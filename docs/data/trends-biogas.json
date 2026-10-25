@@ -1,0 +1,257 @@
+{
+ "UA": {
+  "біогаз": {
+   "last52": 5.7,
+   "all": 5.4,
+   "yoy": null
+  },
+  "біогазова установка": {
+   "last52": 0.0,
+   "all": 0.0,
+   "yoy": null
+  },
+  "біогаз з гною": {
+   "last52": 2.6,
+   "all": 1.0,
+   "yoy": null
+  },
+  "біогазова установка ціна": {
+   "last52": 1.1,
+   "all": 0.2,
+   "yoy": null
+  },
+  "біогаз своїми руками": {
+   "last52": 1.9,
+   "all": 0.4,
+   "yoy": null
+  }
+ },
+ "PL": {
+  "biogazownia": {
+   "last52": 30.8,
+   "all": 28.1,
+   "yoy": -8.8
+  },
+  "biogaz": {
+   "last52": 10.7,
+   "all": 9.9,
+   "yoy": 2.0
+  },
+  "biogazownia rolnicza": {
+   "last52": 0.2,
+   "all": 0.1,
+   "yoy": null
+  },
+  "biogazownia koszt": {
+   "last52": 0.0,
+   "all": 0.0,
+   "yoy": null
+  },
+  "biogazownia dofinansowanie": {
+   "last52": 0.0,
+   "all": 0.0,
+   "yoy": null
+  }
+ },
+ "CZ": {
+  "bioplyn": {
+   "last52": 1.8,
+   "all": 1.3,
+   "yoy": null
+  },
+  "bioplynová stanice": {
+   "last52": 0.2,
+   "all": 2.6,
+   "yoy": -54.2
+  },
+  "bioplynka": {
+   "last52": 0.1,
+   "all": 0.2,
+   "yoy": null
+  },
+  "bioplynová stanice cena": {
+   "last52": 0.0,
+   "all": 0.3,
+   "yoy": null
+  },
+  "biometan": {
+   "last52": 0.2,
+   "all": 0.2,
+   "yoy": null
+  }
+ },
+ "DE": {
+  "Biogas": {
+   "last52": 54.6,
+   "all": 50.8,
+   "yoy": 19.6
+  },
+  "Biogasanlage": {
+   "last52": 25.0,
+   "all": 28.4,
+   "yoy": 3.0
+  },
+  "Biogasanlage Kosten": {
+   "last52": 0.1,
+   "all": 0.1,
+   "yoy": null
+  },
+  "Biogasanlage Wirtschaftlichkeit": {
+   "last52": 0.0,
+   "all": 0.0,
+   "yoy": null
+  },
+  "Biomethan": {
+   "last52": 6.6,
+   "all": 4.2,
+   "yoy": 96.6
+  }
+ },
+ "TR": {
+  "biyogaz": {
+   "last52": 27.3,
+   "all": 36.1,
+   "yoy": -10.2
+  },
+  "biyogaz tesisi": {
+   "last52": 1.6,
+   "all": 2.3,
+   "yoy": 290.5
+  },
+  "biyogaz maliyeti": {
+   "last52": 0.0,
+   "all": 0.1,
+   "yoy": null
+  },
+  "biyogaz tesisi kurulumu": {
+   "last52": 0.0,
+   "all": 0.1,
+   "yoy": null
+  },
+  "biyogaz nedir": {
+   "last52": 0.1,
+   "all": 1.2,
+   "yoy": -78.3
+  }
+ },
+ "HU": {
+  "biogáz": {
+   "last52": 4.7,
+   "all": 3.8,
+   "yoy": 18.9
+  },
+  "biogáz üzem": {
+   "last52": 0.2,
+   "all": 0.0,
+   "yoy": null
+  },
+  "biogázüzem": {
+   "last52": 0.2,
+   "all": 0.6,
+   "yoy": -94.2
+  },
+  "biogáz üzem költség": {
+   "last52": 0.0,
+   "all": 0.2,
+   "yoy": null
+  },
+  "biometán": {
+   "last52": 0.1,
+   "all": 0.4,
+   "yoy": -93.0
+  }
+ },
+ "US": {
+  "biogas": {
+   "last52": 46.3,
+   "all": 24.7,
+   "yoy": 111.7
+  },
+  "anaerobic digester": {
+   "last52": 3.8,
+   "all": 2.4,
+   "yoy": 75.0
+  },
+  "biogas plant": {
+   "last52": 5.1,
+   "all": 2.4,
+   "yoy": 158.8
+  },
+  "renewable natural gas": {
+   "last52": 23.7,
+   "all": 22.5,
+   "yoy": 1.5
+  },
+  "biogas calculator": {
+   "last52": 0.0,
+   "all": 0.0,
+   "yoy": null
+  }
+ },
+ "CA": {
+  "biogas": {
+   "last52": 43.9,
+   "all": 34.3,
+   "yoy": 45.6
+  },
+  "anaerobic digester": {
+   "last52": 0.4,
+   "all": 0.1,
+   "yoy": null
+  },
+  "biogas plant": {
+   "last52": 0.5,
+   "all": 0.2,
+   "yoy": null
+  },
+  "renewable natural gas": {
+   "last52": 8.8,
+   "all": 11.7,
+   "yoy": -3.2
+  },
+  "biogas calculator": {
+   "last52": 0.0,
+   "all": 0.1,
+   "yoy": null
+  }
+ },
+ "UA_regions": {
+  "Вінницька область": 100,
+  "Тернопільська область": 73,
+  "Житомирська область": 61,
+  "Черкаська область": 58,
+  "Рівненська область": 57,
+  "Волинська область": 55,
+  "Чернівецька область": 53,
+  "Сумська область": 51,
+  "Івано-Франківська область": 49,
+  "Київська область": 49,
+  "Закарпатська область": 49,
+  "місто Київ": 49,
+  "Львівська область": 48,
+  "Хмельницька область": 43,
+  "Кіровоградська область": 42,
+  "Чернігівська область": 40,
+  "Полтавська область": 37,
+  "Миколаївська область": 31,
+  "Дніпропетровська область": 29,
+  "Запорізька область": 28,
+  "Харківська область": 25,
+  "Одеська область": 24
+ },
+ "UA_related": {
+  "біогаз": {
+   "top": [
+    {
+     "query": "біогаз це",
+     "value": 100
+    }
+   ],
+   "rising": null
+  },
+  "біогазова установка": {
+   "top": null,
+   "rising": null
+  }
+ }
+}

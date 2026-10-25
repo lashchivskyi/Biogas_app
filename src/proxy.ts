@@ -1,0 +1,79 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { COUNTRY_COOKIE, COUNTRY_LOCALE, DEFAULT_LOCALE, isLocale, LOCALE_COOKIE, LOCALES, type Locale } from "@/i18n/config";
+import { checkBasicAuth } from "@/server/adminAuth";
+
+/** Country from common CDN / platform geo headers (Vercel, Cloudflare, CloudFront, Fastly, generic). */
+function geoCountry(req: NextRequest): string | null {
+  const h = req.headers;
+  const c = h.get("x-vercel-ip-country") ?? h.get("cf-ipcountry") ?? h.get("cloudfront-viewer-country") ?? h.get("fastly-geo-country") ?? h.get("x-country-code");
+  return c && /^[A-Z]{2}$/i.test(c) && c.toUpperCase() !== "XX" ? c.toUpperCase() : null;
+}
+
+/** Accept-Language negotiation against supported locales (q-values honoured; base language match). */
+export function negotiate(header: string | null): Locale | null {
+  if (!header) return null;
+  const prefs = header
+    .split(",")
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(";");
+      const q = params.find((p) => p.trim().startsWith("q="));
+      return { tag: tag.toLowerCase(), q: q ? Number(q.split("=")[1]) || 0 : 1 };
+    })
+    .filter((p) => p.tag && p.q > 0)
+    .sort((a, b) => b.q - a.q);
+  for (const p of prefs) {
+    const base = p.tag.split("-")[0];
+    if (p.tag === "pt-br" || base === "pt") return "pt";
+    if (base === "sh" || base === "bs" || base === "hr" || base === "cnr") return "sr";
+    if (isLocale(base)) return base;
+  }
+  return null;
+}
+
+/** Cookie (explicit choice) → Accept-Language → geo country → English. */
+export function pickLocale(req: NextRequest): Locale {
+  const fromCookie = req.cookies.get(LOCALE_COOKIE)?.value;
+  if (isLocale(fromCookie)) return fromCookie;
+  const fromHeader = negotiate(req.headers.get("accept-language"));
+  if (fromHeader) return fromHeader;
+  const c = geoCountry(req);
+  if (c && COUNTRY_LOCALE[c]) return COUNTRY_LOCALE[c];
+  return DEFAULT_LOCALE;
+}
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    const res = checkBasicAuth(request.headers.get("authorization"));
+    if (res === "ok") return NextResponse.next();
+    if (res === "disabled") return new NextResponse("CRM disabled: set ADMIN_USER and ADMIN_PASSWORD.", { status: 503 });
+    return new NextResponse("Authentication required", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="Methalytics CRM", charset="UTF-8"' } });
+  }
+
+  const first = pathname.split("/")[1];
+  const country = geoCountry(request);
+  if ((LOCALES as readonly string[]).includes(first)) {
+    const res = NextResponse.next();
+    if (country && request.cookies.get(COUNTRY_COOKIE)?.value !== country) res.cookies.set(COUNTRY_COOKIE, country, { path: "/", maxAge: 60 * 60 * 24 * 30, sameSite: "lax" });
+    return res;
+  }
+
+  // Legacy Ukrainian slugs → new localized routes.
+  const legacy: Record<string, string> = { "/biogaz": "/biogas", "/pakety": "/pricing", "/umovy": "/terms", "/oplata": "/payment" };
+  const legacyKey = Object.keys(legacy).find((k) => pathname === k || pathname.startsWith(`${k}/`));
+  const locale = legacyKey ? "uk" : pickLocale(request);
+  const rest = legacyKey ? pathname.replace(legacyKey, legacy[legacyKey]) : pathname;
+  const url = request.nextUrl.clone();
+  url.pathname = `/${locale}${rest === "/" ? "" : rest}`;
+  const res = NextResponse.redirect(url, legacyKey ? 308 : 307);
+  if (country) res.cookies.set(COUNTRY_COOKIE, country, { path: "/", maxAge: 60 * 60 * 24 * 30, sameSite: "lax" });
+  res.headers.set("Vary", "Accept-Language, Cookie");
+  return res;
+}
+
+export const config = {
+  // Everything except Next internals, API routes (other than admin), metadata files and static assets.
+  matcher: ["/((?!_next|api/(?!admin)|icon\\.svg|robots\\.txt|sitemap\\.xml|.*\\.[a-zA-Z0-9]+$).*)"],
+};

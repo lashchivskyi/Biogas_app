@@ -1,0 +1,83 @@
+import type { CustomerDemand } from "./demand";
+import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
+import type { Tr } from "./i18n";
+import type { Confidence, ProjectInput, ScenarioResult } from "./types";
+
+/**
+ * Data quality: what the customer told us vs what we assumed. A screening tool cannot reach HIGH
+ * confidence without laboratory analysis of the feedstock — this is enforced, not hoped for.
+ */
+export function assessQuality(
+  input: ProjectInput,
+  base: ScenarioResult,
+  demand: CustomerDemand,
+  T: Tr,
+  ctx: { currency: string; profileOnly: boolean },
+): { level: Confidence; score: number; reasons: string[]; missing: string[] } {
+  let score = 80;
+  const reasons: string[] = [];
+  const missing: string[] = [];
+  const cur = ctx.currency;
+
+  if (input.feedstocks.some((f) => f.animal)) {
+    score -= 8;
+    reasons.push(T("Manure volumes estimated from head counts, not measured", "Обсяги гною оцінені за кількістю голів, а не виміряні"));
+  }
+  const lowShare =
+    base.feed.tonnesYear > 0
+      ? base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear
+      : 0;
+  if (lowShare > 0.4) {
+    score -= 12;
+    reasons.push(T("Most feedstock has low-confidence parameters", "Більшість сировини має параметри низької довіри"));
+  }
+  if (!input.labAnalysisAvailable) {
+    score -= 15;
+    reasons.push(T("No laboratory feedstock analysis (BMP, DM, VS) — methane yields are typical values", "Немає лабораторного аналізу сировини (BMP, сухість, ВС) — виходи метану типові"));
+    missing.push(T("Laboratory feedstock analysis: dry matter, volatile solids, methane potential (BMP)", "Лабораторний аналіз сировини: сухі речовини, органічна речовина, потенціал метану (BMP)"));
+  }
+  if (ctx.profileOnly) {
+    score -= 6;
+    reasons.push(T("National energy-price profile is an order-of-magnitude estimate — enter your own prices", "Національний профіль цін — оцінка порядку величин; введіть власні ціни"));
+  }
+  if (!demand.electricityKnown) {
+    score -= 12;
+    missing.push(T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
+  }
+  if (!demand.electricityPriceKnown) {
+    score -= 6;
+    missing.push(T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
+  }
+  if (demand.heatWanted && !demand.heatKnown) {
+    score -= 14;
+    missing.push(T("Heat consumption (kWh/year or gas m³) — heat is valued conservatively", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — тепло оцінено консервативно"));
+  }
+  if (!demand.heatWanted && (input.energy.gasM3Year ?? 0) > 0) {
+    score -= 4;
+    reasons.push(T("Gas is used but a heat need is not confirmed", "Є споживання газу, але потреба в теплі не підтверджена"));
+  }
+  if (input.site.landHa === undefined) {
+    score -= 8;
+    missing.push(T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
+  }
+  if (input.feedstocks.filter((f) => f.delivered).some((f) => !(f.distanceKm && f.distanceKm > 0))) {
+    score -= 8;
+    missing.push(T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
+  }
+  const paidLines = base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
+  if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
+    score -= 5;
+    missing.push(T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
+  }
+  if (base.kwElEquivalent < 30 || base.kwElEquivalent > 5000) {
+    score -= 8;
+    reasons.push(T("Scale outside the CAPEX calibration range (30 kW – 5 MW electrical equivalent)", "Масштаб поза діапазоном калібрування CAPEX (30 кВт – 5 МВт ел. еквіваленту)"));
+  }
+  if (input.feedstocks.some((f) => f.animal && ANIMALS[f.animal] && f.housing === "seasonal")) {
+    reasons.push(T("Seasonal grazing reduces collectable manure — the collected share is estimated", "Сезонне випасання зменшує зібраний гній — частку зібраного оцінено"));
+  }
+  score = Math.max(0, Math.min(100, score));
+  let level: Confidence = score >= 85 && input.labAnalysisAvailable ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";
+  if (!input.labAnalysisAvailable && level === "HIGH") level = "MEDIUM";
+  return { level, score, reasons, missing };
+}

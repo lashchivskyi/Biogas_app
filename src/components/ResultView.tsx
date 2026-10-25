@@ -1,0 +1,527 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
+import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
+import { fmt as f, type Dict, type Locale } from "@/i18n";
+import { makeFormat, sig2 } from "@/lib/format";
+import { keyDriver } from "@/lib/whatif";
+import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
+import { FlowDiagram } from "./FlowDiagram";
+
+export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common">;
+
+const VERDICT_STYLE: Record<VerdictId, string> = {
+  STRONG_CANDIDATE: "border-good bg-brandsoft text-brandink",
+  POSSIBLE_WITH_CONDITIONS: "border-amber-400 bg-amber-50 text-amber-900",
+  WEAK_ECONOMICS: "border-red-300 bg-red-50 text-red-900",
+  INSUFFICIENT_DATA: "border-zinc-300 bg-zinc-100 text-zinc-800",
+  NOT_RECOMMENDED_AT_SCALE: "border-red-400 bg-red-100 text-red-950",
+};
+const CONF_STYLE = { LOW: "bg-red-100 text-red-900", MEDIUM: "bg-amber-100 text-amber-900", HIGH: "bg-brandsoft text-brandink" } as const;
+const SCN: ScenarioId[] = ["conservative", "base", "optimistic"];
+
+function Section({ title, children, id, sub }: { title: string; children: ReactNode; id?: string; sub?: string }) {
+  return (
+    <section id={id} className="mt-10 break-inside-avoid-page">
+      <h2 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h2>
+      {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
+function Stat({ label, value, note }: { label: string; value: ReactNode; note?: ReactNode }) {
+  return (
+    <div className="card p-4">
+      <div className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</div>
+      <div className="num mt-1.5 text-xl font-bold leading-tight md:text-2xl">{value}</div>
+      {note && <div className="mt-1 text-xs text-muted">{note}</div>}
+    </div>
+  );
+}
+
+function Fold({ title, children, open = false }: { title: string; children: ReactNode; open?: boolean }) {
+  return (
+    <details open={open} className="card group">
+      <summary className="flex items-center justify-between px-4 py-3 font-semibold">
+        {title}
+        <span aria-hidden className="text-muted transition group-open:rotate-45">+</span>
+      </summary>
+      <div className="border-t border-line px-4 py-4">{children}</div>
+    </details>
+  );
+}
+
+export interface ResultViewProps {
+  a: Assessment;
+  d: ResultDict;
+  locale: Locale;
+  currency: string;
+  countryNotes?: string[];
+  /** "free": verdict + key numbers + energy flow; the rest is a locked teaser. */
+  access: "free" | "full";
+  /** Rendered inside the locked teaser (client button opening checkout). */
+  unlockSlot?: ReactNode;
+  /** Rendered after the report (what-if, contact…). */
+  afterSlot?: ReactNode;
+  samplesHref?: string;
+  methodologyHref: string;
+}
+
+export function ResultView({ a, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref }: ResultViewProps) {
+  const R = d.result;
+  const L = d.labels;
+  const F = makeFormat(locale, L.units);
+  const { n0, eur, money, years, range, compact } = F;
+  const best = a.scenarios.base;
+  const route = a.bestRoute;
+  const r = a.ranges;
+  const e = best.energy;
+  const heatLost = Math.max(0, e.heatNetAvailableKwh - e.heatUsefulKwh);
+  const driver = keyDriver(a);
+  const full = access === "full";
+
+  return (
+    <div>
+      {/* ---------- Verdict ---------- */}
+      <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs font-bold uppercase tracking-widest opacity-70">{R.verdict}</span>
+          <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</span>
+        </div>
+        <h2 className="font-display mt-2 text-3xl font-semibold md:text-[42px]">{L.verdict[a.verdict.id]}</h2>
+        <ul className="mt-4 space-y-1.5 text-[15px]">{a.verdict.reasons.map((x) => <li key={x}>• {x}</li>)}</ul>
+        {driver && <p className="mt-4 text-[15px] font-semibold">{driver}</p>}
+        {a.verdict.whatWouldChange.length > 0 && (
+          <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm">
+            <div className="font-semibold">{R.whatWouldChange}</div>
+            <ul className="mt-1 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
+          </div>
+        )}
+        <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
+      </div>
+
+      {/* ---------- Plain summary ---------- */}
+      <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
+        <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
+        <p className="mt-2 text-[17px] leading-relaxed text-ink">
+          {f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
+          {route === "biomethane"
+            ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
+            : f(R.summaryEl, {
+                el: n0(sig2(e.elNetKwh / 1000)),
+                heat: n0(sig2(e.heatUsefulKwh / 1000)),
+                share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
+              })}{" "}
+          {f(R.summaryMoney, { capex: `${eur(r.capexEur[2])} – ${eur(r.capexEur[0])}`, payback: years(r.paybackYears[1]) })} {R.tone[a.verdict.id]}
+        </p>
+      </section>
+
+      {/* ---------- Key numbers ---------- */}
+      <Section title={R.keyTitle} sub={R.keySub}>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Stat label={R.feedstock} value={<>{n0(sig2(r.feedstockTonnes))} {L.units.tYear}</>} note={f(R.feedNote, { v: n0(best.feed.energyDensityKwhPerTonne) })} />
+          <Stat label={R.biogas} value={<>{range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³</>} note={f(R.biogasNote, { v: n0(r.biogasM3[1] / 8000) })} />
+          <Stat
+            label={R.energy}
+            value={route === "biomethane" ? <>{range(r.biomethaneNm3[0], r.biomethaneNm3[2], (x) => compact(sig2(x)))} Nm³</> : <>{range(r.electricityMwh[0], r.electricityMwh[2])} {L.units.mwh}</>}
+            note={route === "biomethane" ? R.energyBm : f(R.energyHeat, { v: range(r.heatUsefulMwh[0], r.heatUsefulMwh[2]) })}
+          />
+          <Stat label={R.capacity} value={<>{range(r.kwEl[0], r.kwEl[2])} {L.units.kwe}</>} note={L.plantClass[best.plantClass]} />
+          <Stat label={R.capex} value={<>{eur(r.capexEur[2])} – {eur(r.capexEur[0])}</>} note={currency !== "EUR" ? f(R.capexNote, { v: money(r.capexEur[1] * a.fx, currency) }) : undefined} />
+          <Stat label={R.payback} value={<>{years(r.paybackYears[2])} – {years(r.paybackYears[0])}</>} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
+          <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(r.npvEur[0]), hi: eur(r.npvEur[2]) })} />
+          <Stat label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
+        </div>
+        {a.missingData.length > 0 && (
+          <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
+            <div className="font-semibold text-amber-950">{R.missing}</div>
+            <ul className="mt-1.5 list-disc pl-5 text-sm text-amber-950/90">{a.missingData.map((m) => <li key={m}>{m}</li>)}</ul>
+          </div>
+        )}
+        {full && a.warnings.length > 0 && (
+          <div className="mt-3 rounded-xl border border-line bg-surface p-4">
+            <div className="font-semibold">{R.warnings}</div>
+            <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-ink2">{a.warnings.map((m) => <li key={m}>{m}</li>)}</ul>
+          </div>
+        )}
+        {full && <MarketCheck a={a} R={R} F={F} />}
+      </Section>
+
+      {/* ---------- Energy flow ---------- */}
+      <Section title={R.flowTitle} sub={R.flowSub}>
+        <div className="card p-3 md:p-5">
+          <FlowDiagram
+            t={d.flow}
+            n0={n0}
+            compact={compact}
+            values={{
+              tonnes: best.feed.tonnesYear,
+              biogasM3: best.feed.biogasM3Year,
+              route,
+              elMwhSelf: e.elSelfConsumedKwh / 1000,
+              elMwhExport: e.elExportedKwh / 1000,
+              heatUsefulMwh: e.heatUsefulKwh / 1000,
+              heatLostMwh: heatLost / 1000,
+              heatDigesterMwh: e.heatDigesterKwh / 1000,
+              biomethaneNm3: e.biomethaneNm3,
+              digestateT: a.digestate.tonnesYear,
+            }}
+          />
+          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+            <div><dt className="text-muted">{R.heatProduced}</dt><dd className="num font-semibold">{n0(e.heatProducedKwh / 1000)} {L.units.mwh}</dd></div>
+            <div><dt className="text-muted">{R.heatDigester}</dt><dd className="num font-semibold">{n0(e.heatDigesterKwh / 1000)} {L.units.mwh}</dd></div>
+            <div><dt className="text-muted">{R.heatUseful}</dt><dd className="num font-semibold">{n0(e.heatUsefulKwh / 1000)} {L.units.mwh} <span className="font-normal text-muted">{R.of} {n0(e.heatNetAvailableKwh / 1000)}</span></dd></div>
+            <div><dt className="text-muted">{R.elSplit}</dt><dd className="num font-semibold">{n0(e.elSelfConsumedKwh / 1000)} / {n0(e.elExportedKwh / 1000)} {L.units.mwh}</dd></div>
+          </dl>
+        </div>
+      </Section>
+
+      {countryNotes.length > 0 && (
+        <div className="mt-6 rounded-xl border border-line bg-surface2 p-4 text-sm text-ink2">
+          <div className="font-semibold text-ink">{R.countryNotes}</div>
+          <ul className="mt-1 list-disc space-y-1 pl-5">{countryNotes.map((x) => <li key={x}>{x}</li>)}</ul>
+        </div>
+      )}
+
+      {!full ? (
+        <LockedTeaser R={R} unlockSlot={unlockSlot} samplesHref={samplesHref} />
+      ) : (
+        <FullSections a={a} d={d} F={F} currency={currency} methodologyHref={methodologyHref} />
+      )}
+
+      {afterSlot}
+    </div>
+  );
+}
+
+function LockedTeaser({ R, unlockSlot, samplesHref }: { R: ResultDict["result"]; unlockSlot?: ReactNode; samplesHref?: string }) {
+  return (
+    <section className="no-print relative mt-10 overflow-hidden rounded-3xl border border-line bg-surface" aria-labelledby="locked-h">
+      <div className="pointer-events-none select-none p-6 opacity-60 blur-[3px]" aria-hidden>
+        <div className="grid gap-3 md:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="rounded-2xl bg-surface2 p-4">
+              <div className="h-3 w-24 rounded bg-line" />
+              <div className="mt-3 h-6 w-32 rounded bg-line" />
+              <div className="mt-4 space-y-2">{[0, 1, 2, 3].map((k) => <div key={k} className="h-2.5 rounded bg-line" style={{ width: `${90 - k * 12}%` }} />)}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 h-40 rounded-2xl bg-gradient-to-r from-brandsoft via-surface2 to-amber-50" />
+      </div>
+      <div className="absolute inset-0 grid place-items-center bg-gradient-to-b from-white/40 via-white/85 to-white p-6">
+        <div className="max-w-xl text-center">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-night text-signal" aria-hidden>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+          </span>
+          <h3 id="locked-h" className="font-display mt-4 text-2xl font-semibold">{R.lockedTitle}</h3>
+          <p className="mt-2 text-ink2">{R.lockedText}</p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            {unlockSlot}
+            {samplesHref && <Link href={samplesHref} className="btn btn-ghost">{R.seeSample}</Link>}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MarketCheck({ a, R, F }: { a: Assessment; R: ResultDict["result"]; F: ReturnType<typeof makeFormat> }) {
+  const b = a.scenarios.base;
+  const kw = b.energy.chpKwEl || b.kwElEquivalent;
+  if (a.bestRoute === "biomethane" || kw < 10) return null;
+  const perKw = b.capex.totalEur / kw;
+  const bands = marketBandsFor(kw, b.feed.manureShareVs);
+  if (!bands.length) return null;
+  return (
+    <div className="card mt-4 p-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div className="font-semibold">{R.market}</div>
+        <div className="num text-sm">{f(R.ourEstimate, { v: F.n0(sig2(perKw)), kw: F.n0(kw) })}</div>
+      </div>
+      <ul className="mt-2 space-y-2 text-sm">
+        {bands.map((m) => {
+          const pos = perKw < m.lowEurPerKw ? R.below : perKw > m.highEurPerKw ? R.above : R.inRange;
+          return (
+            <li key={m.id} className="flex flex-col gap-0.5 border-t border-line pt-2 first:border-0 first:pt-0">
+              <span><b className="num">{F.n0(m.lowEurPerKw)}–{F.n0(m.highEurPerKw)} €/kW</b> — {m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
+              <span className="text-xs text-muted">{m.source} · {m.year} · {m.quality}</span>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-2 text-xs text-muted">{R.marketNote}</p>
+    </div>
+  );
+}
+
+function FullSections({ a, d, F, currency, methodologyHref }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; currency: string; methodologyHref: string }) {
+  const R = d.result;
+  const L = d.labels;
+  const { n0, n1, eur, years, pct, compact } = F;
+  const best = a.scenarios.base;
+  const route = a.bestRoute;
+  const routes: RouteId[] = ["chp", "boiler", "biomethane"];
+  return (
+    <>
+      {/* ---------- Scenarios ---------- */}
+      <Section title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
+          <div className="card overflow-x-auto p-1">
+            <table className="w-full min-w-[460px] text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-muted">
+                  <th className="p-3 font-semibold" />
+                  {SCN.map((s) => <th key={s} className="p-3 text-right font-semibold">{L.scenario[s]}</th>)}
+                </tr>
+              </thead>
+              <tbody className="num">
+                {([
+                  [R.rowBiogas, (s: ScenarioId) => n1(a.scenarios[s].feed.biogasM3Year / 1000)],
+                  [R.rowCapex, (s: ScenarioId) => eur(a.scenarios[s].capex.totalEur)],
+                  [R.rowOpex, (s: ScenarioId) => eur(a.scenarios[s].opexRev.opexEur)],
+                  [R.rowRevenue, (s: ScenarioId) => eur(a.scenarios[s].opexRev.revenueEur)],
+                  [R.rowEbitda, (s: ScenarioId) => eur(a.scenarios[s].fin.ebitdaEurYear)],
+                  [R.rowPayback, (s: ScenarioId) => years(a.scenarios[s].fin.simplePaybackYears)],
+                  [R.rowNpv, (s: ScenarioId) => eur(a.scenarios[s].fin.npvEur)],
+                  [R.rowIrr, (s: ScenarioId) => (a.scenarios[s].fin.irr === null ? "—" : pct(a.scenarios[s].fin.irr as number, 1))],
+                  [R.rowDscr, (s: ScenarioId) => (a.scenarios[s].fin.dscrMin === null ? "—" : n1(a.scenarios[s].fin.dscrMin as number))],
+                ] as Array<[string, (s: ScenarioId) => string]>).map(([label, fn]) => (
+                  <tr key={label} className="border-t border-line">
+                    <td className="p-3 font-sans font-medium text-ink2">{label}</td>
+                    {SCN.map((s) => <td key={s} className={`p-3 text-right ${s === "base" ? "font-bold" : ""}`}>{fn(s)}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="px-3 pb-3 text-xs text-muted">{f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}</p>
+          </div>
+          <div className="card p-4">
+            <div className="mb-2 text-sm font-semibold">{R.cashTitle}</div>
+            <CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={compact} />
+          </div>
+        </div>
+      </Section>
+
+      {/* ---------- Routes ---------- */}
+      <Section title={R.routesTitle} sub={R.routesSub}>
+        <div className="card overflow-x-auto p-1">
+          <table className="num w-full min-w-[560px] text-sm">
+            <thead>
+              <tr className="text-left text-xs uppercase tracking-wide text-muted">
+                <th className="p-3">{R.colRoute}</th><th className="p-3 text-right">{R.colCapex}</th><th className="p-3 text-right">{R.colEbitda}</th><th className="p-3 text-right">{R.colPayback}</th><th className="p-3 text-right">{R.colNpv}</th><th className="p-3 text-right">{R.colRange}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {routes.map((rt) => {
+                const s = a.routeMatrix[rt];
+                return (
+                  <tr key={rt} className={`border-t border-line ${rt === route ? "bg-brandsoft/60" : ""}`}>
+                    <td className="p-3 font-sans font-medium">{L.route[rt]} {rt === route && <span className="chip ml-1">{R.chosen}</span>}</td>
+                    <td className="p-3 text-right">{eur(s.base.capex.totalEur)}</td>
+                    <td className="p-3 text-right">{eur(s.base.fin.ebitdaEurYear)}</td>
+                    <td className="p-3 text-right">{years(s.base.fin.simplePaybackYears)}</td>
+                    <td className="p-3 text-right font-semibold">{eur(s.base.fin.npvEur)}</td>
+                    <td className="p-3 text-right text-muted">{eur(s.conservative.fin.npvEur)} … {eur(s.optimistic.fin.npvEur)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <ul className="space-y-1 px-4 pb-4 pt-2 text-xs text-muted">
+            <li>{R.routeNoteChp}</li>
+            <li>{f(R.routeNoteBm, { v: n0(a.routeMatrix.biomethane.base.energy.rawBiogasNm3PerHour) })}</li>
+          </ul>
+        </div>
+      </Section>
+
+      {/* ---------- Support cases ---------- */}
+      <Section title={R.supportTitle} sub={R.supportSub}>
+        {a.supportCases.length === 0 ? (
+          <p className="card p-4 text-sm text-ink2">{R.supportNone}</p>
+        ) : (
+          <div className="card overflow-x-auto p-1">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-muted">
+                  <th className="p-3">{R.colScheme}</th><th className="p-3">{R.colStatus}</th><th className="p-3">{R.colEligible}</th><th className="p-3 text-right">{R.colNpv}</th><th className="p-3 text-right">{R.colPayback}</th><th className="p-3 text-right">{R.colDelta}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {a.supportCases.map((s) => (
+                  <tr key={s.schemeId} className="border-t border-line align-top">
+                    <td className="p-3">
+                      <div className="font-semibold">{s.name}</div>
+                      <div className="mt-0.5 text-xs text-muted">{s.note}</div>
+                      <div className="mt-0.5 text-[11px] text-muted">{s.source} · {s.confidence}</div>
+                    </td>
+                    <td className="p-3"><span className="chip">{R.status[s.status]}</span></td>
+                    <td className="p-3">{s.eligible ? d.common.yes : <span className="text-bad">{d.common.no}</span>}{s.reason && <div className="mt-0.5 max-w-[220px] text-xs text-muted">{s.reason}</div>}</td>
+                    <td className="num p-3 text-right font-semibold">{s.eligible || s.status === "closed" ? eur(s.npvEur) : "—"}</td>
+                    <td className="num p-3 text-right">{s.eligible || s.status === "closed" ? years(s.paybackYears) : "—"}</td>
+                    <td className={`num p-3 text-right ${s.deltaNpvEur >= 0 ? "text-good" : "text-bad"}`}>{s.eligible || s.status === "closed" ? eur(s.deltaNpvEur) : "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Section>
+
+      {/* ---------- Scores ---------- */}
+      <Section title={R.scoresTitle} sub={R.scoresSub}>
+        <div className="grid gap-3 md:grid-cols-2">
+          {a.scores.map((s) => (
+            <div key={s.id} className="card p-4">
+              <div className="flex items-baseline justify-between">
+                <div className="font-semibold">{L.score[s.id]}</div>
+                <div className="num text-lg font-bold">{s.value}<span className="text-xs font-normal text-muted">/100{s.isRisk ? ` ${R.risk}` : ""}</span></div>
+              </div>
+              <div className="mt-2"><ScoreBar value={s.value} isRisk={s.isRisk} label={f(d.charts.of100, { v: s.value })} /></div>
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted">{s.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <div className="card mt-3 p-4">
+          <div className="flex items-baseline justify-between">
+            <div className="font-semibold">{R.overall}</div>
+            <div className="num text-2xl font-extrabold">{a.overall.value}<span className="text-sm font-normal text-muted">/100</span></div>
+          </div>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.overall.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
+        </div>
+      </Section>
+
+      {/* ---------- Sensitivity ---------- */}
+      <Section title={R.sensTitle} sub={R.sensSub}>
+        <div className="card p-4"><Tornado items={a.sensitivity} baseNpv={best.fin.npvEur} t={d.charts} compact={compact} /></div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <Stat label={R.beCapex} value={a.breakEven.capexReductionPct === null ? R.unreachable : a.breakEven.capexReductionPct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.capexReductionPct)} %`} note={R.beCapexNote} />
+          <Stat label={R.bePrice} value={a.breakEven.energyPriceIncreasePct === null ? R.unreachable : a.breakEven.energyPriceIncreasePct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.energyPriceIncreasePct)} %`} note={R.bePriceNote} />
+        </div>
+        {a.sensitivity.some((s) => s.breaks) && <p className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-900">{f(R.flips, { list: a.sensitivity.filter((s) => s.breaks).map((s) => s.label).join("; ") })}</p>}
+      </Section>
+
+      {/* ---------- Details ---------- */}
+      <Section title={R.detailsTitle}>
+        <div className="space-y-3">
+          <Fold title={R.dFeed} open>
+            <div className="overflow-x-auto">
+              <table className="num w-full min-w-[640px] text-sm">
+                <thead><tr className="text-left text-xs uppercase tracking-wide text-muted"><th className="py-2">{R.colStream}</th><th className="py-2 text-right">{R.colTonnes}</th><th className="py-2 text-right">{R.colDm}</th><th className="py-2 text-right">{R.colCh4}</th><th className="py-2 text-right">{R.colLogistics}</th><th className="py-2 text-right">{R.colMaxDist}</th></tr></thead>
+                <tbody>
+                  {best.feed.lines.map((l) => {
+                    const lg = a.logistics.perLine.find((x) => x.id === l.id)!;
+                    return (
+                      <tr key={l.id} className="border-t border-line">
+                        <td className="py-2 font-sans">{L.feedstock[l.typeId]}{l.delivered && <span className="chip ml-2">{f(R.deliveredKm, { v: l.distanceKm })}</span>}</td>
+                        <td className="py-2 text-right">{n0(l.tonnesYear)}</td>
+                        <td className="py-2 text-right">{n1(l.dryMatterPct)}</td>
+                        <td className="py-2 text-right">{n1(l.tonnesYear > 0 ? l.ch4M3Year / l.tonnesYear : 0)}</td>
+                        <td className={`py-2 text-right ${lg.level === "CRITICAL" ? "font-bold text-bad" : lg.level === "WARNING" ? "font-semibold text-warn" : ""}`}>{lg.distanceKm > 0 ? pct(lg.transportShareOfEnergyValue) : R.onSite}</td>
+                        <td className="py-2 text-right">≈ {n0(lg.breakEvenDistanceKm)} {L.units.km}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-muted">{R.maxDistNote}</p>
+          </Fold>
+
+          <Fold title={R.dTech}>
+            <p className="font-semibold">{best.design.tech.primary}</p>
+            <p className="mt-1 text-sm text-ink2">{best.design.tech.reactor}</p>
+            <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-4">
+              <div><dt className="text-muted">{R.workVol}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.workingVolumeM3))} m³</dd></div>
+              <div><dt className="text-muted">{R.hrt}</dt><dd className="num font-semibold">{best.design.hrtDays} {R.days}</dd></div>
+              <div><dt className="text-muted">{R.olr}</dt><dd className="num font-semibold">{n1(best.design.olrKgVsM3Day)} kg VS/(m³·d)</dd></div>
+              <div><dt className="text-muted">{R.storage}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.storageVolumeM3))} m³</dd></div>
+            </dl>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.reasons.map((x) => <li key={x}>{x}</li>)}</ul>
+            {best.design.tech.alternatives.length > 0 && <><div className="mt-3 text-sm font-semibold">{R.alternatives}</div><ul className="list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.alternatives.map((x) => <li key={x}>{x}</li>)}</ul></>}
+            <p className="mt-3 text-xs text-muted">{f(R.climate, { region: a.climate.regionName, t: n1(a.climate.meanTempC), hdd: n0(a.climate.hdd), list: a.climate.analogues.map((x) => `${x.name} (Δ ${n1(x.distance)} °C)`).join(", ") })}</p>
+          </Fold>
+
+          <Fold title={R.dMoney}>
+            <div className="grid gap-6 md:grid-cols-3">
+              <LineTable title="CAPEX" rows={best.capex.lines} total={best.capex.totalEur} totalLabel={R.total} compact={compact} />
+              <LineTable title={R.rowOpex} rows={best.opexRev.opex} total={best.opexRev.opexEur} totalLabel={R.total} compact={compact} />
+              <LineTable title={R.rowRevenue} rows={best.opexRev.revenue} total={best.opexRev.revenueEur} totalLabel={R.total} compact={compact} />
+            </div>
+            <p className="mt-3 text-xs text-muted">{f(R.moneyNote, { fx: n1(a.fx), cur: currency })}</p>
+          </Fold>
+
+          <Fold title={R.dDigestate}>
+            <p className="text-sm">
+              {f(R.dgLine, {
+                status: R.dgStatus[a.digestate.status],
+                t: n0(a.digestate.tonnesYear),
+                n: n0(a.digestate.nKgYear),
+                ha: n0(a.digestate.landRequiredHa),
+                avail: a.digestate.landAvailableHa !== null ? f(R.dgAvail, { v: n0(a.digestate.landAvailableHa) }) : R.dgUnknown,
+              })}
+            </p>
+            <p className="mt-1 text-sm text-ink2">{f(R.dgValue, { v: eur(a.digestate.fertiliserValueEurYear), h: eur(a.digestate.handlingCostEurYear), n: eur(a.digestate.netValueEurYear) })}</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.digestate.advice.map((x) => <li key={x}>{x}</li>)}</ul>
+          </Fold>
+
+          <Fold title={R.dMethane}>
+            <p className="text-sm">
+              {f(R.mLine, { v: pct(a.methane.lossShare, 1), lo: pct(a.methane.lossShareRange[0], 1), hi: pct(a.methane.lossShareRange[1], 1), co2: n0(a.methane.co2eTonnesYear), disp: n0(a.methane.displacedCo2eTonnesYear) })}{" "}
+              {Number.isFinite(a.methane.ratio) ? f(R.mRatio, { v: pct(a.methane.ratio) }) : ""}
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
+            <p className="mt-2 text-xs text-muted">{R.mNote}</p>
+          </Fold>
+
+          <Fold title={R.dReg}>
+            <p className="text-sm">{f(R.regComplexity, { v: R.regLevel[a.regulatory.complexity] })} {R.regNote}</p>
+            <ul className="mt-2 space-y-2 text-sm">
+              {a.regulatory.items.map((it) => (
+                <li key={it.id} className="rounded-lg border border-line p-3">
+                  <div className="font-medium">{it.title}</div>
+                  <div className="text-xs text-muted">{it.appliesBecause} · {f(R.effort, { v: R.regLevel[it.effort] })} · {it.status === "CONFIRMED" ? R.verified : R.toVerify}</div>
+                </li>
+              ))}
+            </ul>
+          </Fold>
+
+          <Fold title={R.dSafety}>
+            <ul className="space-y-3 text-sm">
+              {a.safety.map((s) => (
+                <li key={s.id} className="rounded-lg border border-line p-3">
+                  <div className="font-semibold">{s.hazard} <span className={`chip ml-1 ${s.severity === "HIGH" ? "bg-red-100 text-red-900" : ""}`}>{s.severity === "HIGH" ? R.sevHigh : R.sevMed}</span></div>
+                  {s.trigger && <div className="text-xs text-muted">{f(R.condition, { v: s.trigger })}</div>}
+                  <ul className="mt-1 list-disc pl-5 text-ink2">{s.controls.map((c) => <li key={c}>{c}</li>)}</ul>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{SAFETY_DISCLAIMER[a.lang]}</p>
+          </Fold>
+
+          <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>
+            <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={methodologyHref}>→</Link></p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
+          </Fold>
+        </div>
+      </Section>
+    </>
+  );
+}
+
+function LineTable({ title, rows, total, totalLabel, compact }: { title: string; rows: { id: string; label: string; eur: number }[]; total: number; totalLabel: string; compact: (v: number) => string }) {
+  return (
+    <div>
+      <div className="mb-2 text-sm font-semibold">{title}</div>
+      <table className="num w-full text-xs">
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id} className="border-t border-line first:border-0"><td className="py-1.5 pr-2 font-sans text-ink2">{r.label}</td><td className="py-1.5 text-right">{compact(r.eur)}</td></tr>
+          ))}
+          <tr className="border-t-2 border-ink"><td className="py-1.5 font-sans font-bold">{totalLabel}</td><td className="py-1.5 text-right font-bold">{compact(total)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}

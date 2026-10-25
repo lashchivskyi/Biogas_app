@@ -1,0 +1,474 @@
+{
+ "weights": {
+  "feed": 0.2,
+  "econ": 0.25,
+  "pull": 0.2,
+  "demand": 0.1,
+  "gap": 0.1,
+  "access": 0.15
+ },
+ "rows": [
+  {
+   "country": "Індія",
+   "score": 75.0,
+   "criteria": {
+    "feed": 5,
+    "econ": 3,
+    "pull": 5,
+    "demand": 3,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "V",
+   "note": "ціль 5 % біометану, GOBARdhan ₹23 731 крор (2027–36), 1 549 станцій; дрібні господарства"
+  },
+  {
+   "country": "Україна",
+   "score": 73.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 4,
+    "pull": 2,
+    "demand": 2,
+    "gap": 5,
+    "access": 5
+   },
+   "evidence": "V,T",
+   "note": "Нема субсидій для нових малих; висока ціна ел. для бізнесу; велика база переробки; інтерес росте; домашній ринок"
+  },
+  {
+   "country": "Польща",
+   "score": 71.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 3,
+    "pull": 3,
+    "demand": 4,
+    "gap": 4,
+    "access": 4
+   },
+   "evidence": "V,T",
+   "note": "≈160 агроустановок; закони про біометан 2025; інтерес не росте; найближчий ринок"
+  },
+  {
+   "country": "Бразилія",
+   "score": 71.0,
+   "criteria": {
+    "feed": 5,
+    "econ": 3,
+    "pull": 4,
+    "demand": 3,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "V",
+   "note": "1 803 станції, закон «Паливо майбутнього»; 69 виробників біометану; свинарство"
+  },
+  {
+   "country": "Італія",
+   "score": 67.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 3,
+    "pull": 4,
+    "demand": 4,
+    "gap": 3,
+    "access": 2
+   },
+   "evidence": "V",
+   "note": "398 біометанових проєктів з PNRR (40 % грант), термін 30.06.2026; великий ринок агробіогазу"
+  },
+  {
+   "country": "Чехія",
+   "score": 65.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 3,
+    "gap": 4,
+    "access": 4
+   },
+   "evidence": "V,T",
+   "note": "≈540 станцій, тарифи закінчуються 2028–2032 → потреба оцінювати «після тарифу»"
+  },
+  {
+   "country": "Франція",
+   "score": 65.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 3,
+    "pull": 4,
+    "demand": 4,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "V",
+   "note": "≈800 агро-установок, 803 станції подачі; тарифи на електрику закінчуються → перехід на біометан"
+  },
+  {
+   "country": "Угорщина",
+   "score": 64.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 4,
+    "demand": 2,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "V,T",
+   "note": "€100 млн грантів, майже половина — малі станції; статус виплат невизначений"
+  },
+  {
+   "country": "США",
+   "score": 64.0,
+   "criteria": {
+    "feed": 5,
+    "econ": 2,
+    "pull": 4,
+    "demand": 5,
+    "gap": 1,
+    "access": 2
+   },
+   "evidence": "V,T",
+   "note": "Великий ринок, але економіка = RIN/LCFS; безкоштовний EPA-скринінг + Anessa"
+  },
+  {
+   "country": "Румунія",
+   "score": 60.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "V,K",
+   "note": "Біометану немає; постанова в проєкті; великий потенціал"
+  },
+  {
+   "country": "Туреччина",
+   "score": 60.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 2,
+    "pull": 3,
+    "demand": 4,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "V,T",
+   "note": "301 МВт, переважно 1–4 МВт на тарифі; тариф і ціни не підтверджено"
+  },
+  {
+   "country": "Литва",
+   "score": 60.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "V,K",
+   "note": "Багато великих ферм; приклади Латвії/Естонії; дані по Литві не знайдено"
+  },
+  {
+   "country": "Латвія",
+   "score": 60.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "V,K",
+   "note": "Balticovo: послід → біометан; €21,5 млн підтримки; першу точку подачі відкрито 2025"
+  },
+  {
+   "country": "Сербія",
+   "score": 60.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 1,
+    "gap": 5,
+    "access": 3
+   },
+   "evidence": "K",
+   "note": "Агро-країна; підтримка ВДЕ"
+  },
+  {
+   "country": "Словаччина",
+   "score": 60.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "K",
+   "note": "Схожа на Чехію; малий ринок"
+  },
+  {
+   "country": "Естонія",
+   "score": 58.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 1,
+    "gap": 4,
+    "access": 3
+   },
+   "evidence": "V,K",
+   "note": "Koskvere: перша агро-біометанова в Балтії; малий ринок"
+  },
+  {
+   "country": "Таїланд",
+   "score": 57.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Пальмові й маніокові заводи; дані слабкі"
+  },
+  {
+   "country": "Казахстан",
+   "score": 56.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 2,
+    "demand": 1,
+    "gap": 5,
+    "access": 3
+   },
+   "evidence": "K",
+   "note": "Агро-великі ферми; низький інтерес; російська"
+  },
+  {
+   "country": "Болгарія",
+   "score": 56.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 2,
+    "demand": 1,
+    "gap": 5,
+    "access": 3
+   },
+   "evidence": "V",
+   "note": "Потенціал 0,67 млрд м³ біометану; схем не знайдено"
+  },
+  {
+   "country": "Іспанія",
+   "score": 55.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 3,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Свинарство велике; біогаз відстає; PERTE"
+  },
+  {
+   "country": "Велика Британія",
+   "score": 55.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 3,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "V,K",
+   "note": "119 біометанових; підтримка скорочується"
+  },
+  {
+   "country": "В'єтнам",
+   "score": 55.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 2,
+    "demand": 3,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Малі біодигестори; дані слабкі"
+  },
+  {
+   "country": "Молдова",
+   "score": 55.0,
+   "criteria": {
+    "feed": 2,
+    "econ": 3,
+    "pull": 2,
+    "demand": 1,
+    "gap": 5,
+    "access": 4
+   },
+   "evidence": "K",
+   "note": "Малий ринок, близькість"
+  },
+  {
+   "country": "Канада",
+   "score": 54.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 2,
+    "pull": 3,
+    "demand": 4,
+    "gap": 1,
+    "access": 2
+   },
+   "evidence": "V,T",
+   "note": "≈300 об'єктів; RNG-кредити; безкоштовна самооцінка CBA"
+  },
+  {
+   "country": "Нідерланди",
+   "score": 53.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 3,
+    "demand": 2,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Зрілий ринок; ко-дигестія; обмеження азоту"
+  },
+  {
+   "country": "Австрія",
+   "score": 53.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 3,
+    "pull": 2,
+    "demand": 3,
+    "gap": 3,
+    "access": 2
+   },
+   "evidence": "V",
+   "note": "449 установок, приріст 2024 лише +3 МВт; премія до 250 кВт"
+  },
+  {
+   "country": "Данія",
+   "score": 52.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 2,
+    "pull": 3,
+    "demand": 2,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "V,K",
+   "note": "Централізовані заводи; ринок насичується"
+  },
+  {
+   "country": "Німеччина",
+   "score": 52.0,
+   "criteria": {
+    "feed": 4,
+    "econ": 2,
+    "pull": 2,
+    "demand": 4,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "V,T",
+   "note": "Зрілий і стагнує; малі існують завдяки тарифу; безкоштовні інструменти KTBL"
+  },
+  {
+   "country": "Фінляндія",
+   "score": 50.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 2,
+    "pull": 3,
+    "demand": 2,
+    "gap": 3,
+    "access": 2
+   },
+   "evidence": "V,K",
+   "note": "Біометан для транспорту; холодний клімат"
+  },
+  {
+   "country": "Мексика",
+   "score": 48.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 2,
+    "pull": 2,
+    "demand": 2,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Свинарство/молоко; ринок молодий"
+  },
+  {
+   "country": "Аргентина",
+   "score": 48.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 2,
+    "pull": 2,
+    "demand": 2,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Агро-відходи; макроризики"
+  },
+  {
+   "country": "Швеція",
+   "score": 48.0,
+   "criteria": {
+    "feed": 3,
+    "econ": 2,
+    "pull": 3,
+    "demand": 2,
+    "gap": 2,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Біометан для транспорту; фермерських мало"
+  },
+  {
+   "country": "Греція",
+   "score": 47.0,
+   "criteria": {
+    "feed": 2,
+    "econ": 3,
+    "pull": 2,
+    "demand": 1,
+    "gap": 4,
+    "access": 2
+   },
+   "evidence": "K",
+   "note": "Малі ферми; обмежені дані"
+  }
+ ]
+}
