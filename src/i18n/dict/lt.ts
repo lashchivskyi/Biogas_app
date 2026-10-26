@@ -3,7 +3,7 @@ import type { Translation } from "..";
 /** Lietuvių. Kreipinys „Jūs“, dalykiškas tonas; Lietuvos biodujų sektoriaus terminai (kogeneracija, digestatas). */
 const lt: Translation = {
   meta: {
-    title: "Biodujų atsipirkimo skaičiuoklė: ar biodujų jėgainė atsipirks?",
+    title: "Biodujų atsipirkimo skaičiuoklė: ar biodujų gamykla atsipirks?",
     description: "Nemokamas 3 minučių vertinimas ūkiams, maisto pramonei, plėtotojams ir savivaldybėms: biodujos, elektra, šiluma ar biometanas, investicijos, atsipirkimas ir sąžiningas verdiktas — 33 šalims.",
     ogTitle: "Ar biodujos iš jūsų atliekų atsipirks?",
     ogDescription: "Nepriklausomas biodujų ir biometano galimybių vertinimas — pirmiausia duomenys, tik paskui įranga.",
@@ -17,8 +17,8 @@ const lt: Translation = {
   },
   hero: {
     eyebrow: "Nepriklausoma biodujų ir biometano analizė",
-    h1: "Ar jūsų verslui atsipirktų [biodujų jėgainė]?",
-    lead: "Per 3 minutes sužinokite, ar jūsų organinės atliekos gali tapti pelninga energija. Sąžiningas verdiktas: taip, taip su sąlygomis arba ne.",
+    h1: "Ar jūsų verslui atsipirktų [biodujų gamykla]?",
+    lead: "Per tris minutes preliminariai įvertinkite, ar jūsų įmonei apsimokėtų gaminti biodujas iš organinių atliekų ir kokių sąlygų tam reikėtų.",
     cta: "Įvertinti atsiperkamumą",
     ctaSecondary: "Kaip tai veikia",
     trust: ["Neparduodame įrangos", "Subsidijos neįskaičiuotos", "Atvira metodika"],
@@ -123,7 +123,7 @@ const lt: Translation = {
       { q: "Kiek tai tikslu?", a: "Tai parengiamasis vertinimas (AACE 5–4 klasė): CAPEX ±30 %, dujų išeiga ±20–30 %, atsipirkimas maždaug −30 % / +50 %. Jis patikimai atskiria aiškiai nenaudingus ir aiškiai stiprius projektus bei parodo pilkąją zoną tarp jų — ataskaita pasako, kur yra jūsų. Bankui tinkamam skaičiui (±15 %) reikia žaliavos laboratorinio tyrimo, tiekėjų pasiūlymų ir pardavimo sutarčių." },
       { q: "Ar tai tinka mano šaliai?", a: "Taip — 33 šalys. Kainos imamos iš oficialios statistikos, kur ji yra (Eurostatas, nacionaliniai reguliuotojai, EIA, Pasaulio bankas), klimatas — iš ERA5 reanalizės kiekvienam regionui, šalies rizika — iš Damodarano. Ukraina papildomai patikrinta su vietiniais projektais. Jei oficialios eilutės nėra, reikšmė pažymėta kaip įvertis — o jūsų kainos visada turi pirmenybę." },
       { q: "O supirkimo tarifai ir subsidijos?", a: "Niekada neįtraukiame jų į verdiktą. Jei šalyje yra paramos schema, ataskaita parodo jos poveikį kaip atskirą scenarijų su statusu ir šaltiniu." },
-      { q: "Kas nutinka mano duomenims?", a: "Vertinimas vyksta jūsų naršyklėje. Duomenis saugome tik užsakius ataskaitą arba susisiekus su mumis ir niekada neperduodame trečiosioms šalims." },
+      { q: "Kas nutinka mano duomenims?", a: "Kontaktinius ir projekto duomenis tvarkome tik paslaugai suteikti ir su jumis susisiekti. Juos perduodame tik mokėjimo paslaugų teikėjui. Ištrinti duomenis galite paprašyti bet kada." },
     ],
   },
   final: { title: "Per tris minutes sužinokite, ar verta toliau nagrinėti projektą", sub: "Be registracijos. Be įrangos pardavimo. Sąžiningas atsakymas.", cta: "Įvertinti atsiperkamumą" },
@@ -336,7 +336,7 @@ const lt: Translation = {
   payment: { title: "Mokėjimo būsena", paid: "Mokėjimas gautas", paidText: "Ačiū! Jūsų ataskaita paruošta.", open: "Atidaryti mano ataskaitą", pending: "Mokėjimas apdorojamas", failed: "Mokėjimas neužbaigtas", demoTitle: "Demonstracinis mokėjimas", demoText: "Imituoja banko puslapį kūrimo metu. Pinigai nejuda.", demoPay: "Imituoti sėkmingą mokėjimą", demoFail: "Imituoti klaidą" },
   method: { eyebrow: "Metodika", title: "Metodika ir prielaidų registras", lead: "Kiekvienas skaitinis parametras turi vienetą, šaltinį, šalį, datą ir patikimumo lygį. Žymos FACT, ASSUMPTION, CALCULATION ir ESTIMATE nurodo vertės kilmę.", chainTitle: "Skaičiavimo grandinė", notTitle: "Ko modelis nedaro", countryLabel: "Šalies parametrai", param: "Parametras", value: "Reikšmė", type: "Tipas", conf: "Patikimumas", source: "Šaltinis", date: "Data" },
   hub: { eyebrow: "Gidas verslininkams", title: "Biodujų jėgainė: kaina, atsipirkimas ir veikimas", lead: "Aiškiai ir be žargono: kas yra biodujos, kiek kainuoja jėgainė ir kada ji tikrai atsiperka.", toc: "Turinys", sectors: "Biodujos pagal veiklos rūšį" },
-  terms: { title: "Paslaugų teikimo, mokėjimo ir grąžinimo sąlygos", template: "Šablonas: įrašykite įmonės duomenis į src/config/site.ts ir prieš paleidimą pateikite teisininkui patikrinti." },
+  terms: { title: "Paslaugų teikimo, mokėjimo ir grąžinimo sąlygos", template: "Įmonės rekvizitai dar nepaskelbti. Prieš mokėdami susisiekite su mumis." },
   flow: {
     aria: "Schema: žaliava, fermentatorius, biodujos, pavertimas energija, digestatas",
     feedstock: "Žaliava", feedstockSub1: "mėšlas · perdirbimo", feedstockSub2: "atliekos", digester: "Fermentatorius", digesterSub: "≈ 38 °C, be deguonies", ownHeat: "savoms reikmėms šiluma: {v} MWh",

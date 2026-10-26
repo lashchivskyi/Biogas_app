@@ -18,7 +18,7 @@ const nl: Translation = {
   hero: {
     eyebrow: "Onafhankelijke analyse van biogas & groen gas",
     h1: "Is een [biogasinstallatie] rendabel voor uw bedrijf?",
-    lead: "Ontdek in 3 minuten of uw organische reststromen rendabele energie kunnen worden — met een eerlijk oordeel: ja, ja onder voorwaarden, of nee.",
+    lead: "Ontdek in drie minuten of biogasproductie uit uw organische reststromen rendabel kan zijn en welke voorwaarden daarvoor nodig zijn.",
     cta: "Bereken mijn project",
     ctaSecondary: "Zo werkt het",
     trust: ["Wij verkopen geen installaties", "Geen subsidie ingerekend", "Open methodiek"],
@@ -123,7 +123,7 @@ const nl: Translation = {
       { q: "Hoe nauwkeurig is het?", a: "Een screening (AACE-klasse 5–4): CAPEX ±30 %, gasopbrengst ±20–30 %, terugverdientijd ongeveer −30 % / +50 %. Dat onderscheidt betrouwbaar duidelijke no-go- en go-projecten en toont de grijze zone ertussen — het rapport zegt waar het uwe ligt. Een financierbaar cijfer (±15 %) vraagt een labtest van uw biomassa, leveranciersoffertes en afnamecontracten." },
       { q: "Werkt het voor mijn land?", a: "Ja — 33 landen. Prijzen komen uit officiële statistieken waar die bestaan (Eurostat, nationale toezichthouders, EIA, Wereldbank), het klimaat uit de ERA5-heranalyse per regio, het landenrisico van Damodaran. Oekraïne is daarnaast getoetst aan lokale projecten. Zonder officiële reeks is de waarde gemarkeerd als schatting — en uw eigen prijzen gaan altijd voor." },
       { q: "En vaste vergoedingen en subsidies?", a: "Die rekenen we nooit mee in het oordeel. Bestaat er een nationale regeling, dan toont het rapport het effect als apart scenario, met status en bron." },
-      { q: "Wat gebeurt er met mijn gegevens?", a: "De quickscan draait in uw browser. We bewaren alleen gegevens als u een rapport bestelt of contact opneemt, en delen ze nooit met derden." },
+      { q: "Wat gebeurt er met mijn gegevens?", a: "Wij verwerken contact- en projectgegevens uitsluitend om de dienst te leveren en contact met u op te nemen. Wij delen ze alleen met de betaaldienstverlener. U kunt op elk moment om verwijdering vragen." },
     ],
   },
   final: { title: "In drie minuten zien of uw project nader onderzoek waard is", sub: "Zonder account. Zonder verkoop van installaties. Een eerlijk antwoord.", cta: "Bereken mijn project" },
@@ -336,7 +336,7 @@ const nl: Translation = {
   payment: { title: "Betaalstatus", paid: "Betaling ontvangen", paidText: "Bedankt! Uw rapport staat klaar.", open: "Mijn rapport openen", pending: "Betaling in behandeling", failed: "Betaling niet voltooid", demoTitle: "Demobetaling", demoText: "Simuleert een bankpagina tijdens ontwikkeling. Er wordt geen geld overgemaakt.", demoPay: "Geslaagde betaling simuleren", demoFail: "Mislukking simuleren" },
   method: { eyebrow: "Methodiek", title: "Methodiek en register van aannames", lead: "Bij elke getalswaarde staan de eenheid, bron, het land, de datum en de betrouwbaarheid. De labels FACT, ASSUMPTION, CALCULATION en ESTIMATE geven aan hoe de waarde tot stand is gekomen.", chainTitle: "Rekenketen", notTitle: "Wat het model niet doet", countryLabel: "Landparameters voor", param: "Parameter", value: "Waarde", type: "Type", conf: "Betrouwbaarheid", source: "Bron", date: "Datum" },
   hub: { eyebrow: "Gids voor ondernemers", title: "Biogasinstallatie: kosten, terugverdientijd en werking", lead: "Heldere antwoorden: wat biogas is, wat een installatie kost en wanneer die zich echt terugverdient.", toc: "Inhoud", sectors: "Biogas per bedrijfstype" },
-  terms: { title: "Algemene voorwaarden, betaling en terugbetaling", template: "Sjabloon: vul de bedrijfsgegevens in src/config/site.ts in en laat het vóór de lancering juridisch toetsen." },
+  terms: { title: "Algemene voorwaarden, betaling en terugbetaling", template: "De bedrijfsgegevens zijn nog niet gepubliceerd. Neem contact met ons op voordat u betaalt." },
   flow: {
     aria: "Schema: reststromen, vergister, biogas, omzetting naar energie, digestaat",
     feedstock: "Reststromen", feedstockSub1: "mest · verwerkings-", feedstockSub2: "resten", digester: "Vergister", digesterSub: "≈ 38 °C, zonder zuurstof", ownHeat: "eigen warmte: {v} MWh",

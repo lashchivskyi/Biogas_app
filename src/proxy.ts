@@ -55,7 +55,10 @@ export function proxy(request: NextRequest) {
   const first = pathname.split("/")[1];
   const country = geoCountry(request);
   if ((LOCALES as readonly string[]).includes(first)) {
-    const res = NextResponse.next();
+    // Global 404 rendering bypasses [lang]/layout; forward the explicit URL locale.
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-mx-path-locale", first);
+    const res = NextResponse.next({ request: { headers: requestHeaders } });
     if (country && request.cookies.get(COUNTRY_COOKIE)?.value !== country) res.cookies.set(COUNTRY_COOKIE, country, { path: "/", maxAge: 60 * 60 * 24 * 30, sameSite: "lax" });
     return res;
   }

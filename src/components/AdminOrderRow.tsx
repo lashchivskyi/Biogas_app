@@ -20,7 +20,7 @@ export function AdminOrderRow({ order, locale, d, t }: { order: Order; locale: L
   }
   return (
     <tr className="border-t border-line align-top text-sm">
-      <td className="whitespace-nowrap p-3 text-muted">{new Date(order.createdAt).toLocaleString(INTL_TAG[locale], { dateStyle: "short", timeStyle: "short" })}</td>
+      <td className="whitespace-nowrap p-3 text-muted">{new Date(order.createdAt).toLocaleString(INTL_TAG[locale], { dateStyle: "short", timeStyle: "short", timeZone: "UTC" })} UTC</td>
       <td className="p-3">
         <div className="font-semibold">{order.customer.name || order.customer.email}</div>
         <div className="text-muted">{order.customer.email}</div>

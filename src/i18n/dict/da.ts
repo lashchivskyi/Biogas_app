@@ -18,7 +18,7 @@ const da: Translation = {
   hero: {
     eyebrow: "Uafhængig analyse af biogas og biometan",
     h1: "Kan et [biogasanlæg] betale sig for din virksomhed?",
-    lead: "Find ud af på 3 minutter, om dit organiske affald kan blive til rentabel energi — med en ærlig vurdering: ja, ja på betingelser eller nej.",
+    lead: "Få på tre minutter en første vurdering af, om det kan betale sig at producere biogas af virksomhedens organiske restprodukter, og hvilke betingelser der skal være opfyldt.",
     cta: "Beregn rentabiliteten",
     ctaSecondary: "Sådan virker det",
     trust: ["Vi sælger ikke udstyr", "Ingen tilskud regnet med", "Åben metode"],
@@ -123,7 +123,7 @@ const da: Translation = {
       { q: "Hvor præcist er det?", a: "En forundersøgelse (AACE klasse 5–4): CAPEX ±30 %, gasudbytte ±20–30 %, tilbagebetaling ca. −30 % / +50 %. Den adskiller pålideligt klart urentable og klart stærke projekter og viser gråzonen imellem — rapporten siger, hvor dit ligger. Et bankegnet tal (±15 %) kræver laboratorietest af biomassen, leverandørtilbud og aftagekontrakter." },
       { q: "Virker det for mit land?", a: "Ja — 33 lande. Priserne kommer fra officiel statistik, hvor den findes (Eurostat, nationale tilsynsmyndigheder, EIA, Verdensbanken), klimaet fra ERA5-reanalysen for hver region og landerisikoen fra Damodaran. Ukraine er desuden afstemt med lokale projekter. Mangler en officiel serie, er værdien markeret som skøn — og dine egne priser har altid forrang." },
       { q: "Hvad med afregningspriser og tilskud?", a: "Dem regner vi aldrig med i vurderingen. Findes der en national ordning, viser rapporten effekten som et separat scenarie med status og kilde." },
-      { q: "Hvad sker der med mine data?", a: "Screeningen kører i din browser. Vi gemmer kun data, når du bestiller en rapport eller kontakter os, og deler dem aldrig med tredjeparter." },
+      { q: "Hvad sker der med mine data?", a: "Vi behandler kun kontakt- og projektoplysninger for at levere tjenesten og kontakte dig. Vi deler dem kun med betalingsudbyderen. Du kan til enhver tid bede om at få dem slettet." },
     ],
   },
   final: { title: "Se på tre minutter, om dit projekt er værd at undersøge nærmere", sub: "Ingen tilmelding. Intet udstyrssalg. Et ærligt svar.", cta: "Beregn rentabiliteten" },
@@ -336,7 +336,7 @@ const da: Translation = {
   payment: { title: "Betalingsstatus", paid: "Betaling modtaget", paidText: "Tak! Din rapport er klar.", open: "Åbn min rapport", pending: "Betaling behandles", failed: "Betaling ikke gennemført", demoTitle: "Demobetaling", demoText: "Simulerer en bankside under udvikling. Ingen penge flyttes.", demoPay: "Simulér gennemført betaling", demoFail: "Simulér fejl" },
   method: { eyebrow: "Metode", title: "Metode og antagelsesregister", lead: "Hver talværdi har enhed, kilde, land, dato og angivelse af pålidelighed. Mærkerne FACT, ASSUMPTION, CALCULATION og ESTIMATE viser, hvordan værdien er fremkommet.", chainTitle: "Beregningskæde", notTitle: "Det gør modellen ikke", countryLabel: "Landeparametre for", param: "Parameter", value: "Værdi", type: "Type", conf: "Pålidelighed", source: "Kilde", date: "Dato" },
   hub: { eyebrow: "Guide til virksomhedsejere", title: "Biogasanlæg: pris, tilbagebetaling og funktion", lead: "Klare svar: hvad biogas er, hvad et anlæg koster, og hvornår det faktisk tjener sig hjem.", toc: "Indhold", sectors: "Biogas efter virksomhedstype" },
-  terms: { title: "Handelsbetingelser, betaling og refusion", template: "Skabelon: udfyld virksomhedsoplysninger i src/config/site.ts og få en jurist til at gennemgå dem før lancering." },
+  terms: { title: "Handelsbetingelser, betaling og refusion", template: "Virksomhedsoplysningerne er endnu ikke offentliggjort. Kontakt os venligst, før du betaler." },
   flow: {
     aria: "Diagram: biomasse, reaktor, biogas, omdannelse til energi, afgasset biomasse",
     feedstock: "Biomasse", feedstockSub1: "gylle · rest-", feedstockSub2: "produkter", digester: "Reaktor", digesterSub: "≈ 38 °C, uden ilt", ownHeat: "egen varme: {v} MWh",

@@ -18,7 +18,7 @@ const tr: Translation = {
   hero: {
     eyebrow: "Bağımsız biyogaz ve biyometan analizi",
     h1: "İşletmeniz için bir [biyogaz tesisi] kârlı olur mu?",
-    lead: "Organik atıklarınızın kârlı enerjiye dönüşüp dönüşemeyeceğini 3 dakikada öğrenin — dürüst bir kararla: evet, koşullu evet ya da hayır.",
+    lead: "Üç dakikada bir ön değerlendirme alın: işletmenizin organik atıklarından biyogaz üretmek kârlı olabilir mi, hangi koşullar gerekir?",
     cta: "Projeyi değerlendir",
     ctaSecondary: "Nasıl çalışır",
     trust: ["Ekipman satmıyoruz", "Teşvikler hesaba katılmaz", "Açık metodoloji"],
@@ -123,10 +123,10 @@ const tr: Translation = {
       { q: "Ne kadar doğru?", a: "Bu bir ön değerlendirmedir (AACE sınıf 5–4): CAPEX ±%30, gaz verimi ±%20–30, geri ödeme yaklaşık −%30 / +%50. Açıkça kârsız ve açıkça güçlü projeleri güvenilir biçimde ayırır ve aradaki gri bölgeyi gösterir — rapor sizinkinin nerede olduğunu söyler. Bankaya sunulabilir bir rakam (±%15) için hammadde laboratuvar testi, tedarikçi teklifleri ve satış sözleşmeleri gerekir." },
       { q: "Ülkem için geçerli mi?", a: "Evet — 33 ülke. Fiyatlar, mevcut olduğunda resmi istatistiklerden (Eurostat, ulusal düzenleyiciler, EIA, Dünya Bankası), iklim her bölge için ERA5 yeniden analizinden, ülke riski Damodaran'dan gelir. Ukrayna ayrıca yerel projelerle karşılaştırıldı. Resmi seri yoksa değer tahmin olarak işaretlenir — ve kendi fiyatlarınız her zaman önceliklidir." },
       { q: "Alım garantileri ve hibeler ne olacak?", a: "Bunları asla karara dahil etmeyiz. Ulusal bir program varsa rapor, etkisini durum ve kaynakla birlikte ayrı bir senaryo olarak gösterir." },
-      { q: "Verilerime ne olur?", a: "Ön değerlendirme tarayıcınızda çalışır. Verileri yalnızca rapor sipariş ettiğinizde veya bizimle iletişime geçtiğinizde saklarız ve asla üçüncü taraflarla paylaşmayız." },
+      { q: "Verilerime ne olur?", a: "İletişim ve proje verilerini yalnızca hizmeti sunmak ve sizinle iletişim kurmak için işleriz. Bu verileri sadece ödeme sağlayıcısıyla paylaşırız. İstediğiniz zaman silinmelerini talep edebilirsiniz." },
     ],
   },
-  final: { title: "Projenizi ayrıntılı incelemeye değip değmediğini üç dakikada görün", sub: "Üyelik yok. Ekipman satışı yok. Dürüst bir cevap.", cta: "Projeyi değerlendir" },
+  final: { title: "Üç dakikada projenizin fizibilite çalışmasına değer olup olmadığını öğrenin", sub: "Üyelik yok. Ekipman satışı yok. Dürüst bir cevap.", cta: "Projeyi değerlendir" },
   footer: {
     about: "Biyogaz ve biyometan projeleri için bağımsız fizibilite analizi. Tesis satmıyoruz.",
     sectors: "Sektöre göre biyogaz", product: "Ürün", important: "Önemli",
@@ -336,7 +336,7 @@ const tr: Translation = {
   payment: { title: "Ödeme durumu", paid: "Ödeme alındı", paidText: "Teşekkürler! Raporunuz hazır.", open: "Raporumu aç", pending: "Ödeme işleniyor", failed: "Ödeme tamamlanmadı", demoTitle: "Demo ödeme", demoText: "Geliştirme ortamında banka sayfasını simüle eder. Para hareket etmez.", demoPay: "Başarılı ödemeyi simüle et", demoFail: "Hatayı simüle et" },
   method: { eyebrow: "Metodoloji", title: "Metodoloji ve varsayım kaydı", lead: "Her sayısal parametrenin birimi, kaynağı, ülkesi, tarihi ve güvenilirlik düzeyi belirtilir. FACT, ASSUMPTION, CALCULATION ve ESTIMATE etiketleri değerin nasıl elde edildiğini gösterir.", chainTitle: "Hesaplama zinciri", notTitle: "Modelin yapmadıkları", countryLabel: "Ülke parametreleri", param: "Parametre", value: "Değer", type: "Tür", conf: "Güven", source: "Kaynak", date: "Tarih" },
   hub: { eyebrow: "İşletme sahipleri için rehber", title: "Biyogaz tesisi: maliyet, geri ödeme ve çalışma prensibi", lead: "Sade bir dille: biyogaz nedir, bir tesis ne kadara mal olur ve gerçekten ne zaman kendini amorti eder.", toc: "İçindekiler", sectors: "İşletme türüne göre biyogaz" },
-  terms: { title: "Hizmet, ödeme ve iade koşulları", template: "Şablon: şirket bilgilerini src/config/site.ts dosyasına girin ve yayından önce bir hukukçuya inceletin." },
+  terms: { title: "Hizmet, ödeme ve iade koşulları", template: "Şirket bilgileri henüz yayımlanmamıştır. Ödeme yapmadan önce lütfen bizimle iletişime geçin." },
   flow: {
     aria: "Şema: hammadde, fermantör, biyogaz, enerjiye dönüşüm, digestat",
     feedstock: "Hammadde", feedstockSub1: "gübre · işleme", feedstockSub2: "atıkları", digester: "Fermantör", digesterSub: "≈ 38 °C, oksijensiz", ownHeat: "öz ısı: {v} MWh",

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/terms">): 
 }
 
 /**
- * TEMPLATE (English). Payment providers require public terms, prices, a refund policy and company
+ * Localised template. Payment providers require public terms, prices, a refund policy and company
  * details. Fill SITE.legal and have a lawyer review — for the selling entity's jurisdiction — before launch.
  */
 export default async function TermsPage({ params }: PageProps<"/[lang]/terms">) {
@@ -29,7 +29,7 @@ export default async function TermsPage({ params }: PageProps<"/[lang]/terms">) 
       <div className="container-x max-w-3xl py-12">
         {!filled && <p className="mb-8 rounded-2xl bg-amber-50 p-4 text-sm text-amber-950">{d.terms.template}</p>}
         <div className="space-y-8 text-[15.5px] leading-relaxed text-ink2">
-          <section><h2 className="text-xl font-bold text-ink">1. {copy.headings[0]}</h2><p className="mt-2">{[L.entity, L.registration, L.address].map((v) => v.startsWith("[") ? d.common.unknown : v).join(", ")}. {d.checkout.email}: {L.email}.</p></section>
+          <section><h2 className="text-xl font-bold text-ink">1. {copy.headings[0]}</h2><p className="mt-2">{[L.entity, L.registration, L.address].map((v) => v.startsWith("[") ? d.common.unknown : v).join(", ")}. <a className="text-brand underline" href={`mailto:${L.email.startsWith("[") ? SITE.supportEmail : L.email}`}>{L.email.startsWith("[") ? SITE.supportEmail : L.email}</a></p></section>
           <section><h2 className="text-xl font-bold text-ink">2. {copy.headings[1]}</h2><p className="mt-2">{d.footer.about} {copy.automation} {d.footer.disclaimer}</p></section>
           <section>
             <h2 className="text-xl font-bold text-ink">3. {copy.headings[2]}</h2>

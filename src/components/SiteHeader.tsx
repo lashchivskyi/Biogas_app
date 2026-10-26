@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LOCALE_COOKIE, LOCALES, NATIVE_NAME, type Locale } from "@/i18n/config";
+import { INTL_TAG, LOCALE_COOKIE, LOCALES, NATIVE_NAME, type Locale } from "@/i18n/config";
 import type { LanguageOption } from "@/i18n/language-options";
 import { Logo } from "./brand/Logo";
 import { Icon } from "./brand/Icon";
@@ -64,7 +64,7 @@ function LanguageMenu({ locale, label, options }: { locale: Locale; label: strin
         <ul role="listbox" aria-label={label} className="fixed inset-x-3 top-16 z-50 grid max-h-[70dvh] grid-cols-2 gap-0.5 overflow-auto rounded-2xl border border-white/10 bg-[#071510]/97 p-2 shadow-2xl backdrop-blur-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-11 sm:w-[420px]">
           {options.map(({ locale: l }) => (
             <li key={l} role="presentation">
-              <Link role="option" aria-selected={l === locale} tabIndex={l === locale ? 0 : -1} href={swapLocale(path, l)} hrefLang={l} lang={l} onClick={() => { choose(l); setOpen(false); }} className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm ${l === locale ? "bg-white/10 font-semibold text-white" : "text-white/75 hover:bg-white/5 hover:text-white"}`}>
+              <Link role="option" aria-selected={l === locale} tabIndex={l === locale ? 0 : -1} href={swapLocale(path, l)} hrefLang={INTL_TAG[l]} lang={INTL_TAG[l]} onClick={() => { choose(l); setOpen(false); }} className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm ${l === locale ? "bg-white/10 font-semibold text-white" : "text-white/75 hover:bg-white/5 hover:text-white"}`}>
                 <span>{NATIVE_NAME[l]}</span>
                 <span className="text-[11px] text-white/40">{l.toUpperCase()}</span>
               </Link>

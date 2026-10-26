@@ -18,7 +18,7 @@ const fi: Translation = {
   hero: {
     eyebrow: "Riippumatonta biokaasu- ja biometaanianalytiikkaa",
     h1: "Olisiko [biokaasulaitos] yrityksellesi kannattava?",
-    lead: "Selvitä 3 minuutissa, voivatko orgaaniset jätteesi muuttua kannattavaksi energiaksi. Rehellinen arvio: kyllä, kyllä ehdoin tai ei.",
+    lead: "Saat kolmessa minuutissa alustavan arvion siitä, voisiko biokaasun tuotanto yrityksesi orgaanisista sivuvirroista kannattaa ja millä edellytyksillä.",
     cta: "Laske kannattavuus",
     ctaSecondary: "Miten se toimii",
     trust: ["Emme myy laitteita", "Tukia ei lasketa mukaan", "Avoimet menetelmät"],
@@ -123,7 +123,7 @@ const fi: Translation = {
       { q: "Kuinka tarkka arvio on?", a: "Kyseessä on esiselvitys (AACE-luokka 5–4): CAPEX ±30 %, kaasun tuotto ±20–30 %, takaisinmaksuaika noin −30 % / +50 %. Se erottaa luotettavasti selvästi kannattamattomat ja selvästi vahvat hankkeet ja näyttää harmaan alueen niiden välissä — raportti kertoo, missä omasi on. Pankkikelpoinen luku (±15 %) vaatii syötteen laboratoriotestin, toimittajatarjoukset ja myyntisopimukset." },
       { q: "Toimiiko se omassa maassani?", a: "Kyllä — 33 maata. Hinnat tulevat virallisista tilastoista, kun niitä on (Eurostat, kansalliset sääntelijät, EIA, Maailmanpankki), ilmasto ERA5-uusinta-analyysista kullekin alueelle ja maariski Damodaranilta. Ukraina on lisäksi tarkistettu paikallisia hankkeita vasten. Jos virallista sarjaa ei ole, arvo merkitään arvioksi — ja omat hintasi ovat aina etusijalla." },
       { q: "Entä syöttötariffit ja avustukset?", a: "Emme koskaan laske niitä arvioon. Jos maassa on tukijärjestelmä, raportti näyttää sen vaikutuksen erillisenä skenaariona tilan ja lähteen kanssa." },
-      { q: "Mitä tiedoilleni tapahtuu?", a: "Arvio lasketaan selaimessasi. Tallennamme tietoja vain, kun tilaat raportin tai otat yhteyttä, emmekä koskaan luovuta niitä kolmansille osapuolille." },
+      { q: "Mitä tiedoilleni tapahtuu?", a: "Käsittelemme yhteys- ja projektitietoja vain palvelun toimittamiseksi ja yhteydenottoa varten. Jaamme niitä ainoastaan maksupalveluntarjoajan kanssa. Voit pyytää poistamista milloin tahansa." },
     ],
   },
   final: { title: "Selvitä kolmessa minuutissa, kannattaako hanketta tutkia tarkemmin", sub: "Ei rekisteröitymistä. Ei laitemyyntiä. Rehellinen vastaus.", cta: "Laske kannattavuus" },
@@ -336,7 +336,7 @@ const fi: Translation = {
   payment: { title: "Maksun tila", paid: "Maksu vastaanotettu", paidText: "Kiitos! Raporttisi on valmis.", open: "Avaa raporttini", pending: "Maksua käsitellään", failed: "Maksu ei mennyt läpi", demoTitle: "Demomaksu", demoText: "Simuloi pankin sivua kehityksen aikana. Rahaa ei siirry.", demoPay: "Simuloi onnistunut maksu", demoFail: "Simuloi virhe" },
   method: { eyebrow: "Menetelmät", title: "Menetelmät ja oletusrekisteri", lead: "Jokaiselle lukuarvolle ilmoitetaan yksikkö, lähde, maa, päivämäärä ja luotettavuustaso. Merkinnät FACT, ASSUMPTION, CALCULATION ja ESTIMATE kertovat arvon alkuperän.", chainTitle: "Laskentaketju", notTitle: "Mitä malli ei tee", countryLabel: "Maan parametrit", param: "Parametri", value: "Arvo", type: "Tyyppi", conf: "Luotettavuus", source: "Lähde", date: "Päivämäärä" },
   hub: { eyebrow: "Opas yrittäjälle", title: "Biokaasulaitos: hinta, takaisinmaksu ja toiminta", lead: "Selkeät vastaukset: mitä biokaasu on, paljonko laitos maksaa ja milloin se todella maksaa itsensä takaisin.", toc: "Sisältö", sectors: "Biokaasu toimialoittain" },
-  terms: { title: "Palvelu-, maksu- ja palautusehdot", template: "Pohja: täytä yrityksen tiedot tiedostoon src/config/site.ts ja anna juristin tarkastaa ennen julkaisua." },
+  terms: { title: "Palvelu-, maksu- ja palautusehdot", template: "Yrityksen tietoja ei ole vielä julkaistu. Ota meihin yhteyttä ennen maksamista." },
   flow: {
     aria: "Kaavio: syöte, reaktori, biokaasu, muuntaminen energiaksi, mädäte",
     feedstock: "Syöte", feedstockSub1: "lanta · sivu-", feedstockSub2: "virrat", digester: "Reaktori", digesterSub: "≈ 38 °C, hapeton", ownHeat: "omakäyttölämpö: {v} MWh",

@@ -45,14 +45,42 @@ const extra: Record<Locale, readonly [string, string, string]> = {
   th: ["ราคาพลังงาน", "ระยะเวลาหยุด CHP", "การเชื่อมต่อโครงข่าย"],
 };
 
-export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result">): Record<string, string> {
+const equipment: Record<Locale, readonly [string, string, string]> = {
+  en: ["Pasteurisation", "Gas-grid injection", "Gas pipeline"],
+  uk: ["Пастеризація", "Подача до газової мережі", "Газопровід"],
+  pl: ["Pasteryzacja", "Zatłaczanie do sieci gazowej", "Gazociąg"],
+  de: ["Pasteurisierung", "Einspeisung ins Gasnetz", "Gasleitung"],
+  fr: ["Hygiénisation", "Injection dans le réseau de gaz", "Canalisation de gaz"],
+  it: ["Pastorizzazione", "Immissione nella rete del gas", "Gasdotto"],
+  es: ["Pasteurización", "Inyección en la red de gas", "Gasoducto"],
+  pt: ["Pasteurização", "Injeção na rede de gás", "Gasoduto"],
+  nl: ["Hygiënisatie", "Invoeding in het gasnet", "Gasleiding"],
+  cs: ["Hygienizace", "Vtláčení do plynárenské sítě", "Plynovod"],
+  sk: ["Hygienizácia", "Vtláčanie do plynárenskej siete", "Plynovod"],
+  hu: ["Higiénizálás", "Betáplálás a gázhálózatba", "Gázvezeték"],
+  ro: ["Igienizare", "Injecție în rețeaua de gaze", "Conductă de gaze"],
+  bg: ["Хигиенизация", "Подаване в газовата мрежа", "Газопровод"],
+  sr: ["Higijenizacija", "Utiskivanje u gasnu mrežu", "Gasovod"],
+  el: ["Παστερίωση", "Έγχυση στο δίκτυο αερίου", "Αγωγός αερίου"],
+  tr: ["Pastörizasyon", "Gaz şebekesine enjeksiyon", "Gaz boru hattı"],
+  lt: ["Higienizavimas", "Tiekimas į dujų tinklą", "Dujotiekis"],
+  lv: ["Higienizācija", "Ievade gāzes tīklā", "Gāzesvads"],
+  et: ["Hügieniseerimine", "Sisestamine gaasivõrku", "Gaasitorustik"],
+  da: ["Hygiejnisering", "Tilførsel til gasnettet", "Gasledning"],
+  sv: ["Hygienisering", "Inmatning på gasnätet", "Gasledning"],
+  fi: ["Hygienisointi", "Syöttö kaasuverkkoon", "Kaasuputki"],
+  vi: ["Thanh trùng", "Bơm khí vào lưới", "Đường ống dẫn khí"],
+  th: ["การพาสเจอไรซ์", "การจ่ายเข้าระบบท่อก๊าซ", "ท่อส่งก๊าซ"],
+};
+
+export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result"> & Partial<Pick<Dict, "flow">>): Record<string, string> {
   const values = rows[locale].split("|");
   return {
     ...Object.fromEntries(keys.map((k, i) => [k, values[i]])),
-    digester: d.result.dTech, chp: d.labels.route.chp, boiler: d.labels.route.boiler,
-    pasteurisation: "Pasteurisation (70 °C / 1 h)", upgrading: "Upgrading", cng: "Bio-CNG (250 bar)",
-    grid: extra[locale][2], injection: "Grid injection", pipeline: "Gas pipeline", upgrading_maintenance: `${values[13]} (Upgrading)`,
-    el_tariff: d.result.supportTitle, heat: d.result.heatUseful, biomethane: d.labels.route.biomethane, support: d.result.assumedSupport,
+    digester: d.flow?.digester ?? d.result.dTech, chp: d.labels.route.chp, boiler: d.labels.route.boiler,
+    pasteurisation: `${equipment[locale][0]} (70 °C / 1 h)`, upgrading: "Upgrading", cng: "Bio-CNG (250 bar)",
+    grid: extra[locale][2], injection: equipment[locale][1], pipeline: equipment[locale][2], upgrading_maintenance: `${values[13]} (Upgrading)`,
+    el_tariff: `${values[25]} (${d.result.colScheme})`, heat: d.result.heatUseful, biomethane: d.labels.route.biomethane, support: d.result.assumedSupport,
   };
 }
 

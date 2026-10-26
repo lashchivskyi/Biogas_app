@@ -11,6 +11,7 @@ import { SEGMENTS } from "@/content/segments";
 import { getDictionary, INTL_TAG, isLocale, LOCALES, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 import { LANGUAGE_OPTIONS } from "@/i18n/language-options";
+import { LocaleProvider } from "@/components/LocaleProvider";
 
 export const dynamicParams = false;
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     description: d.meta.description,
     applicationName: SITE.name,
     alternates: alternates(lang as Locale, ""),
-    openGraph: { title: d.meta.ogTitle, description: d.meta.ogDescription, type: "website", siteName: SITE.name, locale: INTL_TAG[lang as Locale]?.replace("-", "_") },
+    openGraph: { title: d.meta.ogTitle, description: d.meta.ogDescription, type: "website", siteName: SITE.name, locale: INTL_TAG[lang as Locale]?.replace(/-[A-Z][a-z]{3}/, "").replace("-", "_") },
     twitter: { card: "summary_large_image" },
     robots: { index: true, follow: true, "max-image-preview": "large" },
     verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
@@ -45,6 +46,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   return (
     <html lang={INTL_TAG[lang]}>
       <body className="flex min-h-screen flex-col">
+        <LocaleProvider locale={lang}>
         <a href="#main" className="skip-link">{d.nav.skip}</a>
         <SiteHeader locale={lang} t={d.nav} descriptor={d.brand.descriptor} languageOptions={LANGUAGE_OPTIONS} />
         <div id="main" className="flex-1">{children}</div>
@@ -85,6 +87,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
             </div>
           </div>
         </footer>
+        </LocaleProvider>
       </body>
     </html>
   );

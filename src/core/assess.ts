@@ -254,6 +254,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     drivers,
     confidence: { level: quality.level, score: quality.score, reasons: quality.reasons },
     missingData: quality.missing,
+    missingDataCodes: quality.missingCodes,
     warnings,
     safety,
     regulatory: { items: regItems, complexity: regComplexity },

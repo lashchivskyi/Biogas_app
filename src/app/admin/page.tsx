@@ -8,6 +8,7 @@ import { requestLocale } from "@/i18n/request";
 import { adminCopy } from "@/i18n/admin";
 import { getDictionary } from "@/i18n";
 import { makeFormat } from "@/lib/format";
+import { COUNTRIES } from "@/countries";
 
 export const metadata: Metadata = { title: "CRM", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -58,7 +59,10 @@ export default async function AdminPage() {
                 </tr>
               </thead>
               <tbody>
-                {all.map((l) => <AdminLeadRow key={l.id} lead={l} locale={locale} d={d} t={t} />)}
+                {all.map((l) => {
+                  const r = COUNTRIES[l.input.countryCode]?.regions.find((r) => r.id === l.input.regionId);
+                  return <AdminLeadRow key={l.id} lead={l} locale={locale} d={d} t={t} region={r?.names?.[locale] ?? r?.name ?? l.input.regionId} />;
+                })}
                 {all.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted">{t.noLeads}</td></tr>}
               </tbody>
             </table>

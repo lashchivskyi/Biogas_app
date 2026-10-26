@@ -18,7 +18,7 @@ const sv: Translation = {
   hero: {
     eyebrow: "Oberoende analys av biogas och biometan",
     h1: "Lönar sig en [biogasanläggning] för ditt företag?",
-    lead: "Ta reda på det på 3 minuter: kan ditt organiska avfall bli lönsam energi? Ett ärligt besked: ja, ja på villkor eller nej.",
+    lead: "Få en första bedömning på tre minuter: kan det vara lönsamt att producera biogas av verksamhetens organiska restprodukter, och vilka förutsättningar krävs?",
     cta: "Beräkna lönsamheten",
     ctaSecondary: "Så fungerar det",
     trust: ["Vi säljer ingen utrustning", "Inga stöd inräknade", "Öppen metod"],
@@ -123,7 +123,7 @@ const sv: Translation = {
       { q: "Hur exakt är det?", a: "En förstudiebedömning (AACE klass 5–4): CAPEX ±30 %, gasutbyte ±20–30 %, återbetalning ungefär −30 % / +50 %. Den skiljer pålitligt tydligt olönsamma från tydligt starka projekt och visar gråzonen mellan dem — rapporten säger var ditt ligger. En bankmässig siffra (±15 %) kräver labbtest av substratet, leverantörsofferter och avsättningsavtal." },
       { q: "Fungerar det för mitt land?", a: "Ja — 33 länder. Priserna kommer från officiell statistik där sådan finns (Eurostat, nationella tillsynsmyndigheter, EIA, Världsbanken), klimatet från ERA5-återanalysen per region och landrisken från Damodaran. Ukraina är dessutom avstämt mot lokala projekt. Saknas en officiell serie markeras värdet som uppskattning — och dina egna priser går alltid först." },
       { q: "Och inmatningstariffer och bidrag?", a: "Dem räknar vi aldrig in i beskedet. Finns ett nationellt stöd visar rapporten effekten som ett separat scenario, med status och källa." },
-      { q: "Vad händer med mina data?", a: "Bedömningen körs i din webbläsare. Vi sparar bara data när du beställer en rapport eller kontaktar oss, och delar dem aldrig med tredje part." },
+      { q: "Vad händer med mina data?", a: "Vi behandlar kontakt- och projektuppgifter enbart för att leverera tjänsten och kontakta dig. Vi delar dem endast med betalningsleverantören. Du kan när som helst begära radering." },
     ],
   },
   final: { title: "Se på tre minuter om ditt projekt är värt att undersöka vidare", sub: "Ingen registrering. Ingen utrustningsförsäljning. Ett ärligt svar.", cta: "Beräkna lönsamheten" },
@@ -336,7 +336,7 @@ const sv: Translation = {
   payment: { title: "Betalningsstatus", paid: "Betalning mottagen", paidText: "Tack! Din rapport är klar.", open: "Öppna min rapport", pending: "Betalningen behandlas", failed: "Betalningen genomfördes inte", demoTitle: "Demobetalning", demoText: "Simulerar en banksida under utveckling. Inga pengar flyttas.", demoPay: "Simulera lyckad betalning", demoFail: "Simulera fel" },
   method: { eyebrow: "Metod", title: "Metod och antagandeförteckning", lead: "Varje siffervärde har enhet, källa, land, datum och angiven tillförlitlighet. Etiketterna FACT, ASSUMPTION, CALCULATION och ESTIMATE visar hur värdet har tagits fram.", chainTitle: "Beräkningskedja", notTitle: "Det här gör modellen inte", countryLabel: "Landsparametrar för", param: "Parameter", value: "Värde", type: "Typ", conf: "Tillförlitlighet", source: "Källa", date: "Datum" },
   hub: { eyebrow: "Guide för företagare", title: "Biogasanläggning: kostnad, återbetalning och funktion", lead: "Raka svar: vad biogas är, vad en anläggning kostar och när den faktiskt betalar sig.", toc: "Innehåll", sectors: "Biogas efter verksamhetstyp" },
-  terms: { title: "Villkor för tjänst, betalning och återbetalning", template: "Mall: fyll i företagsuppgifter i src/config/site.ts och låt en jurist granska innan lansering." },
+  terms: { title: "Villkor för tjänst, betalning och återbetalning", template: "Företagsuppgifterna har ännu inte publicerats. Kontakta oss innan du betalar." },
   flow: {
     aria: "Diagram: substrat, rötkammare, biogas, omvandling till energi, rötrest",
     feedstock: "Substrat", feedstockSub1: "gödsel · rest-", feedstockSub2: "flöden", digester: "Rötkammare", digesterSub: "≈ 38 °C, utan syre", ownHeat: "egen värme: {v} MWh",

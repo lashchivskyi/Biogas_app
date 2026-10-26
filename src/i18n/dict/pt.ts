@@ -18,7 +18,7 @@ const pt: Translation = {
   hero: {
     eyebrow: "Análise independente de biogás e biometano",
     h1: "Uma [usina de biogás] vale a pena para o seu negócio?",
-    lead: "Em 3 minutos, descubra se os seus resíduos orgânicos podem virar energia lucrativa — com um veredito honesto: sim, sim com condições, ou não.",
+    lead: "Em três minutos, tenha uma primeira avaliação: vale a pena produzir biogás com os resíduos orgânicos do seu negócio? Veja quais condições tornam o projeto viável.",
     cta: "Avaliar meu projeto",
     ctaSecondary: "Como funciona",
     trust: ["Não vendemos equipamentos", "Sem subsídios embutidos", "Metodologia aberta"],
@@ -123,7 +123,7 @@ const pt: Translation = {
       { q: "Qual é a precisão?", a: "Uma avaliação preliminar (classe AACE 5–4): CAPEX ±30 %, produção de gás ±20–30 %, payback de aproximadamente −30 % / +50 %. Ela separa com segurança os projetos claramente inviáveis e claramente viáveis e mostra a zona cinzenta entre eles — o relatório diz onde está o seu. Um número financiável (±15 %) exige ensaio de laboratório do substrato, propostas de fornecedores e contratos de venda." },
       { q: "Funciona para o meu país?", a: "Sim — 33 países. Os preços vêm de estatísticas oficiais onde existem (Eurostat, reguladores nacionais, EIA, Banco Mundial), o clima da reanálise ERA5 para cada região e o risco-país de Damodaran. A Ucrânia é também conferida com projetos locais. Sem série oficial, o valor é marcado como estimativa — e seus próprios preços sempre prevalecem." },
       { q: "E as tarifas incentivadas e subsídios?", a: "Nunca entram no veredito. Se houver programa nacional, o relatório mostra o efeito como caso à parte, com status e fonte." },
-      { q: "O que acontece com meus dados?", a: "A avaliação roda no seu navegador. Só guardamos dados quando você compra um relatório ou fala conosco, e nunca os compartilhamos com terceiros." },
+      { q: "O que acontece com meus dados?", a: "Tratamos dados de contato e do projeto apenas para prestar o serviço e falar com você. Compartilhamos esses dados somente com o provedor de pagamento. Você pode solicitar a exclusão a qualquer momento." },
     ],
   },
   final: { title: "Em três minutos, veja se vale a pena aprofundar seu projeto", sub: "Sem cadastro. Sem venda de equipamentos. Uma resposta honesta.", cta: "Avaliar meu projeto" },
@@ -336,7 +336,7 @@ const pt: Translation = {
   payment: { title: "Status do pagamento", paid: "Pagamento recebido", paidText: "Obrigado! Seu relatório está pronto.", open: "Abrir meu relatório", pending: "Pagamento em processamento", failed: "Pagamento não concluído", demoTitle: "Pagamento de demonstração", demoText: "Simula a página de um banco em desenvolvimento. Nenhum dinheiro é movimentado.", demoPay: "Simular pagamento aprovado", demoFail: "Simular falha" },
   method: { eyebrow: "Metodologia", title: "Metodologia e registro de premissas", lead: "Cada parâmetro numérico informa unidade, fonte, país, data e nível de confiabilidade. As etiquetas FACT, ASSUMPTION, CALCULATION e ESTIMATE indicam a origem do valor.", chainTitle: "Cadeia de cálculo", notTitle: "O que o modelo não faz", countryLabel: "Parâmetros do país", param: "Parâmetro", value: "Valor", type: "Tipo", conf: "Confiabilidade", source: "Fonte", date: "Data" },
   hub: { eyebrow: "Guia para empresários", title: "Usina de biogás: custo, payback e como funciona", lead: "Respostas diretas: o que é biogás, quanto custa uma usina e quando ela realmente se paga.", toc: "Conteúdo", sectors: "Biogás por tipo de negócio" },
-  terms: { title: "Termos de serviço, pagamento e reembolso", template: "Modelo: preencha os dados da empresa em src/config/site.ts e peça revisão jurídica antes do lançamento." },
+  terms: { title: "Termos de serviço, pagamento e reembolso", template: "Os dados da empresa ainda não foram publicados. Entre em contato antes de efetuar um pagamento." },
   flow: {
     aria: "Esquema: substrato, biodigestor, biogás, conversão em energia, digestato",
     feedstock: "Substrato", feedstockSub1: "dejetos · resíduos", feedstockSub2: "de processo", digester: "Biodigestor", digesterSub: "≈ 38 °C, sem oxigênio", ownHeat: "calor próprio: {v} MWh",

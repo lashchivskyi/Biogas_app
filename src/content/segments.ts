@@ -2,7 +2,7 @@ import type { BusinessTypeId } from "@/core/types";
 
 /**
  * Sector landing pages (/[lang]/biogas/[slug]). Long-form SEO copy exists in English and Ukrainian;
- * other locales render English (hreflang points only to en/uk for these pages).
+ * other locales render native summaries through localizedSegment (with locale-specific hreflang).
  * Short picker texts for the home page live in the i18n dictionaries (dict.fit.segments).
  * Figures in prose are qualitative; numbers on the page come from the model (src/core/examples.ts).
  */

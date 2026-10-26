@@ -48,6 +48,19 @@ export interface FormState {
   protectedArea: boolean;
 }
 
+const formNumber = (s: string, locale?: Locale) => locale
+  ? parseLocalizedNumber(s, locale)
+  : parseLocalizedNumber(s.replace(/\s/g, "").replace(",", "."), "uk");
+
+/** Do not silently omit an invalid stream or price when calculating the remaining inputs. */
+export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
+  const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
+  if (f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
+  if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear].some(invalid)) return 2;
+  if ([f.landHa, f.existingStorageM3, f.gasGridKm].some(invalid)) return 3;
+  return null;
+}
+
 const param = (c: CountryAdapter, id: string, fallback: number) => c.params.find((p) => p.id === id)?.value ?? fallback;
 
 /** Defaults used only to convert a monthly bill into kWh / m³ when the customer does not know the unit price. */
@@ -87,12 +100,10 @@ export function initialForm(businessType: BusinessTypeId, countryCode: string, r
   };
 }
 
-export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk", locale: Locale = lang): ProjectInput {
+export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk"): ProjectInput {
   // Drafts saved before numberLocale existed used a dot or comma as the decimal mark,
   // never locale-specific grouping. Preserve that meaning when opening an old draft.
-  const num = (s: string) => f.numberLocale
-    ? parseLocalizedNumber(s, f.numberLocale)
-    : parseLocalizedNumber(s.replace(/\s/g, "").replace(",", "."), "uk");
+  const num = (s: string) => formNumber(s, f.numberLocale);
   const def = uiDefaults(country);
   const feedstocks: FeedstockLineInput[] = [];
   for (const l of f.lines) {

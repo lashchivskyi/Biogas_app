@@ -50,10 +50,28 @@
   --color-good: var(--good);
   --color-warn: var(--warn);
   --color-bad: var(--bad);
-  /* Manrope covers Latin, Cyrillic, Greek and Vietnamese; Thai falls back to system Thai faces. */
-  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Noto Sans Thai", "Leelawadee UI", Tahoma, Arial, sans-serif;
-  --font-display: "Unbounded Variable", "Manrope Variable", ui-sans-serif, system-ui, "Noto Sans Thai", "Leelawadee UI", sans-serif;
+  /* Manrope covers Latin, Cyrillic, Greek and Vietnamese; Noto supplies Thai glyphs. */
+  --font-sans: "Manrope Variable", "Noto Sans Thai", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Leelawadee UI", Tahoma, Arial, sans-serif;
+  --font-display: "Unbounded Variable", "Manrope Variable", "Noto Sans Thai", ui-sans-serif, system-ui, "Leelawadee UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+/* Noto Sans Thai 5.3.0, OFL-1.1; attribution in public/fonts/noto-sans-thai/OFL.txt. */
+@font-face {
+  font-family: "Noto Sans Thai";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/noto-sans-thai/thai-500.woff") format("woff");
+  unicode-range: U+0E00-0E7F, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Noto Sans Thai";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/noto-sans-thai/thai-700.woff") format("woff");
+  unicode-range: U+0E00-0E7F, U+200C-200D, U+25CC;
 }
 
 html {

@@ -18,7 +18,7 @@ const et: Translation = {
   hero: {
     eyebrow: "Sõltumatu biogaasi ja biometaani analüüs",
     h1: "Kas [biogaasijaam] tasuks teie ettevõttele ära?",
-    lead: "Saate 3 minutiga teada, kas teie orgaanilistest jäätmetest võib saada kasumlik energia. Aus otsus: jah, jah tingimustel või ei.",
+    lead: "Saage kolme minutiga esialgne hinnang, kas teie ettevõttel võiks tasuda orgaanilistest jääkidest biogaasi toota ja millistel tingimustel.",
     cta: "Hinda tasuvust",
     ctaSecondary: "Kuidas see töötab",
     trust: ["Me ei müü seadmeid", "Toetusi ei arvestata", "Avatud metoodika"],
@@ -123,7 +123,7 @@ const et: Translation = {
       { q: "Kui täpne see on?", a: "See on eelhinnang (AACE klass 5–4): CAPEX ±30 %, gaasi saagis ±20–30 %, tasuvusaeg ligikaudu −30 % / +50 %. See eristab usaldusväärselt selgelt kahjumlikud ja selgelt tugevad projektid ning näitab nendevahelist halli tsooni — aruanne ütleb, kus teie oma on. Pangale sobiv arv (±15 %) nõuab tooraine laborikatset, tarnijate pakkumisi ja müügilepinguid." },
       { q: "Kas see sobib minu riigile?", a: "Jah — 33 riiki. Hinnad pärinevad ametlikust statistikast, kus see on olemas (Eurostat, riiklikud regulaatorid, EIA, Maailmapank), kliima iga piirkonna ERA5 taasanalüüsist ja riigirisk Damodaranilt. Ukraina on lisaks kontrollitud kohalike projektide põhjal. Kui ametlik rida puudub, on väärtus märgitud hinnanguks — ja teie enda hinnad on alati eelistatud." },
       { q: "Aga ostutariifid ja toetused?", a: "Me ei arvesta neid kunagi otsuses. Kui riigis on toetusskeem, näitab aruanne selle mõju eraldi stsenaariumina koos staatuse ja allikaga." },
-      { q: "Mis saab minu andmetest?", a: "Hinnang tehakse teie brauseris. Andmeid salvestame ainult siis, kui tellite aruande või võtate meiega ühendust, ega anna neid kunagi kolmandatele isikutele." },
+      { q: "Mis saab minu andmetest?", a: "Töötleme kontakt- ja projektiandmeid ainult teenuse osutamiseks ning teiega ühenduse võtmiseks. Jagame neid üksnes makseteenuse pakkujaga. Võite igal ajal taotleda andmete kustutamist." },
     ],
   },
   final: { title: "Kolme minutiga selgub, kas projekti tasub põhjalikumalt uurida", sub: "Registreerimata. Seadmeid müümata. Aus vastus.", cta: "Hinda tasuvust" },
@@ -336,7 +336,7 @@ const et: Translation = {
   payment: { title: "Makse olek", paid: "Makse laekus", paidText: "Aitäh! Teie aruanne on valmis.", open: "Ava minu aruanne", pending: "Makse on töötlemisel", failed: "Makse jäi lõpetamata", demoTitle: "Demomakse", demoText: "Jäljendab arenduse ajal pangalehte. Raha ei liigu.", demoPay: "Jäljenda edukat makset", demoFail: "Jäljenda viga" },
   method: { eyebrow: "Metoodika", title: "Metoodika ja eelduste register", lead: "Iga arvulise parameetri juures on ühik, allikas, riik, kuupäev ja usaldusväärsuse tase. Märgised FACT, ASSUMPTION, CALCULATION ja ESTIMATE näitavad väärtuse päritolu.", chainTitle: "Arvutusahel", notTitle: "Mida mudel ei tee", countryLabel: "Riigi parameetrid", param: "Parameeter", value: "Väärtus", type: "Tüüp", conf: "Usaldusväärsus", source: "Allikas", date: "Kuupäev" },
   hub: { eyebrow: "Teejuht ettevõtjale", title: "Biogaasijaam: maksumus, tasuvus ja toimimine", lead: "Selgelt ja ilma žargoonita: mis on biogaas, kui palju jaam maksab ja millal see end tõesti ära tasub.", toc: "Sisukord", sectors: "Biogaas tegevusala järgi" },
-  terms: { title: "Teenuse-, makse- ja tagastustingimused", template: "Mall: sisestage ettevõtte andmed faili src/config/site.ts ja laske enne käivitamist juristil üle vaadata." },
+  terms: { title: "Teenuse-, makse- ja tagastustingimused", template: "Ettevõtte andmeid pole veel avaldatud. Palun võtke enne maksmist meiega ühendust." },
   flow: {
     aria: "Skeem: tooraine, reaktor, biogaas, energiaks muundamine, digestaat",
     feedstock: "Tooraine", feedstockSub1: "sõnnik · töötlemis-", feedstockSub2: "jäätmed", digester: "Reaktor", digesterSub: "≈ 38 °C, hapnikuta", ownHeat: "omatarbe soojus: {v} MWh",

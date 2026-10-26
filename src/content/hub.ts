@@ -1,6 +1,6 @@
 /**
  * Long-form guide (/[lang]/biogas) and sector-page labels. Written in English and Ukrainian;
- * other locales render English with canonical → /en (no duplicate-content pages).
+ * other locales render native summaries through localizedHub, with their own canonical URL.
  */
 export interface HubSection {
   id: string;

@@ -5,11 +5,14 @@ import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
+import { marketLabel, marketQuality } from "@/i18n/market";
+import { qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
+import { COUNTRIES } from "@/countries";
 import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
 import { FlowDiagram } from "./FlowDiagram";
 
-export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common">;
+export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
 const VERDICT_STYLE: Record<VerdictId, string> = {
   STRONG_CANDIDATE: "border-good bg-brandsoft text-brandink",
@@ -112,7 +115,12 @@ export interface ResultViewProps {
 
 export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref }: ResultViewProps) {
   const stressLabels = sensitivityLabels(locale, d);
-  const a = { ...raw, sensitivity: raw.sensitivity.map((s) => ({ ...s, label: stressLabels[s.id] ?? s.label })) };
+  const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
+  const a = {
+    ...raw,
+    climate: { ...raw.climate, regionName: region?.names?.[locale] ?? region?.name ?? raw.climate.regionName },
+    sensitivity: raw.sensitivity.map((s) => ({ ...s, label: stressLabels[s.id] ?? s.label })),
+  };
   const R = d.result;
   const L = d.labels;
   const F = makeFormat(locale, L.units);
@@ -123,10 +131,12 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
   const e = best.energy;
   const heatLost = Math.max(0, e.heatNetAvailableKwh - e.heatUsefulKwh);
   const driver = keyDriver(a);
+  const qualityGaps = qualityGapCopy(locale, d, currency);
   const full = access !== "free";
 
   return (
     <div>
+      {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">
@@ -134,12 +144,12 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
           <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</span>
         </div>
         <h2 className="font-display mt-2 text-3xl font-semibold md:text-[42px]">{L.verdict[a.verdict.id]}</h2>
-        <ul className="mt-4 space-y-1.5 text-[15px]">{a.verdict.reasons.map((x) => <li key={x}>• {x}</li>)}</ul>
-        {driver && <p className="mt-4 text-[15px] font-semibold">{driver}</p>}
+        <ul lang={a.lang} className="mt-4 space-y-1.5 text-[15px]">{a.verdict.reasons.map((x) => <li key={x}>• {x}</li>)}</ul>
+        {driver && <p lang={a.lang} className="mt-4 text-[15px] font-semibold">{driver}</p>}
         {a.verdict.whatWouldChange.length > 0 && (
           <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm">
             <div className="font-semibold">{R.whatWouldChange}</div>
-            <ul className="mt-1 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
+            <ul lang={a.lang} className="mt-1 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
           </div>
         )}
         <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
@@ -182,16 +192,16 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
         {a.missingData.length > 0 && (
           <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <div className="font-semibold text-amber-950">{R.missing}</div>
-            <ul className="mt-1.5 list-disc pl-5 text-sm text-amber-950/90">{a.missingData.map((m) => <li key={m}>{m}</li>)}</ul>
+            <ul className="mt-1.5 list-disc pl-5 text-sm text-amber-950/90">{a.missingDataCodes.map((id) => <li key={id}>{qualityGaps[id]}</li>)}</ul>
           </div>
         )}
         {full && a.warnings.length > 0 && (
           <div className="mt-3 rounded-xl border border-line bg-surface p-4">
             <div className="font-semibold">{R.warnings}</div>
-            <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-ink2">{a.warnings.map((m) => <li key={m}>{m}</li>)}</ul>
+            <ul lang={a.lang} className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-ink2">{a.warnings.map((m) => <li key={m}>{m}</li>)}</ul>
           </div>
         )}
-        {full && <MarketCheck a={a} R={R} F={F} />}
+        {full && <MarketCheck a={a} R={R} F={F} locale={locale} />}
       </Section>
 
       {/* ---------- Energy flow ---------- */}
@@ -226,7 +236,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
       {countryNotes.length > 0 && (
         <div className="mt-6 rounded-xl border border-line bg-surface2 p-4 text-sm text-ink2">
           <div className="font-semibold text-ink">{R.countryNotes}</div>
-          <ul className="mt-1 list-disc space-y-1 pl-5">{countryNotes.map((x) => <li key={x}>{x}</li>)}</ul>
+          <ul lang={a.lang} className="mt-1 list-disc space-y-1 pl-5">{countryNotes.map((x) => <li key={x}>{x}</li>)}</ul>
         </div>
       )}
 
@@ -273,7 +283,7 @@ function LockedTeaser({ R, unlockSlot, samplesHref }: { R: ResultDict["result"];
   );
 }
 
-function MarketCheck({ a, R, F }: { a: Assessment; R: ResultDict["result"]; F: ReturnType<typeof makeFormat> }) {
+function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result"]; F: ReturnType<typeof makeFormat>; locale: Locale }) {
   const b = a.scenarios.base;
   const kw = b.energy.chpKwEl || b.kwElEquivalent;
   if (a.bestRoute === "biomethane" || kw < 10) return null;
@@ -291,8 +301,8 @@ function MarketCheck({ a, R, F }: { a: Assessment; R: ResultDict["result"]; F: R
           const pos = perKw < m.lowEurPerKw ? R.below : perKw > m.highEurPerKw ? R.above : R.inRange;
           return (
             <li key={m.id} className="flex flex-col gap-0.5 border-t border-line pt-2 first:border-0 first:pt-0">
-              <span><b className="num">{F.n0(m.lowEurPerKw)}–{F.n0(m.highEurPerKw)} €/kW</b> — {m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
-              <span className="text-xs text-muted">{m.source} · {m.year} · {m.quality}</span>
+              <span><b className="num">{F.n0(m.lowEurPerKw)}–{F.n0(m.highEurPerKw)} €/kW</b> — {marketLabel(locale, m.id) ?? m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
+              <span className="text-xs text-muted"><span lang="uk">{m.source}</span> · {m.year} · {marketQuality(locale, m.quality) ?? m.quality}</span>
             </li>
           );
         })}
@@ -415,11 +425,11 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
                   <tr key={s.schemeId} className="border-t border-line align-top">
                     <td className="p-3">
                       <div className="font-semibold">{s.name}</div>
-                      <div className="mt-0.5 text-xs text-muted">{s.note}</div>
-                      <div className="mt-0.5 text-[11px] text-muted">{s.source} · {s.confidence}</div>
+                      <div lang={a.lang} className="mt-0.5 text-xs text-muted">{s.note}</div>
+                      <div className="mt-0.5 text-[11px] text-muted"><span lang="en">{s.source}</span> · {L.confidence[s.confidence]}</div>
                     </td>
                     <td className="p-3"><span className="chip">{R.status[s.status]}</span></td>
-                    <td className="p-3">{s.eligible ? d.common.yes : <span className="text-bad">{d.common.no}</span>}{s.reason && <div className="mt-0.5 max-w-[220px] text-xs text-muted">{s.reason}</div>}</td>
+                    <td className="p-3">{s.eligible ? d.common.yes : <span className="text-bad">{d.common.no}</span>}{s.reason && <div lang={a.lang} className="mt-0.5 max-w-[220px] text-xs text-muted">{s.reason}</div>}</td>
                     <td className="num p-3 text-right font-semibold">{s.eligible || s.status === "closed" ? eur(s.npvEur) : "—"}</td>
                     <td className="num p-3 text-right">{s.eligible || s.status === "closed" ? years(s.paybackYears) : "—"}</td>
                     <td className={`num p-3 text-right ${s.deltaNpvEur >= 0 ? "text-good" : "text-bad"}`}>{s.eligible || s.status === "closed" ? eur(s.deltaNpvEur) : "—"}</td>
@@ -441,7 +451,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
                 <div className="num text-lg font-bold">{s.value}<span className="text-xs font-normal text-muted">/100{s.isRisk ? ` ${R.risk}` : ""}</span></div>
               </div>
               <div className="mt-2"><ScoreBar value={s.value} isRisk={s.isRisk} label={f(d.charts.of100, { v: s.value })} /></div>
-              <ul className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted">{s.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
+              <ul lang={a.lang} className="mt-3 list-disc space-y-1 pl-5 text-xs text-muted">{s.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
             </div>
           ))}
         </div>
@@ -450,7 +460,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
             <div className="font-semibold">{R.overall}</div>
             <div className="num text-2xl font-extrabold">{a.overall.value}<span className="text-sm font-normal text-muted">/100</span></div>
           </div>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.overall.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
+          <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.overall.explanation.map((x) => <li key={x}>{x}</li>)}</ul>
         </div>
       </Section>
 
@@ -493,16 +503,16 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
           </Fold>
 
           <Fold title={R.dTech}>
-            <p className="font-semibold">{best.design.tech.primary}</p>
-            <p className="mt-1 text-sm text-ink2">{best.design.tech.reactor}</p>
+            <p lang={a.lang} className="font-semibold">{best.design.tech.primary}</p>
+            <p lang={a.lang} className="mt-1 text-sm text-ink2">{best.design.tech.reactor}</p>
             <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-4">
               <div><dt className="text-muted">{R.workVol}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.workingVolumeM3))} m³</dd></div>
               <div><dt className="text-muted">{R.hrt}</dt><dd className="num font-semibold">{best.design.hrtDays} {R.days}</dd></div>
               <div><dt className="text-muted">{R.olr}</dt><dd className="num font-semibold">{n1(best.design.olrKgVsM3Day)} kg VS/(m³·d)</dd></div>
               <div><dt className="text-muted">{R.storage}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.storageVolumeM3))} m³</dd></div>
             </dl>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.reasons.map((x) => <li key={x}>{x}</li>)}</ul>
-            {best.design.tech.alternatives.length > 0 && <><div className="mt-3 text-sm font-semibold">{R.alternatives}</div><ul className="list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.alternatives.map((x) => <li key={x}>{x}</li>)}</ul></>}
+            <ul lang={a.lang} className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.reasons.map((x) => <li key={x}>{x}</li>)}</ul>
+            {best.design.tech.alternatives.length > 0 && <><div className="mt-3 text-sm font-semibold">{R.alternatives}</div><ul lang={a.lang} className="list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.alternatives.map((x) => <li key={x}>{x}</li>)}</ul></>}
             <p className="mt-3 text-xs text-muted">{f(R.climate, { region: a.climate.regionName, t: n1(a.climate.meanTempC), hdd: n0(a.climate.hdd), list: a.climate.analogues.map((x) => `${x.name} (Δ ${n1(x.distance)} °C)`).join(", ") })}</p>
           </Fold>
 
@@ -526,7 +536,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
               })}
             </p>
             <p className="mt-1 text-sm text-ink2">{f(R.dgValue, { v: eur(a.digestate.fertiliserValueEurYear), h: eur(a.digestate.handlingCostEurYear), n: eur(a.digestate.netValueEurYear) })}</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.digestate.advice.map((x) => <li key={x}>{x}</li>)}</ul>
+            <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.digestate.advice.map((x) => <li key={x}>{x}</li>)}</ul>
           </Fold>
 
           <Fold title={R.dMethane}>
@@ -534,7 +544,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
               {f(R.mLine, { v: pct(a.methane.lossShare, 1), lo: pct(a.methane.lossShareRange[0], 1), hi: pct(a.methane.lossShareRange[1], 1), co2: n0(a.methane.co2eTonnesYear), disp: n0(a.methane.displacedCo2eTonnesYear) })}{" "}
               {Number.isFinite(a.methane.ratio) ? f(R.mRatio, { v: pct(a.methane.ratio) }) : ""}
             </p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
+            <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
             <p className="mt-2 text-xs text-muted">{R.mNote}</p>
           </Fold>
 
@@ -543,8 +553,8 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
             <ul className="mt-2 space-y-2 text-sm">
               {a.regulatory.items.map((it) => (
                 <li key={it.id} className="rounded-lg border border-line p-3">
-                  <div className="font-medium">{it.title}</div>
-                  <div className="text-xs text-muted">{it.appliesBecause} · {f(R.effort, { v: R.regLevel[it.effort] })} · {it.status === "CONFIRMED" ? R.verified : R.toVerify}</div>
+                  <div lang={a.lang} className="font-medium">{it.title}</div>
+                  <div className="text-xs text-muted"><span lang={a.lang}>{it.appliesBecause}</span> · {f(R.effort, { v: R.regLevel[it.effort] })} · {it.status === "CONFIRMED" ? R.verified : R.toVerify}</div>
                 </li>
               ))}
             </ul>
@@ -554,18 +564,18 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
             <ul className="space-y-3 text-sm">
               {a.safety.map((s) => (
                 <li key={s.id} className="rounded-lg border border-line p-3">
-                  <div className="font-semibold">{s.hazard} <span className={`chip ml-1 ${s.severity === "HIGH" ? "bg-red-100 text-red-900" : ""}`}>{s.severity === "HIGH" ? R.sevHigh : R.sevMed}</span></div>
-                  {s.trigger && <div className="text-xs text-muted">{f(R.condition, { v: s.trigger })}</div>}
-                  <ul className="mt-1 list-disc pl-5 text-ink2">{s.controls.map((c) => <li key={c}>{c}</li>)}</ul>
+                  <div className="font-semibold"><span lang={a.lang}>{s.hazard}</span> <span className={`chip ml-1 ${s.severity === "HIGH" ? "bg-red-100 text-red-900" : ""}`}>{s.severity === "HIGH" ? R.sevHigh : R.sevMed}</span></div>
+                  {s.trigger && <div className="text-xs text-muted">{f(R.condition, { v: "" })}<span lang={a.lang}>{s.trigger}</span></div>}
+                  <ul lang={a.lang} className="mt-1 list-disc pl-5 text-ink2">{s.controls.map((c) => <li key={c}>{c}</li>)}</ul>
                 </li>
               ))}
             </ul>
-            <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{SAFETY_DISCLAIMER[a.lang]}</p>
+            <p lang={a.lang} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{SAFETY_DISCLAIMER[a.lang]}</p>
           </Fold>
 
           <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>
             <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={methodologyHref}>→</Link></p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
+            <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
           </Fold>
         </div>
       </Section>

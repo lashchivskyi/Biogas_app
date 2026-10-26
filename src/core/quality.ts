@@ -1,7 +1,7 @@
 import type { CustomerDemand } from "./demand";
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import type { Tr } from "./i18n";
-import type { Confidence, ProjectInput, ScenarioResult } from "./types";
+import type { Confidence, ProjectInput, QualityGapId, ScenarioResult } from "./types";
 
 /**
  * Data quality: what the customer told us vs what we assumed. A screening tool cannot reach HIGH
@@ -13,10 +13,12 @@ export function assessQuality(
   demand: CustomerDemand,
   T: Tr,
   ctx: { currency: string; profileOnly: boolean },
-): { level: Confidence; score: number; reasons: string[]; missing: string[] } {
+): { level: Confidence; score: number; reasons: string[]; missing: string[]; missingCodes: QualityGapId[] } {
   let score = 80;
   const reasons: string[] = [];
   const missing: string[] = [];
+  const missingCodes: QualityGapId[] = [];
+  const gap = (id: QualityGapId, text: string) => { missingCodes.push(id); missing.push(text); };
   const cur = ctx.currency;
   const measuredFeedstock = Boolean(input.labAnalysisAvailable) && input.feedstocks.every((f) =>
     (f.dryMatterPct ?? 0) > 0 && (f.vsPctOfDm ?? 0) > 0 && (f.methaneYieldLPerKgVs ?? 0) > 0,
@@ -37,7 +39,7 @@ export function assessQuality(
   if (!measuredFeedstock) {
     score -= 15;
     reasons.push(T("Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing", "Немає повного набору лабораторних DM, VS і BMP для кожної сировини — пропущені значення взято з каталогу"));
-    missing.push(T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
+    gap("lab", T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
   }
   if (ctx.profileOnly) {
     score -= 6;
@@ -45,15 +47,15 @@ export function assessQuality(
   }
   if (!demand.electricityKnown) {
     score -= 12;
-    missing.push(T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
+    gap("electricity", T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
   }
   if (!demand.electricityPriceKnown) {
     score -= 6;
-    missing.push(T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
+    gap("electricity_price", T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
   }
   if (demand.heatWanted && !demand.heatKnown) {
     score -= 14;
-    missing.push(T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
+    gap("heat", T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
   }
   if (!demand.heatWanted && (input.energy.gasM3Year ?? 0) > 0) {
     score -= 4;
@@ -61,16 +63,16 @@ export function assessQuality(
   }
   if (input.site.landHa === undefined) {
     score -= 8;
-    missing.push(T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
+    gap("land", T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
   }
   if (input.feedstocks.filter((f) => f.delivered).some((f) => !(f.distanceKm && f.distanceKm > 0))) {
     score -= 8;
-    missing.push(T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
+    gap("distance", T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
   }
   const paidLines = base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
     score -= 5;
-    missing.push(T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
+    gap("disposal", T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
   }
   if (base.kwElEquivalent < 30 || base.kwElEquivalent > 5000) {
     score -= 8;
@@ -81,5 +83,5 @@ export function assessQuality(
   }
   score = Math.max(0, Math.min(100, score));
   const level: Confidence = score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";
-  return { level, score, reasons, missing };
+  return { level, score, reasons, missing, missingCodes };
 }

@@ -5,6 +5,7 @@
 
 export type DataKind = "FACT" | "ASSUMPTION" | "CALCULATION" | "ESTIMATE";
 export type Confidence = "LOW" | "MEDIUM" | "HIGH";
+export type QualityGapId = "lab" | "electricity" | "electricity_price" | "heat" | "land" | "distance" | "disposal";
 
 /** Every numeric parameter used by the model carries its origin. */
 export interface Provenance {
@@ -377,6 +378,8 @@ export interface Assessment {
   drivers: string[];
   confidence: { level: Confidence; score: number; reasons: string[] };
   missingData: string[];
+  /** Stable message IDs for localisation; same order as missingData. */
+  missingDataCodes: QualityGapId[];
   warnings: string[];
   safety: SafetyItem[];
   regulatory: { items: RegulatoryItem[]; complexity: "LOW" | "MEDIUM" | "HIGH" };

@@ -3,7 +3,7 @@ import { SITE } from "@/config/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${SITE.name} — biogas & biomethane feasibility`,
+    name: SITE.name,
     short_name: SITE.name,
     start_url: "/",
     display: "standalone",

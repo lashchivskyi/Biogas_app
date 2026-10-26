@@ -18,7 +18,7 @@ const cs: Translation = {
   hero: {
     eyebrow: "Nezávislá analytika bioplynu a biometanu",
     h1: "Vyplatí se vašemu podniku [bioplynová stanice]?",
-    lead: "Za 3 minuty zjistíte, zda se vaše organické odpady mohou stát výnosnou energií. Poctivý verdikt: ano, ano za podmínek, nebo ne.",
+    lead: "Za tři minuty získáte předběžnou představu, zda se výroba bioplynu z vašich organických zbytků může vyplatit a za jakých podmínek.",
     cta: "Spočítat návratnost",
     ctaSecondary: "Jak to funguje",
     trust: ["Neprodáváme technologie", "Bez započtených dotací", "Otevřená metodika"],
@@ -123,7 +123,7 @@ const cs: Translation = {
       { q: "Jak je to přesné?", a: "Jde o předběžné posouzení (třída AACE 5–4): CAPEX ±30 %, výtěžnost plynu ±20–30 %, návratnost přibližně −30 % / +50 %. Spolehlivě odliší jasně nevýhodné a jasně silné projekty a ukáže šedou zónu mezi nimi — zpráva řekne, kde je ten váš. Číslo na bankovní úrovni (±15 %) vyžaduje laboratorní test substrátu, nabídky dodavatelů a smlouvy o odběru." },
       { q: "Funguje to pro mou zemi?", a: "Ano — 33 zemí. Ceny pocházejí z oficiálních statistik, kde existují (Eurostat, národní regulátoři, EIA, Světová banka), klima z reanalýzy ERA5 pro každý region, riziko země od Damodarana. Ukrajina je navíc ověřena na místních projektech. Kde oficiální řada chybí, je hodnota označena jako odhad — a vaše vlastní ceny mají vždy přednost." },
       { q: "A co výkupní ceny a dotace?", a: "Do verdiktu je nikdy nezapočítáváme. Pokud existuje národní podpora, zpráva ukáže její vliv jako samostatný případ se stavem a zdrojem." },
-      { q: "Co se stane s mými daty?", a: "Posouzení běží ve vašem prohlížeči. Data ukládáme, jen když objednáte zprávu nebo nás kontaktujete, a nikdy je nepředáváme třetím stranám." },
+      { q: "Co se stane s mými daty?", a: "Kontaktní údaje a údaje o projektu zpracováváme pouze pro poskytnutí služby a komunikaci s vámi. Sdílíme je jen s poskytovatelem plateb. O výmaz můžete požádat kdykoli." },
     ],
   },
   final: { title: "Za tři minuty zjistíte, zda má smysl projekt rozpracovat", sub: "Bez registrace. Bez prodeje technologií. Poctivá odpověď.", cta: "Spočítat návratnost" },
@@ -336,7 +336,7 @@ const cs: Translation = {
   payment: { title: "Stav platby", paid: "Platba přijata", paidText: "Děkujeme! Vaše zpráva je připravena.", open: "Otevřít mou zprávu", pending: "Platba se zpracovává", failed: "Platba nedokončena", demoTitle: "Demo platba", demoText: "Simuluje stránku banky při vývoji. Žádné peníze se nepohybují.", demoPay: "Simulovat úspěšnou platbu", demoFail: "Simulovat chybu" },
   method: { eyebrow: "Metodika", title: "Metodika a registr předpokladů", lead: "Každý číselný parametr má jednotku, zdroj, zemi, datum a úroveň spolehlivosti. Značky FACT, ASSUMPTION, CALCULATION a ESTIMATE vysvětlují původ hodnoty.", chainTitle: "Výpočetní řetězec", notTitle: "Co model nedělá", countryLabel: "Parametry země", param: "Parametr", value: "Hodnota", type: "Typ", conf: "Spolehlivost", source: "Zdroj", date: "Datum" },
   hub: { eyebrow: "Průvodce pro podnikatele", title: "Bioplynová stanice: cena, návratnost a jak funguje", lead: "Srozumitelně: co je bioplyn, kolik stojí stanice a kdy se opravdu vrátí.", toc: "Obsah", sectors: "Bioplyn podle typu provozu" },
-  terms: { title: "Obchodní podmínky, platby a vrácení peněz", template: "Šablona: doplňte údaje firmy v src/config/site.ts a před spuštěním nechte zkontrolovat právníkem." },
+  terms: { title: "Obchodní podmínky, platby a vrácení peněz", template: "Údaje o společnosti zatím nebyly zveřejněny. Před platbou nás prosím kontaktujte." },
   flow: {
     aria: "Schéma: suroviny, fermentor, bioplyn, přeměna na energii, digestát",
     feedstock: "Suroviny", feedstockSub1: "kejda · odpady", feedstockSub2: "ze zpracování", digester: "Fermentor", digesterSub: "≈ 38 °C, bez kyslíku", ownHeat: "vlastní teplo: {v} MWh",

@@ -20,7 +20,7 @@ const en = {
   hero: {
     eyebrow: "Independent biogas & biomethane analytics",
     h1: "Will a [biogas plant] pay off for your business?",
-    lead: "Find out in 3 minutes whether your organic waste can become profitable energy — with an honest verdict: yes, with conditions, or no.",
+    lead: "Get an initial view in three minutes: could biogas from your organic residues pay off, and what would make the project viable?",
     cta: "Assess my project",
     ctaSecondary: "How it works",
     trust: ["We don't sell equipment", "No subsidies baked in", "Open methodology"],
@@ -125,7 +125,7 @@ const en = {
       { q: "How accurate is it?", a: "A screening estimate (AACE class 5–4): CAPEX ±30 %, gas yield ±20–30 %, payback roughly −30 % / +50 %. That reliably separates clear no-go and clear go projects and shows the grey zone in between — the report says which one yours is. A bankable figure (±15 %) needs a lab test of your feedstock, supplier quotes and offtake contracts." },
       { q: "Does it work for my country?", a: "Yes — 33 countries. Prices come from official statistics where they exist (Eurostat, national regulators, EIA, World Bank), climate from ERA5 reanalysis for each region, country risk from Damodaran. Ukraine is additionally checked against local projects. Where no official series exists, the value is marked as an estimate — and your own prices always override the defaults." },
       { q: "What about feed-in tariffs and grants?", a: "We never put them in the verdict. Where a national scheme exists, the report shows its effect as a separate case, with its status and source." },
-      { q: "What happens to my data?", a: "The screening runs in your browser. We store data only when you order a report or contact us, and never share it with third parties." },
+      { q: "What happens to my data?", a: "We process contact and project data only to provide the service and contact you. We share it only with the payment provider. You may request deletion at any time." },
     ],
   },
   final: { title: "Three minutes to see whether your project is worth exploring", sub: "No sign-up. No equipment sales. An honest answer.", cta: "Assess my project" },
@@ -340,7 +340,7 @@ const en = {
   payment: { title: "Payment status", paid: "Payment received", paidText: "Thank you! Your report is ready.", open: "Open my report", pending: "Payment pending", failed: "Payment not completed", demoTitle: "Demo payment", demoText: "This simulates a bank page in development. No money moves.", demoPay: "Simulate successful payment", demoFail: "Simulate failure" },
   method: { eyebrow: "Methodology", title: "Methodology and assumption register", lead: "Every number in the model has a unit, source, country, date and confidence, and is tagged FACT, ASSUMPTION, CALCULATION or ESTIMATE.", chainTitle: "Calculation chain", notTitle: "What the model does not do", countryLabel: "Country parameters shown for", param: "Parameter", value: "Value", type: "Type", conf: "Confidence", source: "Source", date: "Date" },
   hub: { eyebrow: "Guide for business owners", title: "Biogas plant: cost, payback and how it works", lead: "Plain-language answers: what biogas is, what a plant costs, and when it actually pays back.", toc: "Contents", sectors: "Biogas by business type" },
-  terms: { title: "Terms of service, payment and refunds", template: "Template: fill in company details in src/config/site.ts and have a lawyer review before launch." },
+  terms: { title: "Terms of service, payment and refunds", template: "Company details have not yet been published. Please contact us before making a payment." },
   flow: {
     aria: "Diagram: feedstock, digester, biogas, conversion to energy, digestate",
     feedstock: "Feedstock", feedstockSub1: "manure · processing", feedstockSub2: "residues", digester: "Digester", digesterSub: "≈ 38 °C, no oxygen", ownHeat: "own heat: {v} MWh",

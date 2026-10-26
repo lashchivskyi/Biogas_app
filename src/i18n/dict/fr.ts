@@ -18,7 +18,7 @@ const fr: Translation = {
   hero: {
     eyebrow: "Analyse indépendante biogaz & biométhane",
     h1: "Une unité de [méthanisation] serait-elle rentable pour vous ?",
-    lead: "En 3 minutes, découvrez si vos déchets organiques peuvent devenir une énergie rentable — avec un verdict honnête : oui, oui sous conditions, ou non.",
+    lead: "En trois minutes, obtenez une première évaluation de l’intérêt économique d’un projet de méthanisation de vos résidus organiques et des conditions à réunir.",
     cta: "Évaluer mon projet",
     ctaSecondary: "Comment ça marche",
     trust: ["Nous ne vendons pas d'équipements", "Aucune subvention intégrée", "Méthodologie ouverte"],
@@ -123,7 +123,7 @@ const fr: Translation = {
       { q: "Quelle est la précision ?", a: "Une pré-étude (classe AACE 5–4) : CAPEX ±30 %, production de gaz ±20–30 %, retour sur investissement environ −30 % / +50 %. Cela distingue de façon fiable les projets clairement non rentables et clairement rentables, et montre la zone grise entre les deux — le rapport indique où se situe le vôtre. Un chiffre bancable (±15 %) exige un test en laboratoire de vos intrants, des devis fournisseurs et des contrats d'achat." },
       { q: "Est-ce valable pour mon pays ?", a: "Oui — 33 pays. Les prix proviennent des statistiques officielles lorsqu'elles existent (Eurostat, régulateurs nationaux, EIA, Banque mondiale), le climat de la réanalyse ERA5 pour chaque région, le risque pays de Damodaran. L'Ukraine est en plus recoupée avec des projets locaux. Sans série officielle, la valeur est signalée comme estimation — et vos propres prix priment toujours." },
       { q: "Et les tarifs d'achat et subventions ?", a: "Nous ne les intégrons jamais au verdict. Quand un dispositif national existe, le rapport montre son effet en cas séparé, avec son statut et sa source." },
-      { q: "Que deviennent mes données ?", a: "La pré-étude tourne dans votre navigateur. Nous ne conservons des données que si vous commandez un rapport ou nous contactez, et ne les partageons jamais avec des tiers." },
+      { q: "Que deviennent mes données ?", a: "Nous traitons les coordonnées et les données du projet uniquement pour fournir le service et vous contacter. Elles sont partagées uniquement avec le prestataire de paiement. Vous pouvez demander leur suppression à tout moment." },
     ],
   },
   final: { title: "Trois minutes pour savoir si votre projet mérite d’aller plus loin", sub: "Sans inscription. Sans vente d'équipements. Une réponse honnête.", cta: "Évaluer mon projet" },
@@ -336,7 +336,7 @@ const fr: Translation = {
   payment: { title: "Statut du paiement", paid: "Paiement reçu", paidText: "Merci ! Votre rapport est prêt.", open: "Ouvrir mon rapport", pending: "Paiement en cours", failed: "Paiement non abouti", demoTitle: "Paiement de démonstration", demoText: "Simule une page bancaire en développement. Aucun argent ne circule.", demoPay: "Simuler un paiement réussi", demoFail: "Simuler un échec" },
   method: { eyebrow: "Méthodologie", title: "Méthodologie et registre des hypothèses", lead: "Chaque paramètre chiffré est accompagné de son unité, de sa source, du pays concerné, d’une date et d’un niveau de fiabilité. Les mentions FACT, ASSUMPTION, CALCULATION et ESTIMATE précisent l’origine de la valeur.", chainTitle: "Chaîne de calcul", notTitle: "Ce que le modèle ne fait pas", countryLabel: "Paramètres affichés pour", param: "Paramètre", value: "Valeur", type: "Type", conf: "Fiabilité", source: "Source", date: "Date" },
   hub: { eyebrow: "Guide pour chefs d'entreprise", title: "Unité de méthanisation : coût, rentabilité et fonctionnement", lead: "Des réponses claires : ce qu'est le biogaz, ce que coûte une unité et quand elle se rembourse vraiment.", toc: "Sommaire", sectors: "Le biogaz par type d'activité" },
-  terms: { title: "Conditions générales, paiement et remboursement", template: "Modèle : renseignez les informations de la société dans src/config/site.ts et faites relire par un juriste avant le lancement." },
+  terms: { title: "Conditions générales, paiement et remboursement", template: "Les coordonnées de l’entreprise ne sont pas encore publiées. Veuillez nous contacter avant tout paiement." },
   flow: {
     aria: "Schéma : intrants, digesteur, biogaz, conversion en énergie, digestat",
     feedstock: "Intrants", feedstockSub1: "effluents · résidus", feedstockSub2: "de transformation", digester: "Digesteur", digesterSub: "≈ 38 °C, sans oxygène", ownHeat: "autoconsommation chaleur : {v} MWh",

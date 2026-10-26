@@ -17,8 +17,8 @@ const it: Translation = {
   },
   hero: {
     eyebrow: "Analisi indipendenti su biogas e biometano",
-    h1: "Un [impianto biogas] conviene alla vostra azienda?",
-    lead: "In 3 minuti scoprite se i vostri scarti organici possono diventare energia redditizia — con un verdetto onesto: sì, sì a certe condizioni, oppure no.",
+    h1: "Un [impianto a biogas] conviene alla vostra azienda?",
+    lead: "Valutate in tre minuti se produrre biogas dai vostri residui organici può essere conveniente e quali condizioni servono per rendere il progetto economicamente sostenibile.",
     cta: "Calcolare la redditività",
     ctaSecondary: "Come funziona",
     trust: ["Non vendiamo impianti", "Nessun incentivo incluso", "Metodologia trasparente"],
@@ -123,7 +123,7 @@ const it: Translation = {
       { q: "Quanto è preciso?", a: "Una valutazione preliminare (classe AACE 5–4): CAPEX ±30 %, resa di gas ±20–30 %, rientro circa −30 % / +50 %. Distingue in modo affidabile i progetti chiaramente non convenienti e chiaramente validi e mostra la zona grigia intermedia — il rapporto dice dove si trova il tuo. Una cifra bancabile (±15 %) richiede un test di laboratorio della biomassa, offerte dei fornitori e contratti di vendita." },
       { q: "Funziona per il mio paese?", a: "Sì: 33 paesi. I prezzi provengono da statistiche ufficiali dove esistono (Eurostat, regolatori nazionali, EIA, Banca mondiale), il clima dalla rianalisi ERA5 per ogni regione, il rischio paese da Damodaran. L'Ucraina è inoltre verificata su progetti locali. Senza una serie ufficiale il valore è segnato come stima, e i tuoi prezzi hanno sempre la precedenza." },
       { q: "E le tariffe incentivanti e i contributi?", a: "Non li includiamo mai nel verdetto. Se esiste un regime nazionale, il report ne mostra l'effetto come caso separato, con stato e fonte." },
-      { q: "Che fine fanno i miei dati?", a: "La valutazione gira nel vostro browser. Conserviamo i dati solo se ordinate un report o ci contattate, e non li cediamo mai a terzi." },
+      { q: "Che fine fanno i miei dati?", a: "Trattiamo i dati di contatto e del progetto solo per fornire il servizio e contattarvi. Li condividiamo esclusivamente con il fornitore dei pagamenti. Potete richiederne la cancellazione in qualsiasi momento." },
     ],
   },
   final: { title: "Tre minuti per capire se vale la pena approfondire il progetto", sub: "Senza registrazione. Senza vendita di impianti. Una risposta onesta.", cta: "Calcolare la redditività" },
@@ -336,7 +336,7 @@ const it: Translation = {
   payment: { title: "Stato del pagamento", paid: "Pagamento ricevuto", paidText: "Grazie! Il vostro report è pronto.", open: "Apri il mio report", pending: "Pagamento in corso", failed: "Pagamento non completato", demoTitle: "Pagamento demo", demoText: "Simula la pagina di una banca in sviluppo. Nessun movimento di denaro.", demoPay: "Simula pagamento riuscito", demoFail: "Simula errore" },
   method: { eyebrow: "Metodologia", title: "Metodologia e registro delle ipotesi", lead: "Ogni parametro numerico riporta unità, fonte, Paese, data e livello di affidabilità. Le etichette FACT, ASSUMPTION, CALCULATION ed ESTIMATE indicano l’origine del valore.", chainTitle: "Catena di calcolo", notTitle: "Cosa il modello non fa", countryLabel: "Parametri del paese", param: "Parametro", value: "Valore", type: "Tipo", conf: "Affidabilità", source: "Fonte", date: "Data" },
   hub: { eyebrow: "Guida per imprenditori", title: "Impianto biogas: costi, rientro e come funziona", lead: "Risposte chiare: cos'è il biogas, quanto costa un impianto e quando rientra davvero dell'investimento.", toc: "Indice", sectors: "Biogas per tipo di attività" },
-  terms: { title: "Condizioni di servizio, pagamento e rimborsi", template: "Modello: inserite i dati societari in src/config/site.ts e fate verificare da un legale prima del lancio." },
+  terms: { title: "Condizioni di servizio, pagamento e rimborsi", template: "I dati della società non sono ancora pubblicati. Contattateci prima di effettuare un pagamento." },
   flow: {
     aria: "Schema: matrici, digestore, biogas, conversione in energia, digestato",
     feedstock: "Matrici", feedstockSub1: "effluenti · scarti", feedstockSub2: "di lavorazione", digester: "Digestore", digesterSub: "≈ 38 °C, senza ossigeno", ownHeat: "calore proprio: {v} MWh",

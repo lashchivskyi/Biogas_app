@@ -18,7 +18,7 @@ const vi: Translation = {
   hero: {
     eyebrow: "Phân tích độc lập về biogas & biomethane",
     h1: "Đầu tư [nhà máy biogas] có sinh lời cho doanh nghiệp bạn không?",
-    lead: "Chỉ 3 phút để biết chất thải hữu cơ của bạn có thể trở thành năng lượng sinh lời hay không — với kết luận trung thực: có, có nếu đủ điều kiện, hoặc không.",
+    lead: "Trong ba phút, nhận đánh giá sơ bộ về khả năng sinh lời khi sản xuất biogas từ phụ phẩm hữu cơ của doanh nghiệp bạn và những điều kiện cần để dự án khả thi.",
     cta: "Đánh giá dự án",
     ctaSecondary: "Cách hoạt động",
     trust: ["Chúng tôi không bán thiết bị", "Không tính sẵn trợ cấp", "Phương pháp công khai"],
@@ -123,7 +123,7 @@ const vi: Translation = {
       { q: "Độ chính xác đến đâu?", a: "Đây là đánh giá sơ bộ (AACE cấp 5–4): CAPEX ±30 %, sản lượng khí ±20–30 %, hoàn vốn khoảng −30 % / +50 %. Nó phân biệt đáng tin cậy các dự án rõ ràng không hiệu quả và rõ ràng mạnh, đồng thời chỉ ra vùng xám ở giữa — báo cáo cho biết dự án của bạn nằm ở đâu. Con số đủ chuẩn ngân hàng (±15 %) cần thử nghiệm nguyên liệu trong phòng thí nghiệm, báo giá nhà cung cấp và hợp đồng bao tiêu." },
       { q: "Có áp dụng cho nước tôi không?", a: "Có — 33 quốc gia. Giá lấy từ thống kê chính thức nếu có (Eurostat, cơ quan quản lý quốc gia, EIA, Ngân hàng Thế giới), khí hậu từ dữ liệu tái phân tích ERA5 cho từng vùng, rủi ro quốc gia theo Damodaran. Ukraine được đối chiếu thêm với các dự án địa phương. Khi không có chuỗi số liệu chính thức, giá trị được đánh dấu là ước tính — và giá của bạn luôn được ưu tiên." },
       { q: "Còn giá mua điện ưu đãi và trợ cấp?", a: "Chúng tôi không bao giờ đưa vào kết luận. Nếu có chính sách quốc gia, báo cáo sẽ thể hiện tác động thành một kịch bản riêng, kèm tình trạng và nguồn." },
-      { q: "Dữ liệu của tôi được xử lý thế nào?", a: "Phần đánh giá chạy ngay trên trình duyệt của bạn. Chúng tôi chỉ lưu dữ liệu khi bạn đặt báo cáo hoặc liên hệ, và không bao giờ chia sẻ với bên thứ ba." },
+      { q: "Dữ liệu của tôi được xử lý thế nào?", a: "Chúng tôi chỉ xử lý thông tin liên hệ và dữ liệu dự án để cung cấp dịch vụ và liên lạc với bạn. Dữ liệu chỉ được chia sẻ với đơn vị thanh toán. Bạn có thể yêu cầu xóa bất cứ lúc nào." },
     ],
   },
   final: { title: "Ba phút để biết dự án có đáng nghiên cứu thêm hay không", sub: "Không đăng ký. Không bán thiết bị. Câu trả lời trung thực.", cta: "Đánh giá dự án" },
@@ -336,7 +336,7 @@ const vi: Translation = {
   payment: { title: "Trạng thái thanh toán", paid: "Đã nhận thanh toán", paidText: "Cảm ơn bạn! Báo cáo đã sẵn sàng.", open: "Mở báo cáo của tôi", pending: "Đang xử lý thanh toán", failed: "Thanh toán chưa hoàn tất", demoTitle: "Thanh toán thử", demoText: "Mô phỏng trang ngân hàng trong môi trường phát triển. Không có tiền được chuyển.", demoPay: "Mô phỏng thanh toán thành công", demoFail: "Mô phỏng thất bại" },
   method: { eyebrow: "Phương pháp", title: "Phương pháp và danh mục giả định", lead: "Mỗi thông số dạng số đều có đơn vị, nguồn, quốc gia, ngày và mức độ tin cậy. Các nhãn FACT, ASSUMPTION, CALCULATION và ESTIMATE cho biết giá trị được xác định như thế nào.", chainTitle: "Chuỗi tính toán", notTitle: "Những gì mô hình không làm", countryLabel: "Thông số quốc gia", param: "Thông số", value: "Giá trị", type: "Loại", conf: "Độ tin cậy", source: "Nguồn", date: "Ngày" },
   hub: { eyebrow: "Cẩm nang cho chủ doanh nghiệp", title: "Nhà máy biogas: chi phí, hoàn vốn và cách hoạt động", lead: "Dễ hiểu, không thuật ngữ: biogas là gì, nhà máy tốn bao nhiêu và khi nào thực sự hoàn vốn.", toc: "Mục lục", sectors: "Biogas theo loại hình kinh doanh" },
-  terms: { title: "Điều khoản dịch vụ, thanh toán và hoàn tiền", template: "Mẫu: điền thông tin công ty trong src/config/site.ts và nhờ luật sư rà soát trước khi ra mắt." },
+  terms: { title: "Điều khoản dịch vụ, thanh toán và hoàn tiền", template: "Thông tin doanh nghiệp chưa được công bố. Vui lòng liên hệ với chúng tôi trước khi thanh toán." },
   flow: {
     aria: "Sơ đồ: nguyên liệu, bể phân hủy, biogas, chuyển hóa thành năng lượng, chất thải sau phân hủy",
     feedstock: "Nguyên liệu", feedstockSub1: "phân · phụ phẩm", feedstockSub2: "chế biến", digester: "Bể phân hủy", digesterSub: "≈ 38 °C, yếm khí", ownHeat: "nhiệt tự dùng: {v} MWh",

@@ -6,7 +6,7 @@ import { countryName, type Dict, type Locale, INTL_TAG } from "@/i18n";
 import type { AdminCopy } from "@/i18n/admin";
 import { makeFormat } from "@/lib/format";
 
-export function AdminLeadRow({ lead, locale, d, t }: { lead: Lead; locale: Locale; d: Pick<Dict, "labels" | "result">; t: AdminCopy }) {
+export function AdminLeadRow({ lead, locale, d, t, region }: { lead: Lead; locale: Locale; d: Pick<Dict, "labels" | "result">; t: AdminCopy; region: string }) {
   const F = makeFormat(locale, d.labels.units);
   const [status, setStatus] = useState<LeadStatus>(lead.status);
   const [notes, setNotes] = useState(lead.notes);
@@ -23,7 +23,7 @@ export function AdminLeadRow({ lead, locale, d, t }: { lead: Lead; locale: Local
 
   return (
     <tr className="border-t border-line align-top text-sm">
-      <td className="p-3 whitespace-nowrap text-muted">{new Date(lead.createdAt).toLocaleString(INTL_TAG[locale], { dateStyle: "short", timeStyle: "short" })}</td>
+      <td className="p-3 whitespace-nowrap text-muted">{new Date(lead.createdAt).toLocaleString(INTL_TAG[locale], { dateStyle: "short", timeStyle: "short", timeZone: "UTC" })} UTC</td>
       <td className="p-3">
         <div className="font-semibold">{lead.name}</div>
         <div>{lead.company}</div>
@@ -32,7 +32,7 @@ export function AdminLeadRow({ lead, locale, d, t }: { lead: Lead; locale: Local
         {lead.message && <div className="mt-1 max-w-xs text-xs text-ink2">«{lead.message}»</div>}
       </td>
       <td className="p-3 num">
-        <div>{d.labels.business[lead.input.businessType].label} · {countryName(lead.input.countryCode, locale)} / {lead.input.regionId}</div>
+        <div>{d.labels.business[lead.input.businessType].label} · {countryName(lead.input.countryCode, locale)} / {region}</div>
         <div>{F.n0(lead.summary.tonnesYear)} {d.labels.units.tYear} · ≈ {F.n0(lead.summary.kwEl)} {d.labels.units.kw}</div>
         <div>CAPEX ≈ {F.eur(lead.summary.capexEur)} · {d.result.payback}: {F.years(lead.summary.paybackYears)}</div>
       </td>

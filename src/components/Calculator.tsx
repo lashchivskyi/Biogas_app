@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput } from "@/core";
 import { EXAMPLES } from "@/core/examples";
@@ -9,7 +9,10 @@ import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
-import { emptyLine, formToInput, initialForm, inputToForm, linesForBusiness, uiDefaults } from "@/lib/form";
+import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, uiDefaults } from "@/lib/form";
+import { parseLocalizedNumber } from "@/lib/localized-number";
+import { numberError } from "@/i18n/errors";
+import { useLocale } from "./LocaleProvider";
 import type { FormLine, FormState } from "@/lib/form";
 import { guessCountry } from "@/lib/geo";
 import { UnlockButton } from "./payments/Checkout";
@@ -41,10 +44,17 @@ function Field({ label, hint, children, htmlFor }: { label: string; hint?: strin
 }
 
 function Num({ value, onChange, placeholder, unit, id }: { value: string; onChange: (v: string) => void; placeholder?: string; unit?: string; id?: string }) {
+  const locale = useLocale();
+  const fallbackId = useId();
+  const errorId = `${id ?? fallbackId}-error`;
+  const invalid = value.trim() !== "" && parseLocalizedNumber(value, locale) === undefined;
   return (
-    <div className="relative">
-      <input id={id} className="field num pr-24" inputMode="decimal" value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} />
-      {unit && <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">{unit}</span>}
+    <div>
+      <div className="relative">
+        <input id={id} className="field num pr-24" inputMode="decimal" value={value} placeholder={placeholder} aria-invalid={invalid || undefined} aria-describedby={invalid ? errorId : undefined} onChange={(e) => onChange(e.target.value)} />
+        {unit && <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">{unit}</span>}
+      </div>
+      {invalid && <p id={errorId} className="mt-1 text-xs text-bad">{numberError[locale]}</p>}
     </div>
   );
 }
@@ -99,8 +109,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as FormState;
-        if (parsed?.lines?.length && COUNTRIES[parsed.countryCode] && formToInput(parsed, COUNTRIES[parsed.countryCode], lang, locale).feedstocks.length > 0) {
-          setForm(inputToForm(formToInput(parsed, COUNTRIES[parsed.countryCode], lang, locale), locale));
+        if (parsed?.lines?.length && COUNTRIES[parsed.countryCode] && formToInput(parsed, COUNTRIES[parsed.countryCode], lang).feedstocks.length > 0) {
+          setForm(inputToForm(formToInput(parsed, COUNTRIES[parsed.countryCode], lang), locale));
           setRestored(true);
           return;
         }
@@ -134,11 +144,17 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
-  const input = useMemo(() => formToInput(form, country, lang, locale), [form, country, lang, locale]);
+  const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
   const assessment = useMemo(() => (submitted ? assess(input, country) : null), [submitted, input, country]);
 
   function next() {
     setError("");
+    const invalidStep = invalidNumberStep(form);
+    if (invalidStep !== null && invalidStep <= step) {
+      setError(numberError[locale]);
+      setStep(invalidStep);
+      return;
+    }
     if (step === 1 && input.feedstocks.length === 0) {
       setError(C.errNoFeed);
       return;
@@ -149,6 +165,12 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function calculate() {
     setError("");
+    const invalidStep = invalidNumberStep(form);
+    if (invalidStep !== null) {
+      setError(numberError[locale]);
+      setStep(invalidStep);
+      return;
+    }
     if (input.feedstocks.length === 0) {
       setError(C.errNoFeedStep);
       setStep(1);
@@ -285,7 +307,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 <Num id="c-eb" value={form.elecBillMonthly} onChange={(v) => set("elecBillMonthly", v)} unit={fmt(C.perMonth, { cur })} />
               </Field>
               <Field label={C.elecKwh} htmlFor="c-ek">
-                <Num id="c-ek" value={form.elecKwhYear} onChange={(v) => set("elecKwhYear", v)} unit={L.units.kwh} placeholder={fmt(C.eg, { v: "500 000" })} />
+                <Num id="c-ek" value={form.elecKwhYear} onChange={(v) => set("elecKwhYear", v)} unit={L.units.kwh} placeholder={fmt(C.eg, { v: money2(500_000) })} />
               </Field>
               <Field label={C.elecPrice} htmlFor="c-ep" hint={C.elecPriceHint}>
                 <Num id="c-ep" value={form.elecPrice} onChange={(v) => set("elecPrice", v)} unit={`${cur}/${L.units.kwh}`} placeholder={fmt(C.eg, { v: money2(def.electricityPerKwh) })} />
@@ -409,6 +431,7 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
   const label = isAnimal ? L.animal[line.animal as AnimalKind].label : L.feedstock[line.type as FeedstockTypeId];
   const unit = isAnimal ? L.animal[line.animal as AnimalKind].unit : L.units.tYear;
   const id = `l-${line.id}`;
+  const localNumber = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(v);
   return (
     <div className="rounded-xl border border-line p-4">
       <div className="flex items-start justify-between gap-3">
@@ -417,7 +440,7 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
       </div>
       <div className="mt-3 grid gap-4 md:grid-cols-3">
         <Field label={isAnimal ? C.lineHead : C.lineTonnes} htmlFor={`${id}-q`}>
-          <Num id={`${id}-q`} value={line.quantity} onChange={(v) => onChange({ quantity: v })} unit={unit} placeholder={fmt(C.eg, { v: isAnimal ? "400" : "3000" })} />
+          <Num id={`${id}-q`} value={line.quantity} onChange={(v) => onChange({ quantity: v })} unit={unit} placeholder={fmt(C.eg, { v: localNumber(isAnimal ? 400 : 3000) })} />
         </Field>
         {isAnimal && ["dairy_cow", "cattle_other"].includes(line.animal as string) && (
           <Field label={C.housing} htmlFor={`${id}-h`}>
@@ -447,10 +470,10 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
       <details className="mt-3">
         <summary className="text-sm font-semibold text-brand">{C.refine}</summary>
         <div className="mt-3 grid gap-4 md:grid-cols-3">
-          <Field label={fmt(C.dm, { v: t.dryMatterPct })} htmlFor={`${id}-dm`} hint={C.dmHint}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
-          <Field label="VS (% DM)" htmlFor={`${id}-vs`}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={String(t.vsPctOfDm)} /></Field>
-          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={String(t.yieldTyp)} /></Field>
-          {!isAnimal && <Field label={fmt(C.months, { v: t.defaultMonths })} htmlFor={`${id}-m`}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
+          <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
+          <Field label="VS (% DM)" htmlFor={`${id}-vs`}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} /></Field>
+          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} /></Field>
+          {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
           {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`}>
             <select id={`${id}-start`} className="field" value={line.startMonth || String(t.defaultStartMonth)} onChange={(e) => onChange({ startMonth: e.target.value })}>
               {Array.from({ length: 12 }, (_, month) => <option key={month} value={month + 1}>{new Intl.DateTimeFormat(INTL_TAG[locale], { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2025, month, 1)))}</option>)}

@@ -30,7 +30,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
         const f = JSON.parse(raw) as FormState;
         const adapter = COUNTRIES[f.countryCode];
         if (adapter) {
-          const inp = formToInput(f, adapter, coreLang(locale), locale);
+          const inp = formToInput(f, adapter, coreLang(locale));
           if (inp.feedstocks.length) {
             // eslint-disable-next-line react-hooks/set-state-in-effect -- browser-only draft
             setInput(inp);

@@ -18,7 +18,7 @@ const pl: Translation = {
   hero: {
     eyebrow: "Niezależna analityka biogazu i biometanu",
     h1: "Czy [biogazownia] opłaci się w Twojej firmie?",
-    lead: "W 3 minuty sprawdzisz, czy Twoje odpady organiczne mogą stać się opłacalną energią. Uczciwy werdykt: tak, tak pod warunkami albo nie.",
+    lead: "W trzy minuty wstępnie sprawdzisz, czy produkcja biogazu z Twoich odpadów organicznych może się opłacić i jakie warunki trzeba spełnić.",
     cta: "Sprawdź opłacalność",
     ctaSecondary: "Jak to działa",
     trust: ["Nie sprzedajemy instalacji", "Bez wliczonych dotacji", "Otwarta metodologia"],
@@ -123,7 +123,7 @@ const pl: Translation = {
       { q: "Jak dokładne są wyniki?", a: "To wstępna ocena (klasa AACE 5–4): CAPEX ±30 %, uzysk gazu ±20–30 %, okres zwrotu ok. −30 % / +50 %. Pozwala wiarygodnie oddzielić projekty wyraźnie nieopłacalne od wyraźnie mocnych i pokazuje szarą strefę pomiędzy — raport mówi, gdzie jest Twój. Liczba na poziomie bankowym (±15 %) wymaga badania laboratoryjnego substratu, ofert dostawców i umów odbioru." },
       { q: "Czy to działa dla mojego kraju?", a: "Tak — 33 kraje. Ceny pochodzą z oficjalnych statystyk, jeśli istnieją (Eurostat, krajowi regulatorzy, EIA, Bank Światowy), klimat z reanalizy ERA5 dla każdego regionu, ryzyko kraju z Damodarana. Ukrainę dodatkowo zweryfikowano na lokalnych projektach. Gdy brak oficjalnej serii, wartość jest oznaczona jako szacunek — a Twoje własne ceny zawsze mają pierwszeństwo." },
       { q: "A taryfy gwarantowane i dotacje?", a: "Nigdy nie wliczamy ich do werdyktu. Jeśli w kraju działa system wsparcia, raport pokazuje jego efekt jako osobny scenariusz, ze statusem i źródłem." },
-      { q: "Co dzieje się z moimi danymi?", a: "Ocena liczy się w Twojej przeglądarce. Dane zapisujemy tylko wtedy, gdy zamawiasz raport lub się z nami kontaktujesz, i nigdy nie przekazujemy ich osobom trzecim." },
+      { q: "Co dzieje się z moimi danymi?", a: "Dane kontaktowe i projektowe przetwarzamy wyłącznie w celu świadczenia usługi i kontaktu z Tobą. Udostępniamy je tylko operatorowi płatności. W każdej chwili możesz poprosić o ich usunięcie." },
     ],
   },
   final: { title: "W trzy minuty sprawdź, czy warto rozwijać projekt", sub: "Bez rejestracji. Bez sprzedaży sprzętu. Uczciwa odpowiedź.", cta: "Sprawdź opłacalność" },
@@ -336,7 +336,7 @@ const pl: Translation = {
   payment: { title: "Status płatności", paid: "Płatność otrzymana", paidText: "Dziękujemy! Twój raport jest gotowy.", open: "Otwórz mój raport", pending: "Płatność w toku", failed: "Płatność nie została zakończona", demoTitle: "Płatność demo", demoText: "Symulacja strony banku w trybie deweloperskim. Pieniądze nie są pobierane.", demoPay: "Symuluj udaną płatność", demoFail: "Symuluj błąd" },
   method: { eyebrow: "Metodologia", title: "Metodologia i rejestr założeń", lead: "Każdy parametr liczbowy ma jednostkę, źródło, kraj, datę i poziom wiarygodności. Oznaczenia FACT, ASSUMPTION, CALCULATION i ESTIMATE wskazują, skąd pochodzi wartość.", chainTitle: "Łańcuch obliczeń", notTitle: "Czego model nie robi", countryLabel: "Parametry kraju", param: "Parametr", value: "Wartość", type: "Typ", conf: "Wiarygodność", source: "Źródło", date: "Data" },
   hub: { eyebrow: "Poradnik dla przedsiębiorcy", title: "Biogazownia: koszt, zwrot i jak to działa", lead: "Prosto i bez żargonu: czym jest biogaz, ile kosztuje instalacja i kiedy naprawdę się zwraca.", toc: "Spis treści", sectors: "Biogaz według branży" },
-  terms: { title: "Regulamin usług, płatności i zwrotów", template: "Szablon: uzupełnij dane firmy w src/config/site.ts i skonsultuj z prawnikiem przed startem." },
+  terms: { title: "Regulamin usług, płatności i zwrotów", template: "Dane firmy nie zostały jeszcze opublikowane. Przed dokonaniem płatności prosimy o kontakt." },
   flow: {
     aria: "Schemat: substrat, komora fermentacyjna, biogaz, zamiana na energię, poferment",
     feedstock: "Substrat", feedstockSub1: "gnojowica · odpady", feedstockSub2: "z przetwórstwa", digester: "Komora", digesterSub: "≈ 38 °C, bez tlenu", ownHeat: "ciepło własne: {v} MWh",
