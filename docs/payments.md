@@ -5,7 +5,7 @@
 ## 1. Потік
 
 1. Клієнт проходить безкоштовний скринінг у калькуляторі (вхідні дані зберігаються в браузері).
-2. «Unlock full report» → діалог: план (report / expert), email, ім'я, компанія, VAT ID, згода з умовами.
+2. Відкриття звіту → діалог: план (`standard` / `report`), email, ім'я, компанія, VAT ID, згода з умовами. Обидва плани автоматичні; `expert` більше не приймається при оформленні.
 3. `POST /api/checkout` — сервер валідує вхід (`checkoutSchema`), **рахує ціну сам** з `PLAN_PRICES_EUR_CENTS` × tier країни проєкту, створює замовлення з випадковим `reportToken` (24 байти, base64url) і Stripe Checkout Session.
 4. Stripe-сторінка (картка, Apple Pay, Google Pay, Link, локальні методи — вмикаються в Stripe Dashboard). `success_url` = `/{lang}/report/{token}`.
 5. Webhook `POST /api/payments/webhook/stripe` (підпис перевіряється `stripe.webhooks.constructEvent`): `checkout.session.completed` / `async_payment_succeeded` → `paid`; `expired` / `async_payment_failed` → `expired`/`failed`; `charge.refunded` → `reversed`. Сума звіряється з замовленням; невідповідність не позначає оплату, а пише примітку «check manually».

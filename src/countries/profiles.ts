@@ -3,7 +3,8 @@ import { region, type CountryProfile } from "./build";
 
 /**
  * 32 national profiles (Ukraine has its own calibrated adapter in ua.ts).
- * Every number is an ESTIMATE of the right order of magnitude (see build.ts header).
+ * The market numbers here are FALLBACK estimates only: build.ts replaces each one with an official
+ * statistic from sources.ts wherever a series exists, and only the remainder is shown as an estimate.
  * Support schemes are listed only where at least a figure was found in this research or is a
  * widely documented national instrument; all are LOW/MEDIUM confidence and must be checked before use.
  */
@@ -127,14 +128,14 @@ export const PROFILES: CountryProfile[] = [
     notes: { en: ["The Danish model is centralised: dozens of farms supply one large biomethane plant; single-farm CHP is rare."], uk: ["Данська модель централізована: десятки ферм постачають один великий біометановий завод; фермерські КГУ рідкісні."] },
   },
   {
-    code: "SE", name: "Sweden", currency: "SEK", fx: 11.3, tier: "A", regime: "EU", inj: false,
+    bmOverride: true, code: "SE", name: "Sweden", currency: "SEK", fx: 11.3, tier: "A", regime: "EU", inj: false,
     elec: 0.09, exp: 0.04, gas: 50, labour: 32, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: [0.5, 0.65, 0.85], fertN: 1.2, ef: 0.03,
     regions: [region("skane", "Skåne", [1.4, 1.3, 3.3, 7.2, 11.5, 15.0, 17.6, 17.3, 13.9, 9.6, 5.6, 2.6], { sv: "Skåne" })],
     support: none("Manure-gas premium and investment support (Klimatklivet) — details not verified; biomethane mainly for transport.", "Премія за біогаз із гною та інвестиційна підтримка (Klimatklivet) — деталі не перевірено; біометан переважно для транспорту."),
     notes: { en: ["Low electricity prices make CHP unattractive; upgraded biogas for vehicles is the usual route."], uk: ["Низькі ціни на електрику роблять КГУ непривабливою; звична схема — очищений біогаз для транспорту."] },
   },
   {
-    code: "FI", name: "Finland", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: false,
+    bmOverride: true, code: "FI", name: "Finland", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: false,
     elec: 0.09, exp: 0.05, gas: 50, labour: 30, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: [0.5, 0.65, 0.85], fertN: 1.2, ef: 0.08,
     regions: [region("ostrobothnia", "Ostrobothnia (Seinäjoki)", [-7.0, -7.3, -3.3, 2.6, 9.3, 14.2, 16.9, 14.8, 9.6, 4.2, -0.6, -4.6], { fi: "Pohjanmaa", sv: "Österbotten" })],
     support: none("Investment grants for biogas and recycled nutrients; biomethane for heavy transport is the policy driver.", "Інвестиційні гранти на біогаз і повторне використання поживних речовин; рушій політики — біометан для важкого транспорту."),
@@ -247,7 +248,7 @@ export const PROFILES: CountryProfile[] = [
   // ---------------- Asia ----------------
   {
     code: "IN", name: "India", currency: "INR", fx: 95, tier: "C", regime: "GENERIC", inj: false,
-    elec: 0.09, exp: 0.05, gas: 40, labour: 3, capex: 0.6, disc: 0.12, debtRate: 0.1, tkm: 0.05, bm: [0.35, 0.45, 0.6], fertN: 0.5, ef: 0.71,
+    elec: 0.09, exp: 0.05, gas: 40, labour: 3, capex: 0.6, disc: 0.12, debtRate: 0.1, tkm: 0.05, bm: [0.35, 0.45, 0.6], fertN: 0.5, fertFactor: 0.45, ef: 0.71,
     regions: [region("punjab", "Punjab", [12.8, 15.8, 20.8, 27.0, 31.3, 32.5, 30.5, 29.8, 28.8, 25.3, 19.3, 14.3]), region("maharashtra", "Maharashtra (Pune)", [20.8, 22.5, 25.5, 28.5, 29.0, 26.5, 24.8, 24.3, 24.5, 24.8, 22.5, 20.5])],
     support: sup("SATAT offtake for compressed biogas (CBG) and a CBG blending obligation (1 % FY26 → 5 % FY29); GOBARdhan scheme (₹23 731 crore, FY2027–2036) with capital assistance.", "Збут стиснутого біогазу (CBG) за SATAT і обов'язок домішування CBG (1 % FY26 → 5 % FY29); програма GOBARdhan (₹23 731 крор, FY2027–2036) з капітальною допомогою.", [
       sch({ id: "in.cbg", name: "SATAT CBG offtake + central financial assistance", status: "open", biomethaneEurNm3: 0.6, capexGrantShare: 0.1, routes: ["biomethane"], note: { en: "CBG sold as transport fuel; price and assistance assumed for illustration — confirm current MoPNG / MNRE terms.", uk: "CBG продається як пальне; ціна та допомога прийняті для ілюстрації — уточніть умови MoPNG / MNRE." }, source: "Renewable Watch (Dec 2025), Deccan Herald (GOBARdhan); not verified", confidence: "LOW" }),

@@ -144,7 +144,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const regComplexity = regPoints >= 17 ? "HIGH" : regPoints >= 13 ? "MEDIUM" : "LOW";
 
   const ownPrice = (input.energy.electricityPriceLocalPerKwh ?? 0) > 0;
-  const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: country.maturity === "profile" && !ownPrice });
+  const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: country.dataStatus === "estimated" && !ownPrice });
   const { scores, overall } = computeScores({
     input, base, cons, opt, demand, logistics, digestate,
     regulatoryPoints: regPoints,
@@ -202,6 +202,17 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     npvEur: tri((r) => r.fin.npvEur),
   };
 
+  // ---- robustness: does the answer survive the scenario range? ----
+  const robustness: Assessment["robustness"] =
+    verdict.id === "INSUFFICIENT_DATA"
+      ? "insufficient"
+      : ranges.npvEur[0] > 0
+        ? "clear_go"
+        : ranges.npvEur[2] <= 0
+          ? "clear_no"
+          : "grey";
+  const drivers = [...sensitivity].filter((s) => s.deltaNpvEur < 0).sort((x, y) => x.deltaNpvEur - y.deltaNpvEur).slice(0, 3).map((s) => s.id);
+
   // ---- warnings ----
   const warnings = [
     ...new Set([
@@ -239,6 +250,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     scores,
     overall,
     verdict,
+    robustness,
+    drivers,
     confidence: { level: quality.level, score: quality.score, reasons: quality.reasons },
     missingData: quality.missing,
     warnings,

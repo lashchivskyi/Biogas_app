@@ -7,7 +7,7 @@ import { Icon, type IconName } from "../brand/Icon";
 import { SceneCanvas } from "../three/SceneCanvas";
 import type { ChapterId } from "../three/ProcessScene";
 
-const QUICK = ["dairy_farm", "pig_farm", "poultry_farm", "slaughterhouse", "dairy_processor", "biogas_developer", "municipal_biowaste", "sugar_ethanol"] as const;
+const QUICK = ["dairy_farm", "pig_farm", "poultry_farm", "slaughterhouse", "dairy_processor", "sugar_beet_factory", "municipal_biowaste", "biogas_developer", "sugar_ethanol"] as const;
 
 const CHAPTER_META: Array<{ id: ChapterId; color: string; icon: IconName }> = [
   { id: "feedstock", color: "#8fd16a", icon: "leaf" },

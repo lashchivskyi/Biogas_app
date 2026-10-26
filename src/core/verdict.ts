@@ -41,7 +41,8 @@ export function decideVerdict(args: {
   }
 
   const pbCons = cons.fin.simplePaybackYears;
-  const strong = pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && (base.fin.dscrMin ?? 0) >= 1.3 && confidence.level !== "LOW";
+  // "Strong" must survive the conservative case at the country discount rate — otherwise it is a grey-zone project.
+  const strong = pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? 0) >= 1.3 && confidence.level !== "LOW";
   const borderline = npvBase < 0 && npvBase >= -0.1 * base.fin.capexEur && pb !== null && pb <= 8.5 && opt.fin.npvEur >= 0;
   const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
 

@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@/components/brand/Icon";
 import { PageHero } from "@/components/PageHero";
-import { contentLang, HUB } from "@/content/hub";
+import { localizedHub } from "@/content/localized";
 import { SEGMENTS } from "@/content/segments";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/biogas">): Promise<Metadata> {
   const { lang } = await params;
-  const cl = contentLang(lang);
-  const h = HUB[cl];
+  const locale = lang as Locale;
+  const h = localizedHub(locale, await getDictionary(locale));
   return {
     title: h.title,
     description: h.description,
-    alternates: alternates(cl, "/biogas", ["en", "uk"]),
+    alternates: alternates(locale, "/biogas"),
     openGraph: { title: h.title, description: h.description, type: "article" },
   };
 }
@@ -23,7 +23,7 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
   const { lang } = await params;
   const locale = lang as Locale;
   const d = await getDictionary(locale);
-  const h = HUB[contentLang(locale)];
+  const h = localizedHub(locale, d);
   const base = `/${locale}`;
   return (
     <main>
@@ -43,7 +43,6 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
           </div>
         </nav>
         <article className="max-w-3xl">
-          {locale !== "en" && locale !== "uk" && <p className="mb-8 rounded-2xl bg-surface2 p-4 text-sm text-ink2">{d.common.englishOnly}</p>}
           {h.sections.map((s) => (
             <section key={s.id} id={s.id} className="scroll-mt-24 border-b border-line py-8 first:pt-0">
               <h2 className="font-display text-2xl font-semibold">{s.h}</h2>

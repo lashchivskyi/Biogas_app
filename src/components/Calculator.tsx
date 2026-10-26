@@ -4,9 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput } from "@/core";
 import { EXAMPLES } from "@/core/examples";
-import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
+import { COUNTRIES } from "@/countries";
+import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { countryName, fmt, type Dict, type Locale } from "@/i18n";
-import { coreLang } from "@/i18n/config";
+import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
 import { emptyLine, formToInput, initialForm, inputToForm, linesForBusiness, uiDefaults } from "@/lib/form";
 import type { FormLine, FormState } from "@/lib/form";
@@ -14,6 +15,8 @@ import { guessCountry } from "@/lib/geo";
 import { UnlockButton } from "./payments/Checkout";
 import { ResultView } from "./ResultView";
 import { WhatIf } from "./WhatIf";
+import { CountrySelect } from "./CountrySelect";
+import { CountryFlag } from "./CountryFlag";
 
 const STORAGE_KEY = "mx.form.v2";
 
@@ -61,12 +64,13 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const C = d.calc;
   const L = d.labels;
   const lang = coreLang(locale);
-  const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", COUNTRIES.GB.regions[0].id));
+  const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", COUNTRIES.GB.regions[0].id, locale));
   const [detected, setDetected] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [preferredPlan, setPreferredPlan] = useState<PlanId>("report");
   const resultRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
@@ -74,28 +78,34 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   useEffect(() => {
     try {
       const q = new URLSearchParams(window.location.search);
+      const plan = q.get("plan");
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- explicit browser URL preference
+      if (PLAN_IDS.includes(plan as PlanId)) setPreferredPlan(plan as PlanId);
       const guess = guessCountry(locale);
       const c = q.get("c")?.toUpperCase();
       const country = c && COUNTRIES[c] ? c : guess.code;
       const b = q.get("b");
       if (b && b in BUSINESS_TYPES) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- URL/cookie are browser-only state
-        setForm(initialForm(b as BusinessTypeId, country, COUNTRIES[country].regions[0].id));
+        setForm(initialForm(b as BusinessTypeId, country, COUNTRIES[country].regions[0].id, locale));
         setDetected(guess.source !== "locale" && !c ? country : null);
         setStep(1);
         track("calculator_deeplink", { business: b, country });
         return;
       }
+      if (c && COUNTRIES[c]) {
+        setForm(initialForm("dairy_farm", c, COUNTRIES[c].regions[0].id, locale));
+        return;
+      }
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as FormState;
-        if (parsed?.lines?.length && COUNTRIES[parsed.countryCode] && formToInput(parsed, COUNTRIES[parsed.countryCode], lang).feedstocks.length > 0) {
-          setForm(parsed);
+        if (parsed?.lines?.length && COUNTRIES[parsed.countryCode] && formToInput(parsed, COUNTRIES[parsed.countryCode], lang, locale).feedstocks.length > 0) {
+          setForm(inputToForm(formToInput(parsed, COUNTRIES[parsed.countryCode], lang, locale), locale));
           setRestored(true);
           return;
         }
       }
-      setForm(initialForm("dairy_farm", country, COUNTRIES[country].regions[0].id));
+      setForm(initialForm("dairy_farm", country, COUNTRIES[country].regions[0].id, locale));
       if (guess.source !== "locale") setDetected(country);
     } catch {
       /* private mode etc. */
@@ -112,7 +122,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const country = COUNTRIES[form.countryCode] ?? COUNTRIES.GB;
   const cur = country.currency;
   const def = uiDefaults(country);
-  const money2 = (v: number) => new Intl.NumberFormat(undefined, { maximumFractionDigits: v < 10 ? 2 : 0 }).format(v);
+  const money2 = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: v < 10 ? 2 : 0 }).format(v);
 
   const set = useCallback(<K extends keyof FormState>(k: K, v: FormState[K]) => {
     if (!started.current) {
@@ -124,7 +134,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
-  const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
+  const input = useMemo(() => formToInput(form, country, lang, locale), [form, country, lang, locale]);
   const assessment = useMemo(() => (submitted ? assess(input, country) : null), [submitted, input, country]);
 
   function next() {
@@ -153,7 +163,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   function loadExample(id: string) {
     const ex = EXAMPLES.find((e) => e.id === id);
     if (!ex) return;
-    setForm(inputToForm(ex.input));
+    setForm(inputToForm(ex.input, locale));
     setSubmitted(false);
     setStep(1);
     track("example_loaded", { id });
@@ -166,7 +176,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       /* ignore */
     }
     const g = guessCountry(locale).code;
-    setForm(initialForm("dairy_farm", g, COUNTRIES[g].regions[0].id));
+    setForm(initialForm("dairy_farm", g, COUNTRIES[g].regions[0].id, locale));
     setSubmitted(false);
     setRestored(false);
     setStep(0);
@@ -175,15 +185,10 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   }
 
   function applyWhatIf(n: ProjectInput) {
-    setForm(inputToForm(n));
+    setForm(inputToForm(n, locale));
     track("whatif_applied");
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
-
-  const countryOptions = useMemo(
-    () => COUNTRY_ORDER.map((c) => ({ code: c, name: countryName(c, locale) })).sort((a, b) => a.name.localeCompare(b.name, locale)),
-    [locale],
-  );
 
   return (
     <div>
@@ -232,9 +237,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               <p className="hint !mt-1">{C.q2hint}</p>
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
                 <Field label={C.countryLabel} htmlFor="c-country" hint={detected === form.countryCode ? C.detected : undefined}>
-                  <select id="c-country" className="field" value={form.countryCode} onChange={(e) => { const c = e.target.value; setForm((f) => ({ ...f, countryCode: c, regionId: COUNTRIES[c].regions[0].id })); track("country_changed", { country: c }); }}>
-                    {countryOptions.map((o) => <option key={o.code} value={o.code}>{o.name}</option>)}
-                  </select>
+                  <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { setForm((f) => ({ ...f, countryCode: c, regionId: COUNTRIES[c].regions[0].id })); track("country_changed", { country: c }); }} />
                 </Field>
                 <Field label={C.regionLabel} htmlFor="c-region">
                   <select id="c-region" className="field" value={form.regionId} onChange={(e) => set("regionId", e.target.value)}>
@@ -243,8 +246,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 </Field>
               </div>
               <p className="mt-2 flex items-center gap-2 text-xs text-muted">
-                <span className={`inline-block h-2 w-2 rounded-full ${country.maturity === "operational" ? "bg-good" : "bg-warn"}`} />
-                {country.maturity === "operational" ? d.country.calibrated : d.country.profileNote}
+                <span className={`inline-block h-2 w-2 rounded-full ${country.dataStatus === "estimated" ? "bg-warn" : "bg-good"}`} />
+                {country.dataStatus === "calibrated" ? d.country.calibrated : country.dataStatus === "official" ? d.country.official : d.country.profileNote}
               </p>
             </div>
             <div className="rounded-xl border border-dashed border-line p-4">
@@ -253,7 +256,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 {examples.map((e) => (
                   <button key={e.id} type="button" className="flex flex-col items-start rounded-xl border border-line bg-surface px-3 py-2 text-left hover:border-brand" onClick={() => loadExample(e.id)}>
                     <span className="text-sm font-semibold">{e.title}</span>
-                    <span className={`mt-0.5 text-xs font-semibold ${e.tone === "good" ? "text-good" : e.tone === "mid" ? "text-warn" : "text-muted"}`}>{countryName(e.countryCode, locale)} · {e.verdict}</span>
+                    <span className={`mt-0.5 flex items-center gap-1.5 text-xs font-semibold ${e.tone === "good" ? "text-good" : e.tone === "mid" ? "text-warn" : "text-muted"}`}><CountryFlag code={e.countryCode} />{countryName(e.countryCode, locale)} · {e.verdict}</span>
                   </button>
                 ))}
               </div>
@@ -268,7 +271,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               <p className="mt-1 text-sm text-muted">{C.q3hint}</p>
             </div>
             {form.lines.map((l) => (
-              <LineEditor key={l.id} line={l} d={d} cur={cur} onChange={(p) => updateLine(l.id, p)} onRemove={() => setForm((f) => ({ ...f, lines: f.lines.filter((x) => x.id !== l.id) }))} />
+              <LineEditor key={l.id} line={l} d={d} cur={cur} locale={locale} onChange={(p) => updateLine(l.id, p)} onRemove={() => setForm((f) => ({ ...f, lines: f.lines.filter((x) => x.id !== l.id) }))} />
             ))}
             <AddLine d={d} onAdd={(kind, key) => setForm((f) => ({ ...f, lines: [...f.lines, emptyLine(kind, key)] }))} />
           </div>
@@ -368,7 +371,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               access="free"
               samplesHref={samplesHref}
               methodologyHref={`/${locale}/methodology`}
-              unlockSlot={<UnlockButton input={input} locale={locale} d={d} demo={demo} label={d.result.unlock} className="btn btn-primary" />}
+              unlockSlot={<UnlockButton input={input} locale={locale} d={d} demo={demo} plan={preferredPlan} label={d.result.unlock} className="btn btn-primary" />}
               afterSlot={<WhatIf input={input} base={assessment} country={country} locale={locale} d={d} onApply={applyWhatIf} />}
             />
           </div>
@@ -398,7 +401,7 @@ function AddLine({ d, onAdd }: { d: CalculatorDict; onAdd: (kind: "animal" | "ty
   );
 }
 
-function LineEditor({ line, d, cur, onChange, onRemove }: { line: FormLine; d: CalculatorDict; cur: string; onChange: (p: Partial<FormLine>) => void; onRemove: () => void }) {
+function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLine; d: CalculatorDict; cur: string; locale: Locale; onChange: (p: Partial<FormLine>) => void; onRemove: () => void }) {
   const C = d.calc;
   const L = d.labels;
   const isAnimal = line.kind === "animal";
@@ -445,7 +448,14 @@ function LineEditor({ line, d, cur, onChange, onRemove }: { line: FormLine; d: C
         <summary className="text-sm font-semibold text-brand">{C.refine}</summary>
         <div className="mt-3 grid gap-4 md:grid-cols-3">
           <Field label={fmt(C.dm, { v: t.dryMatterPct })} htmlFor={`${id}-dm`} hint={C.dmHint}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
+          <Field label="VS (% DM)" htmlFor={`${id}-vs`}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={String(t.vsPctOfDm)} /></Field>
+          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={String(t.yieldTyp)} /></Field>
           {!isAnimal && <Field label={fmt(C.months, { v: t.defaultMonths })} htmlFor={`${id}-m`}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
+          {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`}>
+            <select id={`${id}-start`} className="field" value={line.startMonth || String(t.defaultStartMonth)} onChange={(e) => onChange({ startMonth: e.target.value })}>
+              {Array.from({ length: 12 }, (_, month) => <option key={month} value={month + 1}>{new Intl.DateTimeFormat(INTL_TAG[locale], { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2025, month, 1)))}</option>)}
+            </select>
+          </Field>}
           <div className="space-y-2">
             <Toggle checked={line.delivered} onChange={(v) => onChange({ delivered: v })} label={C.delivered} />
             {line.delivered && <Num value={line.distanceKm} onChange={(v) => onChange({ distanceKm: v })} unit={L.units.km} placeholder={C.distance} />}

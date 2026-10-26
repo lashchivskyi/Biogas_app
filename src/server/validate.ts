@@ -14,6 +14,8 @@ export const lineSchema = z
     quantity: z.number().gt(0).max(1e9),
     housing: z.enum(["year_round", "seasonal"]).optional(),
     dryMatterPct: z.number().gt(0).max(95).optional(),
+    vsPctOfDm: z.number().gt(0).max(100).optional(),
+    methaneYieldLPerKgVs: z.number().gt(0).max(1200).optional(),
     monthsActive: z.number().min(1).max(12).optional(),
     startMonth: z.number().min(1).max(12).optional(),
     delivered: z.boolean().optional(),

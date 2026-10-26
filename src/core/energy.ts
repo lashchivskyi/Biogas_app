@@ -35,6 +35,7 @@ export function runEnergy(
   design: DigesterDesign,
   demand: CustomerDemand,
   ctx: RunContext,
+  cngCompression = false,
 ): EnergyBalance {
   const { params: p, scenario, mods, input } = ctx;
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
@@ -61,9 +62,15 @@ export function runEnergy(
 
   const monthlyHeatUseful = new Array(12).fill(0) as number[];
   const monthlyElNet = new Array(12).fill(0) as number[];
+  let elNet = 0;
+  let elSelf = 0;
+  let elExport = 0;
   const monthlyDigHeat = new Array(12).fill(0) as number[];
 
   let flared = 0;
+  let gasToChp = 0;
+  let gasToBoiler = 0;
+  let gasToUpgrader = 0;
   let elGross = 0;
   let elPar = 0;
   let elPurchased = 0;
@@ -73,6 +80,7 @@ export function runEnergy(
   let heatNet = 0;
   let heatUseful = 0;
   let bioNm3 = 0;
+  let cngCompressionKwh = 0;
   let rawToUpgrade = 0;
   let slipUpgradeKwh = 0;
   let chpSlipKwh = 0;
@@ -82,9 +90,8 @@ export function runEnergy(
   const parasiticMonth = (i: number) => feed.monthlyTonnes[i] * (parBase + parDm * feed.dryMatterPct);
 
   if (route === "chp") {
-    // Size on average gas power over the months in which gas is produced.
-    const activeHours = sum(HOURS_IN_MONTH.map((h, i) => (gasM[i] > 0 ? h : 0))) || 8760;
-    const qNom = gasYear / (activeHours * (designHours / 8760)); // kW of gas input
+    // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.
+    const qNom = Math.max(...gasM.map((g, i) => g / HOURS_IN_MONTH[i])) * (8760 / designHours);
     let eta = 0.36;
     let kw = qNom * eta;
     for (let k = 0; k < 4; k++) {
@@ -124,6 +131,8 @@ export function runEnergy(
         }
       }
       const gFlare = Math.max(0, G - gC - gB);
+      gasToChp += gC;
+      gasToBoiler += gB;
       flared += gFlare;
       const gen = gC * etaEl;
       const par = parasiticMonth(i);
@@ -131,7 +140,13 @@ export function runEnergy(
       elPar += par;
       const net = gen - par;
       if (net < 0) elPurchased += -net;
-      monthlyElNet[i] = Math.max(0, net);
+      const usable = Math.max(0, net);
+      monthlyElNet[i] = usable;
+      elNet += usable;
+      const coincident = demand.electricityKwhYear * (HOURS_IN_MONTH[i] / 8760) * coincidence;
+      const self = Math.min(usable, coincident);
+      elSelf += self;
+      if (input.energy.hasGridConnection) elExport += usable - self;
       const chpHeat = gC * heatPerGas;
       const boilerHeat = gB * boilerEff;
       heatProduced += gC * recovery * etaTh + boilerHeat;
@@ -150,6 +165,7 @@ export function runEnergy(
       const G = gasM[i];
       const D = dig[i];
       const heat = boilerEff * G;
+      gasToBoiler += G;
       heatProduced += heat;
       heatDigesterTotal += D;
       monthlyDigHeat[i] = D;
@@ -173,6 +189,8 @@ export function runEnergy(
       heatDigesterTotal += D;
       monthlyDigHeat[i] = D;
       const raw = G - gB;
+      gasToBoiler += gB;
+      gasToUpgrader += raw;
       const outKwh = raw * (1 - slipUp);
       slipUpgradeKwh += raw * slipUp;
       bioNm3 += outKwh / (lhv * purity);
@@ -183,10 +201,11 @@ export function runEnergy(
     }
   }
 
-  const elNet = Math.max(0, elGross - elPar);
-  const coincident = demand.electricityKwhYear * coincidence;
-  const elSelf = Math.min(elNet, coincident);
-  const elExport = input.energy.hasGridConnection ? Math.max(0, elNet - elSelf) : 0;
+  if (route === "biomethane" && cngCompression) {
+    cngCompressionKwh = bioNm3 * p.get("eng.cng_compression_kwh_nm3");
+    elPar += cngCompressionKwh;
+    elPurchased += cngCompressionKwh;
+  }
 
   const lossCh4Kwh = ch4Leaked * lhv + chpSlipKwh + slipUpgradeKwh + flared * 0.02;
   const prodKwh = ch4Prod * lhv;
@@ -195,6 +214,10 @@ export function runEnergy(
     route,
     ch4ProducedM3: ch4Prod,
     ch4LeakedM3: ch4Leaked,
+    ch4ToChpM3: gasToChp / lhv,
+    ch4ToBoilerM3: gasToBoiler / lhv,
+    ch4ToUpgraderM3: gasToUpgrader / lhv,
+    ch4FlaredM3: flared / lhv,
     gasEnergyKwh: gasYear,
     flaredKwh: flared,
     chpKwEl: chpKw,
@@ -202,6 +225,7 @@ export function runEnergy(
     chpEtaTh: route === "chp" ? Math.max(0, etaTotal - etaEl) : 0,
     elGrossKwh: elGross,
     elParasiticKwh: elPar,
+    cngCompressionKwh,
     elNetKwh: elNet,
     elSelfConsumedKwh: elSelf,
     elExportedKwh: elExport,
@@ -213,6 +237,9 @@ export function runEnergy(
     heatUsefulKwh: heatUseful,
     biomethaneNm3: bioNm3,
     rawBiogasNm3PerHour: route === "biomethane" ? rawToUpgrade / designHours : feed.biogasM3Year / designHours,
+    rawBiogasDesignNm3PerHour: route === "biomethane"
+      ? Math.max(rawToUpgrade / designHours, ...gasM.map((g, i) => (g - Math.min(g, dig[i] / boilerEff)) / lhv / frac / HOURS_IN_MONTH[i]))
+      : Math.max(feed.biogasM3Year / designHours, ...feed.monthlyCh4M3.map((m3, i) => m3 / frac / HOURS_IN_MONTH[i])),
     upgradingSlipM3: slipUpgradeKwh / lhv,
     methaneLossShare: prodKwh > 0 ? lossCh4Kwh / prodKwh : 0,
     monthly: { gasKwh: gasM, heatDigesterKwh: monthlyDigHeat, heatUsefulKwh: monthlyHeatUseful, elNetKwh: monthlyElNet },
@@ -221,11 +248,10 @@ export function runEnergy(
 
 /**
  * Heat that earns money: only as much as the customer can absorb in that month, discounted by
- * scenario utilisation (timing, distance, outages). If the customer has no number, we credit a
- * conservative flat share of the surplus — and the report lists "heat demand" as missing data.
+ * scenario utilisation (timing, distance, outages). Unquantified demand earns no heat credit.
  */
 function usefulHeat(surplus: number, demand: CustomerDemand, month: number, util: number): number {
   if (!demand.heatWanted) return 0;
-  if (!demand.heatKnown) return surplus * 0.25 * util;
+  if (!demand.heatKnown) return 0;
   return Math.min(surplus, demand.heatMonthlyKwh[month]) * util;
 }

@@ -4,12 +4,14 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/PageHero";
 import { PrintButton } from "@/components/PrintButton";
 import { ResultView } from "@/components/ResultView";
+import { SampleCaseBrief } from "@/components/SampleCaseBrief";
 import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
+import { exampleTitle } from "@/lib/examples";
 
 export function generateStaticParams() {
   return EXAMPLES.map((e) => ({ id: e.id }));
@@ -18,8 +20,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/[lang]/samples/[id]">): Promise<Metadata> {
   const { lang, id } = await params;
   const d = await getDictionary(lang);
-  const title = d.examples[id as keyof typeof d.examples] ?? id;
-  return { title: `${d.report.sampleEyebrow}: ${title}`, description: d.samples.lead, alternates: alternates(lang as Locale, `/samples/${id}`) };
+  const ex = EXAMPLES.find((e) => e.id === id);
+  const title = ex ? exampleTitle(ex, d) : id;
+  return { title: `${d.report.sampleEyebrow}: ${title}${ex ? ` · ${countryName(ex.input.countryCode, lang as Locale)}` : ""}`, description: d.samples.lead, alternates: alternates(lang as Locale, `/samples/${id}`) };
 }
 
 export default async function SamplePage({ params }: PageProps<"/[lang]/samples/[id]">) {
@@ -31,7 +34,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
   const country = getCountry(ex.input.countryCode);
   const cl = coreLang(locale);
   const a = assess(ex.input, country, { lang: cl });
-  const title = d.examples[ex.id as keyof typeof d.examples] ?? ex.title;
+  const title = exampleTitle(ex, d);
   return (
     <main>
       <PageHero
@@ -45,6 +48,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
           <Link href={`/${locale}/calculator`} className="btn btn-primary">{d.samples.run}</Link>
           <PrintButton label={d.report.print} />
         </div>
+        <SampleCaseBrief id={ex.id} locale={locale} d={d} />
         <ResultView a={a} d={d} locale={locale} currency={country.currency} countryNotes={country.approachNotes[cl]} access="full" methodologyHref={`/${locale}/methodology`} />
       </div>
     </main>

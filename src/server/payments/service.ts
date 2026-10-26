@@ -26,8 +26,8 @@ export class CheckoutError extends Error {
 }
 
 const PRODUCT: Record<PlanId, { name: string; description: string }> = {
-  report: { name: "Full Feasibility Report", description: "Biogas/biomethane feasibility report for one project site" },
-  expert: { name: "Expert-Reviewed Feasibility", description: "Full report + engineer review, call and written recommendation" },
+  standard: { name: "Standard Feasibility Report", description: "Automated base-case biogas report: design, CAPEX/OPEX and cash flow for one project site" },
+  report: { name: "Extended Feasibility Report", description: "Automated report with scenario and route comparisons, stress tests and support cases for one project site" },
 };
 
 /**

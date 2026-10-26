@@ -1,0 +1,6314 @@
+{
+ "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2015–2024",
+ "regions": {
+  "UA:kyiv": {
+   "country": "UA",
+   "id": "kyiv",
+   "name": "Kyiv oblast",
+   "names": {
+    "uk": "Київська область"
+   },
+   "lat": 50.45,
+   "lon": 30.52,
+   "elevationM": 169.0,
+   "monthlyTempC": [
+    -2.5,
+    -0.7,
+    3.2,
+    9.6,
+    15.2,
+    20.8,
+    21.5,
+    21.5,
+    16.3,
+    9.5,
+    3.2,
+    -0.1
+   ],
+   "days": 3653
+  },
+  "UA:lviv": {
+   "country": "UA",
+   "id": "lviv",
+   "name": "Lviv oblast",
+   "names": {
+    "uk": "Львівська область"
+   },
+   "lat": 49.84,
+   "lon": 24.03,
+   "elevationM": 286.0,
+   "monthlyTempC": [
+    -1.4,
+    0.9,
+    3.7,
+    9.0,
+    13.9,
+    19.0,
+    20.0,
+    20.3,
+    15.4,
+    9.8,
+    4.2,
+    0.8
+   ],
+   "days": 3653
+  },
+  "UA:volyn": {
+   "country": "UA",
+   "id": "volyn",
+   "name": "Volyn oblast (Lutsk)",
+   "names": {
+    "uk": "Волинська область"
+   },
+   "lat": 50.75,
+   "lon": 25.34,
+   "elevationM": 191.0,
+   "monthlyTempC": [
+    -1.5,
+    0.6,
+    3.6,
+    9.1,
+    14.3,
+    19.4,
+    20.3,
+    20.6,
+    15.5,
+    9.7,
+    4.1,
+    0.8
+   ],
+   "days": 3653
+  },
+  "UA:rivne": {
+   "country": "UA",
+   "id": "rivne",
+   "name": "Rivne oblast",
+   "names": {
+    "uk": "Рівненська область"
+   },
+   "lat": 50.62,
+   "lon": 26.25,
+   "elevationM": 191.0,
+   "monthlyTempC": [
+    -1.7,
+    0.2,
+    3.5,
+    9.1,
+    14.3,
+    19.6,
+    20.4,
+    20.7,
+    15.7,
+    9.6,
+    3.9,
+    0.6
+   ],
+   "days": 3653
+  },
+  "UA:zakarpattia": {
+   "country": "UA",
+   "id": "zakarpattia",
+   "name": "Zakarpattia oblast (Uzhhorod)",
+   "names": {
+    "uk": "Закарпатська область"
+   },
+   "lat": 48.62,
+   "lon": 22.29,
+   "elevationM": 122.0,
+   "monthlyTempC": [
+    -0.8,
+    2.2,
+    5.3,
+    10.6,
+    15.5,
+    20.3,
+    21.6,
+    22.0,
+    17.0,
+    11.0,
+    5.4,
+    1.4
+   ],
+   "days": 3653
+  },
+  "UA:ivano-frankivsk": {
+   "country": "UA",
+   "id": "ivano-frankivsk",
+   "name": "Ivano-Frankivsk oblast",
+   "names": {
+    "uk": "Івано-Франківська область"
+   },
+   "lat": 48.92,
+   "lon": 24.71,
+   "elevationM": 264.0,
+   "monthlyTempC": [
+    -1.1,
+    1.1,
+    3.7,
+    9.3,
+    14.3,
+    19.1,
+    20.3,
+    20.6,
+    15.8,
+    9.8,
+    4.1,
+    1.0
+   ],
+   "days": 3653
+  },
+  "UA:ternopil": {
+   "country": "UA",
+   "id": "ternopil",
+   "name": "Ternopil oblast",
+   "names": {
+    "uk": "Тернопільська область"
+   },
+   "lat": 49.55,
+   "lon": 25.59,
+   "elevationM": 322.0,
+   "monthlyTempC": [
+    -1.8,
+    0.2,
+    3.2,
+    9.0,
+    14.2,
+    19.4,
+    20.3,
+    20.8,
+    15.7,
+    9.4,
+    3.6,
+    0.2
+   ],
+   "days": 3653
+  },
+  "UA:chernivtsi": {
+   "country": "UA",
+   "id": "chernivtsi",
+   "name": "Chernivtsi oblast",
+   "names": {
+    "uk": "Чернівецька область"
+   },
+   "lat": 48.29,
+   "lon": 25.94,
+   "elevationM": 235.0,
+   "monthlyTempC": [
+    -1.4,
+    0.9,
+    4.1,
+    10.0,
+    15.2,
+    20.1,
+    21.4,
+    21.7,
+    16.7,
+    10.2,
+    4.3,
+    0.7
+   ],
+   "days": 3653
+  },
+  "UA:khmelnytskyi": {
+   "country": "UA",
+   "id": "khmelnytskyi",
+   "name": "Khmelnytskyi oblast",
+   "names": {
+    "uk": "Хмельницька область"
+   },
+   "lat": 49.42,
+   "lon": 26.99,
+   "elevationM": 296.0,
+   "monthlyTempC": [
+    -2.2,
+    -0.0,
+    3.1,
+    9.0,
+    14.3,
+    19.4,
+    20.3,
+    20.7,
+    15.7,
+    9.3,
+    3.5,
+    0.0
+   ],
+   "days": 3653
+  },
+  "UA:vinnytsia": {
+   "country": "UA",
+   "id": "vinnytsia",
+   "name": "Vinnytsia oblast",
+   "names": {
+    "uk": "Вінницька область"
+   },
+   "lat": 49.23,
+   "lon": 28.47,
+   "elevationM": 257.0,
+   "monthlyTempC": [
+    -2.2,
+    0.0,
+    3.5,
+    9.4,
+    14.5,
+    19.9,
+    20.9,
+    21.1,
+    16.1,
+    9.6,
+    3.5,
+    0.2
+   ],
+   "days": 3653
+  },
+  "UA:zhytomyr": {
+   "country": "UA",
+   "id": "zhytomyr",
+   "name": "Zhytomyr oblast",
+   "names": {
+    "uk": "Житомирська область"
+   },
+   "lat": 50.25,
+   "lon": 28.66,
+   "elevationM": 224.0,
+   "monthlyTempC": [
+    -2.3,
+    -0.4,
+    3.2,
+    9.2,
+    14.5,
+    20.0,
+    20.8,
+    21.0,
+    15.9,
+    9.4,
+    3.3,
+    0.1
+   ],
+   "days": 3653
+  },
+  "UA:chernihiv": {
+   "country": "UA",
+   "id": "chernihiv",
+   "name": "Chernihiv oblast",
+   "names": {
+    "uk": "Чернігівська область"
+   },
+   "lat": 51.49,
+   "lon": 31.29,
+   "elevationM": 133.0,
+   "monthlyTempC": [
+    -3.5,
+    -1.5,
+    2.7,
+    9.2,
+    14.9,
+    20.3,
+    21.0,
+    20.9,
+    15.6,
+    8.9,
+    2.6,
+    -0.7
+   ],
+   "days": 3653
+  },
+  "UA:sumy": {
+   "country": "UA",
+   "id": "sumy",
+   "name": "Sumy oblast",
+   "names": {
+    "uk": "Сумська область"
+   },
+   "lat": 50.91,
+   "lon": 34.8,
+   "elevationM": 143.0,
+   "monthlyTempC": [
+    -4.2,
+    -2.6,
+    2.1,
+    9.3,
+    14.8,
+    20.1,
+    21.1,
+    21.2,
+    15.7,
+    8.8,
+    2.3,
+    -1.1
+   ],
+   "days": 3653
+  },
+  "UA:poltava": {
+   "country": "UA",
+   "id": "poltava",
+   "name": "Poltava oblast",
+   "names": {
+    "uk": "Полтавська область"
+   },
+   "lat": 49.59,
+   "lon": 34.55,
+   "elevationM": 170.0,
+   "monthlyTempC": [
+    -3.3,
+    -1.6,
+    2.9,
+    9.9,
+    15.4,
+    21.0,
+    22.3,
+    22.5,
+    16.8,
+    9.7,
+    3.0,
+    -0.2
+   ],
+   "days": 3653
+  },
+  "UA:cherkasy": {
+   "country": "UA",
+   "id": "cherkasy",
+   "name": "Cherkasy oblast",
+   "names": {
+    "uk": "Черкаська область"
+   },
+   "lat": 49.44,
+   "lon": 32.06,
+   "elevationM": 111.0,
+   "monthlyTempC": [
+    -2.2,
+    -0.4,
+    3.5,
+    10.2,
+    16.0,
+    21.3,
+    22.4,
+    22.6,
+    17.2,
+    10.4,
+    4.0,
+    0.6
+   ],
+   "days": 3653
+  },
+  "UA:kirovohrad": {
+   "country": "UA",
+   "id": "kirovohrad",
+   "name": "Kirovohrad oblast (Kropyvnytskyi)",
+   "names": {
+    "uk": "Кіровоградська область"
+   },
+   "lat": 48.51,
+   "lon": 32.26,
+   "elevationM": 113.0,
+   "monthlyTempC": [
+    -2.2,
+    -0.1,
+    3.7,
+    10.3,
+    15.9,
+    21.3,
+    22.7,
+    22.9,
+    17.5,
+    10.4,
+    4.0,
+    0.7
+   ],
+   "days": 3653
+  },
+  "UA:kharkiv": {
+   "country": "UA",
+   "id": "kharkiv",
+   "name": "Kharkiv oblast",
+   "names": {
+    "uk": "Харківська область"
+   },
+   "lat": 49.99,
+   "lon": 36.23,
+   "elevationM": 121.0,
+   "monthlyTempC": [
+    -3.8,
+    -2.0,
+    2.5,
+    9.9,
+    15.3,
+    21.0,
+    22.4,
+    22.5,
+    16.7,
+    9.4,
+    2.6,
+    -0.8
+   ],
+   "days": 3653
+  },
+  "UA:dnipro": {
+   "country": "UA",
+   "id": "dnipro",
+   "name": "Dnipropetrovsk oblast (Dnipro)",
+   "names": {
+    "uk": "Дніпропетровська область"
+   },
+   "lat": 48.46,
+   "lon": 35.05,
+   "elevationM": 70.0,
+   "monthlyTempC": [
+    -2.3,
+    -0.3,
+    3.8,
+    10.7,
+    16.3,
+    22.0,
+    23.5,
+    23.6,
+    18.0,
+    10.8,
+    4.3,
+    0.9
+   ],
+   "days": 3653
+  },
+  "UA:zaporizhzhia": {
+   "country": "UA",
+   "id": "zaporizhzhia",
+   "name": "Zaporizhzhia oblast",
+   "names": {
+    "uk": "Запорізька область"
+   },
+   "lat": 47.84,
+   "lon": 35.14,
+   "elevationM": 88.0,
+   "monthlyTempC": [
+    -1.5,
+    0.5,
+    4.3,
+    11.1,
+    16.6,
+    22.2,
+    24.0,
+    24.3,
+    18.6,
+    11.4,
+    4.9,
+    1.5
+   ],
+   "days": 3653
+  },
+  "UA:mykolaiv": {
+   "country": "UA",
+   "id": "mykolaiv",
+   "name": "Mykolaiv oblast",
+   "names": {
+    "uk": "Миколаївська область"
+   },
+   "lat": 46.98,
+   "lon": 31.99,
+   "elevationM": 3.0,
+   "monthlyTempC": [
+    -0.7,
+    1.8,
+    5.1,
+    11.1,
+    16.9,
+    22.4,
+    24.5,
+    24.6,
+    19.1,
+    12.2,
+    5.8,
+    2.6
+   ],
+   "days": 3653
+  },
+  "UA:odesa": {
+   "country": "UA",
+   "id": "odesa",
+   "name": "Odesa oblast",
+   "names": {
+    "uk": "Одеська область"
+   },
+   "lat": 46.48,
+   "lon": 30.73,
+   "elevationM": 63.0,
+   "monthlyTempC": [
+    0.3,
+    2.6,
+    5.1,
+    10.5,
+    16.2,
+    21.9,
+    24.2,
+    24.4,
+    19.4,
+    13.0,
+    7.2,
+    3.4
+   ],
+   "days": 3653
+  },
+  "UA:kherson": {
+   "country": "UA",
+   "id": "kherson",
+   "name": "Kherson oblast",
+   "names": {
+    "uk": "Херсонська область"
+   },
+   "lat": 46.64,
+   "lon": 32.62,
+   "elevationM": 54.0,
+   "monthlyTempC": [
+    -0.1,
+    2.0,
+    5.3,
+    11.3,
+    16.9,
+    22.4,
+    24.7,
+    24.9,
+    19.4,
+    12.4,
+    6.3,
+    3.0
+   ],
+   "days": 3653
+  },
+  "PL:wielkopolskie": {
+   "country": "PL",
+   "id": "wielkopolskie",
+   "name": "Greater Poland (Poznań)",
+   "names": {
+    "pl": "Wielkopolskie (Poznań)"
+   },
+   "lat": 52.41,
+   "lon": 16.93,
+   "elevationM": 69.0,
+   "monthlyTempC": [
+    0.8,
+    2.3,
+    4.8,
+    9.1,
+    14.2,
+    19.2,
+    20.0,
+    20.6,
+    15.9,
+    10.6,
+    5.4,
+    2.6
+   ],
+   "days": 3653
+  },
+  "PL:mazowieckie": {
+   "country": "PL",
+   "id": "mazowieckie",
+   "name": "Masovia (Warsaw)",
+   "names": {
+    "pl": "Mazowieckie (Warszawa)"
+   },
+   "lat": 52.23,
+   "lon": 21.01,
+   "elevationM": 113.0,
+   "monthlyTempC": [
+    -0.3,
+    1.5,
+    4.2,
+    9.1,
+    14.4,
+    19.5,
+    20.3,
+    20.4,
+    15.6,
+    10.1,
+    4.8,
+    1.8
+   ],
+   "days": 3653
+  },
+  "PL:podlaskie": {
+   "country": "PL",
+   "id": "podlaskie",
+   "name": "Podlaskie (Białystok)",
+   "names": {
+    "pl": "Podlaskie (Białystok)"
+   },
+   "lat": 53.13,
+   "lon": 23.16,
+   "elevationM": 144.0,
+   "monthlyTempC": [
+    -1.8,
+    0.2,
+    3.2,
+    8.1,
+    13.6,
+    18.7,
+    19.4,
+    19.7,
+    14.8,
+    9.0,
+    3.8,
+    0.7
+   ],
+   "days": 3653
+  },
+  "PL:lodzkie": {
+   "country": "PL",
+   "id": "lodzkie",
+   "name": "Łódź province",
+   "names": {
+    "pl": "Łódzkie (Łódź)"
+   },
+   "lat": 51.76,
+   "lon": 19.46,
+   "elevationM": 215.0,
+   "monthlyTempC": [
+    -0.6,
+    1.3,
+    4.0,
+    8.6,
+    13.7,
+    18.8,
+    19.8,
+    20.1,
+    15.3,
+    9.9,
+    4.6,
+    1.6
+   ],
+   "days": 3653
+  },
+  "PL:kujawsko-pomorskie": {
+   "country": "PL",
+   "id": "kujawsko-pomorskie",
+   "name": "Kuyavia-Pomerania (Bydgoszcz)",
+   "names": {
+    "pl": "Kujawsko-pomorskie (Bydgoszcz)"
+   },
+   "lat": 53.12,
+   "lon": 18.01,
+   "elevationM": 37.0,
+   "monthlyTempC": [
+    0.4,
+    1.7,
+    4.3,
+    8.7,
+    14.0,
+    18.9,
+    19.4,
+    20.0,
+    15.6,
+    10.2,
+    5.1,
+    2.3
+   ],
+   "days": 3653
+  },
+  "PL:lubelskie": {
+   "country": "PL",
+   "id": "lubelskie",
+   "name": "Lublin province",
+   "names": {
+    "pl": "Lubelskie (Lublin)"
+   },
+   "lat": 51.25,
+   "lon": 22.57,
+   "elevationM": 178.0,
+   "monthlyTempC": [
+    -1.1,
+    1.2,
+    3.8,
+    8.9,
+    13.9,
+    19.0,
+    20.0,
+    20.2,
+    15.3,
+    9.8,
+    4.4,
+    1.2
+   ],
+   "days": 3653
+  },
+  "PL:podkarpackie": {
+   "country": "PL",
+   "id": "podkarpackie",
+   "name": "Subcarpathia (Rzeszów)",
+   "names": {
+    "pl": "Podkarpackie (Rzeszów)"
+   },
+   "lat": 50.04,
+   "lon": 22.0,
+   "elevationM": 207.0,
+   "monthlyTempC": [
+    -0.9,
+    1.5,
+    4.3,
+    9.3,
+    14.0,
+    19.1,
+    20.3,
+    20.4,
+    15.6,
+    10.4,
+    4.9,
+    1.3
+   ],
+   "days": 3653
+  },
+  "PL:dolnoslaskie": {
+   "country": "PL",
+   "id": "dolnoslaskie",
+   "name": "Lower Silesia (Wrocław)",
+   "names": {
+    "pl": "Dolnośląskie (Wrocław)"
+   },
+   "lat": 51.11,
+   "lon": 17.03,
+   "elevationM": 132.0,
+   "monthlyTempC": [
+    1.0,
+    2.7,
+    5.3,
+    9.5,
+    14.4,
+    19.5,
+    20.4,
+    20.7,
+    16.1,
+    11.1,
+    5.7,
+    2.8
+   ],
+   "days": 3653
+  },
+  "PL:pomorskie": {
+   "country": "PL",
+   "id": "pomorskie",
+   "name": "Pomerania (Gdańsk)",
+   "names": {
+    "pl": "Pomorskie (Gdańsk)"
+   },
+   "lat": 54.35,
+   "lon": 18.65,
+   "elevationM": 15.0,
+   "monthlyTempC": [
+    0.9,
+    1.8,
+    4.0,
+    7.7,
+    12.8,
+    17.5,
+    18.7,
+    19.4,
+    15.6,
+    10.5,
+    5.7,
+    2.7
+   ],
+   "days": 3653
+  },
+  "CZ:praha": {
+   "country": "CZ",
+   "id": "praha",
+   "name": "Central Bohemia (Prague)",
+   "names": {
+    "cs": "Středočeský kraj (Praha)"
+   },
+   "lat": 50.08,
+   "lon": 14.44,
+   "elevationM": 251.0,
+   "monthlyTempC": [
+    0.9,
+    2.6,
+    5.3,
+    9.6,
+    14.4,
+    19.6,
+    21.0,
+    20.8,
+    16.0,
+    10.9,
+    5.2,
+    2.6
+   ],
+   "days": 3653
+  },
+  "CZ:vysocina": {
+   "country": "CZ",
+   "id": "vysocina",
+   "name": "Vysočina (Jihlava)",
+   "names": {
+    "cs": "Vysočina (Jihlava)"
+   },
+   "lat": 49.4,
+   "lon": 15.59,
+   "elevationM": 518.0,
+   "monthlyTempC": [
+    -1.3,
+    0.8,
+    3.5,
+    7.5,
+    12.1,
+    17.1,
+    18.6,
+    18.7,
+    14.0,
+    9.2,
+    3.7,
+    0.7
+   ],
+   "days": 3653
+  },
+  "CZ:jihomoravsky": {
+   "country": "CZ",
+   "id": "jihomoravsky",
+   "name": "South Moravia (Brno)",
+   "names": {
+    "cs": "Jihomoravský kraj (Brno)"
+   },
+   "lat": 49.2,
+   "lon": 16.61,
+   "elevationM": 217.0,
+   "monthlyTempC": [
+    -0.0,
+    2.5,
+    5.3,
+    9.9,
+    14.6,
+    19.9,
+    21.5,
+    21.4,
+    16.2,
+    10.8,
+    5.2,
+    1.5
+   ],
+   "days": 3653
+  },
+  "CZ:jihocesky": {
+   "country": "CZ",
+   "id": "jihocesky",
+   "name": "South Bohemia (České Budějovice)",
+   "names": {
+    "cs": "Jihočeský kraj (České Budějovice)"
+   },
+   "lat": 48.97,
+   "lon": 14.47,
+   "elevationM": 382.0,
+   "monthlyTempC": [
+    0.1,
+    2.1,
+    4.7,
+    8.7,
+    13.0,
+    18.1,
+    19.6,
+    19.5,
+    14.9,
+    10.3,
+    4.6,
+    1.8
+   ],
+   "days": 3653
+  },
+  "CZ:olomoucky": {
+   "country": "CZ",
+   "id": "olomoucky",
+   "name": "Olomouc region",
+   "names": {
+    "cs": "Olomoucký kraj (Olomouc)"
+   },
+   "lat": 49.59,
+   "lon": 17.25,
+   "elevationM": 220.0,
+   "monthlyTempC": [
+    -0.1,
+    2.2,
+    5.1,
+    9.6,
+    14.4,
+    19.5,
+    21.0,
+    21.2,
+    16.2,
+    10.7,
+    5.2,
+    1.6
+   ],
+   "days": 3653
+  },
+  "CZ:plzensky": {
+   "country": "CZ",
+   "id": "plzensky",
+   "name": "Plzeň region",
+   "names": {
+    "cs": "Plzeňský kraj (Plzeň)"
+   },
+   "lat": 49.74,
+   "lon": 13.37,
+   "elevationM": 335.0,
+   "monthlyTempC": [
+    0.5,
+    2.2,
+    4.8,
+    8.9,
+    13.7,
+    18.8,
+    20.2,
+    20.1,
+    15.2,
+    10.2,
+    4.5,
+    2.2
+   ],
+   "days": 3653
+  },
+  "SK:nitra": {
+   "country": "SK",
+   "id": "nitra",
+   "name": "Nitra region",
+   "names": {
+    "sk": "Nitriansky kraj (Nitra)"
+   },
+   "lat": 48.31,
+   "lon": 18.09,
+   "elevationM": 142.0,
+   "monthlyTempC": [
+    0.0,
+    3.2,
+    6.0,
+    10.7,
+    15.4,
+    20.7,
+    22.4,
+    22.1,
+    17.0,
+    11.6,
+    5.8,
+    1.7
+   ],
+   "days": 3653
+  },
+  "SK:bratislava": {
+   "country": "SK",
+   "id": "bratislava",
+   "name": "Bratislava / Trnava",
+   "names": {
+    "sk": "Bratislava / Trnava"
+   },
+   "lat": 48.15,
+   "lon": 17.11,
+   "elevationM": 159.0,
+   "monthlyTempC": [
+    0.9,
+    3.6,
+    6.5,
+    11.0,
+    15.6,
+    20.9,
+    22.8,
+    22.4,
+    17.2,
+    11.9,
+    6.2,
+    2.3
+   ],
+   "days": 3653
+  },
+  "SK:zilina": {
+   "country": "SK",
+   "id": "zilina",
+   "name": "Žilina region",
+   "names": {
+    "sk": "Žilinský kraj (Žilina)"
+   },
+   "lat": 49.22,
+   "lon": 18.74,
+   "elevationM": 357.0,
+   "monthlyTempC": [
+    -1.2,
+    1.4,
+    4.3,
+    8.6,
+    13.3,
+    18.3,
+    19.5,
+    19.7,
+    15.0,
+    9.9,
+    4.7,
+    0.9
+   ],
+   "days": 3653
+  },
+  "SK:banska-bystrica": {
+   "country": "SK",
+   "id": "banska-bystrica",
+   "name": "Banská Bystrica region",
+   "names": {
+    "sk": "Banskobystrický kraj"
+   },
+   "lat": 48.74,
+   "lon": 19.15,
+   "elevationM": 382.0,
+   "monthlyTempC": [
+    -1.0,
+    1.4,
+    4.4,
+    8.9,
+    13.7,
+    18.8,
+    20.1,
+    20.3,
+    15.3,
+    9.7,
+    4.5,
+    0.7
+   ],
+   "days": 3653
+  },
+  "SK:kosice": {
+   "country": "SK",
+   "id": "kosice",
+   "name": "Košice region",
+   "names": {
+    "sk": "Košický kraj (Košice)"
+   },
+   "lat": 48.72,
+   "lon": 21.26,
+   "elevationM": 214.0,
+   "monthlyTempC": [
+    -1.3,
+    1.7,
+    4.9,
+    10.1,
+    15.0,
+    20.2,
+    21.6,
+    21.8,
+    16.5,
+    10.2,
+    4.5,
+    0.6
+   ],
+   "days": 3653
+  },
+  "HU:alfold": {
+   "country": "HU",
+   "id": "alfold",
+   "name": "Great Plain (Kecskemét)",
+   "names": {
+    "hu": "Alföld (Kecskemét)"
+   },
+   "lat": 46.91,
+   "lon": 19.69,
+   "elevationM": 126.0,
+   "monthlyTempC": [
+    0.8,
+    4.0,
+    6.9,
+    11.9,
+    16.7,
+    21.8,
+    23.6,
+    23.5,
+    18.0,
+    12.2,
+    6.4,
+    2.5
+   ],
+   "days": 3653
+  },
+  "HU:pest": {
+   "country": "HU",
+   "id": "pest",
+   "name": "Budapest / Pest",
+   "names": {
+    "hu": "Budapest / Pest"
+   },
+   "lat": 47.5,
+   "lon": 19.04,
+   "elevationM": 114.0,
+   "monthlyTempC": [
+    0.6,
+    3.7,
+    6.7,
+    11.6,
+    16.3,
+    21.5,
+    23.4,
+    23.2,
+    17.7,
+    11.9,
+    6.0,
+    2.0
+   ],
+   "days": 3653
+  },
+  "HU:hajdu-bihar": {
+   "country": "HU",
+   "id": "hajdu-bihar",
+   "name": "Hajdú-Bihar (Debrecen)",
+   "names": {
+    "hu": "Hajdú-Bihar (Debrecen)"
+   },
+   "lat": 47.53,
+   "lon": 21.63,
+   "elevationM": 127.0,
+   "monthlyTempC": [
+    0.3,
+    3.4,
+    6.6,
+    11.8,
+    16.6,
+    21.6,
+    23.3,
+    23.5,
+    18.2,
+    12.1,
+    6.0,
+    2.2
+   ],
+   "days": 3653
+  },
+  "HU:gyor": {
+   "country": "HU",
+   "id": "gyor",
+   "name": "Győr-Moson-Sopron (Győr)",
+   "names": {
+    "hu": "Győr-Moson-Sopron (Győr)"
+   },
+   "lat": 47.69,
+   "lon": 17.63,
+   "elevationM": 105.0,
+   "monthlyTempC": [
+    1.3,
+    4.1,
+    6.9,
+    11.6,
+    16.1,
+    21.3,
+    23.2,
+    22.7,
+    17.7,
+    12.4,
+    6.7,
+    2.8
+   ],
+   "days": 3653
+  },
+  "HU:csongrad": {
+   "country": "HU",
+   "id": "csongrad",
+   "name": "Csongrád (Szeged)",
+   "names": {
+    "hu": "Csongrád-Csanád (Szeged)"
+   },
+   "lat": 46.25,
+   "lon": 20.15,
+   "elevationM": 89.0,
+   "monthlyTempC": [
+    1.2,
+    4.4,
+    7.3,
+    12.3,
+    17.2,
+    22.1,
+    24.1,
+    24.0,
+    18.6,
+    12.8,
+    7.0,
+    2.9
+   ],
+   "days": 3653
+  },
+  "HU:baranya": {
+   "country": "HU",
+   "id": "baranya",
+   "name": "Baranya (Pécs)",
+   "names": {
+    "hu": "Baranya (Pécs)"
+   },
+   "lat": 46.07,
+   "lon": 18.23,
+   "elevationM": 130.0,
+   "monthlyTempC": [
+    1.1,
+    4.2,
+    7.0,
+    11.6,
+    16.1,
+    21.1,
+    22.9,
+    22.8,
+    17.7,
+    12.5,
+    6.8,
+    2.8
+   ],
+   "days": 3653
+  },
+  "RO:baragan": {
+   "country": "RO",
+   "id": "baragan",
+   "name": "Bărăgan / Muntenia (Călărași)",
+   "names": {
+    "ro": "Bărăgan / Muntenia (Călărași)"
+   },
+   "lat": 44.2,
+   "lon": 27.33,
+   "elevationM": 22.0,
+   "monthlyTempC": [
+    1.2,
+    4.4,
+    7.2,
+    12.6,
+    17.4,
+    22.3,
+    24.9,
+    25.1,
+    20.1,
+    13.7,
+    8.3,
+    3.7
+   ],
+   "days": 3653
+  },
+  "RO:transilvania": {
+   "country": "RO",
+   "id": "transilvania",
+   "name": "Transylvania (Cluj)",
+   "names": {
+    "ro": "Transilvania (Cluj)"
+   },
+   "lat": 46.77,
+   "lon": 23.59,
+   "elevationM": 348.0,
+   "monthlyTempC": [
+    -0.8,
+    2.3,
+    5.0,
+    10.1,
+    14.9,
+    19.6,
+    21.2,
+    21.5,
+    16.4,
+    10.5,
+    5.0,
+    1.1
+   ],
+   "days": 3653
+  },
+  "RO:timis": {
+   "country": "RO",
+   "id": "timis",
+   "name": "Banat (Timișoara)",
+   "names": {
+    "ro": "Banat (Timișoara)"
+   },
+   "lat": 45.75,
+   "lon": 21.23,
+   "elevationM": 95.0,
+   "monthlyTempC": [
+    1.1,
+    4.4,
+    7.3,
+    12.3,
+    17.2,
+    22.0,
+    24.2,
+    24.3,
+    18.8,
+    12.9,
+    7.2,
+    3.2
+   ],
+   "days": 3653
+  },
+  "RO:iasi": {
+   "country": "RO",
+   "id": "iasi",
+   "name": "Moldavia (Iași)",
+   "names": {
+    "ro": "Moldova (Iași)"
+   },
+   "lat": 47.16,
+   "lon": 27.59,
+   "elevationM": 63.0,
+   "monthlyTempC": [
+    -0.8,
+    2.0,
+    5.2,
+    10.9,
+    16.1,
+    21.1,
+    22.8,
+    22.9,
+    17.9,
+    11.5,
+    5.6,
+    1.9
+   ],
+   "days": 3653
+  },
+  "RO:dolj": {
+   "country": "RO",
+   "id": "dolj",
+   "name": "Oltenia (Craiova)",
+   "names": {
+    "ro": "Oltenia (Craiova)"
+   },
+   "lat": 44.32,
+   "lon": 23.8,
+   "elevationM": 106.0,
+   "monthlyTempC": [
+    0.3,
+    3.8,
+    7.0,
+    12.6,
+    17.5,
+    22.6,
+    25.2,
+    25.3,
+    20.0,
+    13.1,
+    7.2,
+    2.8
+   ],
+   "days": 3653
+  },
+  "RO:brasov": {
+   "country": "RO",
+   "id": "brasov",
+   "name": "Brașov",
+   "names": {
+    "ro": "Brașov"
+   },
+   "lat": 45.65,
+   "lon": 25.61,
+   "elevationM": 569.0,
+   "monthlyTempC": [
+    -2.1,
+    0.7,
+    3.6,
+    8.5,
+    13.2,
+    17.9,
+    19.6,
+    19.9,
+    15.1,
+    9.4,
+    4.4,
+    0.5
+   ],
+   "days": 3653
+  },
+  "RO:bucuresti": {
+   "country": "RO",
+   "id": "bucuresti",
+   "name": "Bucharest / Ilfov",
+   "names": {
+    "ro": "București / Ilfov"
+   },
+   "lat": 44.43,
+   "lon": 26.1,
+   "elevationM": 83.0,
+   "monthlyTempC": [
+    -0.2,
+    3.4,
+    6.6,
+    12.1,
+    17.1,
+    22.1,
+    24.6,
+    24.8,
+    19.6,
+    13.0,
+    7.2,
+    2.6
+   ],
+   "days": 3653
+  },
+  "MD:chisinau": {
+   "country": "MD",
+   "id": "chisinau",
+   "name": "Central Moldova (Chișinău)",
+   "names": {
+    "ro": "Centrul Moldovei (Chișinău)",
+    "uk": "Центр Молдови (Кишинів)"
+   },
+   "lat": 47.01,
+   "lon": 28.86,
+   "elevationM": 48.0,
+   "monthlyTempC": [
+    -0.8,
+    2.2,
+    5.3,
+    11.1,
+    16.4,
+    21.8,
+    23.5,
+    23.7,
+    18.4,
+    11.7,
+    5.6,
+    1.9
+   ],
+   "days": 3653
+  },
+  "MD:balti": {
+   "country": "MD",
+   "id": "balti",
+   "name": "Northern Moldova (Bălți)",
+   "names": {
+    "ro": "Nordul Moldovei (Bălți)",
+    "uk": "Північ Молдови (Бєльці)"
+   },
+   "lat": 47.76,
+   "lon": 27.93,
+   "elevationM": 118.0,
+   "monthlyTempC": [
+    -1.2,
+    1.6,
+    4.9,
+    10.8,
+    16.2,
+    21.3,
+    22.9,
+    23.1,
+    17.8,
+    11.0,
+    5.1,
+    1.3
+   ],
+   "days": 3653
+  },
+  "MD:cahul": {
+   "country": "MD",
+   "id": "cahul",
+   "name": "Southern Moldova (Cahul)",
+   "names": {
+    "ro": "Sudul Moldovei (Cahul)",
+    "uk": "Південь Молдови (Кагул)"
+   },
+   "lat": 45.9,
+   "lon": 28.19,
+   "elevationM": 40.0,
+   "monthlyTempC": [
+    -0.3,
+    2.9,
+    6.0,
+    11.6,
+    16.9,
+    22.1,
+    24.1,
+    24.1,
+    19.0,
+    12.5,
+    6.6,
+    2.5
+   ],
+   "days": 3653
+  },
+  "BG:danube": {
+   "country": "BG",
+   "id": "danube",
+   "name": "Danube plain (Pleven)",
+   "names": {
+    "bg": "Дунавска равнина (Плевен)"
+   },
+   "lat": 43.42,
+   "lon": 24.62,
+   "elevationM": 97.0,
+   "monthlyTempC": [
+    1.1,
+    4.7,
+    7.4,
+    12.7,
+    17.4,
+    21.9,
+    24.9,
+    25.1,
+    20.2,
+    13.6,
+    7.9,
+    3.6
+   ],
+   "days": 3653
+  },
+  "BG:plovdiv": {
+   "country": "BG",
+   "id": "plovdiv",
+   "name": "Thrace (Plovdiv)",
+   "names": {
+    "bg": "Тракия (Пловдив)"
+   },
+   "lat": 42.14,
+   "lon": 24.75,
+   "elevationM": 167.0,
+   "monthlyTempC": [
+    2.7,
+    5.6,
+    8.1,
+    13.0,
+    17.8,
+    22.7,
+    25.8,
+    25.8,
+    20.9,
+    14.7,
+    9.0,
+    4.6
+   ],
+   "days": 3653
+  },
+  "BG:sofia": {
+   "country": "BG",
+   "id": "sofia",
+   "name": "Sofia",
+   "names": {
+    "bg": "София"
+   },
+   "lat": 42.7,
+   "lon": 23.32,
+   "elevationM": 548.0,
+   "monthlyTempC": [
+    0.1,
+    3.3,
+    5.8,
+    10.8,
+    15.3,
+    19.7,
+    22.5,
+    22.5,
+    18.0,
+    12.2,
+    6.7,
+    2.4
+   ],
+   "days": 3653
+  },
+  "BG:dobrich": {
+   "country": "BG",
+   "id": "dobrich",
+   "name": "Dobrudja (Dobrich)",
+   "names": {
+    "bg": "Добруджа (Добрич)"
+   },
+   "lat": 43.57,
+   "lon": 27.83,
+   "elevationM": 220.0,
+   "monthlyTempC": [
+    1.5,
+    4.2,
+    6.2,
+    11.0,
+    15.7,
+    20.7,
+    23.1,
+    23.4,
+    19.0,
+    13.2,
+    8.3,
+    4.1
+   ],
+   "days": 3653
+  },
+  "BG:stara-zagora": {
+   "country": "BG",
+   "id": "stara-zagora",
+   "name": "Stara Zagora",
+   "names": {
+    "bg": "Стара Загора"
+   },
+   "lat": 42.43,
+   "lon": 25.64,
+   "elevationM": 202.0,
+   "monthlyTempC": [
+    1.8,
+    4.7,
+    7.2,
+    12.1,
+    16.9,
+    21.7,
+    24.7,
+    24.9,
+    20.2,
+    13.7,
+    8.5,
+    3.8
+   ],
+   "days": 3653
+  },
+  "BG:ruse": {
+   "country": "BG",
+   "id": "ruse",
+   "name": "Ruse",
+   "names": {
+    "bg": "Русе"
+   },
+   "lat": 43.85,
+   "lon": 25.97,
+   "elevationM": 45.0,
+   "monthlyTempC": [
+    1.0,
+    4.3,
+    7.4,
+    12.7,
+    17.5,
+    22.3,
+    25.1,
+    25.2,
+    20.3,
+    13.8,
+    8.2,
+    3.5
+   ],
+   "days": 3653
+  },
+  "RS:vojvodina": {
+   "country": "RS",
+   "id": "vojvodina",
+   "name": "Vojvodina (Novi Sad)",
+   "names": {
+    "sr": "Vojvodina (Novi Sad)"
+   },
+   "lat": 45.27,
+   "lon": 19.83,
+   "elevationM": 78.0,
+   "monthlyTempC": [
+    1.8,
+    5.2,
+    8.0,
+    12.7,
+    17.4,
+    22.3,
+    24.3,
+    24.3,
+    19.2,
+    13.6,
+    8.0,
+    3.8
+   ],
+   "days": 3653
+  },
+  "RS:belgrade": {
+   "country": "RS",
+   "id": "belgrade",
+   "name": "Belgrade",
+   "names": {
+    "sr": "Beograd"
+   },
+   "lat": 44.79,
+   "lon": 20.45,
+   "elevationM": 145.0,
+   "monthlyTempC": [
+    1.4,
+    5.0,
+    7.8,
+    12.7,
+    17.4,
+    22.1,
+    24.1,
+    24.1,
+    19.2,
+    13.6,
+    8.1,
+    3.7
+   ],
+   "days": 3653
+  },
+  "RS:macva": {
+   "country": "RS",
+   "id": "macva",
+   "name": "Mačva (Šabac)",
+   "names": {
+    "sr": "Mačva (Šabac)"
+   },
+   "lat": 44.75,
+   "lon": 19.69,
+   "elevationM": 80.0,
+   "monthlyTempC": [
+    1.5,
+    5.1,
+    8.0,
+    12.7,
+    17.4,
+    22.2,
+    24.3,
+    24.2,
+    19.2,
+    13.6,
+    8.1,
+    3.7
+   ],
+   "days": 3653
+  },
+  "RS:sumadija": {
+   "country": "RS",
+   "id": "sumadija",
+   "name": "Šumadija (Kragujevac)",
+   "names": {
+    "sr": "Šumadija (Kragujevac)"
+   },
+   "lat": 44.01,
+   "lon": 20.92,
+   "elevationM": 175.0,
+   "monthlyTempC": [
+    1.2,
+    5.0,
+    7.4,
+    12.2,
+    16.8,
+    21.5,
+    23.9,
+    23.7,
+    18.7,
+    13.4,
+    7.8,
+    3.7
+   ],
+   "days": 3653
+  },
+  "RS:nis": {
+   "country": "RS",
+   "id": "nis",
+   "name": "Southern Serbia (Niš)",
+   "names": {
+    "sr": "Južna Srbija (Niš)"
+   },
+   "lat": 43.32,
+   "lon": 21.9,
+   "elevationM": 196.0,
+   "monthlyTempC": [
+    0.4,
+    4.3,
+    6.8,
+    11.7,
+    16.4,
+    21.0,
+    23.5,
+    23.2,
+    18.5,
+    12.8,
+    7.3,
+    3.2
+   ],
+   "days": 3653
+  },
+  "GR:thessaly": {
+   "country": "GR",
+   "id": "thessaly",
+   "name": "Thessaly (Larissa)",
+   "names": {
+    "el": "Θεσσαλία (Λάρισα)"
+   },
+   "lat": 39.64,
+   "lon": 22.42,
+   "elevationM": 85.0,
+   "monthlyTempC": [
+    4.5,
+    7.2,
+    10.1,
+    14.8,
+    19.9,
+    25.4,
+    28.4,
+    27.6,
+    22.5,
+    16.7,
+    11.9,
+    6.7
+   ],
+   "days": 3653
+  },
+  "GR:central-macedonia": {
+   "country": "GR",
+   "id": "central-macedonia",
+   "name": "Central Macedonia (Thessaloniki)",
+   "names": {
+    "el": "Κεντρική Μακεδονία (Θεσσαλονίκη)"
+   },
+   "lat": 40.64,
+   "lon": 22.94,
+   "elevationM": 32.0,
+   "monthlyTempC": [
+    5.4,
+    8.2,
+    10.5,
+    14.6,
+    19.5,
+    24.6,
+    27.3,
+    27.1,
+    22.5,
+    17.1,
+    12.4,
+    7.7
+   ],
+   "days": 3653
+  },
+  "GR:serres": {
+   "country": "GR",
+   "id": "serres",
+   "name": "Eastern Macedonia (Serres)",
+   "names": {
+    "el": "Ανατολική Μακεδονία (Σέρρες)"
+   },
+   "lat": 41.09,
+   "lon": 23.55,
+   "elevationM": 52.0,
+   "monthlyTempC": [
+    5.2,
+    7.9,
+    10.2,
+    14.6,
+    19.3,
+    24.3,
+    27.3,
+    27.2,
+    22.5,
+    16.8,
+    11.7,
+    7.3
+   ],
+   "days": 3653
+  },
+  "GR:western-greece": {
+   "country": "GR",
+   "id": "western-greece",
+   "name": "Western Greece (Patras)",
+   "names": {
+    "el": "Δυτική Ελλάδα (Πάτρα)"
+   },
+   "lat": 38.25,
+   "lon": 21.73,
+   "elevationM": 0.0,
+   "monthlyTempC": [
+    10.2,
+    11.1,
+    12.4,
+    15.8,
+    19.8,
+    24.8,
+    28.3,
+    28.4,
+    24.2,
+    20.0,
+    15.9,
+    12.0
+   ],
+   "days": 3653
+  },
+  "GR:attica": {
+   "country": "GR",
+   "id": "attica",
+   "name": "Attica",
+   "names": {
+    "el": "Αττική"
+   },
+   "lat": 37.98,
+   "lon": 23.73,
+   "elevationM": 99.0,
+   "monthlyTempC": [
+    8.6,
+    10.0,
+    11.7,
+    15.8,
+    20.3,
+    25.2,
+    28.4,
+    27.9,
+    23.9,
+    18.9,
+    14.7,
+    10.7
+   ],
+   "days": 3653
+  },
+  "GR:epirus": {
+   "country": "GR",
+   "id": "epirus",
+   "name": "Epirus (Ioannina)",
+   "names": {
+    "el": "Ήπειρος (Ιωάννινα)"
+   },
+   "lat": 39.66,
+   "lon": 20.85,
+   "elevationM": 509.0,
+   "monthlyTempC": [
+    4.0,
+    6.0,
+    8.0,
+    12.2,
+    16.4,
+    21.1,
+    24.5,
+    24.0,
+    19.5,
+    14.6,
+    10.3,
+    6.0
+   ],
+   "days": 3653
+  },
+  "GR:crete": {
+   "country": "GR",
+   "id": "crete",
+   "name": "Crete (Heraklion)",
+   "names": {
+    "el": "Κρήτη (Ηράκλειο)"
+   },
+   "lat": 35.34,
+   "lon": 25.13,
+   "elevationM": 17.0,
+   "monthlyTempC": [
+    11.8,
+    12.4,
+    13.6,
+    16.8,
+    20.4,
+    24.6,
+    27.0,
+    26.9,
+    24.4,
+    20.6,
+    17.3,
+    13.6
+   ],
+   "days": 3653
+  },
+  "TR:konya": {
+   "country": "TR",
+   "id": "konya",
+   "name": "Central Anatolia (Konya)",
+   "names": {
+    "tr": "İç Anadolu (Konya)"
+   },
+   "lat": 37.87,
+   "lon": 32.48,
+   "elevationM": 1024.0,
+   "monthlyTempC": [
+    0.8,
+    3.2,
+    6.8,
+    12.5,
+    16.9,
+    21.2,
+    25.0,
+    25.5,
+    20.9,
+    14.7,
+    8.3,
+    3.3
+   ],
+   "days": 3653
+  },
+  "TR:ankara": {
+   "country": "TR",
+   "id": "ankara",
+   "name": "Ankara",
+   "names": {
+    "tr": "Ankara"
+   },
+   "lat": 39.93,
+   "lon": 32.86,
+   "elevationM": 870.0,
+   "monthlyTempC": [
+    0.8,
+    3.7,
+    6.6,
+    11.9,
+    16.3,
+    20.4,
+    24.2,
+    25.1,
+    20.8,
+    14.4,
+    8.0,
+    3.2
+   ],
+   "days": 3653
+  },
+  "TR:afyon": {
+   "country": "TR",
+   "id": "afyon",
+   "name": "Afyonkarahisar",
+   "names": {
+    "tr": "Afyonkarahisar"
+   },
+   "lat": 38.76,
+   "lon": 30.54,
+   "elevationM": 1017.0,
+   "monthlyTempC": [
+    -0.1,
+    2.5,
+    5.4,
+    10.7,
+    15.0,
+    18.9,
+    22.9,
+    23.2,
+    19.2,
+    13.0,
+    7.1,
+    2.3
+   ],
+   "days": 3653
+  },
+  "TR:aegean": {
+   "country": "TR",
+   "id": "aegean",
+   "name": "Aegean (İzmir)",
+   "names": {
+    "tr": "Ege (İzmir)"
+   },
+   "lat": 38.42,
+   "lon": 27.14,
+   "elevationM": 13.0,
+   "monthlyTempC": [
+    8.4,
+    10.1,
+    11.9,
+    16.3,
+    21.1,
+    25.9,
+    29.5,
+    29.4,
+    25.2,
+    19.6,
+    14.8,
+    10.2
+   ],
+   "days": 3653
+  },
+  "TR:balikesir": {
+   "country": "TR",
+   "id": "balikesir",
+   "name": "Balıkesir",
+   "names": {
+    "tr": "Balıkesir"
+   },
+   "lat": 39.65,
+   "lon": 27.88,
+   "elevationM": 148.0,
+   "monthlyTempC": [
+    5.6,
+    7.4,
+    9.2,
+    13.6,
+    18.3,
+    22.8,
+    25.6,
+    25.8,
+    22.1,
+    16.8,
+    12.2,
+    7.7
+   ],
+   "days": 3653
+  },
+  "TR:bursa": {
+   "country": "TR",
+   "id": "bursa",
+   "name": "Marmara (Bursa)",
+   "names": {
+    "tr": "Marmara (Bursa)"
+   },
+   "lat": 40.19,
+   "lon": 29.06,
+   "elevationM": 186.0,
+   "monthlyTempC": [
+    5.0,
+    7.2,
+    8.9,
+    13.4,
+    17.6,
+    22.0,
+    24.7,
+    25.1,
+    21.5,
+    16.1,
+    11.9,
+    7.7
+   ],
+   "days": 3653
+  },
+  "TR:thrace": {
+   "country": "TR",
+   "id": "thrace",
+   "name": "Thrace (Tekirdağ)",
+   "names": {
+    "tr": "Trakya (Tekirdağ)"
+   },
+   "lat": 40.98,
+   "lon": 27.51,
+   "elevationM": 80.0,
+   "monthlyTempC": [
+    5.0,
+    6.8,
+    8.3,
+    12.3,
+    17.0,
+    22.2,
+    25.0,
+    25.3,
+    21.4,
+    16.0,
+    11.9,
+    7.5
+   ],
+   "days": 3653
+  },
+  "TR:adana": {
+   "country": "TR",
+   "id": "adana",
+   "name": "Mediterranean (Adana)",
+   "names": {
+    "tr": "Akdeniz (Adana)"
+   },
+   "lat": 37.0,
+   "lon": 35.32,
+   "elevationM": 29.0,
+   "monthlyTempC": [
+    9.2,
+    10.8,
+    13.4,
+    17.7,
+    21.8,
+    25.7,
+    29.1,
+    29.6,
+    27.0,
+    22.5,
+    16.1,
+    11.3
+   ],
+   "days": 3653
+  },
+  "TR:samsun": {
+   "country": "TR",
+   "id": "samsun",
+   "name": "Black Sea (Samsun)",
+   "names": {
+    "tr": "Karadeniz (Samsun)"
+   },
+   "lat": 41.29,
+   "lon": 36.33,
+   "elevationM": 23.0,
+   "monthlyTempC": [
+    7.1,
+    8.0,
+    9.0,
+    12.4,
+    16.1,
+    21.1,
+    23.7,
+    24.6,
+    21.3,
+    16.8,
+    12.7,
+    9.5
+   ],
+   "days": 3653
+  },
+  "TR:erzurum": {
+   "country": "TR",
+   "id": "erzurum",
+   "name": "Eastern Anatolia (Erzurum)",
+   "names": {
+    "tr": "Doğu Anadolu (Erzurum)"
+   },
+   "lat": 39.9,
+   "lon": 41.27,
+   "elevationM": 1924.0,
+   "monthlyTempC": [
+    -5.9,
+    -4.2,
+    -0.2,
+    5.6,
+    10.0,
+    15.6,
+    19.0,
+    20.3,
+    15.7,
+    8.8,
+    2.0,
+    -3.5
+   ],
+   "days": 3653
+  },
+  "TR:sanliurfa": {
+   "country": "TR",
+   "id": "sanliurfa",
+   "name": "Southeast (Şanlıurfa)",
+   "names": {
+    "tr": "Güneydoğu (Şanlıurfa)"
+   },
+   "lat": 37.16,
+   "lon": 38.79,
+   "elevationM": 525.0,
+   "monthlyTempC": [
+    5.4,
+    7.4,
+    11.1,
+    16.8,
+    22.3,
+    28.8,
+    32.6,
+    32.4,
+    28.0,
+    21.1,
+    12.6,
+    7.6
+   ],
+   "days": 3653
+  },
+  "LT:kaunas": {
+   "country": "LT",
+   "id": "kaunas",
+   "name": "Central Lithuania (Kaunas)",
+   "names": {
+    "lt": "Vidurio Lietuva (Kaunas)"
+   },
+   "lat": 54.9,
+   "lon": 23.89,
+   "elevationM": 30.0,
+   "monthlyTempC": [
+    -1.9,
+    -0.2,
+    2.7,
+    7.6,
+    13.1,
+    18.3,
+    19.1,
+    19.1,
+    14.7,
+    8.8,
+    4.1,
+    0.6
+   ],
+   "days": 3653
+  },
+  "LT:vilnius": {
+   "country": "LT",
+   "id": "vilnius",
+   "name": "Vilnius",
+   "names": {
+    "lt": "Vilnius"
+   },
+   "lat": 54.69,
+   "lon": 25.28,
+   "elevationM": 95.0,
+   "monthlyTempC": [
+    -3.0,
+    -1.1,
+    2.1,
+    7.1,
+    12.8,
+    18.0,
+    18.5,
+    18.7,
+    14.0,
+    7.9,
+    3.1,
+    -0.4
+   ],
+   "days": 3653
+  },
+  "LT:siauliai": {
+   "country": "LT",
+   "id": "siauliai",
+   "name": "Šiauliai",
+   "names": {
+    "lt": "Šiauliai"
+   },
+   "lat": 55.93,
+   "lon": 23.32,
+   "elevationM": 128.0,
+   "monthlyTempC": [
+    -2.5,
+    -0.9,
+    1.9,
+    6.6,
+    12.3,
+    17.3,
+    18.0,
+    18.0,
+    13.7,
+    7.9,
+    3.3,
+    -0.2
+   ],
+   "days": 3653
+  },
+  "LT:panevezys": {
+   "country": "LT",
+   "id": "panevezys",
+   "name": "Panevėžys",
+   "names": {
+    "lt": "Panevėžys"
+   },
+   "lat": 55.73,
+   "lon": 24.36,
+   "elevationM": 61.0,
+   "monthlyTempC": [
+    -2.3,
+    -0.5,
+    2.4,
+    7.3,
+    12.8,
+    17.9,
+    18.6,
+    18.6,
+    14.2,
+    8.2,
+    3.6,
+    0.1
+   ],
+   "days": 3653
+  },
+  "LT:klaipeda": {
+   "country": "LT",
+   "id": "klaipeda",
+   "name": "Klaipėda",
+   "names": {
+    "lt": "Klaipėda"
+   },
+   "lat": 55.71,
+   "lon": 21.13,
+   "elevationM": 9.0,
+   "monthlyTempC": [
+    0.1,
+    1.0,
+    2.8,
+    7.0,
+    12.5,
+    17.2,
+    18.5,
+    18.9,
+    15.1,
+    9.9,
+    5.5,
+    2.4
+   ],
+   "days": 3653
+  },
+  "LV:zemgale": {
+   "country": "LV",
+   "id": "zemgale",
+   "name": "Zemgale (Jelgava)",
+   "names": {
+    "lv": "Zemgale (Jelgava)"
+   },
+   "lat": 56.65,
+   "lon": 23.72,
+   "elevationM": 8.0,
+   "monthlyTempC": [
+    -2.0,
+    -0.5,
+    2.2,
+    6.8,
+    12.5,
+    17.5,
+    18.4,
+    18.2,
+    14.1,
+    8.2,
+    3.7,
+    0.3
+   ],
+   "days": 3653
+  },
+  "LV:riga": {
+   "country": "LV",
+   "id": "riga",
+   "name": "Riga region",
+   "names": {
+    "lv": "Rīgas reģions"
+   },
+   "lat": 56.95,
+   "lon": 24.11,
+   "elevationM": 18.0,
+   "monthlyTempC": [
+    -2.1,
+    -0.7,
+    1.9,
+    6.6,
+    12.4,
+    17.5,
+    18.5,
+    18.3,
+    14.1,
+    8.2,
+    3.6,
+    0.3
+   ],
+   "days": 3653
+  },
+  "LV:vidzeme": {
+   "country": "LV",
+   "id": "vidzeme",
+   "name": "Vidzeme (Valmiera)",
+   "names": {
+    "lv": "Vidzeme (Valmiera)"
+   },
+   "lat": 57.54,
+   "lon": 25.43,
+   "elevationM": 43.0,
+   "monthlyTempC": [
+    -3.1,
+    -1.9,
+    1.0,
+    6.0,
+    11.8,
+    16.9,
+    17.8,
+    17.5,
+    13.2,
+    7.2,
+    2.8,
+    -0.6
+   ],
+   "days": 3653
+  },
+  "LV:latgale": {
+   "country": "LV",
+   "id": "latgale",
+   "name": "Latgale (Rēzekne)",
+   "names": {
+    "lv": "Latgale (Rēzekne)"
+   },
+   "lat": 56.51,
+   "lon": 27.33,
+   "elevationM": 155.0,
+   "monthlyTempC": [
+    -4.0,
+    -2.6,
+    0.8,
+    6.1,
+    12.0,
+    17.2,
+    17.9,
+    17.7,
+    13.0,
+    6.7,
+    2.1,
+    -1.3
+   ],
+   "days": 3653
+  },
+  "LV:kurzeme": {
+   "country": "LV",
+   "id": "kurzeme",
+   "name": "Kurzeme (Liepāja)",
+   "names": {
+    "lv": "Kurzeme (Liepāja)"
+   },
+   "lat": 56.51,
+   "lon": 21.01,
+   "elevationM": 5.0,
+   "monthlyTempC": [
+    0.0,
+    0.8,
+    2.5,
+    6.5,
+    11.9,
+    16.6,
+    18.2,
+    18.5,
+    14.8,
+    9.6,
+    5.3,
+    2.1
+   ],
+   "days": 3653
+  },
+  "EE:tartu": {
+   "country": "EE",
+   "id": "tartu",
+   "name": "Southern Estonia (Tartu)",
+   "names": {
+    "et": "Lõuna-Eesti (Tartu)"
+   },
+   "lat": 58.38,
+   "lon": 26.72,
+   "elevationM": 48.0,
+   "monthlyTempC": [
+    -3.6,
+    -2.3,
+    0.4,
+    5.4,
+    11.6,
+    16.9,
+    17.9,
+    17.4,
+    12.9,
+    6.7,
+    2.3,
+    -1.2
+   ],
+   "days": 3653
+  },
+  "EE:harju": {
+   "country": "EE",
+   "id": "harju",
+   "name": "Harju (Tallinn)",
+   "names": {
+    "et": "Harjumaa (Tallinn)"
+   },
+   "lat": 59.44,
+   "lon": 24.75,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    -2.7,
+    -1.7,
+    0.4,
+    4.6,
+    10.8,
+    16.1,
+    17.6,
+    17.2,
+    13.0,
+    7.2,
+    2.9,
+    -0.4
+   ],
+   "days": 3653
+  },
+  "EE:parnu": {
+   "country": "EE",
+   "id": "parnu",
+   "name": "Pärnu",
+   "names": {
+    "et": "Pärnumaa"
+   },
+   "lat": 58.39,
+   "lon": 24.5,
+   "elevationM": 4.0,
+   "monthlyTempC": [
+    -2.4,
+    -1.5,
+    0.6,
+    5.4,
+    11.7,
+    16.7,
+    18.1,
+    17.7,
+    13.5,
+    7.6,
+    3.3,
+    0.0
+   ],
+   "days": 3653
+  },
+  "EE:viljandi": {
+   "country": "EE",
+   "id": "viljandi",
+   "name": "Viljandi",
+   "names": {
+    "et": "Viljandimaa"
+   },
+   "lat": 58.36,
+   "lon": 25.59,
+   "elevationM": 69.0,
+   "monthlyTempC": [
+    -3.5,
+    -2.4,
+    0.1,
+    5.1,
+    11.3,
+    16.4,
+    17.5,
+    16.9,
+    12.6,
+    6.6,
+    2.2,
+    -1.2
+   ],
+   "days": 3653
+  },
+  "EE:laane-viru": {
+   "country": "EE",
+   "id": "laane-viru",
+   "name": "Lääne-Viru (Rakvere)",
+   "names": {
+    "et": "Lääne-Virumaa (Rakvere)"
+   },
+   "lat": 59.35,
+   "lon": 26.36,
+   "elevationM": 78.0,
+   "monthlyTempC": [
+    -3.8,
+    -2.6,
+    -0.3,
+    4.3,
+    10.7,
+    16.0,
+    17.3,
+    16.8,
+    12.4,
+    6.3,
+    2.0,
+    -1.5
+   ],
+   "days": 3653
+  },
+  "DK:jutland": {
+   "country": "DK",
+   "id": "jutland",
+   "name": "Central Jutland (Herning)",
+   "names": {
+    "da": "Midtjylland (Herning)"
+   },
+   "lat": 56.14,
+   "lon": 8.97,
+   "elevationM": 58.0,
+   "monthlyTempC": [
+    2.3,
+    2.7,
+    3.9,
+    6.9,
+    11.5,
+    15.1,
+    16.0,
+    16.5,
+    14.0,
+    10.1,
+    5.9,
+    3.9
+   ],
+   "days": 3653
+  },
+  "DK:south-jutland": {
+   "country": "DK",
+   "id": "south-jutland",
+   "name": "Southern Jutland (Aabenraa)",
+   "names": {
+    "da": "Sønderjylland (Aabenraa)"
+   },
+   "lat": 55.04,
+   "lon": 9.42,
+   "elevationM": 4.0,
+   "monthlyTempC": [
+    2.7,
+    3.2,
+    4.5,
+    7.4,
+    12.1,
+    16.0,
+    17.0,
+    17.5,
+    14.8,
+    10.9,
+    6.4,
+    4.3
+   ],
+   "days": 3653
+  },
+  "DK:north-jutland": {
+   "country": "DK",
+   "id": "north-jutland",
+   "name": "North Jutland (Aalborg)",
+   "names": {
+    "da": "Nordjylland (Aalborg)"
+   },
+   "lat": 57.05,
+   "lon": 9.92,
+   "elevationM": 6.0,
+   "monthlyTempC": [
+    2.1,
+    2.6,
+    3.8,
+    7.1,
+    11.8,
+    15.7,
+    16.6,
+    16.7,
+    14.3,
+    10.1,
+    6.1,
+    3.7
+   ],
+   "days": 3653
+  },
+  "DK:funen": {
+   "country": "DK",
+   "id": "funen",
+   "name": "Funen (Odense)",
+   "names": {
+    "da": "Fyn (Odense)"
+   },
+   "lat": 55.4,
+   "lon": 10.39,
+   "elevationM": 18.0,
+   "monthlyTempC": [
+    2.5,
+    3.0,
+    4.3,
+    7.3,
+    12.0,
+    16.1,
+    17.1,
+    17.5,
+    14.8,
+    10.8,
+    6.5,
+    4.2
+   ],
+   "days": 3653
+  },
+  "DK:zealand": {
+   "country": "DK",
+   "id": "zealand",
+   "name": "Zealand (Roskilde)",
+   "names": {
+    "da": "Sjælland (Roskilde)"
+   },
+   "lat": 55.64,
+   "lon": 12.08,
+   "elevationM": 45.0,
+   "monthlyTempC": [
+    1.9,
+    2.4,
+    3.8,
+    7.1,
+    12.0,
+    16.4,
+    17.3,
+    17.6,
+    14.6,
+    10.3,
+    6.0,
+    3.6
+   ],
+   "days": 3653
+  },
+  "SE:skane": {
+   "country": "SE",
+   "id": "skane",
+   "name": "Skåne (Kristianstad)",
+   "names": {
+    "sv": "Skåne (Kristianstad)"
+   },
+   "lat": 56.03,
+   "lon": 14.16,
+   "elevationM": 6.0,
+   "monthlyTempC": [
+    1.5,
+    2.1,
+    3.6,
+    6.8,
+    11.7,
+    16.4,
+    17.6,
+    17.6,
+    14.5,
+    10.1,
+    5.8,
+    3.2
+   ],
+   "days": 3653
+  },
+  "SE:halland": {
+   "country": "SE",
+   "id": "halland",
+   "name": "Halland (Halmstad)",
+   "names": {
+    "sv": "Halland (Halmstad)"
+   },
+   "lat": 56.67,
+   "lon": 12.86,
+   "elevationM": 0.0,
+   "monthlyTempC": [
+    1.4,
+    1.7,
+    3.2,
+    6.8,
+    12.2,
+    16.2,
+    17.2,
+    17.2,
+    14.4,
+    9.9,
+    5.7,
+    2.9
+   ],
+   "days": 3653
+  },
+  "SE:vastra-gotaland": {
+   "country": "SE",
+   "id": "vastra-gotaland",
+   "name": "Västra Götaland (Skara)",
+   "names": {
+    "sv": "Västra Götaland (Skara)"
+   },
+   "lat": 58.39,
+   "lon": 13.44,
+   "elevationM": 118.0,
+   "monthlyTempC": [
+    -0.5,
+    -0.2,
+    1.9,
+    5.7,
+    11.4,
+    15.9,
+    16.6,
+    16.1,
+    12.9,
+    7.9,
+    3.6,
+    0.9
+   ],
+   "days": 3653
+  },
+  "SE:ostergotland": {
+   "country": "SE",
+   "id": "ostergotland",
+   "name": "Östergötland (Linköping)",
+   "names": {
+    "sv": "Östergötland (Linköping)"
+   },
+   "lat": 58.41,
+   "lon": 15.62,
+   "elevationM": 61.0,
+   "monthlyTempC": [
+    -0.6,
+    -0.0,
+    2.1,
+    5.7,
+    11.8,
+    16.7,
+    17.6,
+    17.0,
+    13.3,
+    8.2,
+    3.8,
+    1.0
+   ],
+   "days": 3653
+  },
+  "SE:uppsala": {
+   "country": "SE",
+   "id": "uppsala",
+   "name": "Uppsala",
+   "names": {
+    "sv": "Uppsala"
+   },
+   "lat": 59.86,
+   "lon": 17.64,
+   "elevationM": 14.0,
+   "monthlyTempC": [
+    -1.9,
+    -1.1,
+    1.1,
+    4.8,
+    11.0,
+    16.3,
+    17.5,
+    16.8,
+    12.7,
+    7.2,
+    2.7,
+    -0.4
+   ],
+   "days": 3653
+  },
+  "SE:jamtland": {
+   "country": "SE",
+   "id": "jamtland",
+   "name": "Jämtland (Östersund)",
+   "names": {
+    "sv": "Jämtland (Östersund)"
+   },
+   "lat": 63.18,
+   "lon": 14.64,
+   "elevationM": 320.0,
+   "monthlyTempC": [
+    -5.8,
+    -5.0,
+    -2.6,
+    0.9,
+    7.6,
+    12.9,
+    14.2,
+    13.4,
+    9.4,
+    3.6,
+    -1.4,
+    -4.2
+   ],
+   "days": 3653
+  },
+  "FI:ostrobothnia": {
+   "country": "FI",
+   "id": "ostrobothnia",
+   "name": "Ostrobothnia (Seinäjoki)",
+   "names": {
+    "fi": "Etelä-Pohjanmaa (Seinäjoki)",
+    "sv": "Södra Österbotten (Seinäjoki)"
+   },
+   "lat": 62.79,
+   "lon": 22.84,
+   "elevationM": 48.0,
+   "monthlyTempC": [
+    -5.2,
+    -4.1,
+    -1.7,
+    2.9,
+    9.7,
+    15.2,
+    16.8,
+    15.8,
+    11.1,
+    4.7,
+    0.6,
+    -2.6
+   ],
+   "days": 3653
+  },
+  "FI:uusimaa": {
+   "country": "FI",
+   "id": "uusimaa",
+   "name": "Uusimaa (Helsinki)",
+   "names": {
+    "fi": "Uusimaa (Helsinki)",
+    "sv": "Nyland (Helsingfors)"
+   },
+   "lat": 60.17,
+   "lon": 24.94,
+   "elevationM": 7.0,
+   "monthlyTempC": [
+    -3.3,
+    -2.6,
+    -0.7,
+    3.8,
+    10.1,
+    15.6,
+    17.5,
+    17.0,
+    12.9,
+    7.0,
+    2.9,
+    -0.5
+   ],
+   "days": 3653
+  },
+  "FI:varsinais-suomi": {
+   "country": "FI",
+   "id": "varsinais-suomi",
+   "name": "Southwest Finland (Turku)",
+   "names": {
+    "fi": "Varsinais-Suomi (Turku)",
+    "sv": "Egentliga Finland (Åbo)"
+   },
+   "lat": 60.45,
+   "lon": 22.27,
+   "elevationM": 13.0,
+   "monthlyTempC": [
+    -3.1,
+    -2.4,
+    -0.4,
+    4.1,
+    10.7,
+    16.0,
+    17.6,
+    16.8,
+    12.5,
+    6.7,
+    2.7,
+    -0.6
+   ],
+   "days": 3653
+  },
+  "FI:pirkanmaa": {
+   "country": "FI",
+   "id": "pirkanmaa",
+   "name": "Pirkanmaa (Tampere)",
+   "names": {
+    "fi": "Pirkanmaa (Tampere)"
+   },
+   "lat": 61.5,
+   "lon": 23.76,
+   "elevationM": 102.0,
+   "monthlyTempC": [
+    -4.7,
+    -3.7,
+    -1.5,
+    3.1,
+    10.3,
+    15.8,
+    17.4,
+    16.4,
+    11.8,
+    5.7,
+    1.5,
+    -1.8
+   ],
+   "days": 3653
+  },
+  "FI:north-savo": {
+   "country": "FI",
+   "id": "north-savo",
+   "name": "North Savo (Kuopio)",
+   "names": {
+    "fi": "Pohjois-Savo (Kuopio)"
+   },
+   "lat": 62.89,
+   "lon": 27.68,
+   "elevationM": 99.0,
+   "monthlyTempC": [
+    -6.7,
+    -5.3,
+    -2.7,
+    1.5,
+    9.0,
+    15.2,
+    17.4,
+    16.3,
+    11.4,
+    5.0,
+    0.5,
+    -3.2
+   ],
+   "days": 3653
+  },
+  "FI:oulu": {
+   "country": "FI",
+   "id": "oulu",
+   "name": "North Ostrobothnia (Oulu)",
+   "names": {
+    "fi": "Pohjois-Pohjanmaa (Oulu)"
+   },
+   "lat": 65.01,
+   "lon": 25.47,
+   "elevationM": 15.0,
+   "monthlyTempC": [
+    -7.6,
+    -6.3,
+    -3.5,
+    0.7,
+    7.8,
+    14.1,
+    16.8,
+    15.3,
+    10.6,
+    3.8,
+    -0.7,
+    -4.1
+   ],
+   "days": 3653
+  },
+  "DE:niedersachsen": {
+   "country": "DE",
+   "id": "niedersachsen",
+   "name": "Lower Saxony (Vechta)",
+   "names": {
+    "de": "Niedersachsen (Vechta)"
+   },
+   "lat": 52.73,
+   "lon": 8.29,
+   "elevationM": 39.0,
+   "monthlyTempC": [
+    3.1,
+    4.0,
+    6.0,
+    9.0,
+    13.5,
+    17.5,
+    18.4,
+    18.9,
+    15.5,
+    11.5,
+    6.6,
+    4.8
+   ],
+   "days": 3653
+  },
+  "DE:nrw": {
+   "country": "DE",
+   "id": "nrw",
+   "name": "North Rhine-Westphalia (Münster)",
+   "names": {
+    "de": "Nordrhein-Westfalen (Münster)"
+   },
+   "lat": 51.96,
+   "lon": 7.63,
+   "elevationM": 69.0,
+   "monthlyTempC": [
+    3.2,
+    4.2,
+    6.2,
+    9.3,
+    13.9,
+    18.1,
+    19.0,
+    19.2,
+    15.6,
+    11.7,
+    6.7,
+    4.9
+   ],
+   "days": 3653
+  },
+  "DE:schleswig-holstein": {
+   "country": "DE",
+   "id": "schleswig-holstein",
+   "name": "Schleswig-Holstein (Rendsburg)",
+   "names": {
+    "de": "Schleswig-Holstein (Rendsburg)"
+   },
+   "lat": 54.3,
+   "lon": 9.66,
+   "elevationM": 10.0,
+   "monthlyTempC": [
+    2.8,
+    3.4,
+    4.9,
+    7.8,
+    12.5,
+    16.5,
+    17.4,
+    17.9,
+    15.0,
+    11.0,
+    6.4,
+    4.3
+   ],
+   "days": 3653
+  },
+  "DE:mecklenburg": {
+   "country": "DE",
+   "id": "mecklenburg",
+   "name": "Mecklenburg-Vorpommern (Neubrandenburg)",
+   "names": {
+    "de": "Mecklenburg-Vorpommern (Neubrandenburg)"
+   },
+   "lat": 53.56,
+   "lon": 13.26,
+   "elevationM": 26.0,
+   "monthlyTempC": [
+    1.7,
+    2.6,
+    4.6,
+    8.1,
+    13.3,
+    17.8,
+    18.6,
+    19.3,
+    15.4,
+    10.8,
+    5.8,
+    3.4
+   ],
+   "days": 3653
+  },
+  "DE:brandenburg": {
+   "country": "DE",
+   "id": "brandenburg",
+   "name": "Brandenburg (Potsdam)",
+   "names": {
+    "de": "Brandenburg (Potsdam)"
+   },
+   "lat": 52.39,
+   "lon": 13.07,
+   "elevationM": 37.0,
+   "monthlyTempC": [
+    2.1,
+    3.2,
+    5.5,
+    9.4,
+    14.5,
+    19.2,
+    19.9,
+    20.5,
+    16.3,
+    11.4,
+    6.1,
+    3.8
+   ],
+   "days": 3653
+  },
+  "DE:sachsen": {
+   "country": "DE",
+   "id": "sachsen",
+   "name": "Saxony (Leipzig)",
+   "names": {
+    "de": "Sachsen (Leipzig)"
+   },
+   "lat": 51.34,
+   "lon": 12.37,
+   "elevationM": 111.0,
+   "monthlyTempC": [
+    2.1,
+    3.3,
+    5.5,
+    9.3,
+    14.3,
+    19.2,
+    20.4,
+    20.7,
+    16.3,
+    11.5,
+    6.0,
+    3.8
+   ],
+   "days": 3653
+  },
+  "DE:thueringen": {
+   "country": "DE",
+   "id": "thueringen",
+   "name": "Thuringia (Erfurt)",
+   "names": {
+    "de": "Thüringen (Erfurt)"
+   },
+   "lat": 50.98,
+   "lon": 11.03,
+   "elevationM": 195.0,
+   "monthlyTempC": [
+    2.0,
+    3.1,
+    5.3,
+    9.0,
+    13.6,
+    18.4,
+    19.8,
+    20.0,
+    15.6,
+    11.1,
+    5.8,
+    3.7
+   ],
+   "days": 3653
+  },
+  "DE:bayern": {
+   "country": "DE",
+   "id": "bayern",
+   "name": "Bavaria (Landshut)",
+   "names": {
+    "de": "Bayern (Landshut)"
+   },
+   "lat": 48.54,
+   "lon": 12.15,
+   "elevationM": 390.0,
+   "monthlyTempC": [
+    0.6,
+    2.6,
+    5.5,
+    9.3,
+    13.6,
+    18.6,
+    20.1,
+    20.0,
+    15.2,
+    10.6,
+    4.8,
+    2.1
+   ],
+   "days": 3653
+  },
+  "DE:baden-wuerttemberg": {
+   "country": "DE",
+   "id": "baden-wuerttemberg",
+   "name": "Baden-Württemberg (Ulm)",
+   "names": {
+    "de": "Baden-Württemberg (Ulm)"
+   },
+   "lat": 48.4,
+   "lon": 9.99,
+   "elevationM": 485.0,
+   "monthlyTempC": [
+    0.6,
+    2.3,
+    5.0,
+    8.5,
+    12.8,
+    17.7,
+    19.3,
+    19.1,
+    14.6,
+    10.2,
+    4.5,
+    1.9
+   ],
+   "days": 3653
+  },
+  "AT:oberoesterreich": {
+   "country": "AT",
+   "id": "oberoesterreich",
+   "name": "Upper Austria (Linz)",
+   "names": {
+    "de": "Oberösterreich (Linz)"
+   },
+   "lat": 48.31,
+   "lon": 14.29,
+   "elevationM": 250.0,
+   "monthlyTempC": [
+    1.0,
+    3.3,
+    6.0,
+    10.2,
+    14.6,
+    20.0,
+    21.4,
+    21.2,
+    16.4,
+    11.4,
+    5.6,
+    2.4
+   ],
+   "days": 3653
+  },
+  "AT:niederoesterreich": {
+   "country": "AT",
+   "id": "niederoesterreich",
+   "name": "Lower Austria (St. Pölten)",
+   "names": {
+    "de": "Niederösterreich (St. Pölten)"
+   },
+   "lat": 48.2,
+   "lon": 15.63,
+   "elevationM": 273.0,
+   "monthlyTempC": [
+    0.5,
+    3.0,
+    5.5,
+    9.6,
+    13.9,
+    19.2,
+    20.7,
+    20.5,
+    15.7,
+    10.9,
+    5.2,
+    2.1
+   ],
+   "days": 3653
+  },
+  "AT:steiermark": {
+   "country": "AT",
+   "id": "steiermark",
+   "name": "Styria (Graz)",
+   "names": {
+    "de": "Steiermark (Graz)"
+   },
+   "lat": 47.07,
+   "lon": 15.44,
+   "elevationM": 363.0,
+   "monthlyTempC": [
+    -0.0,
+    2.6,
+    5.5,
+    9.8,
+    14.0,
+    19.2,
+    20.8,
+    20.5,
+    15.7,
+    11.0,
+    5.0,
+    0.9
+   ],
+   "days": 3653
+  },
+  "AT:burgenland": {
+   "country": "AT",
+   "id": "burgenland",
+   "name": "Burgenland (Eisenstadt)",
+   "names": {
+    "de": "Burgenland (Eisenstadt)"
+   },
+   "lat": 47.85,
+   "lon": 16.52,
+   "elevationM": 242.0,
+   "monthlyTempC": [
+    1.1,
+    3.8,
+    6.4,
+    10.8,
+    15.2,
+    20.6,
+    22.6,
+    22.1,
+    17.0,
+    11.9,
+    6.2,
+    2.5
+   ],
+   "days": 3653
+  },
+  "AT:kaernten": {
+   "country": "AT",
+   "id": "kaernten",
+   "name": "Carinthia (Klagenfurt)",
+   "names": {
+    "de": "Kärnten (Klagenfurt)"
+   },
+   "lat": 46.62,
+   "lon": 14.31,
+   "elevationM": 448.0,
+   "monthlyTempC": [
+    -0.9,
+    1.5,
+    5.1,
+    9.5,
+    13.7,
+    19.0,
+    20.9,
+    20.4,
+    15.5,
+    10.9,
+    4.9,
+    0.5
+   ],
+   "days": 3653
+  },
+  "AT:tirol": {
+   "country": "AT",
+   "id": "tirol",
+   "name": "Tyrol (Innsbruck)",
+   "names": {
+    "de": "Tirol (Innsbruck)"
+   },
+   "lat": 47.27,
+   "lon": 11.39,
+   "elevationM": 590.0,
+   "monthlyTempC": [
+    0.6,
+    3.0,
+    5.9,
+    9.3,
+    13.5,
+    18.6,
+    20.1,
+    19.8,
+    15.6,
+    11.7,
+    6.0,
+    2.5
+   ],
+   "days": 3653
+  },
+  "IT:lombardia": {
+   "country": "IT",
+   "id": "lombardia",
+   "name": "Lombardy (Cremona)",
+   "names": {
+    "it": "Lombardia (Cremona)"
+   },
+   "lat": 45.13,
+   "lon": 10.02,
+   "elevationM": 50.0,
+   "monthlyTempC": [
+    3.0,
+    6.0,
+    9.4,
+    13.6,
+    17.7,
+    23.2,
+    26.1,
+    25.4,
+    20.3,
+    15.0,
+    8.7,
+    4.0
+   ],
+   "days": 3653
+  },
+  "IT:emilia": {
+   "country": "IT",
+   "id": "emilia",
+   "name": "Emilia-Romagna (Modena)",
+   "names": {
+    "it": "Emilia-Romagna (Modena)"
+   },
+   "lat": 44.65,
+   "lon": 10.93,
+   "elevationM": 36.0,
+   "monthlyTempC": [
+    3.5,
+    6.0,
+    9.3,
+    13.4,
+    17.8,
+    23.5,
+    26.6,
+    25.8,
+    20.6,
+    15.3,
+    9.2,
+    4.5
+   ],
+   "days": 3653
+  },
+  "IT:veneto": {
+   "country": "IT",
+   "id": "veneto",
+   "name": "Veneto (Verona)",
+   "names": {
+    "it": "Veneto (Verona)"
+   },
+   "lat": 45.44,
+   "lon": 10.99,
+   "elevationM": 69.0,
+   "monthlyTempC": [
+    3.5,
+    6.3,
+    9.5,
+    13.6,
+    17.7,
+    23.0,
+    25.8,
+    25.2,
+    20.1,
+    15.1,
+    8.9,
+    4.6
+   ],
+   "days": 3653
+  },
+  "IT:piemonte": {
+   "country": "IT",
+   "id": "piemonte",
+   "name": "Piedmont (Cuneo)",
+   "names": {
+    "it": "Piemonte (Cuneo)"
+   },
+   "lat": 44.39,
+   "lon": 7.55,
+   "elevationM": 544.0,
+   "monthlyTempC": [
+    2.5,
+    4.2,
+    7.0,
+    11.1,
+    14.8,
+    19.9,
+    22.8,
+    22.1,
+    17.5,
+    12.6,
+    6.8,
+    2.9
+   ],
+   "days": 3653
+  },
+  "IT:lazio": {
+   "country": "IT",
+   "id": "lazio",
+   "name": "Lazio (Latina)",
+   "names": {
+    "it": "Lazio (Latina)"
+   },
+   "lat": 41.47,
+   "lon": 12.9,
+   "elevationM": 21.0,
+   "monthlyTempC": [
+    9.2,
+    10.3,
+    11.9,
+    14.6,
+    18.6,
+    23.5,
+    26.9,
+    26.7,
+    22.7,
+    18.5,
+    14.3,
+    10.6
+   ],
+   "days": 3653
+  },
+  "IT:campania": {
+   "country": "IT",
+   "id": "campania",
+   "name": "Campania (Caserta)",
+   "names": {
+    "it": "Campania (Caserta)"
+   },
+   "lat": 41.07,
+   "lon": 14.33,
+   "elevationM": 64.0,
+   "monthlyTempC": [
+    7.5,
+    8.9,
+    10.5,
+    13.6,
+    17.5,
+    22.6,
+    26.0,
+    25.8,
+    21.5,
+    17.2,
+    12.9,
+    9.0
+   ],
+   "days": 3653
+  },
+  "IT:puglia": {
+   "country": "IT",
+   "id": "puglia",
+   "name": "Apulia (Foggia)",
+   "names": {
+    "it": "Puglia (Foggia)"
+   },
+   "lat": 41.46,
+   "lon": 15.54,
+   "elevationM": 82.0,
+   "monthlyTempC": [
+    7.9,
+    9.4,
+    10.9,
+    14.6,
+    19.4,
+    25.1,
+    28.4,
+    27.4,
+    22.6,
+    17.9,
+    13.2,
+    9.3
+   ],
+   "days": 3653
+  },
+  "IT:sicilia": {
+   "country": "IT",
+   "id": "sicilia",
+   "name": "Sicily (Catania)",
+   "names": {
+    "it": "Sicilia (Catania)"
+   },
+   "lat": 37.5,
+   "lon": 15.09,
+   "elevationM": 3.0,
+   "monthlyTempC": [
+    11.0,
+    11.7,
+    13.2,
+    15.8,
+    19.7,
+    24.8,
+    28.1,
+    28.0,
+    24.5,
+    20.5,
+    16.4,
+    12.6
+   ],
+   "days": 3653
+  },
+  "IT:sardegna": {
+   "country": "IT",
+   "id": "sardegna",
+   "name": "Sardinia (Oristano)",
+   "names": {
+    "it": "Sardegna (Oristano)"
+   },
+   "lat": 39.9,
+   "lon": 8.59,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    10.2,
+    10.7,
+    12.2,
+    14.8,
+    18.3,
+    23.4,
+    26.5,
+    26.2,
+    23.0,
+    19.1,
+    14.7,
+    11.5
+   ],
+   "days": 3653
+  },
+  "FR:bretagne": {
+   "country": "FR",
+   "id": "bretagne",
+   "name": "Brittany (Pontivy)",
+   "names": {
+    "fr": "Bretagne (Pontivy)"
+   },
+   "lat": 48.07,
+   "lon": -2.96,
+   "elevationM": 80.0,
+   "monthlyTempC": [
+    6.2,
+    6.8,
+    8.1,
+    10.2,
+    13.3,
+    16.5,
+    18.3,
+    18.1,
+    16.0,
+    12.9,
+    9.4,
+    7.8
+   ],
+   "days": 3653
+  },
+  "FR:normandie": {
+   "country": "FR",
+   "id": "normandie",
+   "name": "Normandy (Caen)",
+   "names": {
+    "fr": "Normandie (Caen)"
+   },
+   "lat": 49.18,
+   "lon": -0.37,
+   "elevationM": 10.0,
+   "monthlyTempC": [
+    5.8,
+    6.7,
+    8.2,
+    10.1,
+    13.3,
+    16.7,
+    18.7,
+    18.7,
+    16.4,
+    13.2,
+    9.3,
+    7.4
+   ],
+   "days": 3653
+  },
+  "FR:pays-de-la-loire": {
+   "country": "FR",
+   "id": "pays-de-la-loire",
+   "name": "Pays de la Loire (Angers)",
+   "names": {
+    "fr": "Pays de la Loire (Angers)"
+   },
+   "lat": 47.47,
+   "lon": -0.55,
+   "elevationM": 48.0,
+   "monthlyTempC": [
+    5.9,
+    6.9,
+    8.8,
+    11.4,
+    14.9,
+    18.9,
+    20.7,
+    20.6,
+    17.5,
+    13.7,
+    9.2,
+    7.3
+   ],
+   "days": 3653
+  },
+  "FR:hauts-de-france": {
+   "country": "FR",
+   "id": "hauts-de-france",
+   "name": "Hauts-de-France (Arras)",
+   "names": {
+    "fr": "Hauts-de-France (Arras)"
+   },
+   "lat": 50.29,
+   "lon": 2.78,
+   "elevationM": 79.0,
+   "monthlyTempC": [
+    4.1,
+    5.4,
+    7.2,
+    9.5,
+    13.3,
+    17.2,
+    18.8,
+    18.9,
+    16.0,
+    12.4,
+    7.9,
+    5.9
+   ],
+   "days": 3653
+  },
+  "FR:grand-est": {
+   "country": "FR",
+   "id": "grand-est",
+   "name": "Grand Est (Châlons-en-Champagne)",
+   "names": {
+    "fr": "Grand Est (Châlons-en-Champagne)"
+   },
+   "lat": 48.96,
+   "lon": 4.36,
+   "elevationM": 85.0,
+   "monthlyTempC": [
+    3.9,
+    5.5,
+    7.5,
+    10.4,
+    14.4,
+    18.8,
+    20.5,
+    20.6,
+    16.8,
+    12.7,
+    7.7,
+    5.6
+   ],
+   "days": 3653
+  },
+  "FR:centre": {
+   "country": "FR",
+   "id": "centre",
+   "name": "Centre-Val de Loire (Orléans)",
+   "names": {
+    "fr": "Centre-Val de Loire (Orléans)"
+   },
+   "lat": 47.9,
+   "lon": 1.91,
+   "elevationM": 117.0,
+   "monthlyTempC": [
+    4.6,
+    5.9,
+    8.2,
+    11.0,
+    14.5,
+    18.8,
+    20.8,
+    20.6,
+    17.1,
+    13.2,
+    8.3,
+    6.2
+   ],
+   "days": 3653
+  },
+  "FR:auvergne-rhone-alpes": {
+   "country": "FR",
+   "id": "auvergne-rhone-alpes",
+   "name": "Auvergne-Rhône-Alpes (Lyon)",
+   "names": {
+    "fr": "Auvergne-Rhône-Alpes (Lyon)"
+   },
+   "lat": 45.76,
+   "lon": 4.84,
+   "elevationM": 161.0,
+   "monthlyTempC": [
+    3.8,
+    5.6,
+    8.4,
+    11.8,
+    15.6,
+    20.7,
+    23.1,
+    22.6,
+    18.3,
+    13.6,
+    8.0,
+    5.1
+   ],
+   "days": 3653
+  },
+  "FR:nouvelle-aquitaine": {
+   "country": "FR",
+   "id": "nouvelle-aquitaine",
+   "name": "Nouvelle-Aquitaine (Bordeaux)",
+   "names": {
+    "fr": "Nouvelle-Aquitaine (Bordeaux)"
+   },
+   "lat": 44.84,
+   "lon": -0.58,
+   "elevationM": 22.0,
+   "monthlyTempC": [
+    6.6,
+    8.0,
+    10.2,
+    12.9,
+    16.1,
+    20.0,
+    22.0,
+    22.1,
+    19.1,
+    15.3,
+    10.5,
+    8.2
+   ],
+   "days": 3653
+  },
+  "FR:occitanie": {
+   "country": "FR",
+   "id": "occitanie",
+   "name": "Occitanie (Toulouse)",
+   "names": {
+    "fr": "Occitanie (Toulouse)"
+   },
+   "lat": 43.6,
+   "lon": 1.44,
+   "elevationM": 156.0,
+   "monthlyTempC": [
+    5.5,
+    7.5,
+    9.8,
+    12.5,
+    16.0,
+    20.7,
+    23.3,
+    23.2,
+    19.5,
+    15.4,
+    10.1,
+    7.6
+   ],
+   "days": 3653
+  },
+  "ES:cataluna": {
+   "country": "ES",
+   "id": "cataluna",
+   "name": "Catalonia (Lleida)",
+   "names": {
+    "es": "Cataluña (Lleida)"
+   },
+   "lat": 41.62,
+   "lon": 0.62,
+   "elevationM": 174.0,
+   "monthlyTempC": [
+    5.4,
+    8.2,
+    11.6,
+    14.6,
+    19.2,
+    24.1,
+    27.5,
+    26.8,
+    21.7,
+    17.1,
+    10.7,
+    6.9
+   ],
+   "days": 3653
+  },
+  "ES:aragon": {
+   "country": "ES",
+   "id": "aragon",
+   "name": "Aragon (Zaragoza)",
+   "names": {
+    "es": "Aragón (Zaragoza)"
+   },
+   "lat": 41.65,
+   "lon": -0.88,
+   "elevationM": 224.0,
+   "monthlyTempC": [
+    7.1,
+    9.1,
+    11.7,
+    14.5,
+    19.1,
+    23.8,
+    26.8,
+    26.3,
+    21.5,
+    17.3,
+    11.5,
+    8.3
+   ],
+   "days": 3653
+  },
+  "ES:castilla": {
+   "country": "ES",
+   "id": "castilla",
+   "name": "Castile and León (Valladolid)",
+   "names": {
+    "es": "Castilla y León (Valladolid)"
+   },
+   "lat": 41.65,
+   "lon": -4.72,
+   "elevationM": 702.0,
+   "monthlyTempC": [
+    3.9,
+    6.0,
+    8.4,
+    11.4,
+    15.8,
+    20.2,
+    24.1,
+    23.7,
+    18.6,
+    14.3,
+    8.3,
+    5.5
+   ],
+   "days": 3653
+  },
+  "ES:galicia": {
+   "country": "ES",
+   "id": "galicia",
+   "name": "Galicia (Lugo)",
+   "names": {
+    "es": "Galicia (Lugo)"
+   },
+   "lat": 43.01,
+   "lon": -7.56,
+   "elevationM": 457.0,
+   "monthlyTempC": [
+    6.1,
+    7.1,
+    8.1,
+    10.4,
+    13.3,
+    16.0,
+    18.6,
+    18.8,
+    16.3,
+    13.7,
+    9.6,
+    7.7
+   ],
+   "days": 3653
+  },
+  "ES:castilla-la-mancha": {
+   "country": "ES",
+   "id": "castilla-la-mancha",
+   "name": "Castile-La Mancha (Albacete)",
+   "names": {
+    "es": "Castilla-La Mancha (Albacete)"
+   },
+   "lat": 38.99,
+   "lon": -1.86,
+   "elevationM": 688.0,
+   "monthlyTempC": [
+    5.4,
+    7.6,
+    10.0,
+    12.9,
+    17.8,
+    22.7,
+    27.2,
+    26.1,
+    20.6,
+    16.2,
+    10.2,
+    7.1
+   ],
+   "days": 3653
+  },
+  "ES:andalucia": {
+   "country": "ES",
+   "id": "andalucia",
+   "name": "Andalusia (Córdoba)",
+   "names": {
+    "es": "Andalucía (Córdoba)"
+   },
+   "lat": 37.88,
+   "lon": -4.78,
+   "elevationM": 118.0,
+   "monthlyTempC": [
+    9.1,
+    11.3,
+    13.6,
+    16.4,
+    21.3,
+    25.9,
+    30.1,
+    29.7,
+    24.7,
+    20.0,
+    13.6,
+    10.7
+   ],
+   "days": 3653
+  },
+  "ES:murcia": {
+   "country": "ES",
+   "id": "murcia",
+   "name": "Murcia",
+   "names": {
+    "es": "Región de Murcia"
+   },
+   "lat": 37.98,
+   "lon": -1.13,
+   "elevationM": 53.0,
+   "monthlyTempC": [
+    10.6,
+    12.1,
+    14.1,
+    16.2,
+    20.1,
+    24.3,
+    27.7,
+    27.5,
+    23.7,
+    19.7,
+    14.8,
+    12.0
+   ],
+   "days": 3653
+  },
+  "ES:extremadura": {
+   "country": "ES",
+   "id": "extremadura",
+   "name": "Extremadura (Badajoz)",
+   "names": {
+    "es": "Extremadura (Badajoz)"
+   },
+   "lat": 38.88,
+   "lon": -6.97,
+   "elevationM": 191.0,
+   "monthlyTempC": [
+    8.3,
+    10.5,
+    12.6,
+    15.5,
+    20.0,
+    23.8,
+    27.3,
+    27.2,
+    23.2,
+    18.8,
+    13.0,
+    10.1
+   ],
+   "days": 3653
+  },
+  "ES:valencia": {
+   "country": "ES",
+   "id": "valencia",
+   "name": "Valencia",
+   "names": {
+    "es": "Comunidad Valenciana"
+   },
+   "lat": 39.47,
+   "lon": -0.38,
+   "elevationM": 20.0,
+   "monthlyTempC": [
+    10.9,
+    11.9,
+    13.7,
+    15.4,
+    19.3,
+    23.3,
+    26.3,
+    26.4,
+    23.2,
+    19.5,
+    15.1,
+    12.2
+   ],
+   "days": 3653
+  },
+  "NL:brabant": {
+   "country": "NL",
+   "id": "brabant",
+   "name": "North Brabant ('s-Hertogenbosch)",
+   "names": {
+    "nl": "Noord-Brabant ('s-Hertogenbosch)"
+   },
+   "lat": 51.69,
+   "lon": 5.3,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    4.1,
+    5.0,
+    6.8,
+    9.5,
+    13.8,
+    17.7,
+    18.6,
+    18.9,
+    15.8,
+    12.1,
+    7.5,
+    5.7
+   ],
+   "days": 3653
+  },
+  "NL:gelderland": {
+   "country": "NL",
+   "id": "gelderland",
+   "name": "Gelderland (Barneveld)",
+   "names": {
+    "nl": "Gelderland (Barneveld)"
+   },
+   "lat": 52.14,
+   "lon": 5.58,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    3.8,
+    4.7,
+    6.4,
+    9.2,
+    13.6,
+    17.4,
+    18.3,
+    18.7,
+    15.5,
+    11.8,
+    7.2,
+    5.4
+   ],
+   "days": 3653
+  },
+  "NL:overijssel": {
+   "country": "NL",
+   "id": "overijssel",
+   "name": "Overijssel (Zwolle)",
+   "names": {
+    "nl": "Overijssel (Zwolle)"
+   },
+   "lat": 52.52,
+   "lon": 6.08,
+   "elevationM": 4.0,
+   "monthlyTempC": [
+    3.9,
+    4.6,
+    6.3,
+    9.0,
+    13.4,
+    17.1,
+    18.2,
+    18.5,
+    15.5,
+    11.8,
+    7.3,
+    5.5
+   ],
+   "days": 3653
+  },
+  "NL:friesland": {
+   "country": "NL",
+   "id": "friesland",
+   "name": "Friesland (Leeuwarden)",
+   "names": {
+    "nl": "Friesland (Leeuwarden)"
+   },
+   "lat": 53.2,
+   "lon": 5.8,
+   "elevationM": 5.0,
+   "monthlyTempC": [
+    4.1,
+    4.7,
+    6.1,
+    8.5,
+    12.7,
+    16.1,
+    17.6,
+    18.0,
+    15.4,
+    11.8,
+    7.5,
+    5.7
+   ],
+   "days": 3653
+  },
+  "NL:groningen": {
+   "country": "NL",
+   "id": "groningen",
+   "name": "Groningen",
+   "names": {
+    "nl": "Groningen"
+   },
+   "lat": 53.22,
+   "lon": 6.57,
+   "elevationM": 7.0,
+   "monthlyTempC": [
+    3.7,
+    4.4,
+    6.0,
+    8.5,
+    12.7,
+    16.3,
+    17.6,
+    18.0,
+    15.2,
+    11.6,
+    7.1,
+    5.4
+   ],
+   "days": 3653
+  },
+  "NL:limburg": {
+   "country": "NL",
+   "id": "limburg",
+   "name": "Limburg (Venlo)",
+   "names": {
+    "nl": "Limburg (Venlo)"
+   },
+   "lat": 51.37,
+   "lon": 6.17,
+   "elevationM": 23.0,
+   "monthlyTempC": [
+    3.7,
+    4.9,
+    6.9,
+    9.7,
+    14.1,
+    18.3,
+    19.3,
+    19.4,
+    16.1,
+    12.2,
+    7.4,
+    5.5
+   ],
+   "days": 3653
+  },
+  "GB:midlands": {
+   "country": "GB",
+   "id": "midlands",
+   "name": "West Midlands / Shropshire",
+   "names": {},
+   "lat": 52.71,
+   "lon": -2.75,
+   "elevationM": 68.0,
+   "monthlyTempC": [
+    4.6,
+    5.3,
+    6.3,
+    8.2,
+    11.8,
+    14.8,
+    16.5,
+    16.2,
+    14.0,
+    11.0,
+    7.4,
+    6.2
+   ],
+   "days": 3653
+  },
+  "GB:east-anglia": {
+   "country": "GB",
+   "id": "east-anglia",
+   "name": "East Anglia (Norwich)",
+   "names": {},
+   "lat": 52.63,
+   "lon": 1.3,
+   "elevationM": 12.0,
+   "monthlyTempC": [
+    4.7,
+    5.8,
+    6.8,
+    8.4,
+    12.1,
+    15.5,
+    17.5,
+    17.7,
+    15.3,
+    12.1,
+    8.2,
+    6.6
+   ],
+   "days": 3653
+  },
+  "GB:south-west": {
+   "country": "GB",
+   "id": "south-west",
+   "name": "South West England (Exeter)",
+   "names": {},
+   "lat": 50.72,
+   "lon": -3.53,
+   "elevationM": 33.0,
+   "monthlyTempC": [
+    5.7,
+    6.4,
+    7.3,
+    9.1,
+    12.3,
+    15.4,
+    17.1,
+    16.8,
+    14.8,
+    12.0,
+    8.8,
+    7.6
+   ],
+   "days": 3653
+  },
+  "GB:south-east": {
+   "country": "GB",
+   "id": "south-east",
+   "name": "South East England (Ashford)",
+   "names": {},
+   "lat": 51.15,
+   "lon": 0.87,
+   "elevationM": 61.0,
+   "monthlyTempC": [
+    4.8,
+    5.8,
+    7.1,
+    8.9,
+    12.5,
+    15.8,
+    17.8,
+    17.7,
+    15.4,
+    12.3,
+    8.3,
+    6.8
+   ],
+   "days": 3653
+  },
+  "GB:yorkshire": {
+   "country": "GB",
+   "id": "yorkshire",
+   "name": "Yorkshire (York)",
+   "names": {},
+   "lat": 53.96,
+   "lon": -1.08,
+   "elevationM": 19.0,
+   "monthlyTempC": [
+    4.3,
+    5.3,
+    6.5,
+    8.1,
+    11.8,
+    14.8,
+    16.7,
+    16.5,
+    14.1,
+    11.0,
+    7.3,
+    5.7
+   ],
+   "days": 3653
+  },
+  "GB:north-west": {
+   "country": "GB",
+   "id": "north-west",
+   "name": "North West England (Preston)",
+   "names": {},
+   "lat": 53.76,
+   "lon": -2.7,
+   "elevationM": 42.0,
+   "monthlyTempC": [
+    4.8,
+    5.5,
+    6.5,
+    8.4,
+    11.9,
+    14.8,
+    16.1,
+    15.9,
+    14.0,
+    11.1,
+    7.6,
+    6.2
+   ],
+   "days": 3653
+  },
+  "GB:wales": {
+   "country": "GB",
+   "id": "wales",
+   "name": "Wales (Carmarthen)",
+   "names": {},
+   "lat": 51.86,
+   "lon": -4.31,
+   "elevationM": 31.0,
+   "monthlyTempC": [
+    5.3,
+    5.9,
+    6.7,
+    8.7,
+    11.8,
+    14.7,
+    16.0,
+    15.8,
+    14.1,
+    11.4,
+    8.3,
+    7.1
+   ],
+   "days": 3653
+  },
+  "GB:scotland": {
+   "country": "GB",
+   "id": "scotland",
+   "name": "Scotland (Stirling)",
+   "names": {},
+   "lat": 56.12,
+   "lon": -3.94,
+   "elevationM": 41.0,
+   "monthlyTempC": [
+    3.2,
+    3.9,
+    5.0,
+    6.9,
+    10.6,
+    13.3,
+    14.6,
+    14.2,
+    12.2,
+    9.3,
+    5.6,
+    4.3
+   ],
+   "days": 3653
+  },
+  "GB:northern-ireland": {
+   "country": "GB",
+   "id": "northern-ireland",
+   "name": "Northern Ireland (Armagh)",
+   "names": {},
+   "lat": 54.35,
+   "lon": -6.65,
+   "elevationM": 45.0,
+   "monthlyTempC": [
+    4.9,
+    5.5,
+    6.2,
+    7.9,
+    11.3,
+    14.0,
+    15.1,
+    14.9,
+    13.0,
+    10.5,
+    7.2,
+    6.0
+   ],
+   "days": 3653
+  },
+  "US:wisconsin": {
+   "country": "US",
+   "id": "wisconsin",
+   "name": "Wisconsin (Green Bay)",
+   "names": {},
+   "lat": 44.52,
+   "lon": -88.02,
+   "elevationM": 180.0,
+   "monthlyTempC": [
+    -6.4,
+    -5.9,
+    0.6,
+    6.3,
+    14.1,
+    20.0,
+    22.6,
+    21.4,
+    18.1,
+    10.6,
+    3.3,
+    -2.7
+   ],
+   "days": 3653
+  },
+  "US:minnesota": {
+   "country": "US",
+   "id": "minnesota",
+   "name": "Minnesota (St. Cloud)",
+   "names": {},
+   "lat": 45.56,
+   "lon": -94.16,
+   "elevationM": 319.0,
+   "monthlyTempC": [
+    -9.5,
+    -8.7,
+    -0.5,
+    5.5,
+    14.2,
+    20.8,
+    22.6,
+    20.9,
+    17.6,
+    8.9,
+    0.9,
+    -5.9
+   ],
+   "days": 3653
+  },
+  "US:michigan": {
+   "country": "US",
+   "id": "michigan",
+   "name": "Michigan (Lansing)",
+   "names": {},
+   "lat": 42.73,
+   "lon": -84.56,
+   "elevationM": 261.0,
+   "monthlyTempC": [
+    -3.7,
+    -3.0,
+    2.4,
+    8.0,
+    15.2,
+    20.6,
+    22.7,
+    21.7,
+    18.6,
+    11.7,
+    4.6,
+    0.1
+   ],
+   "days": 3653
+  },
+  "US:new-york": {
+   "country": "US",
+   "id": "new-york",
+   "name": "New York (Syracuse)",
+   "names": {},
+   "lat": 43.05,
+   "lon": -76.15,
+   "elevationM": 124.0,
+   "monthlyTempC": [
+    -3.4,
+    -2.5,
+    1.4,
+    7.7,
+    14.8,
+    19.4,
+    22.5,
+    21.4,
+    18.2,
+    11.9,
+    5.1,
+    0.4
+   ],
+   "days": 3653
+  },
+  "US:pennsylvania": {
+   "country": "US",
+   "id": "pennsylvania",
+   "name": "Pennsylvania (Lancaster)",
+   "names": {},
+   "lat": 40.04,
+   "lon": -76.31,
+   "elevationM": 106.0,
+   "monthlyTempC": [
+    0.7,
+    2.1,
+    5.7,
+    11.6,
+    17.2,
+    22.0,
+    25.0,
+    23.9,
+    20.5,
+    14.4,
+    7.6,
+    3.5
+   ],
+   "days": 3653
+  },
+  "US:iowa": {
+   "country": "US",
+   "id": "iowa",
+   "name": "Iowa (Sioux Center)",
+   "names": {},
+   "lat": 43.08,
+   "lon": -96.18,
+   "elevationM": 438.0,
+   "monthlyTempC": [
+    -6.8,
+    -5.5,
+    2.4,
+    8.3,
+    15.5,
+    22.2,
+    23.3,
+    21.9,
+    19.4,
+    10.7,
+    3.0,
+    -3.2
+   ],
+   "days": 3653
+  },
+  "US:north-carolina": {
+   "country": "US",
+   "id": "north-carolina",
+   "name": "North Carolina (Clinton)",
+   "names": {},
+   "lat": 35.0,
+   "lon": -78.32,
+   "elevationM": 49.0,
+   "monthlyTempC": [
+    7.1,
+    9.5,
+    12.7,
+    17.1,
+    21.5,
+    25.2,
+    27.0,
+    26.1,
+    23.6,
+    18.3,
+    12.5,
+    9.4
+   ],
+   "days": 3653
+  },
+  "US:texas": {
+   "country": "US",
+   "id": "texas",
+   "name": "Texas Panhandle (Amarillo)",
+   "names": {},
+   "lat": 35.22,
+   "lon": -101.83,
+   "elevationM": 1119.0,
+   "monthlyTempC": [
+    3.4,
+    5.5,
+    10.7,
+    14.6,
+    19.4,
+    25.1,
+    27.5,
+    26.4,
+    22.9,
+    15.8,
+    9.3,
+    5.3
+   ],
+   "days": 3653
+  },
+  "US:idaho": {
+   "country": "US",
+   "id": "idaho",
+   "name": "Idaho (Twin Falls)",
+   "names": {},
+   "lat": 42.56,
+   "lon": -114.46,
+   "elevationM": 1140.0,
+   "monthlyTempC": [
+    -1.5,
+    1.2,
+    5.3,
+    9.5,
+    14.7,
+    21.2,
+    26.8,
+    25.2,
+    19.1,
+    11.1,
+    3.3,
+    -1.2
+   ],
+   "days": 3653
+  },
+  "US:washington": {
+   "country": "US",
+   "id": "washington",
+   "name": "Washington (Yakima)",
+   "names": {},
+   "lat": 46.6,
+   "lon": -120.51,
+   "elevationM": 326.0,
+   "monthlyTempC": [
+    -0.2,
+    1.6,
+    5.7,
+    10.4,
+    16.9,
+    21.2,
+    25.6,
+    24.9,
+    18.8,
+    11.3,
+    4.0,
+    -0.3
+   ],
+   "days": 3653
+  },
+  "US:california": {
+   "country": "US",
+   "id": "california",
+   "name": "California Central Valley (Tulare)",
+   "names": {},
+   "lat": 36.21,
+   "lon": -119.35,
+   "elevationM": 84.0,
+   "monthlyTempC": [
+    9.0,
+    10.6,
+    13.2,
+    17.5,
+    22.0,
+    28.0,
+    31.6,
+    30.4,
+    26.5,
+    20.2,
+    12.6,
+    8.5
+   ],
+   "days": 3653
+  },
+  "CA:ontario": {
+   "country": "CA",
+   "id": "ontario",
+   "name": "Ontario (Guelph)",
+   "names": {
+    "fr": "Ontario (Guelph)"
+   },
+   "lat": 43.54,
+   "lon": -80.25,
+   "elevationM": 322.0,
+   "monthlyTempC": [
+    -5.2,
+    -4.8,
+    0.0,
+    5.9,
+    13.7,
+    18.6,
+    21.3,
+    20.4,
+    17.2,
+    10.3,
+    3.4,
+    -1.2
+   ],
+   "days": 3653
+  },
+  "CA:quebec": {
+   "country": "CA",
+   "id": "quebec",
+   "name": "Quebec (Saint-Hyacinthe)",
+   "names": {
+    "fr": "Québec (Saint-Hyacinthe)"
+   },
+   "lat": 45.63,
+   "lon": -72.96,
+   "elevationM": 36.0,
+   "monthlyTempC": [
+    -8.7,
+    -7.9,
+    -2.0,
+    5.6,
+    13.8,
+    18.5,
+    21.5,
+    20.5,
+    16.6,
+    10.0,
+    2.2,
+    -3.7
+   ],
+   "days": 3653
+  },
+  "CA:alberta": {
+   "country": "CA",
+   "id": "alberta",
+   "name": "Alberta (Lethbridge)",
+   "names": {},
+   "lat": 49.69,
+   "lon": -112.84,
+   "elevationM": 903.0,
+   "monthlyTempC": [
+    -4.1,
+    -5.2,
+    -0.0,
+    5.6,
+    11.9,
+    16.8,
+    20.2,
+    19.4,
+    14.0,
+    6.6,
+    0.3,
+    -4.2
+   ],
+   "days": 3653
+  },
+  "CA:british-columbia": {
+   "country": "CA",
+   "id": "british-columbia",
+   "name": "British Columbia (Abbotsford)",
+   "names": {
+    "fr": "Colombie-Britannique (Abbotsford)"
+   },
+   "lat": 49.05,
+   "lon": -122.31,
+   "elevationM": 66.0,
+   "monthlyTempC": [
+    3.0,
+    3.0,
+    5.7,
+    8.5,
+    13.0,
+    15.7,
+    18.6,
+    18.7,
+    14.9,
+    10.1,
+    5.5,
+    2.2
+   ],
+   "days": 3653
+  },
+  "CA:saskatchewan": {
+   "country": "CA",
+   "id": "saskatchewan",
+   "name": "Saskatchewan (Saskatoon)",
+   "names": {},
+   "lat": 52.13,
+   "lon": -106.67,
+   "elevationM": 486.0,
+   "monthlyTempC": [
+    -12.2,
+    -13.8,
+    -5.7,
+    3.2,
+    12.1,
+    17.2,
+    19.7,
+    18.3,
+    13.4,
+    4.7,
+    -4.0,
+    -10.8
+   ],
+   "days": 3653
+  },
+  "CA:manitoba": {
+   "country": "CA",
+   "id": "manitoba",
+   "name": "Manitoba (Winnipeg)",
+   "names": {},
+   "lat": 49.9,
+   "lon": -97.14,
+   "elevationM": 235.0,
+   "monthlyTempC": [
+    -13.2,
+    -13.9,
+    -5.0,
+    3.1,
+    12.4,
+    18.7,
+    21.1,
+    19.9,
+    15.4,
+    6.4,
+    -2.1,
+    -10.0
+   ],
+   "days": 3653
+  },
+  "MX:jalisco": {
+   "country": "MX",
+   "id": "jalisco",
+   "name": "Jalisco highlands (Tepatitlán)",
+   "names": {
+    "es": "Altos de Jalisco (Tepatitlán)"
+   },
+   "lat": 20.82,
+   "lon": -102.76,
+   "elevationM": 1793.0,
+   "monthlyTempC": [
+    15.6,
+    17.2,
+    19.5,
+    21.8,
+    23.1,
+    21.9,
+    19.6,
+    19.6,
+    19.4,
+    18.8,
+    17.7,
+    15.8
+   ],
+   "days": 3653
+  },
+  "MX:guanajuato": {
+   "country": "MX",
+   "id": "guanajuato",
+   "name": "Guanajuato (León)",
+   "names": {
+    "es": "Guanajuato (León)"
+   },
+   "lat": 21.12,
+   "lon": -101.68,
+   "elevationM": 1804.0,
+   "monthlyTempC": [
+    15.5,
+    17.4,
+    20.1,
+    22.4,
+    23.6,
+    22.2,
+    20.2,
+    20.2,
+    19.7,
+    19.1,
+    17.8,
+    15.8
+   ],
+   "days": 3653
+  },
+  "MX:la-laguna": {
+   "country": "MX",
+   "id": "la-laguna",
+   "name": "La Laguna (Torreón)",
+   "names": {
+    "es": "Comarca Lagunera (Torreón)"
+   },
+   "lat": 25.54,
+   "lon": -103.41,
+   "elevationM": 1122.0,
+   "monthlyTempC": [
+    14.6,
+    18.0,
+    21.1,
+    24.8,
+    28.1,
+    29.2,
+    28.6,
+    28.4,
+    25.7,
+    22.8,
+    18.8,
+    15.8
+   ],
+   "days": 3653
+  },
+  "MX:chihuahua": {
+   "country": "MX",
+   "id": "chihuahua",
+   "name": "Chihuahua (Delicias)",
+   "names": {
+    "es": "Chihuahua (Delicias)"
+   },
+   "lat": 28.19,
+   "lon": -105.47,
+   "elevationM": 1174.0,
+   "monthlyTempC": [
+    11.7,
+    15.1,
+    18.8,
+    22.8,
+    26.8,
+    29.9,
+    28.8,
+    28.1,
+    25.2,
+    21.7,
+    16.7,
+    12.8
+   ],
+   "days": 3653
+  },
+  "MX:sonora": {
+   "country": "MX",
+   "id": "sonora",
+   "name": "Sonora (Hermosillo)",
+   "names": {
+    "es": "Sonora (Hermosillo)"
+   },
+   "lat": 29.07,
+   "lon": -110.96,
+   "elevationM": 201.0,
+   "monthlyTempC": [
+    16.0,
+    17.7,
+    20.6,
+    24.2,
+    26.6,
+    31.7,
+    32.7,
+    32.3,
+    30.2,
+    27.0,
+    21.2,
+    16.7
+   ],
+   "days": 3653
+  },
+  "MX:nuevo-leon": {
+   "country": "MX",
+   "id": "nuevo-leon",
+   "name": "Nuevo León (Monterrey)",
+   "names": {
+    "es": "Nuevo León (Monterrey)"
+   },
+   "lat": 25.69,
+   "lon": -100.32,
+   "elevationM": 542.0,
+   "monthlyTempC": [
+    13.9,
+    16.5,
+    19.7,
+    22.6,
+    25.3,
+    27.1,
+    27.8,
+    28.3,
+    25.6,
+    22.0,
+    17.9,
+    15.7
+   ],
+   "days": 3653
+  },
+  "MX:veracruz": {
+   "country": "MX",
+   "id": "veracruz",
+   "name": "Veracruz (Córdoba)",
+   "names": {
+    "es": "Veracruz (Córdoba)"
+   },
+   "lat": 18.88,
+   "lon": -96.93,
+   "elevationM": 828.0,
+   "monthlyTempC": [
+    16.8,
+    17.8,
+    20.0,
+    22.1,
+    23.4,
+    22.3,
+    21.7,
+    21.7,
+    21.5,
+    20.5,
+    19.0,
+    17.6
+   ],
+   "days": 3653
+  },
+  "MX:yucatan": {
+   "country": "MX",
+   "id": "yucatan",
+   "name": "Yucatán (Mérida)",
+   "names": {
+    "es": "Yucatán (Mérida)"
+   },
+   "lat": 20.97,
+   "lon": -89.62,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    23.0,
+    24.1,
+    26.3,
+    28.2,
+    29.1,
+    28.0,
+    28.4,
+    28.0,
+    27.6,
+    26.5,
+    25.0,
+    24.0
+   ],
+   "days": 3653
+  },
+  "AR:cordoba": {
+   "country": "AR",
+   "id": "cordoba",
+   "name": "Córdoba (Villa María)",
+   "names": {
+    "es": "Córdoba (Villa María)"
+   },
+   "lat": -32.41,
+   "lon": -63.24,
+   "elevationM": 203.0,
+   "monthlyTempC": [
+    24.9,
+    23.5,
+    21.7,
+    18.3,
+    14.0,
+    11.3,
+    10.5,
+    12.9,
+    15.6,
+    18.2,
+    21.9,
+    24.0
+   ],
+   "days": 3653
+  },
+  "AR:buenos-aires": {
+   "country": "AR",
+   "id": "buenos-aires",
+   "name": "Buenos Aires province (Pergamino)",
+   "names": {
+    "es": "Provincia de Buenos Aires (Pergamino)"
+   },
+   "lat": -33.89,
+   "lon": -60.57,
+   "elevationM": 68.0,
+   "monthlyTempC": [
+    24.6,
+    23.4,
+    21.3,
+    17.9,
+    13.6,
+    11.1,
+    10.2,
+    12.3,
+    14.6,
+    17.3,
+    21.1,
+    23.5
+   ],
+   "days": 3653
+  },
+  "AR:santa-fe": {
+   "country": "AR",
+   "id": "santa-fe",
+   "name": "Santa Fe (Rafaela)",
+   "names": {
+    "es": "Santa Fe (Rafaela)"
+   },
+   "lat": -31.25,
+   "lon": -61.49,
+   "elevationM": 103.0,
+   "monthlyTempC": [
+    25.6,
+    24.3,
+    22.4,
+    19.1,
+    14.8,
+    12.5,
+    11.9,
+    14.1,
+    16.8,
+    19.3,
+    22.5,
+    24.5
+   ],
+   "days": 3653
+  },
+  "AR:entre-rios": {
+   "country": "AR",
+   "id": "entre-rios",
+   "name": "Entre Ríos (Paraná)",
+   "names": {
+    "es": "Entre Ríos (Paraná)"
+   },
+   "lat": -31.73,
+   "lon": -60.53,
+   "elevationM": 68.0,
+   "monthlyTempC": [
+    25.8,
+    24.7,
+    22.7,
+    19.5,
+    15.2,
+    13.0,
+    12.2,
+    14.1,
+    16.4,
+    19.0,
+    22.3,
+    24.5
+   ],
+   "days": 3653
+  },
+  "AR:tucuman": {
+   "country": "AR",
+   "id": "tucuman",
+   "name": "Tucumán",
+   "names": {
+    "es": "Tucumán"
+   },
+   "lat": -26.81,
+   "lon": -65.22,
+   "elevationM": 465.0,
+   "monthlyTempC": [
+    25.1,
+    24.0,
+    22.3,
+    19.4,
+    15.2,
+    12.6,
+    12.3,
+    15.0,
+    18.2,
+    20.9,
+    23.0,
+    24.6
+   ],
+   "days": 3653
+  },
+  "AR:mendoza": {
+   "country": "AR",
+   "id": "mendoza",
+   "name": "Mendoza",
+   "names": {
+    "es": "Mendoza"
+   },
+   "lat": -32.89,
+   "lon": -68.84,
+   "elevationM": 758.0,
+   "monthlyTempC": [
+    25.2,
+    23.6,
+    21.1,
+    16.6,
+    11.7,
+    8.6,
+    8.2,
+    11.2,
+    14.6,
+    17.4,
+    21.6,
+    24.2
+   ],
+   "days": 3653
+  },
+  "BR:santa-catarina": {
+   "country": "BR",
+   "id": "santa-catarina",
+   "name": "West Santa Catarina (Chapecó)",
+   "names": {
+    "pt": "Oeste catarinense (Chapecó)"
+   },
+   "lat": -27.1,
+   "lon": -52.62,
+   "elevationM": 650.0,
+   "monthlyTempC": [
+    23.2,
+    22.5,
+    21.6,
+    19.3,
+    16.0,
+    14.6,
+    14.6,
+    16.0,
+    18.5,
+    19.7,
+    20.9,
+    22.5
+   ],
+   "days": 3653
+  },
+  "BR:parana": {
+   "country": "BR",
+   "id": "parana",
+   "name": "West Paraná (Cascavel)",
+   "names": {
+    "pt": "Oeste do Paraná (Cascavel)"
+   },
+   "lat": -24.96,
+   "lon": -53.46,
+   "elevationM": 774.0,
+   "monthlyTempC": [
+    23.3,
+    22.8,
+    22.3,
+    20.4,
+    17.3,
+    16.0,
+    16.0,
+    17.6,
+    20.5,
+    21.3,
+    21.9,
+    23.0
+   ],
+   "days": 3653
+  },
+  "BR:rio-grande-do-sul": {
+   "country": "BR",
+   "id": "rio-grande-do-sul",
+   "name": "Rio Grande do Sul (Passo Fundo)",
+   "names": {
+    "pt": "Rio Grande do Sul (Passo Fundo)"
+   },
+   "lat": -28.26,
+   "lon": -52.41,
+   "elevationM": 660.0,
+   "monthlyTempC": [
+    22.7,
+    21.8,
+    20.8,
+    18.6,
+    15.0,
+    13.4,
+    13.2,
+    14.6,
+    16.8,
+    18.2,
+    19.9,
+    21.8
+   ],
+   "days": 3653
+  },
+  "BR:sao-paulo": {
+   "country": "BR",
+   "id": "sao-paulo",
+   "name": "São Paulo interior (Ribeirão Preto)",
+   "names": {
+    "pt": "Interior de São Paulo (Ribeirão Preto)"
+   },
+   "lat": -21.18,
+   "lon": -47.81,
+   "elevationM": 552.0,
+   "monthlyTempC": [
+    24.7,
+    24.5,
+    24.4,
+    23.1,
+    20.6,
+    19.6,
+    19.9,
+    21.7,
+    25.1,
+    25.3,
+    24.5,
+    24.6
+   ],
+   "days": 3653
+  },
+  "BR:minas-gerais": {
+   "country": "BR",
+   "id": "minas-gerais",
+   "name": "Triângulo Mineiro (Uberaba)",
+   "names": {
+    "pt": "Triângulo Mineiro (Uberaba)"
+   },
+   "lat": -19.75,
+   "lon": -47.93,
+   "elevationM": 766.0,
+   "monthlyTempC": [
+    24.0,
+    23.7,
+    23.8,
+    23.0,
+    20.9,
+    20.2,
+    20.7,
+    22.6,
+    25.8,
+    25.5,
+    24.1,
+    24.0
+   ],
+   "days": 3653
+  },
+  "BR:goias": {
+   "country": "BR",
+   "id": "goias",
+   "name": "Goiás (Rio Verde)",
+   "names": {
+    "pt": "Goiás (Rio Verde)"
+   },
+   "lat": -17.8,
+   "lon": -50.92,
+   "elevationM": 734.0,
+   "monthlyTempC": [
+    24.1,
+    24.0,
+    23.9,
+    23.4,
+    21.6,
+    20.8,
+    21.1,
+    23.3,
+    26.4,
+    26.0,
+    24.6,
+    24.4
+   ],
+   "days": 3653
+  },
+  "BR:mato-grosso": {
+   "country": "BR",
+   "id": "mato-grosso",
+   "name": "Mato Grosso (Sorriso)",
+   "names": {
+    "pt": "Mato Grosso (Sorriso)"
+   },
+   "lat": -12.55,
+   "lon": -55.71,
+   "elevationM": 375.0,
+   "monthlyTempC": [
+    25.1,
+    25.1,
+    25.1,
+    25.3,
+    25.2,
+    24.9,
+    24.9,
+    26.8,
+    27.9,
+    27.0,
+    25.7,
+    25.4
+   ],
+   "days": 3653
+  },
+  "BR:pernambuco": {
+   "country": "BR",
+   "id": "pernambuco",
+   "name": "Pernambuco sugar belt (Recife)",
+   "names": {
+    "pt": "Zona da Mata de Pernambuco (Recife)"
+   },
+   "lat": -8.05,
+   "lon": -34.88,
+   "elevationM": 3.0,
+   "monthlyTempC": [
+    26.8,
+    27.1,
+    26.9,
+    26.7,
+    26.0,
+    25.1,
+    24.4,
+    24.5,
+    25.0,
+    25.9,
+    26.7,
+    26.8
+   ],
+   "days": 3653
+  },
+  "IN:punjab": {
+   "country": "IN",
+   "id": "punjab",
+   "name": "Punjab (Ludhiana)",
+   "names": {},
+   "lat": 30.9,
+   "lon": 75.86,
+   "elevationM": 250.0,
+   "monthlyTempC": [
+    11.1,
+    14.8,
+    19.7,
+    26.2,
+    30.4,
+    31.9,
+    29.4,
+    28.7,
+    27.9,
+    24.5,
+    18.6,
+    13.1
+   ],
+   "days": 3653
+  },
+  "IN:haryana": {
+   "country": "IN",
+   "id": "haryana",
+   "name": "Haryana (Karnal)",
+   "names": {},
+   "lat": 29.69,
+   "lon": 76.99,
+   "elevationM": 250.0,
+   "monthlyTempC": [
+    11.9,
+    15.7,
+    20.9,
+    27.5,
+    30.8,
+    31.9,
+    29.2,
+    28.5,
+    27.8,
+    24.6,
+    19.3,
+    13.8
+   ],
+   "days": 3653
+  },
+  "IN:uttar-pradesh": {
+   "country": "IN",
+   "id": "uttar-pradesh",
+   "name": "Western Uttar Pradesh (Meerut)",
+   "names": {},
+   "lat": 28.98,
+   "lon": 77.71,
+   "elevationM": 227.0,
+   "monthlyTempC": [
+    12.6,
+    16.5,
+    21.7,
+    28.1,
+    30.7,
+    32.0,
+    29.1,
+    28.5,
+    27.8,
+    24.6,
+    19.6,
+    14.4
+   ],
+   "days": 3653
+  },
+  "IN:rajasthan": {
+   "country": "IN",
+   "id": "rajasthan",
+   "name": "Rajasthan (Jaipur)",
+   "names": {},
+   "lat": 26.91,
+   "lon": 75.79,
+   "elevationM": 430.0,
+   "monthlyTempC": [
+    14.3,
+    18.7,
+    23.9,
+    30.0,
+    33.2,
+    32.9,
+    29.2,
+    27.5,
+    27.7,
+    26.2,
+    21.1,
+    15.9
+   ],
+   "days": 3653
+  },
+  "IN:gujarat": {
+   "country": "IN",
+   "id": "gujarat",
+   "name": "Gujarat (Anand)",
+   "names": {},
+   "lat": 22.56,
+   "lon": 72.95,
+   "elevationM": 41.0,
+   "monthlyTempC": [
+    20.6,
+    23.9,
+    28.1,
+    32.1,
+    33.6,
+    31.6,
+    28.3,
+    27.5,
+    27.7,
+    27.9,
+    25.3,
+    21.9
+   ],
+   "days": 3653
+  },
+  "IN:madhya-pradesh": {
+   "country": "IN",
+   "id": "madhya-pradesh",
+   "name": "Madhya Pradesh (Indore)",
+   "names": {},
+   "lat": 22.72,
+   "lon": 75.86,
+   "elevationM": 552.0,
+   "monthlyTempC": [
+    17.9,
+    21.4,
+    25.7,
+    30.6,
+    32.8,
+    29.6,
+    25.6,
+    24.7,
+    25.0,
+    25.1,
+    22.6,
+    19.2
+   ],
+   "days": 3653
+  },
+  "IN:maharashtra": {
+   "country": "IN",
+   "id": "maharashtra",
+   "name": "Maharashtra (Pune)",
+   "names": {},
+   "lat": 18.52,
+   "lon": 73.86,
+   "elevationM": 562.0,
+   "monthlyTempC": [
+    21.4,
+    23.9,
+    26.5,
+    29.1,
+    28.8,
+    25.7,
+    23.9,
+    23.7,
+    23.8,
+    24.3,
+    23.4,
+    22.1
+   ],
+   "days": 3653
+  },
+  "IN:karnataka": {
+   "country": "IN",
+   "id": "karnataka",
+   "name": "Karnataka (Bengaluru)",
+   "names": {},
+   "lat": 12.97,
+   "lon": 77.59,
+   "elevationM": 914.0,
+   "monthlyTempC": [
+    21.0,
+    22.9,
+    25.7,
+    27.2,
+    25.8,
+    23.6,
+    22.8,
+    22.8,
+    22.7,
+    22.6,
+    21.8,
+    20.9
+   ],
+   "days": 3653
+  },
+  "IN:andhra-pradesh": {
+   "country": "IN",
+   "id": "andhra-pradesh",
+   "name": "Andhra Pradesh (Vijayawada)",
+   "names": {},
+   "lat": 16.51,
+   "lon": 80.65,
+   "elevationM": 121.0,
+   "monthlyTempC": [
+    24.0,
+    25.8,
+    28.5,
+    30.8,
+    32.2,
+    30.6,
+    28.3,
+    28.1,
+    27.4,
+    26.9,
+    25.6,
+    24.0
+   ],
+   "days": 3653
+  },
+  "IN:tamil-nadu": {
+   "country": "IN",
+   "id": "tamil-nadu",
+   "name": "Tamil Nadu (Coimbatore)",
+   "names": {},
+   "lat": 11.02,
+   "lon": 76.96,
+   "elevationM": 429.0,
+   "monthlyTempC": [
+    24.3,
+    26.2,
+    28.5,
+    29.3,
+    27.8,
+    25.6,
+    24.8,
+    24.9,
+    25.1,
+    25.1,
+    24.5,
+    23.9
+   ],
+   "days": 3653
+  },
+  "IN:west-bengal": {
+   "country": "IN",
+   "id": "west-bengal",
+   "name": "West Bengal (Kolkata)",
+   "names": {},
+   "lat": 22.57,
+   "lon": 88.36,
+   "elevationM": 12.0,
+   "monthlyTempC": [
+    18.8,
+    22.5,
+    26.6,
+    29.7,
+    30.0,
+    29.7,
+    28.5,
+    28.2,
+    28.0,
+    26.9,
+    23.7,
+    20.0
+   ],
+   "days": 3653
+  },
+  "TH:central": {
+   "country": "TH",
+   "id": "central",
+   "name": "Central Thailand (Suphan Buri)",
+   "names": {
+    "th": "ภาคกลาง (สุพรรณบุรี)"
+   },
+   "lat": 14.47,
+   "lon": 100.12,
+   "elevationM": 11.0,
+   "monthlyTempC": [
+    26.5,
+    27.9,
+    30.0,
+    31.1,
+    30.4,
+    29.6,
+    28.9,
+    28.8,
+    27.9,
+    27.3,
+    27.5,
+    26.6
+   ],
+   "days": 3653
+  },
+  "TH:west": {
+   "country": "TH",
+   "id": "west",
+   "name": "Western Thailand (Ratchaburi)",
+   "names": {
+    "th": "ภาคตะวันตก (ราชบุรี)"
+   },
+   "lat": 13.54,
+   "lon": 99.82,
+   "elevationM": 4.0,
+   "monthlyTempC": [
+    25.8,
+    27.2,
+    29.1,
+    30.3,
+    29.9,
+    29.1,
+    28.5,
+    28.3,
+    27.6,
+    26.9,
+    26.6,
+    25.8
+   ],
+   "days": 3653
+  },
+  "TH:east": {
+   "country": "TH",
+   "id": "east",
+   "name": "Eastern Thailand (Chonburi)",
+   "names": {
+    "th": "ภาคตะวันออก (ชลบุรี)"
+   },
+   "lat": 13.36,
+   "lon": 100.98,
+   "elevationM": 6.0,
+   "monthlyTempC": [
+    26.7,
+    27.3,
+    28.6,
+    29.5,
+    29.5,
+    29.1,
+    28.5,
+    28.4,
+    27.7,
+    27.1,
+    27.2,
+    26.6
+   ],
+   "days": 3653
+  },
+  "TH:northeast": {
+   "country": "TH",
+   "id": "northeast",
+   "name": "Northeast (Khon Kaen)",
+   "names": {
+    "th": "ภาคตะวันออกเฉียงเหนือ (ขอนแก่น)"
+   },
+   "lat": 16.43,
+   "lon": 102.84,
+   "elevationM": 161.0,
+   "monthlyTempC": [
+    23.8,
+    25.2,
+    28.6,
+    30.3,
+    29.6,
+    29.2,
+    28.2,
+    27.8,
+    26.9,
+    26.2,
+    25.6,
+    23.6
+   ],
+   "days": 3653
+  },
+  "TH:north": {
+   "country": "TH",
+   "id": "north",
+   "name": "Northern Thailand (Chiang Mai)",
+   "names": {
+    "th": "ภาคเหนือ (เชียงใหม่)"
+   },
+   "lat": 18.79,
+   "lon": 98.98,
+   "elevationM": 315.0,
+   "monthlyTempC": [
+    21.9,
+    24.0,
+    27.6,
+    29.3,
+    28.9,
+    27.3,
+    26.5,
+    26.1,
+    26.1,
+    25.5,
+    24.4,
+    22.5
+   ],
+   "days": 3653
+  },
+  "TH:south": {
+   "country": "TH",
+   "id": "south",
+   "name": "Southern Thailand (Surat Thani)",
+   "names": {
+    "th": "ภาคใต้ (สุราษฎร์ธานี)"
+   },
+   "lat": 9.14,
+   "lon": 99.33,
+   "elevationM": 7.0,
+   "monthlyTempC": [
+    25.6,
+    26.4,
+    28.1,
+    28.5,
+    28.0,
+    27.3,
+    27.0,
+    26.9,
+    26.3,
+    25.9,
+    25.7,
+    25.4
+   ],
+   "days": 3653
+  },
+  "VN:mekong": {
+   "country": "VN",
+   "id": "mekong",
+   "name": "Mekong Delta (Cần Thơ)",
+   "names": {
+    "vi": "Đồng bằng sông Cửu Long (Cần Thơ)"
+   },
+   "lat": 10.03,
+   "lon": 105.79,
+   "elevationM": 0.0,
+   "monthlyTempC": [
+    25.9,
+    26.7,
+    28.1,
+    29.0,
+    28.5,
+    27.3,
+    26.8,
+    26.9,
+    26.6,
+    26.5,
+    26.6,
+    26.0
+   ],
+   "days": 3653
+  },
+  "VN:southeast": {
+   "country": "VN",
+   "id": "southeast",
+   "name": "Southeast (Đồng Nai)",
+   "names": {
+    "vi": "Đông Nam Bộ (Đồng Nai)"
+   },
+   "lat": 10.95,
+   "lon": 106.82,
+   "elevationM": 9.0,
+   "monthlyTempC": [
+    26.4,
+    27.1,
+    28.3,
+    29.0,
+    28.7,
+    27.5,
+    26.9,
+    27.0,
+    26.7,
+    26.5,
+    26.6,
+    26.3
+   ],
+   "days": 3653
+  },
+  "VN:central-highlands": {
+   "country": "VN",
+   "id": "central-highlands",
+   "name": "Central Highlands (Buôn Ma Thuột)",
+   "names": {
+    "vi": "Tây Nguyên (Buôn Ma Thuột)"
+   },
+   "lat": 12.67,
+   "lon": 108.04,
+   "elevationM": 469.0,
+   "monthlyTempC": [
+    22.3,
+    23.5,
+    26.1,
+    27.4,
+    26.8,
+    25.5,
+    24.8,
+    24.9,
+    24.5,
+    24.2,
+    24.0,
+    22.5
+   ],
+   "days": 3653
+  },
+  "VN:south-central-coast": {
+   "country": "VN",
+   "id": "south-central-coast",
+   "name": "South Central Coast (Quy Nhơn)",
+   "names": {
+    "vi": "Duyên hải Nam Trung Bộ (Quy Nhơn)"
+   },
+   "lat": 13.78,
+   "lon": 109.22,
+   "elevationM": 52.0,
+   "monthlyTempC": [
+    22.6,
+    22.9,
+    24.9,
+    26.9,
+    28.7,
+    29.7,
+    29.2,
+    29.5,
+    27.8,
+    26.1,
+    25.0,
+    23.4
+   ],
+   "days": 3653
+  },
+  "VN:north-central": {
+   "country": "VN",
+   "id": "north-central",
+   "name": "North Central (Vinh)",
+   "names": {
+    "vi": "Bắc Trung Bộ (Vinh)"
+   },
+   "lat": 18.68,
+   "lon": 105.68,
+   "elevationM": 7.0,
+   "monthlyTempC": [
+    18.5,
+    19.4,
+    22.7,
+    25.8,
+    28.8,
+    31.0,
+    30.1,
+    29.5,
+    27.7,
+    25.0,
+    22.8,
+    19.0
+   ],
+   "days": 3653
+  },
+  "VN:red-river": {
+   "country": "VN",
+   "id": "red-river",
+   "name": "Red River Delta (Hanoi)",
+   "names": {
+    "vi": "Đồng bằng sông Hồng (Hà Nội)"
+   },
+   "lat": 21.03,
+   "lon": 105.85,
+   "elevationM": 24.0,
+   "monthlyTempC": [
+    17.3,
+    18.5,
+    21.9,
+    24.9,
+    27.9,
+    29.7,
+    29.2,
+    28.5,
+    27.4,
+    24.8,
+    22.3,
+    17.7
+   ],
+   "days": 3653
+  },
+  "KZ:north": {
+   "country": "KZ",
+   "id": "north",
+   "name": "Northern Kazakhstan (Kostanay)",
+   "names": {
+    "uk": "Північний Казахстан (Костанай)"
+   },
+   "lat": 53.21,
+   "lon": 63.63,
+   "elevationM": 164.0,
+   "monthlyTempC": [
+    -13.9,
+    -11.2,
+    -4.8,
+    6.5,
+    14.3,
+    19.0,
+    21.6,
+    19.6,
+    12.5,
+    4.6,
+    -4.7,
+    -11.2
+   ],
+   "days": 3653
+  },
+  "KZ:akmola": {
+   "country": "KZ",
+   "id": "akmola",
+   "name": "Akmola (Astana)",
+   "names": {
+    "uk": "Акмолинська обл. (Астана)"
+   },
+   "lat": 51.17,
+   "lon": 71.45,
+   "elevationM": 359.0,
+   "monthlyTempC": [
+    -13.5,
+    -11.2,
+    -4.9,
+    6.3,
+    14.3,
+    19.2,
+    21.2,
+    19.2,
+    12.3,
+    4.4,
+    -5.6,
+    -10.8
+   ],
+   "days": 3653
+  },
+  "KZ:pavlodar": {
+   "country": "KZ",
+   "id": "pavlodar",
+   "name": "Pavlodar",
+   "names": {
+    "uk": "Павлодар"
+   },
+   "lat": 52.29,
+   "lon": 76.95,
+   "elevationM": 136.0,
+   "monthlyTempC": [
+    -14.6,
+    -12.0,
+    -4.4,
+    7.0,
+    15.0,
+    20.6,
+    22.2,
+    20.0,
+    13.3,
+    5.1,
+    -5.3,
+    -11.0
+   ],
+   "days": 3653
+  },
+  "KZ:east": {
+   "country": "KZ",
+   "id": "east",
+   "name": "East Kazakhstan (Oskemen)",
+   "names": {
+    "uk": "Східний Казахстан (Усть-Каменогорськ)"
+   },
+   "lat": 49.95,
+   "lon": 82.61,
+   "elevationM": 290.0,
+   "monthlyTempC": [
+    -12.4,
+    -9.9,
+    -3.2,
+    7.3,
+    14.1,
+    20.0,
+    21.6,
+    19.9,
+    13.1,
+    5.8,
+    -4.5,
+    -9.9
+   ],
+   "days": 3653
+  },
+  "KZ:aktobe": {
+   "country": "KZ",
+   "id": "aktobe",
+   "name": "Aktobe",
+   "names": {
+    "uk": "Актобе"
+   },
+   "lat": 50.28,
+   "lon": 57.17,
+   "elevationM": 216.0,
+   "monthlyTempC": [
+    -11.4,
+    -9.3,
+    -3.7,
+    7.9,
+    15.7,
+    21.4,
+    23.8,
+    22.5,
+    14.9,
+    6.4,
+    -2.2,
+    -8.7
+   ],
+   "days": 3653
+  },
+  "KZ:south": {
+   "country": "KZ",
+   "id": "south",
+   "name": "Almaty region",
+   "names": {
+    "uk": "Алматинська область"
+   },
+   "lat": 43.24,
+   "lon": 76.89,
+   "elevationM": 810.0,
+   "monthlyTempC": [
+    -4.1,
+    -1.4,
+    5.4,
+    11.9,
+    16.8,
+    21.6,
+    25.1,
+    23.2,
+    17.6,
+    10.1,
+    2.1,
+    -2.6
+   ],
+   "days": 3653
+  },
+  "KZ:turkistan": {
+   "country": "KZ",
+   "id": "turkistan",
+   "name": "Turkistan (Shymkent)",
+   "names": {
+    "uk": "Туркестанська обл. (Шимкент)"
+   },
+   "lat": 42.32,
+   "lon": 69.59,
+   "elevationM": 529.0,
+   "monthlyTempC": [
+    0.6,
+    3.1,
+    8.7,
+    14.6,
+    20.3,
+    25.6,
+    28.8,
+    26.3,
+    20.6,
+    12.7,
+    5.7,
+    1.1
+   ],
+   "days": 3653
+  }
+ },
+ "fetchedOn": "2026-10-25"
+}

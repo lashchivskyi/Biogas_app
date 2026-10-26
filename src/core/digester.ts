@@ -1,5 +1,7 @@
 import { DAYS_IN_MONTH, HOURS_IN_MONTH, meanTemp, substrateTempC } from "./climate";
 import type { RunContext } from "./context";
+import { FEEDSTOCKS } from "./feedstockData";
+import { digestateTonnes } from "./massBalance";
 import type { DigesterDesign, FeedstockSummary, TechnologyRecommendation } from "./types";
 
 /**
@@ -116,7 +118,8 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   const olrStd = p.get("eng.olr_max_kgvs_m3d");
   const olrHard = p.get("eng.olr_max_poultry_kgvs_m3d");
   const storageMonths = p.get("eng.storage_months");
-  const biogasMass = p.get("eng.biogas_mass_kg_per_m3");
+  const heatRecovery = p.get("eng.pasteurisation_heat_recovery");
+  const pasteurTemp = p.get("eng.pasteurisation_temp_c");
 
   const digestion = chooseDigestion(feed, ctx);
   const manure = feed.manureShareVs;
@@ -150,6 +153,7 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   const surface = wallRoof + floor;
 
   const heat: number[] = [];
+  let pasteurisationHeat = 0;
   for (let i = 0; i < 12; i++) {
     const tAmb = ctx.region.monthlyTempC[i];
     const mass = feed.monthlyTonnes[i] * 1000; // kg
@@ -159,12 +163,20 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
     }
     const dT = Math.max(0, tempDig - substrateTempC(tAmb));
     const eSub = (mass * cp * dT) / 3600; // kJ → kWh
+    const abpMass = feed.lines.filter((l) => FEEDSTOCKS[l.typeId].abp !== "none")
+      .reduce((acc, l) => acc + l.monthlyTonnes[i] * 1000, 0);
+    const inletC = substrateTempC(tAmb);
+    const pasteurDelta = Math.max(0, pasteurTemp - inletC);
+    const recoverableDelta = Math.max(0, pasteurTemp - tempDig);
+    const recoveredDelta = Math.min(pasteurDelta * heatRecovery, recoverableDelta);
+    const extraPasteurisation = abpMass * cp * Math.max(0, pasteurDelta - recoveredDelta - dT) / 3600;
+    pasteurisationHeat += extraPasteurisation;
     const lossW = uWall * wallRoof * (tempDig - tAmb) + uFloor * floor * Math.max(0, tempDig - (tAmb + 6));
     const eLoss = (Math.max(0, lossW) * HOURS_IN_MONTH[i]) / 1000;
-    heat.push(eSub + eLoss);
+    heat.push(eSub + eLoss + extraPasteurisation);
   }
 
-  const digestateT = Math.max(0, feed.tonnesYear - (feed.biogasM3Year * biogasMass) / 1000);
+  const digestateT = digestateTonnes(feed, p);
   // Dilute industrial effluent is typically treated & discharged/irrigated, not stored 6 months.
   const months = digestion === "high_rate" || digestion === "covered_lagoon" ? Math.min(storageMonths, 1) : storageMonths;
   const storageRequired = (digestateT * months) / 12; // m³ (density ≈ 1)
@@ -181,6 +193,7 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
     olrKgVsM3Day: working > 0 ? (vsMax * 1000) / working : 0,
     monthlyHeatDemandKwh: heat,
     heatDemandKwhYear: heat.reduce((a, b) => a + b, 0),
+    pasteurisationHeatKwhYear: pasteurisationHeat,
     storageVolumeM3: storageRequired,
     storageCovered: covered,
     storageNew: newStorage,

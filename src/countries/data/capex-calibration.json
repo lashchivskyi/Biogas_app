@@ -1,0 +1,294 @@
+{
+  "generatedOn": "2026-10-26",
+  "method": "published plant cost ÷ model CAPEX at capex_factor 1, median per country; weak points reported but not used",
+  "benchmarks": [
+    {
+      "id": "pl-agri-0.5mw",
+      "country": "PL",
+      "route": "chp",
+      "size": 500,
+      "achievedSize": 500,
+      "input": 10267,
+      "capexEur": 1750000,
+      "modelAt1": 2021207,
+      "factor": 0.87,
+      "strength": "medium",
+      "year": 2023,
+      "quality": "press",
+      "source": "Metropolis advisory: 0.5 MW agricultural plant 1.5–2 mln EUR (midpoint); grid connection and permits extra (gramwzielone.pl, article undated)"
+    },
+    {
+      "id": "pl-agri-1mw",
+      "country": "PL",
+      "route": "chp",
+      "size": 1000,
+      "achievedSize": 1000,
+      "input": 20623,
+      "capexEur": 3773000,
+      "modelAt1": 3410456,
+      "factor": 1.11,
+      "strength": "medium",
+      "year": 2023,
+      "quality": "press",
+      "source": "Poznań University of Life Sciences researcher: 1 MW plant ≈ 16 mln PLN ÷ 4.24 PLN/EUR (gramwzielone.pl, article undated)"
+    },
+    {
+      "id": "fr-biomethane-sarthe",
+      "country": "FR",
+      "route": "biomethane",
+      "size": 136,
+      "achievedSize": 136,
+      "input": 11736,
+      "capexEur": 5400000,
+      "modelAt1": 3314629,
+      "factor": 1.63,
+      "strength": "strong",
+      "year": 2025,
+      "quality": "company",
+      "source": "Agripower press release, Greenfield project Sarthe (Oct 2025): initial investment 5.4 M€ for 136 Nm³/h, phase 1"
+    },
+    {
+      "id": "fr-biomethane-allier",
+      "country": "FR",
+      "route": "biomethane",
+      "size": 106,
+      "achievedSize": 106,
+      "input": 9156,
+      "capexEur": 5500000,
+      "modelAt1": 2913684,
+      "factor": 1.89,
+      "strength": "strong",
+      "year": 2026,
+      "quality": "company",
+      "source": "Agripower press release, Greenfield project Allier (Apr 2026): ≈ 5.5 M€ for 106 Nm³/h"
+    },
+    {
+      "id": "es-biomethane-calahorra",
+      "country": "ES",
+      "route": "biomethane",
+      "size": 727,
+      "achievedSize": 727,
+      "input": 62186,
+      "capexEur": 25000000,
+      "modelAt1": 9370521,
+      "factor": 2.67,
+      "strength": "strong",
+      "year": 2025,
+      "quality": "company",
+      "source": "AGR Biogás, La Calahorra (Granada): investment 25 M€ for ≈ 58 GWh/yr biomethane (El Debate, Dec 2025) ≈ 727 Nm³/h at 8 000 h"
+    },
+    {
+      "id": "tr-agri-0.8mw",
+      "country": "TR",
+      "route": "chp",
+      "size": 800,
+      "achievedSize": 800,
+      "input": 16478,
+      "capexEur": 2300000,
+      "modelAt1": 2872607,
+      "factor": 0.8,
+      "strength": "strong",
+      "year": 2025,
+      "quality": "academic",
+      "source": "Bursa Teknik Üniversitesi 2025 comparison of single- and two-stage plants: 0.8 MW → 2.3 M€ (installed power written as MWh in source; read as MW)"
+    },
+    {
+      "id": "tr-agri-2.7mw",
+      "country": "TR",
+      "route": "chp",
+      "size": 2700,
+      "achievedSize": 2700,
+      "input": 55857,
+      "capexEur": 7300000,
+      "modelAt1": 7520206,
+      "factor": 0.97,
+      "strength": "strong",
+      "year": 2025,
+      "quality": "academic",
+      "source": "Bursa Teknik Üniversitesi 2025: 2.7 MW → 7.3 M€ (same study)"
+    },
+    {
+      "id": "gb-foodwaste-coleshill",
+      "country": "GB",
+      "route": "chp",
+      "size": 2400,
+      "achievedSize": 2400,
+      "input": 63557,
+      "capexEur": 15170000,
+      "modelAt1": 11420038,
+      "factor": 1.33,
+      "strength": "strong",
+      "year": 2024,
+      "quality": "company",
+      "source": "Severn Trent Water, food-waste plant at Coleshill (Warwickshire): £13 m ÷ 0.85679 £/€, ≈ 2.4 MW (WaterWorld)"
+    },
+    {
+      "id": "gb-foodwaste-fenland",
+      "country": "GB",
+      "route": "chp",
+      "size": 2500,
+      "achievedSize": 2500,
+      "input": 66211,
+      "capexEur": 12250000,
+      "modelAt1": 11837820,
+      "factor": 1.03,
+      "strength": "medium",
+      "year": 2024,
+      "quality": "press",
+      "source": "Fenland (Lifecrown / Local Generation): £9–12 m (midpoint £10.5 m) ÷ 0.85679, 2.5 MW (Wisbech Standard, undated)"
+    },
+    {
+      "id": "it-agri-aggregate",
+      "country": "IT",
+      "route": "chp",
+      "size": 1000,
+      "achievedSize": 1000,
+      "input": 20623,
+      "capexEur": 3200000,
+      "modelAt1": 3410323,
+      "factor": 0.94,
+      "strength": "weak",
+      "year": 2025,
+      "quality": "aggregate",
+      "source": "Sector aggregate: ≈ 4.5 bn € for ≈ 1 400 MW agricultural plants (Terna/CIB slide) ≈ 3.2 M€/MW — not a single-plant cost"
+    },
+    {
+      "id": "cz-agri-1mw",
+      "country": "CZ",
+      "route": "chp",
+      "size": 1000,
+      "achievedSize": 1000,
+      "input": 20623,
+      "capexEur": 2630000,
+      "modelAt1": 3410450,
+      "factor": 0.77,
+      "strength": "weak",
+      "year": 2022,
+      "quality": "press",
+      "source": "tzb-info: construction 60–70 mil. Kč for 1 MW, midpoint 65 mil. Kč ÷ 24.69 CZK/EUR (article undated, likely older)"
+    },
+    {
+      "id": "cz-cicov-526kw",
+      "country": "CZ",
+      "route": "chp",
+      "size": 526,
+      "achievedSize": 530,
+      "input": 10882,
+      "capexEur": 2835000,
+      "modelAt1": 2109039,
+      "factor": 1.34,
+      "strength": "medium",
+      "year": 2024,
+      "quality": "press",
+      "source": "ČEZ Číčov 526 kW CHP: press estimate ≈ 70 mil. Kč ÷ 24.69 CZK/EUR (ČEZ did not publish the cost)"
+    },
+    {
+      "id": "ro-ardud-1.5mw",
+      "country": "RO",
+      "route": "chp",
+      "size": 1500,
+      "achievedSize": 1500,
+      "input": 30986,
+      "capexEur": 5300000,
+      "modelAt1": 4687624,
+      "factor": 1.13,
+      "strength": "weak",
+      "year": 2015,
+      "quality": "project",
+      "source": "BCR-financed Ardud biogas station (First Biogaz), ≈ 5.3 M€, 1.5 MW — c. 2015, not inflation-adjusted"
+    },
+    {
+      "id": "ro-filipestii-1mw",
+      "country": "RO",
+      "route": "chp",
+      "size": 1000,
+      "achievedSize": 1000,
+      "input": 20623,
+      "capexEur": 5000000,
+      "modelAt1": 3410432,
+      "factor": 1.47,
+      "strength": "weak",
+      "year": 2019,
+      "quality": "press",
+      "source": "Genesis Biopartner, Filipeștii de Pădure: 5 M€ for 1 MW electric (Forbes/Profit, year approximate)"
+    }
+  ],
+  "countries": {
+    "PL": {
+      "factor": 0.99,
+      "n": 2,
+      "confidence": "MEDIUM",
+      "ids": [
+        "pl-agri-0.5mw",
+        "pl-agri-1mw"
+      ]
+    },
+    "FR": {
+      "n": 0,
+      "confidence": "LOW",
+      "ids": [
+        "fr-biomethane-sarthe",
+        "fr-biomethane-allier"
+      ],
+      "biomethane": {
+        "factor": 1.76,
+        "n": 2,
+        "note": "Biomethane points show the model's upgrading/injection CAPEX is lower than published projects; not applied to the country factor (it applies to all routes)."
+      }
+    },
+    "ES": {
+      "n": 0,
+      "confidence": "LOW",
+      "ids": [
+        "es-biomethane-calahorra"
+      ],
+      "biomethane": {
+        "factor": 2.67,
+        "n": 1,
+        "note": "Biomethane points show the model's upgrading/injection CAPEX is lower than published projects; not applied to the country factor (it applies to all routes)."
+      }
+    },
+    "TR": {
+      "factor": 0.89,
+      "n": 2,
+      "confidence": "MEDIUM",
+      "ids": [
+        "tr-agri-0.8mw",
+        "tr-agri-2.7mw"
+      ]
+    },
+    "GB": {
+      "factor": 1.18,
+      "n": 2,
+      "confidence": "MEDIUM",
+      "ids": [
+        "gb-foodwaste-coleshill",
+        "gb-foodwaste-fenland"
+      ]
+    },
+    "IT": {
+      "n": 0,
+      "confidence": "LOW",
+      "ids": [
+        "it-agri-aggregate"
+      ]
+    },
+    "CZ": {
+      "factor": 1.34,
+      "n": 1,
+      "confidence": "LOW",
+      "ids": [
+        "cz-agri-1mw",
+        "cz-cicov-526kw"
+      ]
+    },
+    "RO": {
+      "n": 0,
+      "confidence": "LOW",
+      "ids": [
+        "ro-ardud-1.5mw",
+        "ro-filipestii-1mw"
+      ]
+    }
+  }
+}

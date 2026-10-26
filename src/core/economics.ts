@@ -1,4 +1,4 @@
-import { buildCapex, peakMonthlyHeatKw } from "./capex";
+import { biomethaneOfftake, buildCapex, peakMonthlyHeatKw } from "./capex";
 import { HOURS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import { customerDemand } from "./demand";
@@ -26,7 +26,10 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   const feed = analyseFeedstock(ctx);
   const design = designDigester(feed, ctx);
   const demand = customerDemand(ctx);
-  const energy = runEnergy(route, feed, design, demand, ctx);
+  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx);
+  const energy = route === "biomethane" && biomethaneOfftake(ctx, energyBeforeOfftake).mode === "cng"
+    ? runEnergy(route, feed, design, demand, ctx, true)
+    : energyBeforeOfftake;
   const peakKw = peakMonthlyHeatKw(design, HOURS_IN_MONTH);
   const gross = buildCapex(route, feed, design, energy, ctx, peakKw);
   const dig = assessDigestate(feed, ctx);
@@ -34,7 +37,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   const kwEq = route === "chp" ? energy.chpKwEl : (energy.gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
 
   const selfShare = p.get("econ.self_consumption_variable_share");
-  const exportPrice = p.get("econ.electricity_export_eur_kwh") * scenario.energyPriceMult * mods.energyPrice;
+  const exportPrice = p.get("econ.electricity_spot_eur_kwh") * p.get("econ.export_haircut") * scenario.energyPriceMult * mods.energyPrice;
   const bmKey = scenario.biomethanePriceKey;
   const marketBm = p.get(`econ.biomethane_price_${bmKey}_eur_nm3`) * mods.energyPrice;
   const bmPrice = sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? sup.biomethaneEurNm3 : marketBm;
@@ -49,7 +52,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   let selfEur = energy.elSelfConsumedKwh * demand.electricityPriceEurKwh * selfShare;
   let exportEur = energy.elExportedKwh * exportPrice;
   let tariffEur = 0;
-  const tariff = route === "chp" ? sup?.electricityTariffEurKwh : undefined;
+  const tariff = route === "chp" && input.energy.hasGridConnection ? sup?.electricityTariffEurKwh : undefined;
   if (tariff !== undefined) {
     // Feed-in style support: if the tariff beats the avoided bill, everything is sold under the tariff.
     if (tariff >= demand.electricityPriceEurKwh * selfShare) {
@@ -81,7 +84,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
     if (Math.abs(eur) > 0.5) opex.push({ id, label, eur });
   };
   const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_per_kw") * Math.max(kwEq, 0));
-  ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * p.get("econ.labour_eur_h") * opexMult);
+  ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio") * opexMult);
   ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp").reduce((a, l) => a + l.eur, 0);
@@ -96,6 +99,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   ox("digestate_handling", T("Digestate handling (incremental)", "Поводження з дигестатом (інкрементально)"), dig.handlingCostEurYear);
   ox("el_purchased", T("Electricity purchased", "Закупівля електроенергії"), energy.elPurchasedKwh * demand.electricityPriceEurKwh);
   ox("heat_external", T("External heat for the digester", "Зовнішнє тепло для обігріву реактора"), energy.heatExternalPurchasedKwh * demand.heatValueEurKwh);
+  if (route === "biomethane" && biomethaneOfftake(ctx, energy).mode === "cng") ox("cng_haul", T("Bio-CNG road haulage to the offtaker", "Перевезення bio-CNG до покупця"), biomethaneOfftake(ctx, energy).haulEurYear * opexMult);
   if (route === "biomethane") ox("certification", T("Biomethane certification, trading, balancing", "Сертифікація, торгівля, балансування біометану"), energy.biomethaneNm3 * p.get("eng.opex.certification_eur_nm3") * opexMult);
 
   const revenueEur = revenue.reduce((a, l) => a + l.eur, 0);
@@ -124,8 +128,6 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
     otherRevenue,
     fixedRevenue: tariffEur, // tariffs are fixed, not market-escalated
     opexEur,
-    overhaulEur: chpCapex * p.get("eng.chp_overhaul_share"),
-    overhaulEveryYears: p.get("eng.chp_overhaul_years"),
     horizon,
     discount: p.get("econ.discount_rate"),
     energyEsc: p.get("econ.energy_escalation"),

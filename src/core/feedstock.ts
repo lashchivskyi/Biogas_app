@@ -54,9 +54,10 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     const activeDays = act.reduce((acc, on, i) => acc + (on ? DAYS_IN_MONTH[i] : 0), 0) || 1;
     const mt = act.map((on, i) => (on ? (tonnes * DAYS_IN_MONTH[i]) / activeDays : 0));
 
-    const vsT = (tonnes * dm * t.vsPctOfDm) / 10000;
+    const vsPct = line.vsPctOfDm ?? t.vsPctOfDm;
+    const vsT = (tonnes * dm * vsPct) / 10000;
     const blend = scenario.yieldBlend;
-    const yieldL = blend < 0 ? t.yieldTyp + -blend * (t.yieldLow - t.yieldTyp) : t.yieldTyp + blend * (t.yieldHigh - t.yieldTyp);
+    const yieldL = line.methaneYieldLPerKgVs ?? (blend < 0 ? t.yieldTyp + -blend * (t.yieldLow - t.yieldTyp) : t.yieldTyp + blend * (t.yieldHigh - t.yieldTyp));
     // 1 L/kg VS × t VS ×1000 kg/t / 1000 L/m3 = t VS × yield  → m3 CH4
     const ch4 = vsT * yieldL * mods.methaneYield;
     const ch4Fraction = t.ch4Fraction;
@@ -70,25 +71,33 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     const distance = delivered ? Math.max(0, line.distanceKm ?? 0) : 0;
     const returnFactor = delivered && t.category === "manure" ? 1.5 : 1;
     const transportCost = delivered ? tonnes * (transportFixed + distance * transportRate) * returnFactor : 0;
-    const purchaseCost = ((line.purchasePricePerTonneLocal ?? 0) / fx) * tonnes;
+    const purchasePrice = line.purchasePricePerTonneLocal ?? 0;
+    const purchaseCost = (purchasePrice / fx) * tonnes;
     const handling = line.handling ?? t.defaultHandling;
     const disposalSaving =
-      PAID_HANDLING.includes(handling) && (line.currentDisposalCostPerTonneLocal ?? 0) > 0
+      !delivered && purchasePrice >= 0 && PAID_HANDLING.includes(handling) && (line.currentDisposalCostPerTonneLocal ?? 0) > 0
         ? ((line.currentDisposalCostPerTonneLocal ?? 0) / fx) * tonnes * scenario.disposalRealisation
         : 0;
-    const opportunity = ((line.opportunityValuePerTonneLocal ?? 0) / fx) * tonnes;
+    // Purchase and foregone sale are alternative valuations of the same stream, not additive.
+    const opportunity = delivered ? 0 : (Math.max(0, (line.opportunityValuePerTonneLocal ?? 0) - Math.max(0, purchasePrice)) / fx) * tonnes;
 
     const w: string[] = [];
     const nm = t.name[lang];
+    if (delivered && (line.currentDisposalCostPerTonneLocal ?? 0) > 0) w.push(T("Avoided disposal costs for delivered feedstock are excluded: prove the plant owner captures this saving in a supply agreement.", "Економію на утилізації привізної сировини не враховано: право власника установки на цю економію потрібно підтвердити договором."));
+    if (delivered && (line.opportunityValuePerTonneLocal ?? 0) > 0) w.push(T("Alternative sale value belongs to the external supplier and is not charged to this project.", "Дохід від альтернативного продажу належить зовнішньому постачальнику й не є витратою цього проєкту."));
+    if (!delivered && purchasePrice > 0 && (line.opportunityValuePerTonneLocal ?? 0) > 0) w.push(T("Purchase cost and foregone sale value overlap; the model uses the larger amount only.", "Вартість закупівлі й втрачений дохід від продажу перекриваються; модель бере лише більшу суму."));
     if (t.confidence === "LOW") w.push(T(`Parameters for "${nm}" have low confidence — a laboratory analysis (BMP) is needed.`, `Параметри «${nm}» мають низьку довіру — потрібен лабораторний аналіз (BMP).`));
     if (t.flags.includes("competing_use") && opportunity === 0) w.push(T(`"${nm}" often has an alternative use (e.g. animal feed) — enter its sale price.`, `«${nm}» часто має альтернативне використання (корм) — вкажіть його ціну.`));
     if (t.flags.includes("seasonal") && months < 9) w.push(T(`Seasonal stream (${months} months): equipment sits idle for the rest of the year.`, `Сезонний потік (${months} міс.): обладнання простоюватиме решту року.`));
     if (t.flags.includes("dilute")) w.push(T(`"${nm}" is very dilute: consider a high-rate reactor (UASB / covered lagoon) instead of a CSTR — the model's CSTR costing is conservative here.`, `«${nm}» дуже розбавлений: розгляньте високонавантажений реактор (UASB / накрита лагуна) замість CSTR — оцінка CAPEX тут консервативна.`));
+    if (t.flags.includes("energy_crop") && !((line.purchasePricePerTonneLocal ?? 0) > 0) && opportunity === 0) w.push(T(`"${nm}" is a purchased or own-grown crop — enter its cost per tonne (typically 30–45 €/t delivered), otherwise the gas is counted as free.`, `«${nm}» — покупна або власна культура: вкажіть її вартість за тонну (зазвичай 30–45 €/т з доставкою), інакше газ рахується як безкоштовний.`));
+    if (t.flags.includes("energy_crop")) w.push(T("Energy-crop share is capped in many support schemes (e.g. EEG maize cap, RED III sustainability criteria) — check before relying on it.", "Частка енергетичних культур обмежена в багатьох схемах підтримки (напр. ліміт кукурудзи в EEG, критерії сталості RED III) — перевірте заздалегідь."));
     if (t.abp !== "none") w.push(T(`Animal by-products (${t.abp === "cat3" ? "Cat. 3" : "Cat. 2"}) → pasteurisation and veterinary approval required.`, `Побічні продукти тваринного походження (${t.abp === "cat3" ? "кат. 3" : "кат. 2"}) → потрібна пастеризація та ветеринарне узгодження.`));
     if (delivered && !(line.distanceKm && line.distanceKm > 0)) w.push(T("Delivery distance not given — logistics cost is understated.", "Відстань доставки не вказана — вартість логістики занижена."));
 
     lines.push({
       id: line.id, label: t.name[lang], typeId: t.id, tonnesYear: tonnes, monthlyTonnes: mt, dryMatterPct: dm,
+      vsPctOfDm: vsPct, methaneYieldLPerKgVs: yieldL,
       vsTonnesYear: vsT, ch4M3Year: ch4, ch4Fraction, nKgYear: nKg, p2o5KgYear: pKg, k2oKgYear: kKg, delivered,
       distanceKm: distance, transportCostEurYear: transportCost, purchaseCostEurYear: purchaseCost,
       disposalSavingEurYear: disposalSaving, opportunityCostEurYear: opportunity, category: t.category, warnings: w,

@@ -10,6 +10,7 @@ import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
 import { getDictionary, INTL_TAG, isLocale, LOCALES, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
+import { LANGUAGE_OPTIONS } from "@/i18n/language-options";
 
 export const dynamicParams = false;
 
@@ -28,7 +29,6 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     alternates: alternates(lang as Locale, ""),
     openGraph: { title: d.meta.ogTitle, description: d.meta.ogDescription, type: "website", siteName: SITE.name, locale: INTL_TAG[lang as Locale]?.replace("-", "_") },
     twitter: { card: "summary_large_image" },
-    icons: { icon: "/icon.svg" },
     robots: { index: true, follow: true, "max-image-preview": "large" },
     verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
   };
@@ -46,7 +46,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
     <html lang={INTL_TAG[lang]}>
       <body className="flex min-h-screen flex-col">
         <a href="#main" className="skip-link">{d.nav.skip}</a>
-        <SiteHeader locale={lang} t={d.nav} descriptor={d.brand.descriptor} />
+        <SiteHeader locale={lang} t={d.nav} descriptor={d.brand.descriptor} languageOptions={LANGUAGE_OPTIONS} />
         <div id="main" className="flex-1">{children}</div>
         <footer className="no-print relative z-10 bg-night text-white/70">
           <div className="container-x grid gap-10 py-14 text-sm md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">

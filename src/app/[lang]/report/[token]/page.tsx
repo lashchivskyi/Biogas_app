@@ -43,9 +43,8 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
     <main>
       <PageHero eyebrow={d.report.eyebrow} title={`${d.labels.business[order.input.businessType].label} · ${countryName(order.input.countryCode, locale)}`} lead={fmt(d.report.paidFor, { who, date })} />
       <div className="container-x py-8">
-        {order.plan === "expert" && <p className="mb-6 rounded-2xl bg-brandsoft p-4 text-brandink">{fmt(d.report.expertNext, { email: order.customer.email })}</p>}
         <div className="no-print mb-4 flex justify-end"><PrintButton label={d.report.print} /></div>
-        <ResultView a={a} d={d} locale={locale} currency={country.currency} countryNotes={country.approachNotes[cl]} access="full" methodologyHref={`/${locale}/methodology`} />
+        <ResultView a={a} d={d} locale={locale} currency={country.currency} countryNotes={country.approachNotes[cl]} access={order.plan === "standard" ? "standard" : "full"} methodologyHref={`/${locale}/methodology`} />
       </div>
     </main>
   );

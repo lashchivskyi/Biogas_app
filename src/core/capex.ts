@@ -1,4 +1,5 @@
 import { FEEDSTOCKS } from "./feedstockData";
+import { DAYS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
 
@@ -6,6 +7,23 @@ import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, R
  * Component-based CAPEX (EU-baseline unit costs × country factor × scenario × sensitivity).
  * Built from physical sizing so that each line can be challenged and replaced by a supplier quote.
  */
+/**
+ * How biomethane leaves the site: a pipeline to the gas grid, or compressed bio-CNG by road ("virtual pipeline",
+ * the SATAT / Brazilian / remote-site practice). Road transport is chosen where the country has no established
+ * injection pathway, or where it is cheaper than the pipeline (CAPEX + 8 years of haulage as a simple comparison).
+ */
+export function biomethaneOfftake(ctx: RunContext, energy: EnergyBalance) {
+  const p = ctx.params;
+  const km = ctx.input.site.gasGridKm ?? 2;
+  const nm3h = Math.max(energy.biomethaneNm3 / 8000, 5);
+  const pipelineEur = km * p.get("eng.capex.pipeline_eur_km");
+  const cngEur = p.get("eng.capex.cng_fixed") + p.get("eng.capex.cng_per_nm3h") * nm3h;
+  const haulEurYear = energy.biomethaneNm3 * p.get("eng.opex.cng_haul_eur_nm3");
+  const gridCost = p.get("eng.capex.injection_fixed") + pipelineEur;
+  const mode: "grid" | "cng" = !ctx.country.biomethaneInjection || cngEur + 8 * haulEurYear < gridCost ? "cng" : "grid";
+  return { mode, km, pipelineEur, cngEur, haulEurYear };
+}
+
 export function buildCapex(
   route: RouteId,
   feed: FeedstockSummary,
@@ -60,11 +78,14 @@ export function buildCapex(
 
   // Pasteurisation for ABP
   if (feed.abpTonnesYear > 0) {
-    add("pasteurisation", T("Pasteurisation 70 °C / 1 h (ABP Cat. 3)", "Пастеризація 70 °C / 1 год (ABP кат. 3)"), p.get("eng.capex.pasteurisation_fixed") + p.get("eng.capex.pasteurisation_per_tday") * (feed.abpTonnesYear / 365));
+    const peakAbpTDay = Math.max(...DAYS_IN_MONTH.map((days, i) =>
+      feed.lines.filter((l) => FEEDSTOCKS[l.typeId].abp !== "none").reduce((total, l) => total + l.monthlyTonnes[i], 0) / days,
+    ));
+    add("pasteurisation", T("Pasteurisation 70 °C / 1 h (ABP Cat. 3)", "Пастеризація 70 °C / 1 год (ABP кат. 3)"), p.get("eng.capex.pasteurisation_fixed") + p.get("eng.capex.pasteurisation_per_tday") * peakAbpTDay);
   }
 
   // Gas system
-  const rawNm3h = route === "biomethane" ? Math.max(energy.rawBiogasNm3PerHour, 1) : Math.max(feed.biogasM3Year / p.get("eng.chp_design_hours"), 1);
+  const rawNm3h = Math.max(energy.rawBiogasDesignNm3PerHour, 1);
   add("gas_system", T("Gas holder, flare, H₂S removal, gas lines", "Газгольдер, факел, очищення (H₂S), газові лінії"), p.get("eng.capex.gas_system_fixed") + p.get("eng.capex.gas_system_per_nm3h") * rawNm3h);
 
   // Conversion equipment
@@ -75,18 +96,22 @@ export function buildCapex(
     const chpEur = unitChp * kw;
     add("chp", T(`CHP unit ${Math.round(kw)} kWe`, `Когенераційна установка ${Math.round(kw)} кВт ел.`), chpEur);
     const thKw = (kw * energy.chpEtaTh) / Math.max(energy.chpEtaEl, 0.01);
-    add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * thKw);
+    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * thKw);
     add("backup_boiler", T("Back-up biogas boiler", "Резервний котел на біогазі"), 0.5 * p.get("eng.capex.boiler_eur_kw") * peakHeatKw);
     conversion = chpEur;
   } else if (route === "boiler") {
     add("boiler", T("Biogas boiler", "Котел на біогазі"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
-    add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * peakHeatKw);
+    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * peakHeatKw);
   } else {
-    const q = Math.max(energy.rawBiogasNm3PerHour, 10);
+    const q = Math.max(energy.rawBiogasDesignNm3PerHour, 10);
     add("upgrading", T("Biogas upgrading to biomethane (membranes) + compression", "Очищення біогазу до біометану (мембрани) + компресія"), p.get("eng.capex.upgrade_ref_eur") * Math.pow(q / 250, p.get("eng.capex.upgrade_scale_exp")));
-    add("injection", T("Metering & grid-injection station", "Вузол обліку та ін'єкції"), p.get("eng.capex.injection_fixed"));
-    const km = ctx.input.site.gasGridKm ?? 2;
-    add("pipeline", T(`Pipeline to gas grid (${km} km)`, `Газопровід до мережі (${km} км)`), km * p.get("eng.capex.pipeline_eur_km"));
+    const off = biomethaneOfftake(ctx, energy);
+    if (off.mode === "grid") {
+      add("injection", T("Metering & grid-injection station", "Вузол обліку та ін'єкції"), p.get("eng.capex.injection_fixed"));
+      add("pipeline", T(`Pipeline to gas grid (${off.km} km)`, `Газопровід до мережі (${off.km} км)`), off.pipelineEur);
+    } else {
+      add("cng", T("Bio-CNG: 250 bar compression, filling post, cascade trailers (no grid connection)", "Bio-CNG: компресія 250 бар, пост заправки, каскадні причепи (без приєднання до мережі)"), off.cngEur);
+    }
     add("boiler", T("Boiler for digester heating", "Котел для обігріву реактора"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
   }
   void conversion;

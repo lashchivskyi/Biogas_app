@@ -1,6 +1,8 @@
 import { BUSINESS_TYPES, FEEDSTOCKS } from "@/core/feedstockData";
 import type { CountryAdapter } from "@/core/country";
 import type { AnimalKind, BusinessTypeId, FeedstockLineInput, FeedstockTypeId, HandlingId, HeatNeed, Housing, ProjectInput } from "@/core/types";
+import { INTL_TAG, type Locale } from "@/i18n/config";
+import { parseLocalizedNumber } from "./localized-number";
 
 /** Questionnaire state. Everything is a string so empty ≠ 0 (an empty field is "unknown"). Money in the project's local currency. */
 export interface FormLine {
@@ -11,7 +13,10 @@ export interface FormLine {
   quantity: string;
   housing: Housing;
   dryMatterPct: string;
+  vsPctOfDm: string;
+  methaneYieldLPerKgVs: string;
   monthsActive: string;
+  startMonth: string;
   delivered: boolean;
   distanceKm: string;
   handling: HandlingId | "";
@@ -21,6 +26,7 @@ export interface FormLine {
 }
 
 export interface FormState {
+  numberLocale?: Locale;
   countryCode: string;
   regionId: string;
   businessType: BusinessTypeId;
@@ -57,7 +63,7 @@ export const newId = () => `l${Date.now().toString(36)}${(counter++).toString(36
 
 export function emptyLine(kind: "animal" | "type", key: AnimalKind | FeedstockTypeId): FormLine {
   const base: FormLine = {
-    id: newId(), kind, quantity: "", housing: "year_round", dryMatterPct: "", monthsActive: "", delivered: false,
+    id: newId(), kind, quantity: "", housing: "year_round", dryMatterPct: "", vsPctOfDm: "", methaneYieldLPerKgVs: "", monthsActive: "", startMonth: "", delivered: false,
     distanceKm: "", handling: "", disposalCost: "", opportunityValue: "", purchasePrice: "",
   };
   if (kind === "animal") return { ...base, animal: key as AnimalKind };
@@ -68,8 +74,9 @@ export function linesForBusiness(b: BusinessTypeId): FormLine[] {
   return BUSINESS_TYPES[b].suggested.map((s) => (s.animal ? emptyLine("animal", s.animal) : emptyLine("type", s.type as FeedstockTypeId)));
 }
 
-export function initialForm(businessType: BusinessTypeId, countryCode: string, regionId: string): FormState {
+export function initialForm(businessType: BusinessTypeId, countryCode: string, regionId: string, locale: Locale = "en"): FormState {
   return {
+    numberLocale: locale,
     countryCode, regionId, businessType,
     lines: linesForBusiness(businessType),
     elecBillMonthly: "", elecKwhYear: "", elecPrice: "",
@@ -80,12 +87,12 @@ export function initialForm(businessType: BusinessTypeId, countryCode: string, r
   };
 }
 
-const num = (s: string): number | undefined => {
-  const v = parseFloat(s.replace(",", ".").replace(/\s/g, ""));
-  return Number.isFinite(v) ? v : undefined;
-};
-
-export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk"): ProjectInput {
+export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk", locale: Locale = lang): ProjectInput {
+  // Drafts saved before numberLocale existed used a dot or comma as the decimal mark,
+  // never locale-specific grouping. Preserve that meaning when opening an old draft.
+  const num = (s: string) => f.numberLocale
+    ? parseLocalizedNumber(s, f.numberLocale)
+    : parseLocalizedNumber(s.replace(/\s/g, "").replace(",", "."), "uk");
   const def = uiDefaults(country);
   const feedstocks: FeedstockLineInput[] = [];
   for (const l of f.lines) {
@@ -98,8 +105,14 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
     } else line.type = l.type;
     const dm = num(l.dryMatterPct);
     if (dm && dm > 0 && dm <= 95) line.dryMatterPct = dm;
+    const vs = num(l.vsPctOfDm ?? "");
+    if (vs && vs > 0 && vs <= 100) line.vsPctOfDm = vs;
+    const bmp = num(l.methaneYieldLPerKgVs ?? "");
+    if (bmp && bmp > 0 && bmp <= 1200) line.methaneYieldLPerKgVs = bmp;
     const months = num(l.monthsActive);
     if (months && l.kind === "type") line.monthsActive = Math.min(12, Math.max(1, months));
+    const start = num(l.startMonth ?? "");
+    if (start && l.kind === "type") line.startMonth = Math.min(12, Math.max(1, Math.round(start)));
     if (l.delivered) {
       line.delivered = true;
       line.distanceKm = num(l.distanceKm);
@@ -145,18 +158,21 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
   };
 }
 
-const s = (v: number | undefined) => (v === undefined ? "" : String(v));
-
-export function inputToForm(i: ProjectInput): FormState {
+export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
+  const nf = new Intl.NumberFormat(INTL_TAG[locale], { useGrouping: false, maximumFractionDigits: 20 });
+  const s = (v: number | undefined) => v === undefined ? "" : nf.format(v);
   const lines: FormLine[] = i.feedstocks.map((l) => {
     const base = emptyLine(l.animal ? "animal" : "type", (l.animal ?? l.type) as AnimalKind | FeedstockTypeId);
     return {
       ...base,
       id: l.id + newId(),
-      quantity: String(l.quantity),
+      quantity: s(l.quantity),
       housing: l.housing ?? "year_round",
       dryMatterPct: s(l.dryMatterPct),
+      vsPctOfDm: s(l.vsPctOfDm),
+      methaneYieldLPerKgVs: s(l.methaneYieldLPerKgVs),
       monthsActive: s(l.monthsActive),
+      startMonth: s(l.startMonth),
       delivered: !!l.delivered,
       distanceKm: s(l.distanceKm),
       handling: l.handling ?? base.handling,
@@ -166,6 +182,7 @@ export function inputToForm(i: ProjectInput): FormState {
     };
   });
   return {
+    numberLocale: locale,
     countryCode: i.countryCode,
     regionId: i.regionId,
     businessType: i.businessType,

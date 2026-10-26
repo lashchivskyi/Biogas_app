@@ -15,7 +15,7 @@ export function PageHero({ eyebrow, title, lead, crumbs, children }: { eyebrow?:
       <div className="container-x relative">
         {crumbs && crumbs.length > 0 && (
           <>
-            <nav aria-label="Breadcrumb" className="mb-5 text-sm text-white/55">
+            <nav aria-label={crumbs[crumbs.length - 1].name} className="mb-5 text-sm text-white/55">
               <ol className="flex flex-wrap items-center gap-1.5">
                 {crumbs.map((c, i) => (
                   <li key={c.href} className="flex items-center gap-1.5">

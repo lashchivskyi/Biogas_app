@@ -1,4 +1,5 @@
 import type { RunContext } from "./context";
+import { digestateTonnes } from "./massBalance";
 import type { DigestateAssessment, FeedstockSummary } from "./types";
 
 /**
@@ -18,10 +19,9 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const pK = p.get("econ.fert_k2o_eur_kg");
   const handling = p.get("econ.digestate_handling_eur_t");
   const excessCost = p.get("econ.digestate_excess_eur_t");
-  const biogasMass = p.get("eng.biogas_mass_kg_per_m3");
   const storageMonths = p.get("eng.storage_months");
 
-  const tonnes = Math.max(0, feed.tonnesYear - (feed.biogasM3Year * biogasMass) / 1000);
+  const tonnes = digestateTonnes(feed, p);
   const nRet = feed.nKgYear * retention;
   const required = nRet / nLimit;
   const land = ctx.input.site.landHa;
@@ -38,13 +38,16 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   let importedTonnes = 0;
   let valueOwn = 0;
   let valueImported = 0;
+  // A non-manure stream the site already spreads on its own land (vinasse fertigation, press mud on cane fields)
+  // is not an additional handling burden: digestion changes its form, not where it goes.
+  const ownSpread = new Set(ctx.input.feedstocks.filter((f) => !f.delivered && f.handling === "field_spreading").map((f) => f.id));
   for (const l of feed.lines) {
-    const imported = l.category !== "manure" || l.delivered;
+    const imported = l.delivered || (l.category !== "manure" && !ownSpread.has(l.id));
     if (imported) {
       importedTonnes += l.tonnesYear;
-      valueImported += l.nKgYear * nCredit * pN + l.p2o5KgYear * pkCredit * pP + l.k2oKgYear * pkCredit * pK;
+      valueImported += l.nKgYear * retention * nCredit * pN + l.p2o5KgYear * pkCredit * pP + l.k2oKgYear * pkCredit * pK;
     } else {
-      valueOwn += l.nKgYear * gainOwn * pN;
+      valueOwn += l.nKgYear * retention * gainOwn * pN;
     }
   }
   const factor = ctx.scenario.digestateValueFactor;

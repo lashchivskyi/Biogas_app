@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assess } from "../assess";
 import { ENGINEERING_PARAMS } from "../engineeringParams";
 import { EXAMPLES } from "../examples";
-import { ANIMALS, FEEDSTOCKS } from "../feedstockData";
+import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS } from "../feedstockData";
 import { npv, irr } from "../finance";
 import type { Assessment, ProjectInput } from "../types";
 import { COUNTRIES, getCountry, UA } from "@/countries";
@@ -58,7 +58,9 @@ describe("feedstock-first model", () => {
   });
 
   it("does not default to energy crops", () => {
-    expect(Object.keys(FEEDSTOCKS).some((k) => k.includes("silage") || k.includes("maize"))).toBe(false);
+    // maize silage exists as an explicit, flagged co-substrate — but no business template suggests it
+    expect(FEEDSTOCKS.maize_silage.flags).toContain("energy_crop");
+    expect(Object.values(BUSINESS_TYPES).some((b) => b.suggested.some((s) => s.type === "maize_silage"))).toBe(false);
   });
 
   it("penalises poultry-dominated mixes (ammonia inhibition)", () => {
@@ -126,7 +128,7 @@ describe("economics", () => {
 
   it("matches NPV / IRR definitions", () => {
     const cf = base.fin.cashFlows;
-    expect(base.fin.npvEur).toBeCloseTo(npv(0.13, cf), 4);
+    expect(base.fin.npvEur).toBeCloseTo(npv(UA.params.find((p) => p.id === "econ.discount_rate")!.value, cf), 4);
     const r = irr([-100, 60, 60, 60]);
     expect(r).not.toBeNull();
     expect(npv(r!, [-100, 60, 60, 60])).toBeCloseTo(0, 3);
@@ -289,7 +291,24 @@ describe("templates produce distinct, explained outcomes (regression: 'always we
     const { LEVERS } = await import("@/lib/whatif");
     const base = assess(ex("dairy_400"), UA).scenarios.base.fin.simplePaybackYears!;
     const co = assess(LEVERS.find((l) => l.id === "cosubstrate")!.apply(ex("dairy_400"), UA_FX), UA).scenarios.base.fin.simplePaybackYears!;
-    expect(co).toBeLessThan(base * 0.7);
+    // food waste needs hygienisation + reception, so the gain is real but not free
+    expect(co).toBeLessThan(base * 0.8);
+  });
+});
+
+describe("robustness of the answer", () => {
+  it("is clear only when every scenario agrees on the NPV sign", () => {
+    for (const e of EXAMPLES) {
+      const a = run(e.input);
+      const [lo, , hi] = a.ranges.npvEur;
+      const expected = lo > 0 ? "clear_go" : hi <= 0 ? "clear_no" : "grey";
+      expect(a.robustness, e.id).toBe(expected);
+      expect(a.drivers.length, e.id).toBeLessThanOrEqual(3);
+    }
+  });
+  it("covers clear go, clear no and grey cases among the templates", () => {
+    const set = new Set(EXAMPLES.map((e) => run(e.input).robustness));
+    expect([...set].sort()).toEqual(["clear_go", "clear_no", "grey"]);
   });
 });
 

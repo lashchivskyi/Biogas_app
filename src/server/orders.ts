@@ -12,7 +12,8 @@ export interface Order {
   reportToken: string;
   createdAt: string;
   updatedAt: string;
-  plan: PlanId;
+  /** Legacy expert orders retain their report access; that service is no longer sold. */
+  plan: PlanId | "expert";
   /** Integer minor units (cents / kopiyky) — never floats for money. */
   amountMinor: number;
   currency: string;

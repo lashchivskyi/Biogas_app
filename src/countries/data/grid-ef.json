@@ -1,0 +1,138 @@
+{
+ "source": "Ember via Our World in Data, carbon intensity of electricity generation (lifecycle-free, gCO2/kWh)",
+ "fetchedOn": "2026-10-25",
+ "countries": {
+  "AR": {
+   "year": 2025,
+   "tCo2Mwh": 0.346
+  },
+  "AT": {
+   "year": 2025,
+   "tCo2Mwh": 0.117
+  },
+  "BR": {
+   "year": 2025,
+   "tCo2Mwh": 0.11
+  },
+  "BG": {
+   "year": 2025,
+   "tCo2Mwh": 0.276
+  },
+  "CA": {
+   "year": 2025,
+   "tCo2Mwh": 0.191
+  },
+  "CZ": {
+   "year": 2025,
+   "tCo2Mwh": 0.401
+  },
+  "DK": {
+   "year": 2025,
+   "tCo2Mwh": 0.114
+  },
+  "EE": {
+   "year": 2025,
+   "tCo2Mwh": 0.319
+  },
+  "FI": {
+   "year": 2025,
+   "tCo2Mwh": 0.057
+  },
+  "FR": {
+   "year": 2025,
+   "tCo2Mwh": 0.041
+  },
+  "DE": {
+   "year": 2025,
+   "tCo2Mwh": 0.33
+  },
+  "GR": {
+   "year": 2025,
+   "tCo2Mwh": 0.315
+  },
+  "HU": {
+   "year": 2025,
+   "tCo2Mwh": 0.163
+  },
+  "IN": {
+   "year": 2025,
+   "tCo2Mwh": 0.67
+  },
+  "IT": {
+   "year": 2025,
+   "tCo2Mwh": 0.285
+  },
+  "KZ": {
+   "year": 2025,
+   "tCo2Mwh": 0.805
+  },
+  "LV": {
+   "year": 2025,
+   "tCo2Mwh": 0.139
+  },
+  "LT": {
+   "year": 2025,
+   "tCo2Mwh": 0.138
+  },
+  "MX": {
+   "year": 2025,
+   "tCo2Mwh": 0.474
+  },
+  "MD": {
+   "year": 2025,
+   "tCo2Mwh": 0.633
+  },
+  "NL": {
+   "year": 2025,
+   "tCo2Mwh": 0.254
+  },
+  "PL": {
+   "year": 2025,
+   "tCo2Mwh": 0.589
+  },
+  "RO": {
+   "year": 2025,
+   "tCo2Mwh": 0.251
+  },
+  "RS": {
+   "year": 2025,
+   "tCo2Mwh": 0.696
+  },
+  "SK": {
+   "year": 2025,
+   "tCo2Mwh": 0.095
+  },
+  "ES": {
+   "year": 2025,
+   "tCo2Mwh": 0.154
+  },
+  "SE": {
+   "year": 2025,
+   "tCo2Mwh": 0.035
+  },
+  "TH": {
+   "year": 2025,
+   "tCo2Mwh": 0.546
+  },
+  "TR": {
+   "year": 2025,
+   "tCo2Mwh": 0.475
+  },
+  "UA": {
+   "year": 2022,
+   "tCo2Mwh": 0.25
+  },
+  "GB": {
+   "year": 2025,
+   "tCo2Mwh": 0.217
+  },
+  "US": {
+   "year": 2025,
+   "tCo2Mwh": 0.384
+  },
+  "VN": {
+   "year": 2025,
+   "tCo2Mwh": 0.461
+  }
+ }
+}

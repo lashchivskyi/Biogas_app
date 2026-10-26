@@ -17,7 +17,7 @@ export interface SegmentSeo {
 
 export interface Segment {
   slug: string;
-  id: "meat" | "dairyproc" | "poultry" | "pigs" | "dairy" | "brewery" | "small";
+  id: "meat" | "dairyproc" | "sugar" | "foodwaste" | "poultry" | "pigs" | "dairy" | "brewery" | "small";
   businessType: BusinessTypeId;
   exampleId: string;
   tone: "good" | "mid" | "weak";
@@ -26,7 +26,7 @@ export interface Segment {
 
 export const SEGMENTS: Segment[] = [
   {
-    slug: "meat-processing", id: "meat", businessType: "slaughterhouse", exampleId: "slaughter_5000", tone: "good",
+    slug: "meat-processing", id: "meat", businessType: "slaughterhouse", exampleId: "de_meat", tone: "good",
     seo: {
       en: {
         title: "Biogas for slaughterhouses and meat processing: payback",
@@ -34,7 +34,7 @@ export const SEGMENTS: Segment[] = [
         h1: "Biogas for meat processing plants",
         intro: [
           "Slaughter residues — rumen content, blood, DAF fat — yield several times more methane per tonne than manure. The plant already pays for their removal and uses steam, hot water and power for cooling every day. This is where biogas most often pays without any subsidy.",
-          "The conditions: a steady daily flow (in our model NPV turns positive from roughly 3 kt a year), pasteurisation of animal by-products, and land or an offtaker for the nitrogen-rich digestate.",
+          "The conditions: a steady daily flow (in our model NPV turns positive from roughly 2–3 kt a year when disposal is paid for), pasteurisation of animal by-products, and land or an offtaker for the nitrogen-rich digestate.",
         ],
         drivers: [
           ["Disposal cost", "The more you pay today, the faster the payback — and this saving doesn't depend on energy prices."],
@@ -54,7 +54,7 @@ export const SEGMENTS: Segment[] = [
         h1: "Біогаз для м'ясопереробних підприємств",
         intro: [
           "Відходи забою — рубцевий вміст, кров, жировий флотат — дають у кілька разів більше метану на тонну, ніж гній. Підприємство вже платить за їх вивезення і щодня споживає пару, гарячу воду й електрику для холоду. Саме тут біогаз найчастіше має позитивну економіку без субсидій.",
-          "Головні умови — достатній щоденний потік (за нашою моделлю NPV стає додатним приблизно від 3 тис. т на рік), пастеризація побічних продуктів тваринного походження та земля або покупець для дигестату.",
+          "Головні умови — достатній щоденний потік (за нашою моделлю NPV стає додатним приблизно від 2–3 тис. т на рік, якщо утилізація платна), пастеризація побічних продуктів тваринного походження та земля або покупець для дигестату.",
         ],
         drivers: [
           ["Вартість утилізації", "Що більше ви зараз платите за вивезення, то швидша окупність — ця економія не залежить від тарифів."],
@@ -71,7 +71,7 @@ export const SEGMENTS: Segment[] = [
     },
   },
   {
-    slug: "dairy-processing", id: "dairyproc", businessType: "dairy_processor", exampleId: "dairy_processor", tone: "mid",
+    slug: "dairy-processing", id: "dairyproc", businessType: "dairy_processor", exampleId: "it_whey", tone: "good",
     seo: {
       en: {
         title: "Biogas from whey for dairies and cheese plants",
@@ -79,7 +79,7 @@ export const SEGMENTS: Segment[] = [
         h1: "Biogas for dairies and cheese plants",
         intro: [
           "Whey and DAF sludge arrive daily, and a dairy uses hot water, steam and cooling around the clock. That is an almost ideal profile for biogas — if the volume is large enough.",
-          "Whey is very dilute (≈ 6 % dry matter), so energy per tonne is modest. In our model the case becomes realistic from around 15 kt of whey a year, especially together with fatty wastes.",
+          "Whey is very dilute (≈ 6 % dry matter), so energy per tonne is modest. In our model the case becomes realistic from about 10–20 kt of whey a year — the lower end where power and gas are expensive — especially together with fatty wastes.",
         ],
         drivers: [
           ["Alternative value of whey", "If it sells well as feed, that is lost revenue — we count it as a cost."],
@@ -98,7 +98,7 @@ export const SEGMENTS: Segment[] = [
         h1: "Біогаз для молокозаводів і сироварень",
         intro: [
           "Сироватка та жиро-флотаційний осад утворюються щодня, а молокозавод цілодобово споживає гарячу воду, пару й холод. Це майже ідеальний профіль для біогазу — якщо обсягу достатньо.",
-          "Сироватка дуже рідка (≈ 6 % сухої речовини), тому енергії на тонну небагато. За нашою моделлю проєкт стає реальним приблизно від 15 тис. т на рік, особливо разом із жировими відходами.",
+          "Сироватка дуже рідка (≈ 6 % сухої речовини), тому енергії на тонну небагато. За нашою моделлю проєкт стає реальним приблизно від 10–20 тис. т на рік (нижня межа — там, де дорогі електрика й газ), особливо разом із жировими відходами.",
         ],
         drivers: [
           ["Альтернативна вартість сироватки", "Якщо її вигідно продають на корм, це втрачений дохід — враховуємо як витрату."],
@@ -109,6 +109,92 @@ export const SEGMENTS: Segment[] = [
         faq: [
           ["Чи можна зробити біогаз лише на сироватці?", "Можна, але на малих обсягах економіка слабка. Найкраще — разом із жиро-осадом або гноєм сусідніх ферм."],
           ["Що робити з дигестатом без власних полів?", "Договори з агропідприємствами або сепарація. Без цього він стає витратою — калькулятор це покаже."],
+        ],
+      },
+    },
+  },
+  {
+    slug: "sugar-industry", id: "sugar", businessType: "sugar_beet_factory", exampleId: "ua_sugar", tone: "good",
+    seo: {
+      en: {
+        title: "Biogas from sugar-beet pulp: economics for sugar factories",
+        description: "Pressed beet pulp is one of the most energy-dense industrial residues. CAPEX, payback and the conditions that make a sugar-factory biogas plant work. Free screening.",
+        h1: "Biogas for sugar factories",
+        intro: [
+          "A sugar factory produces tens of thousands of tonnes of pressed pulp in a few months — and needs huge amounts of heat during the campaign. Pressed pulp (≈ 22–24 % dry matter) gives about 70 m³ of methane per tonne, five times more than cattle slurry.",
+          "Ensiled pulp can feed a digester all year, so the plant runs at full load while power and heat replace grid electricity and natural gas. Plants of this type operate in Germany, Poland, France and Ukraine.",
+        ],
+        drivers: [
+          ["Feed value of pulp", "Pulp sold as feed is lost revenue: the economics work when the feed price is low or the market is saturated."],
+          ["Gas replacement", "During the campaign biogas displaces factory gas — at current gas prices this is the largest saving."],
+          ["Ensiling", "Silage storage (clamps or silos) lets the digester run 12 months instead of 4."],
+          ["Biomethane", "At 1 000+ Nm³/h of biogas, upgrading and grid injection become realistic."],
+        ],
+        faq: [
+          ["Can pulp be digested alone?", "Yes, but it is acidic and low in nitrogen: manure, vinasse or stillage are usually added to keep the process stable."],
+          ["What size of plant?", "Roughly 30 kt of pressed pulp a year supports a 1 MW-class plant; 80–100 kt supports 2.5–3.5 MW or a biomethane plant."],
+        ],
+      },
+      uk: {
+        title: "Біогаз із бурякового жому: економіка для цукрових заводів",
+        description: "Пресований жом — одна з найенергоємніших промислових сировин. Вартість, окупність і умови, за яких біогазова установка цукрового заводу працює. Безкоштовний розрахунок.",
+        h1: "Біогаз для цукрових заводів",
+        intro: [
+          "Цукровий завод за кілька місяців отримує десятки тисяч тонн пресованого жому — і під час кампанії споживає дуже багато тепла. Пресований жом (≈ 22–24 % сухої речовини) дає близько 70 м³ метану на тонну — уп'ятеро більше за гноївку ВРХ.",
+          "Силосований жом живить реактор цілий рік, тож установка працює на повну, а електрика й тепло заміщують мережеву електроенергію та природний газ. Такі станції працюють у Німеччині, Польщі, Франції та Україні.",
+        ],
+        drivers: [
+          ["Кормова цінність жому", "Жом, який продають на корм, — це втрачений дохід: економіка сходиться, коли кормова ціна низька або ринок насичений."],
+          ["Заміщення газу", "Під час кампанії біогаз заміщує заводський газ — за нинішніх цін це найбільша економія."],
+          ["Силосування", "Сховище силосу (траншеї або силоси) дозволяє реактору працювати 12 місяців, а не 4."],
+          ["Біометан", "Від 1 000 нм³/год біогазу очищення та подача в мережу стають реальними."],
+        ],
+        faq: [
+          ["Чи можна зброджувати лише жом?", "Можна, але він кислий і бідний на азот: зазвичай додають гній, барду чи інші азотовмісні відходи для стабільності процесу."],
+          ["Якого розміру установка?", "Приблизно 30 тис. т пресованого жому на рік — це установка класу 1 МВт; 80–100 тис. т — 2,5–3,5 МВт або біометановий завод."],
+        ],
+      },
+    },
+  },
+  {
+    slug: "food-waste", id: "foodwaste", businessType: "municipal_biowaste", exampleId: "gb_food", tone: "good",
+    seo: {
+      en: {
+        title: "Food-waste and biowaste anaerobic digestion: gate fees and payback",
+        description: "Merchant and municipal AD plants earn twice: from gate fees and from energy. CAPEX, depackaging, payback and the conditions for a food-waste biogas plant. Free screening.",
+        h1: "Biogas from food waste and municipal biowaste",
+        intro: [
+          "Commercial food waste and source-separated biowaste come with a gate fee: the plant is paid to take its feedstock and then sells biomethane or power. That double income is why food-waste AD is one of the strongest biogas segments in Europe.",
+          "The conditions are a secure tonnage contract, a depackaging line and an enclosed reception hall (odour), and an outlet for the digestate under the national quality protocol.",
+        ],
+        drivers: [
+          ["Gate fee", "The fee per tonne often matters more than the energy price — and depends on local competition with composting and incineration."],
+          ["Contracts", "Banks finance on secured tonnage: 5–10-year waste contracts with municipalities or retailers."],
+          ["Depackaging & quality", "Packaging and plastics must be removed; digestate quality decides whether it is a product or a waste."],
+          ["Gas route", "At this scale biomethane to the grid or vehicle fuel usually beats CHP."],
+        ],
+        faq: [
+          ["What size is viable?", "From ≈ 15–20 kt a year; most merchant plants process 40–100 kt."],
+          ["Is the digestate a fertiliser?", "Yes, if it meets the national quality standard (e.g. PAS 110 in the UK); otherwise it must be disposed of."],
+        ],
+      },
+      uk: {
+        title: "Біогаз із харчових і муніципальних біовідходів: плата за прийом і окупність",
+        description: "Установки на харчових відходах заробляють двічі: на платі за прийом і на енергії. Вартість, депакування, окупність і умови. Безкоштовний розрахунок.",
+        h1: "Біогаз із харчових відходів і муніципальних біовідходів",
+        intro: [
+          "Комерційні харчові відходи та роздільно зібрані біовідходи надходять із платою за прийом: установці платять за сировину, а потім вона продає біометан або електрику. Саме подвійний дохід робить цей сегмент одним із найсильніших у Європі.",
+          "Умови — гарантований договір на обсяги, лінія депакування й закритий цех прийому (запахи) та збут дигестату за національним стандартом якості.",
+        ],
+        drivers: [
+          ["Плата за прийом", "Ціна за тонну часто важить більше за ціну енергії — і залежить від конкуренції з компостуванням та спалюванням."],
+          ["Договори", "Банки фінансують під гарантовані обсяги: договори з громадами чи торговельними мережами на 5–10 років."],
+          ["Депакування та якість", "Упаковку й пластик треба видаляти; від якості дигестату залежить, чи це продукт, чи відхід."],
+          ["Шлях використання газу", "У такому масштабі біометан у мережу чи як пальне зазвичай вигідніший за когенерацію."],
+        ],
+        faq: [
+          ["Який мінімальний обсяг?", "Від ≈ 15–20 тис. т на рік; більшість комерційних установок переробляють 40–100 тис. т."],
+          ["Чи є дигестат добривом?", "Так, якщо відповідає національному стандарту якості (наприклад, PAS 110 у Великій Британії); інакше його утилізують."],
         ],
       },
     },

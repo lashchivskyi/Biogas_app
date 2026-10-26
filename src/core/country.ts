@@ -75,8 +75,10 @@ export interface CountryAdapter {
   nameEn: string;
   /** ISO 4217 code of the local currency. */
   currency: string;
-  /** "operational": calibrated & sold; "profile": order-of-magnitude national profile (LOW confidence). */
+  /** "operational": prices calibrated against local projects & invoices; "profile": built from national statistics. */
   maturity: "operational" | "profile";
+  /** What backs the key prices: calibrated (local invoices + projects), official statistics, or national estimates. */
+  dataStatus: "calibrated" | "official" | "estimated";
   params: Provenance[];
   regions: Region[];
   support: SupportInfo;

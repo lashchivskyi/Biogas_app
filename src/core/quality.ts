@@ -18,6 +18,9 @@ export function assessQuality(
   const reasons: string[] = [];
   const missing: string[] = [];
   const cur = ctx.currency;
+  const measuredFeedstock = Boolean(input.labAnalysisAvailable) && input.feedstocks.every((f) =>
+    (f.dryMatterPct ?? 0) > 0 && (f.vsPctOfDm ?? 0) > 0 && (f.methaneYieldLPerKgVs ?? 0) > 0,
+  );
 
   if (input.feedstocks.some((f) => f.animal)) {
     score -= 8;
@@ -31,14 +34,14 @@ export function assessQuality(
     score -= 12;
     reasons.push(T("Most feedstock has low-confidence parameters", "Більшість сировини має параметри низької довіри"));
   }
-  if (!input.labAnalysisAvailable) {
+  if (!measuredFeedstock) {
     score -= 15;
-    reasons.push(T("No laboratory feedstock analysis (BMP, DM, VS) — methane yields are typical values", "Немає лабораторного аналізу сировини (BMP, сухість, ВС) — виходи метану типові"));
-    missing.push(T("Laboratory feedstock analysis: dry matter, volatile solids, methane potential (BMP)", "Лабораторний аналіз сировини: сухі речовини, органічна речовина, потенціал метану (BMP)"));
+    reasons.push(T("Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing", "Немає повного набору лабораторних DM, VS і BMP для кожної сировини — пропущені значення взято з каталогу"));
+    missing.push(T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
   }
   if (ctx.profileOnly) {
     score -= 6;
-    reasons.push(T("National energy-price profile is an order-of-magnitude estimate — enter your own prices", "Національний профіль цін — оцінка порядку величин; введіть власні ціни"));
+    reasons.push(T("No official business-price statistics for this country — national estimates used; enter your own prices", "Для цієї країни немає офіційної статистики цін для бізнесу — використано національні оцінки; введіть власні ціни"));
   }
   if (!demand.electricityKnown) {
     score -= 12;
@@ -50,7 +53,7 @@ export function assessQuality(
   }
   if (demand.heatWanted && !demand.heatKnown) {
     score -= 14;
-    missing.push(T("Heat consumption (kWh/year or gas m³) — heat is valued conservatively", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — тепло оцінено консервативно"));
+    missing.push(T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
   }
   if (!demand.heatWanted && (input.energy.gasM3Year ?? 0) > 0) {
     score -= 4;
@@ -77,7 +80,6 @@ export function assessQuality(
     reasons.push(T("Seasonal grazing reduces collectable manure — the collected share is estimated", "Сезонне випасання зменшує зібраний гній — частку зібраного оцінено"));
   }
   score = Math.max(0, Math.min(100, score));
-  let level: Confidence = score >= 85 && input.labAnalysisAvailable ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";
-  if (!input.labAnalysisAvailable && level === "HIGH") level = "MEDIUM";
+  const level: Confidence = score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";
   return { level, score, reasons, missing };
 }

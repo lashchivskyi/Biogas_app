@@ -1,0 +1,171 @@
+{
+ "source": "Damodaran, Country Default Spreads and Risk Premiums (ctryprem.xlsx, update of 2026-01-05, ratings 2026-02-16)",
+ "mature_erp": 0.0423,
+ "countries": {
+  "AR": {
+   "rating": "Caa1",
+   "crp": 0.0971,
+   "erp": 0.1394
+  },
+  "AT": {
+   "rating": "Aa1",
+   "crp": 0.0036,
+   "erp": 0.0459
+  },
+  "BR": {
+   "rating": "Ba1",
+   "crp": 0.0324,
+   "erp": 0.0747
+  },
+  "BG": {
+   "rating": "Baa1",
+   "crp": 0.0207,
+   "erp": 0.063
+  },
+  "CA": {
+   "rating": "Aaa",
+   "crp": 0,
+   "erp": 0.0423
+  },
+  "CZ": {
+   "rating": "Aa3",
+   "crp": 0.0078,
+   "erp": 0.0501
+  },
+  "DK": {
+   "rating": "Aaa",
+   "crp": 0,
+   "erp": 0.0423
+  },
+  "EE": {
+   "rating": "A1",
+   "crp": 0.0091,
+   "erp": 0.0514
+  },
+  "FI": {
+   "rating": "Aa1",
+   "crp": 0.0036,
+   "erp": 0.0459
+  },
+  "FR": {
+   "rating": "Aa3",
+   "crp": 0.0078,
+   "erp": 0.0501
+  },
+  "DE": {
+   "rating": "Aaa",
+   "crp": 0,
+   "erp": 0.0423
+  },
+  "GR": {
+   "rating": "Baa3",
+   "crp": 0.0285,
+   "erp": 0.0708
+  },
+  "HU": {
+   "rating": "Baa2",
+   "crp": 0.0246,
+   "erp": 0.0669
+  },
+  "IN": {
+   "rating": "Baa3",
+   "crp": 0.0285,
+   "erp": 0.0708
+  },
+  "IT": {
+   "rating": "Baa2",
+   "crp": 0.0246,
+   "erp": 0.0669
+  },
+  "KZ": {
+   "rating": "Baa1",
+   "crp": 0.0207,
+   "erp": 0.063
+  },
+  "LV": {
+   "rating": "A3",
+   "crp": 0.0155,
+   "erp": 0.0578
+  },
+  "LT": {
+   "rating": "A2",
+   "crp": 0.011,
+   "erp": 0.0533
+  },
+  "MX": {
+   "rating": "Baa2",
+   "crp": 0.0246,
+   "erp": 0.0669
+  },
+  "MD": {
+   "rating": "B3",
+   "crp": 0.0841,
+   "erp": 0.1264
+  },
+  "NL": {
+   "rating": "Aaa",
+   "crp": 0,
+   "erp": 0.0423
+  },
+  "PL": {
+   "rating": "A2",
+   "crp": 0.011,
+   "erp": 0.0533
+  },
+  "RO": {
+   "rating": "Baa3",
+   "crp": 0.0285,
+   "erp": 0.0708
+  },
+  "RS": {
+   "rating": "Ba2",
+   "crp": 0.039,
+   "erp": 0.0813
+  },
+  "SK": {
+   "rating": "A3",
+   "crp": 0.0155,
+   "erp": 0.0578
+  },
+  "ES": {
+   "rating": "A3",
+   "crp": 0.0155,
+   "erp": 0.0578
+  },
+  "SE": {
+   "rating": "Aaa",
+   "crp": 0,
+   "erp": 0.0423
+  },
+  "TH": {
+   "rating": "Baa1",
+   "crp": 0.0207,
+   "erp": 0.063
+  },
+  "TR": {
+   "rating": "Ba3",
+   "crp": 0.0466,
+   "erp": 0.0889
+  },
+  "UA": {
+   "rating": "Ca",
+   "crp": 0.1554,
+   "erp": 0.1977
+  },
+  "GB": {
+   "rating": "Aa3",
+   "crp": 0.0078,
+   "erp": 0.0501
+  },
+  "US": {
+   "rating": "Aa1",
+   "crp": 0.0023,
+   "erp": 0.0446
+  },
+  "VN": {
+   "rating": "Ba2",
+   "crp": 0.039,
+   "erp": 0.0813
+  }
+ }
+}

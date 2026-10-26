@@ -13,10 +13,10 @@ const ENG = "Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR 
 
 export const ENGINEERING_PARAMS: Provenance[] = [
   // --- physical constants ---
-  prov("eng.ch4_lhv_kwh_m3", "Lower heating value of methane", 9.97, "kWh/m³ CH₄", "FACT", FNR08, "HIGH"),
-  prov("eng.gwp_ch4", "Global warming potential of CH₄ (100 y)", 28, "kgCO₂e/kgCH₄", "FACT", "IPCC AR5 (GWP100, without climate feedback)", "HIGH"),
+  prov("eng.ch4_lhv_kwh_m3", "Lower heating value of methane", 9.97, "kWh/Nm³ CH₄", "FACT", FNR08, "HIGH", { date: "2008-12-31" }),
+  prov("eng.gwp_ch4", "Global warming potential of biogenic CH₄ (100 y)", 27, "kgCO₂e/kgCH₄", "FACT", "IPCC AR6 WGIII Annex II, Table 9 (biogenic CH₄)", "HIGH", { date: "2022-04-04" }),
   prov("eng.ch4_density_kg_m3", "Methane density at 0 °C, 1 atm", 0.717, "kg/m³", "FACT", "Physical constant", "HIGH"),
-  prov("eng.biogas_density_kg_m3", "Biogas density (≈55 % CH₄)", 1.2, "kg/m³", "ESTIMATE", ENG, "MEDIUM"),
+  prov("eng.co2_density_kg_m3", "Dry CO₂ density at 0 °C, 1 atm", 1.963, "kg/Nm³", "FACT", "44.010 kg/kmol (NIST) ÷ 22.414 Nm³/kmol", "HIGH"),
   prov("eng.gas_emission_factor_t_mwh", "Natural-gas combustion emission factor", 0.202, "tCO₂/MWh", "FACT", "IPCC default 56.1 kgCO₂/GJ", "HIGH"),
 
   prov("eng.natgas_lhv_kwh_m3", "Natural gas lower heating value", 9.5, "kWh/m³", "ASSUMPTION", "Typical pipeline gas; invoice value may differ", "MEDIUM"),
@@ -41,8 +41,9 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.storage_months", "Gas-tight digestate storage required", 6, "months", "ASSUMPTION", "Typical agronomic closed-season requirement; to be set by local law", "MEDIUM"),
   prov("eng.parasitic_base_kwh_t", "Plant electricity use, base", 3.0, "kWh/t FM", "ESTIMATE", ENG, "MEDIUM"),
   prov("eng.parasitic_dm_kwh_t_per_pct", "Plant electricity use per % DM of mix", 0.15, "kWh/t FM per %DM", "ESTIMATE", ENG, "LOW"),
+  prov("eng.pasteurisation_temp_c", "ABP pasteurisation temperature used in screening", 70, "°C", "ASSUMPTION", "EU Regulation 142/2011 Annex V (consolidated 2025-10-29): 70 °C for 60 min for applicable Cat. 3 streams; exemptions and non-EU rules require review", "MEDIUM"),
+  prov("eng.pasteurisation_heat_recovery", "Heat recovery from ABP pasteurisation before mesophilic digestion", 0.6, "—", "ASSUMPTION", "Pre-FEED plate heat exchanger allowance; requires supplier heat balance", "LOW"),
   prov("eng.digestate_n_retention", "Share of feed nitrogen retained in digestate", 0.85, "—", "ESTIMATE", "NH₃ and storage losses 10–20 %", "MEDIUM"),
-  prov("eng.biogas_mass_kg_per_m3", "Mass removed with biogas", 1.2, "kg/m³", "ESTIMATE", ENG, "MEDIUM"),
 
   prov("eng.self_consumption_coincidence", "Share of customer electricity load coinciding with biogas generation", 0.85, "—", "ASSUMPTION", "Biogas CHP runs ≈24/7; barn/cooling/process loads are largely continuous. Without a load profile this is a guess", "LOW"),
 
@@ -57,12 +58,10 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.chp_eta_el_100", "CHP electrical efficiency at 100 kW", 0.36, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
   prov("eng.chp_eta_el_250", "CHP electrical efficiency at 250 kW", 0.39, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
   prov("eng.chp_eta_el_500", "CHP electrical efficiency at 500 kW", 0.41, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
-  prov("eng.chp_eta_total", "CHP total efficiency (el + th)", 0.85, "—", "FACT", FNR08 + " (≈85 %)", "HIGH"),
+  prov("eng.chp_eta_total", "CHP total efficiency (el + th)", 0.85, "—", "ESTIMATE", FNR08 + " (≈85 %); supplier heat and power guarantees needed", "MEDIUM", { date: "2008-12-31" }),
   prov("eng.chp_heat_recovery", "Share of CHP thermal output recoverable to a heating circuit", 0.92, "—", "ESTIMATE", ENG, "MEDIUM"),
-  prov("eng.chp_design_hours", "CHP design full-load hours", 8000, "h/a", "FACT", FNR08 + " (7 500–8 000 h)", "HIGH"),
+  prov("eng.chp_design_hours", "CHP design full-load hours", 8000, "h/a", "ASSUMPTION", FNR08 + " (7 500–8 000 h); availability differs by service contract", "MEDIUM", { date: "2008-12-31" }),
   prov("eng.chp_min_kw", "Smallest CHP the model treats as technically sensible", 25, "kWel", "ASSUMPTION", ENG, "MEDIUM", { note: "Below this, CHP is a hobby-scale installation; model returns NOT RECOMMENDED unless another route works" }),
-  prov("eng.chp_overhaul_share", "CHP major overhaul cost, share of CHP CAPEX", 0.22, "—", "ESTIMATE", ENG, "LOW"),
-  prov("eng.chp_overhaul_years", "Years between CHP major overhauls", 6, "a", "ESTIMATE", "≈40 000–48 000 h", "MEDIUM"),
   prov("eng.chp_slip_share", "Unburned CH₄ (methane slip) in CHP exhaust", 0.01, "—", "ESTIMATE", "Literature: 0.5–2 % of CH₄ fed to engine", "LOW"),
   prov("eng.boiler_efficiency", "Biogas boiler efficiency", 0.9, "—", "ASSUMPTION", ENG, "HIGH"),
 
@@ -70,6 +69,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.upgrade_slip_share", "CH₄ slip in membrane upgrading", 0.007, "—", "ESTIMATE", "Literature 0.1–1 %; membranes toward the top of the range", "LOW"),
   prov("eng.biomethane_ch4_purity", "CH₄ content of biomethane", 0.97, "—", "ASSUMPTION", "Grid-injection quality", "HIGH"),
   prov("eng.upgrade_kwh_per_nm3_raw", "Electricity for upgrading + compression", 0.3, "kWh/Nm³ raw biogas", "ESTIMATE", ENG, "MEDIUM"),
+  prov("eng.cng_compression_kwh_nm3", "Additional compression of biomethane to ~250 bar for road CNG", 0.15, "kWh/Nm³ biomethane", "ESTIMATE", "Burckhardt Compression CNG compressor technical sheet (2022), 12–19 bar suction to 251 bar discharge: ~0.13–0.16 kWh/Nm³ shaft power; electrical input and low suction pressure may raise it", "LOW"),
   prov("eng.upgrade_min_nm3h", "Raw-biogas flow below which biomethane is flagged as sub-scale", 60, "Nm³/h", "ASSUMPTION", "EBA: average EU biomethane plant 483 m³/h; operating UA plants start at ~3 Mm³/a (≈400 Nm³/h)", "MEDIUM"),
 
   // --- engineering CAPEX (EU baseline, 2025 EUR) ---
@@ -102,16 +102,19 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.capex.upgrade_ref_eur", "Membrane upgrading unit at 250 Nm³/h raw biogas (incl. compression)", 900000, "EUR", "ESTIMATE", "Market check 2026-10: reviews and vendors give 2 500–3 500 EUR per Nm³/h at 250–700 Nm³/h (≈ 3 600 EUR per Nm³/h here incl. small-scale premium); see docs/capex-benchmark.md", "LOW"),
   prov("eng.capex.upgrade_scale_exp", "Upgrading scale exponent", 0.65, "—", "ASSUMPTION", ENG, "LOW"),
   prov("eng.capex.injection_fixed", "Compression, metering, injection station", 350000, "EUR", "ESTIMATE", ENG, "LOW"),
+  prov("eng.capex.cng_fixed", "Bio-CNG off-grid offtake: filling post + 3–4 cascade trailers (≈ 4 000–5 000 Nm³ each)", 450000, "EUR", "ESTIMATE", "Virtual-pipeline practice (IEA Bioenergy Task 37; SATAT CBG plants in India; Brazilian bio-GNV); TO VERIFY with supplier quotes", "LOW"),
+  prov("eng.capex.cng_per_nm3h", "Bio-CNG high-pressure (250 bar) compression", 1000, "EUR per Nm³/h biomethane", "ESTIMATE", "Reciprocating CNG compressors 100–1 000 Nm³/h; TO VERIFY", "LOW"),
   prov("eng.capex.pipeline_eur_km", "Pipeline to gas main", 200000, "EUR/km", "ESTIMATE", ENG, "LOW"),
 
   // --- engineering OPEX ---
   prov("eng.opex.labour_min_hours", "Minimum operator time", 750, "h/a", "ASSUMPTION", "FNR 2008: 3–7 h/(kWel·a); ≈ 2 h/day floor for small farm plants (revised 2026-10 from 1 400 h)", "MEDIUM"),
-  prov("eng.opex.labour_hours_per_kw", "Operator time per kWel", 5, "h/(kWel·a)", "FACT", FNR08 + " (3–7)", "MEDIUM"),
+  prov("eng.opex.labour_hours_per_kw", "Operator time per kWel", 5, "h/(kWel·a)", "ESTIMATE", FNR08 + " (3–7); current staffing plan needed", "LOW", { date: "2008-12-31" }),
   prov("eng.opex.chp_service_eur_kwh", "CHP service + oil + spare parts", 0.022, "EUR/kWhel", "ESTIMATE", "Typical 1.5–2.5 ct/kWh", "LOW"),
   prov("eng.opex.maintenance_share", "Maintenance of non-CHP plant", 0.02, "of CAPEX/a", "ESTIMATE", ENG, "LOW"),
   prov("eng.opex.insurance_share", "Insurance", 0.005, "of CAPEX/a", "ESTIMATE", ENG, "LOW"),
   prov("eng.opex.monitoring_fixed", "Lab tests, safety inspections, gas monitoring", 5000, "EUR/a", "ESTIMATE", ENG, "LOW"),
   prov("eng.opex.upgrade_maintenance_share", "Upgrading maintenance", 0.04, "of upgrading CAPEX/a", "ESTIMATE", ENG, "LOW"),
+  prov("eng.opex.cng_haul_eur_nm3", "Bio-CNG road haulage to the offtaker (30–60 km)", 0.04, "EUR/Nm³", "ESTIMATE", "Cascade trailer ≈ 4 500 Nm³ per trip, ≈ 150–200 € per round trip incl. driver; TO VERIFY with hauliers", "LOW"),
   prov("eng.opex.certification_eur_nm3", "Certification, trading, balancing for biomethane", 0.03, "EUR/Nm³", "ESTIMATE", ENG, "LOW"),
 
   // --- fertiliser / digestate agronomy ---

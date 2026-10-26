@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { ProjectInput } from "@/core";
-import { priceFor, type PlanId } from "@/config/plans";
+import { PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
 import { fmt, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
@@ -25,6 +25,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   plan?: PlanId;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const id = useId();
   const [plan, setPlan] = useState<PlanId>(initialPlan);
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
@@ -52,11 +53,15 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
         body: JSON.stringify({ plan, lang: locale, email: fd.get("email"), name: fd.get("name"), company: fd.get("company"), vatId: fd.get("vatId"), consent: fd.get("consent") === "on", input }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.redirectUrl) throw new Error(res.status === 503 ? C.unavailable : data?.error ?? C.error);
+      if (!res.ok || !data.redirectUrl) {
+        setError(res.status === 503 ? C.unavailable : C.error);
+        setState("error");
+        return;
+      }
       track("checkout_submit", { plan, country: input.countryCode });
       window.location.assign(data.redirectUrl);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : C.error);
+    } catch {
+      setError(C.error);
       setState("error");
     }
   }
@@ -64,10 +69,10 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   return (
     <>
       <button type="button" className={className} onClick={open}>{label}</button>
-      <dialog ref={ref} aria-labelledby="co-h" className="m-auto w-[min(560px,calc(100vw-24px))] rounded-3xl p-0 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm">
+      <dialog ref={ref} aria-labelledby={`${id}-h`} className="m-auto w-[min(560px,calc(100vw-24px))] rounded-3xl p-0 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm">
         <div className="p-6 text-left sm:p-8">
           <div className="flex items-start justify-between gap-4">
-            <h2 id="co-h" className="font-display text-2xl font-semibold">{C.title}</h2>
+            <h2 id={`${id}-h`} className="font-display text-2xl font-semibold">{C.title}</h2>
             <button type="button" onClick={() => ref.current?.close()} className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-muted hover:text-ink" aria-label={C.close}>✕</button>
           </div>
           {!input ? (
@@ -77,7 +82,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
               <fieldset>
                 <legend className="label">{C.plan}</legend>
                 <div className="grid gap-2">
-                  {(["report", "expert"] as PlanId[]).map((p) => (
+                  {PLAN_IDS.map((p) => (
                     <label key={p} className={`flex cursor-pointer items-start justify-between gap-3 rounded-2xl border p-4 ${plan === p ? "border-brand bg-brandsoft/60" : "border-line"}`}>
                       <span className="flex items-start gap-3">
                         <input type="radio" name="plan" value={p} checked={plan === p} onChange={() => setPlan(p)} className="mt-1" />
@@ -92,10 +97,10 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
                 </div>
               </fieldset>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="sm:col-span-2"><label className="label" htmlFor="co-email">{C.email} *</label><input id="co-email" name="email" type="email" required maxLength={160} autoComplete="email" className="field" /></div>
-                <div><label className="label" htmlFor="co-name">{C.name}</label><input id="co-name" name="name" maxLength={120} autoComplete="name" className="field" /></div>
-                <div><label className="label" htmlFor="co-company">{C.company}</label><input id="co-company" name="company" maxLength={160} autoComplete="organization" className="field" /></div>
-                <div className="sm:col-span-2"><label className="label" htmlFor="co-vat">{C.vat}</label><input id="co-vat" name="vatId" maxLength={40} className="field" /></div>
+                <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-email`}>{C.email} *</label><input id={`${id}-email`} name="email" type="email" required maxLength={160} autoComplete="email" className="field" /></div>
+                <div><label className="label" htmlFor={`${id}-name`}>{C.name}</label><input id={`${id}-name`} name="name" maxLength={120} autoComplete="name" className="field" /></div>
+                <div><label className="label" htmlFor={`${id}-company`}>{C.company}</label><input id={`${id}-company`} name="company" maxLength={160} autoComplete="organization" className="field" /></div>
+                <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-vat`}>{C.vat}</label><input id={`${id}-vat`} name="vatId" maxLength={40} className="field" /></div>
               </div>
               <label className="flex items-start gap-3 text-sm text-ink2">
                 <input type="checkbox" name="consent" required className="mt-1 h-4 w-4" />

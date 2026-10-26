@@ -5,29 +5,35 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
 /**
- * Cinematic, fully procedural scene of a farm-scale biogas plant at dusk:
- * barn → feedstock pipe → digester (breathing gas dome, rising bubbles) → gas line → CHP
- * → electricity (overhead line) + heat (to greenhouse) → digestate back to the fields.
+ * Cinematic, fully procedural scene of an agro-industrial biogas plant at dusk, laid out in the real
+ * process order of a CSTR plant (EU 142/2011 hygienisation, ATEX gas train):
+ *   barn & delivery truck → reception / pre-tank → hygienisation 70 °C (animal by-products)
+ *   → digester (side-entry agitators, double-membrane gas roof that breathes, rising bubbles)
+ *   → gas cleaning (condensate trap + desulphurisation columns) with emergency flare
+ *   → CHP → electricity (overhead line) + useful heat (greenhouse) + heat loop back to the digester
+ *   → or upgrading (membranes) → biomethane injection station
+ *   → digestate storage → screw-press separator → field spreading.
  *
- * No external assets: everything is geometry + small shaders, so it loads with the JS bundle.
- * The camera is driven by "chapters" (scroll story on the home page); each chapter highlights its flow.
+ * No external assets: geometry + small shaders only, so it ships with the JS bundle. High quality adds
+ * soft shadows and bloom; low quality halves particles; reduced motion renders a single still frame.
+ * The camera is driven by "chapters" (scroll story on the home page); each chapter highlights its flows.
  */
 
 export const CHAPTERS = ["overview", "feedstock", "digester", "biogas", "energy", "digestate", "outro"] as const;
 export type ChapterId = (typeof CHAPTERS)[number];
 
-type Shot = { pos: THREE.Vector3; target: THREE.Vector3; focus: FlowKey | "all" | "dome" };
-type FlowKey = "feed" | "gas" | "power" | "heat" | "digestate";
+type FlowKey = "feed" | "gas" | "power" | "heat" | "loop" | "bm" | "digestate";
+type Shot = { pos: THREE.Vector3; target: THREE.Vector3; focus: FlowKey[] | "all"; dome: boolean };
 
 const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const SHOTS: Record<ChapterId, Shot> = {
-  overview: { pos: v(30, 15, 34), target: v(2, 1.5, -1), focus: "all" },
-  feedstock: { pos: v(-27, 7, 16), target: v(-15, 1.5, 1.5), focus: "feed" },
-  digester: { pos: v(-7, 7.5, 14), target: v(0, 2.4, 0), focus: "dome" },
-  biogas: { pos: v(-3, 10, 15), target: v(4.5, 4, 1.5), focus: "gas" },
-  energy: { pos: v(5, 7.5, 21), target: v(14, 2, 1), focus: "power" },
-  digestate: { pos: v(-14, 10, -30), target: v(0, 0.5, -8), focus: "digestate" },
-  outro: { pos: v(38, 23, 32), target: v(2, 0, -2), focus: "all" },
+  overview: { pos: v(30, 15, 34), target: v(2, 1.5, -1), focus: "all", dome: true },
+  feedstock: { pos: v(-26, 7.5, 17), target: v(-11, 1.2, -0.5), focus: ["feed"], dome: false },
+  digester: { pos: v(-8, 7.5, 14), target: v(0, 2.2, 0), focus: ["loop"], dome: true },
+  biogas: { pos: v(-1, 8.5, 16), target: v(5, 2.8, 3), focus: ["gas"], dome: true },
+  energy: { pos: v(4, 8.5, 21), target: v(13, 2, -1), focus: ["power", "heat", "bm"], dome: false },
+  digestate: { pos: v(-12, 11, -31), target: v(2, 0.5, -9), focus: ["digestate"], dome: false },
+  outro: { pos: v(38, 23, 32), target: v(2, 0, -2), focus: "all", dome: true },
 };
 
 const COLORS = {
@@ -36,6 +42,7 @@ const COLORS = {
   power: new THREE.Color("#5b9bff"),
   heat: new THREE.Color("#ff7a45"),
   digestate: new THREE.Color("#c99a62"),
+  bm: new THREE.Color("#46d9ff"),
   dome: new THREE.Color("#3ddc97"),
 };
 
@@ -67,6 +74,7 @@ const POINT_FRAG = /* glsl */ `
 `;
 
 class Flow {
+  private static readonly tmp = new THREE.Vector3();
   readonly points: THREE.Points;
   readonly tube: THREE.Mesh;
   private readonly curve: THREE.CatmullRomCurve3;
@@ -117,7 +125,7 @@ class Flow {
     this.material.uniforms.uIntensity.value = this.intensity;
     this.tubeMat.opacity = 0.22 + 0.4 * Math.min(1, this.intensity);
     const n = this.offsets.length;
-    const tmp = new THREE.Vector3();
+    const tmp = Flow.tmp;
     for (let i = 0; i < n; i++) {
       const t = (this.offsets[i] + time * this.speed) % 1;
       this.curve.getPointAt(t, tmp);
@@ -179,6 +187,45 @@ function stripeTexture(colA: string, colB: string, rows: number): THREE.CanvasTe
   return t;
 }
 
+const SKY_VERT = /* glsl */ `
+  varying vec3 vDir;
+  void main() {
+    vDir = normalize(position);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const SKY_FRAG = /* glsl */ `
+  varying vec3 vDir;
+  void main() {
+    float h = clamp(vDir.y, -0.1, 1.0);
+    vec3 zenith = vec3(0.012, 0.045, 0.036);
+    vec3 horizon = vec3(0.039, 0.114, 0.086); // = fog colour, so the ground edge dissolves
+    vec3 col = mix(horizon, zenith, pow(max(h, 0.0), 0.55));
+    // warm after-glow where the sun has set (west, -x)
+    float west = pow(max(dot(normalize(vec3(vDir.x, 0.0, vDir.z)), vec3(-0.85, 0.0, -0.53)), 0.0), 6.0);
+    col += vec3(0.16, 0.07, 0.02) * west * exp(-max(h, 0.0) * 14.0);
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+const UV_VERT = /* glsl */ `
+  varying vec2 vUv;
+  void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+`;
+const FLAME_FRAG = /* glsl */ `
+  varying vec2 vUv;
+  uniform float uTime;
+  uniform float uSize;
+  void main() {
+    vec2 p = vUv - vec2(0.5, 0.12);
+    float flick = 0.08 * sin(uTime * 23.0 + p.y * 14.0) + 0.05 * sin(uTime * 37.0);
+    float w = (0.22 + flick) * (1.0 - p.y * 1.1);
+    float body = smoothstep(w, 0.0, abs(p.x + 0.03 * sin(uTime * 9.0 + p.y * 8.0)))
+      * smoothstep(0.95 * uSize, 0.0, p.y) * smoothstep(-0.08, 0.04, p.y);
+    vec3 col = mix(vec3(1.0, 0.85, 0.45), vec3(1.0, 0.35, 0.05), clamp(p.y * 1.4, 0.0, 1.0));
+    gl_FragColor = vec4(col * 2.2, body);
+  }
+`;
+
 /* ---------------- the scene ---------------- */
 
 export interface SceneOptions {
@@ -198,6 +245,11 @@ export class ProcessScene {
   private dome: THREE.Mesh;
   private domeMat: THREE.ShaderMaterial;
   private stars: THREE.Points;
+  private agitators: THREE.Object3D[] = [];
+  private flame!: THREE.Mesh;
+  private flameMat!: THREE.ShaderMaterial;
+  private truck!: THREE.Group;
+  private tractor!: THREE.Group;
   private last = 0;
   private raf = 0;
   private running = false;
@@ -221,23 +273,36 @@ export class ProcessScene {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
 
+    if (high) {
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }
     this.scene.background = new THREE.Color("#06110d");
-    this.scene.fog = new THREE.FogExp2("#0a1d16", 0.012);
+    this.scene.fog = new THREE.FogExp2("#0a1d16", 0.011);
+    this.scene.add(new THREE.Mesh(new THREE.SphereGeometry(320, 32, 16), new THREE.ShaderMaterial({ vertexShader: SKY_VERT, fragmentShader: SKY_FRAG, side: THREE.BackSide, depthWrite: false, fog: false })));
 
     this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 400);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget);
 
     this.buildWorld();
+    if (high) this.enableShadows();
 
     const P = (x: number, y: number, z: number) => v(x, y, z);
     const count = (n: number) => (high ? n : Math.round(n * 0.5));
     this.flows = {
-      feed: new Flow([P(-14, 0.6, 2.2), P(-11, 0.7, 1.8), P(-7.5, 0.7, 1.2), P(-4.3, 0.9, 0.6)], COLORS.feed, count(70), { speed: 0.06, size: 1.3, pixelRatio: pr }),
-      gas: new Flow([P(0, 4.9, 0), P(2.5, 6.0, 0.6), P(6, 5.0, 2), P(8.6, 3.0, 3)], COLORS.gas, count(90), { speed: 0.1, size: 1.2, spread: 0.06, pixelRatio: pr }),
+      // barn → pre-tank → hygienisation → digester
+      feed: new Flow([P(-14, 0.6, 2.2), P(-12, 1.7, -0.3), P(-9.6, 2.3, -2.4), P(-8.4, 2.3, -3.2), P(-6, 1.1, -1.6), P(-4.2, 0.9, -0.4)], COLORS.feed, count(80), { speed: 0.05, size: 1.3, pixelRatio: pr }),
+      // gas roof → condensate trap / desulphurisation → CHP
+      gas: new Flow([P(0, 4.75, 0), P(2.4, 5.2, 2.2), P(5.2, 3.3, 4.0), P(5.4, 1.0, 4.3), P(7.0, 1.2, 3.9), P(8.0, 1.4, 3.4)], COLORS.gas, count(90), { speed: 0.09, size: 1.2, spread: 0.05, pixelRatio: pr }),
+      // cleaned gas → membrane upgrading → injection station
+      bm: new Flow([P(5.8, 0.6, 4.6), P(7.0, 0.6, 1.4), P(8.6, 1.2, -0.8), P(10.4, 1.2, -1.6), P(12.4, 0.6, -5.2), P(14.6, 0.6, -8.2)], COLORS.bm, count(70), { speed: 0.08, size: 1.1, spread: 0.04, tube: 0.05, pixelRatio: pr }),
+      // CHP heat back to the digester heating circuit (process heat comes first)
+      loop: new Flow([P(7.6, 0.45, 2.4), P(5.6, 0.4, 2.2), P(4.15, 0.6, 1.2), P(3.6, 0.9, -1.8)], COLORS.heat, count(40), { speed: 0.11, size: 1.0, spread: 0.03, tube: 0.04, pixelRatio: pr }),
       power: new Flow([P(10, 3.4, 2.4), P(12.5, 5.6, -0.5), P(14.5, 5.2, -3), P(16.5, 3.6, -4.5)], COLORS.power, count(70), { speed: 0.18, size: 1.1, spread: 0.02, tube: 0.03, pixelRatio: pr }),
       heat: new Flow([P(10.8, 0.5, 3.6), P(13, 0.5, 5.2), P(15.5, 0.6, 6), P(17.2, 0.9, 6.2)], COLORS.heat, count(60), { speed: 0.09, size: 1.3, pixelRatio: pr }),
-      digestate: new Flow([P(3.6, 0.4, -2.2), P(6, 0.5, -6), P(3, 0.35, -11), P(-3, 0.3, -14.5), P(-9, 0.3, -15)], COLORS.digestate, count(90), { speed: 0.05, size: 1.4, spread: 0.14, pixelRatio: pr }),
+      // digester → gas-tight storage → separator → fields
+      digestate: new Flow([P(3.4, 0.4, -2.4), P(6, 0.5, -6), P(8.6, 0.7, -9.4), P(4, 0.35, -12), P(-3, 0.3, -14.5), P(-9, 0.3, -15.5)], COLORS.digestate, count(90), { speed: 0.045, size: 1.4, spread: 0.14, pixelRatio: pr }),
     };
     for (const f of Object.values(this.flows)) this.scene.add(f.tube, f.points);
 
@@ -487,15 +552,131 @@ export class ProcessScene {
       t.position.set(x, h / 2, z);
       s.add(t);
     }
+    this.buildProcessEquipment(steel, dark);
+  }
+
+  /** Equipment that makes the process chain technically correct (see the class comment). */
+  private buildProcessEquipment(steel: THREE.Material, dark: THREE.Material) {
+    const s = this.scene;
+    const hot = new THREE.MeshStandardMaterial({ color: "#8a4a22", emissive: "#ff7a45", emissiveIntensity: 1.1 });
+    const cyan = new THREE.MeshStandardMaterial({ color: "#0f3b47", emissive: "#46d9ff", emissiveIntensity: 1.2 });
+    const amber = new THREE.MeshStandardMaterial({ color: "#3a2a08", emissive: "#ffbf3d", emissiveIntensity: 0.9 });
+    const add = <T extends THREE.Object3D>(m: T, x: number, y: number, z: number): T => {
+      m.position.set(x, y, z);
+      s.add(m);
+      return m;
+    };
+
+    // hygienisation (70 °C for 60 min, EU 142/2011) — two batch tanks with hot bands
+    for (const z of [-2.4, -4.0]) {
+      add(new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 2.3, 24), steel), -8.9, 1.15, z);
+      add(new THREE.Mesh(new THREE.TorusGeometry(0.64, 0.05, 6, 32), hot), -8.9, 1.7, z).rotation.x = Math.PI / 2;
+    }
+
+    // side-entry agitators on the digester wall: motor outside, propeller turning inside the tank
+    const motorMat = new THREE.MeshStandardMaterial({ color: "#2f5a4c", roughness: 0.5, metalness: 0.3 });
+    const bladeMat = new THREE.MeshStandardMaterial({ color: "#3ddc97", emissive: "#3ddc97", emissiveIntensity: 0.8 });
+    for (const ang of [Math.PI * 0.18, Math.PI * 0.82, Math.PI * 1.5]) {
+      const g = new THREE.Group();
+      const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.9, 16), motorMat);
+      motor.rotation.z = Math.PI / 2;
+      g.add(motor);
+      const hub = new THREE.Group();
+      for (let i = 0; i < 3; i++) {
+        const a = (i * Math.PI * 2) / 3;
+        const b = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.62, 0.14), bladeMat);
+        b.position.set(0, Math.cos(a) * 0.22, Math.sin(a) * 0.22);
+        b.rotation.x = a;
+        hub.add(b);
+      }
+      hub.position.x = -0.55;
+      g.add(hub);
+      g.position.set(Math.cos(ang) * 4.35, 0.85, Math.sin(ang) * 4.35);
+      g.rotation.y = -ang;
+      s.add(g);
+      this.agitators.push(hub);
+    }
+
+    // gas cleaning: two desulphurisation columns (activated carbon / biofilter) + condensate trap
+    add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 2.7, 20), steel), 5.0, 1.35, 4.0);
+    add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 2.7, 20), steel), 5.95, 1.35, 4.7);
+    add(new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.6), dark), 6.9, 0.25, 4.2);
+
+    // emergency flare (mandatory safety device) with a shader flame
+    add(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 4.4, 10), steel), 3.1, 2.2, 5.9);
+    add(new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.14, 0.35, 12), steel), 3.1, 4.5, 5.9);
+    this.flameMat = new THREE.ShaderMaterial({ vertexShader: UV_VERT, fragmentShader: FLAME_FRAG, uniforms: { uTime: { value: 0 }, uSize: { value: 0.3 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    this.flame = add(new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.2), this.flameMat), 3.1, 5.55, 5.9);
+
+    // membrane upgrading container → biomethane injection station with grid marker
+    add(new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 2.0), new THREE.MeshStandardMaterial({ color: "#1d3d47", roughness: 0.5, metalness: 0.25 })), 9.6, 1.1, -1.6);
+    add(new THREE.Mesh(new THREE.BoxGeometry(3.62, 0.06, 2.02), cyan), 9.6, 1.85, -1.6);
+    for (let i = 0; i < 4; i++) add(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 3.2, 8), cyan), 9.6, 2.35, -2.2 + i * 0.4).rotation.z = Math.PI / 2;
+    add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.3, 1.3), dark), 14.8, 0.65, -8.5);
+    add(new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.8, 8), amber), 15.9, 0.9, -8.0);
+    add(new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 8), amber), 15.9, 1.85, -8.0);
+
+    // digestate: screw-press separator and solid-fraction heap
+    add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 1.1), new THREE.MeshStandardMaterial({ color: "#4b5a53", roughness: 0.6, metalness: 0.3 })), 9.2, 1.2, -9.6);
+    add(new THREE.Mesh(new THREE.ConeGeometry(1.5, 1.1, 18), new THREE.MeshStandardMaterial({ color: "#6b4c2c", roughness: 1 })), 10.9, 0.55, -10.8);
+
+    // access road + delivery tanker (feedstock also arrives from processors, not only the barn)
+    add(new THREE.Mesh(new THREE.PlaneGeometry(46, 2.6), new THREE.MeshStandardMaterial({ color: "#1b2622", roughness: 1 })), -37, 0.025, 8.4).rotation.set(-Math.PI / 2, 0, 0.1);
+    this.truck = new THREE.Group();
+    const trailer = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 4.2, 18), new THREE.MeshStandardMaterial({ color: "#c9d3ce", roughness: 0.4, metalness: 0.5 }));
+    trailer.rotation.z = Math.PI / 2;
+    trailer.position.set(-0.6, 1.25, 0);
+    const cab = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.7, 1.7), motorMat);
+    cab.position.set(2.2, 1.05, 0);
+    const lamp = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.25), new THREE.MeshStandardMaterial({ color: "#222222", emissive: "#fff3c4", emissiveIntensity: 2.4 }));
+    lamp.position.set(2.92, 0.7, 0);
+    lamp.rotation.y = Math.PI / 2;
+    this.truck.add(trailer, cab, lamp);
+    s.add(this.truck);
+
+    // digestate tanker with trailing-hose boom on the field (nutrients go back to the soil)
+    this.tractor = new THREE.Group();
+    const tanker = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 2.4, 16), new THREE.MeshStandardMaterial({ color: "#7a5a36", roughness: 0.6 }));
+    tanker.rotation.z = Math.PI / 2;
+    tanker.position.set(-1.2, 0.9, 0);
+    const tr = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.1, 1.0), new THREE.MeshStandardMaterial({ color: "#2f7a43", roughness: 0.6 }));
+    tr.position.set(0.8, 0.75, 0);
+    const boom = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 4.2), steel);
+    boom.position.set(-2.5, 0.45, 0);
+    this.tractor.add(tanker, tr, boom);
+    s.add(this.tractor);
+  }
+
+  private enableShadows() {
+    const moon = this.scene.children.find((o) => (o as THREE.DirectionalLight).isDirectionalLight) as THREE.DirectionalLight | undefined;
+    if (moon) {
+      moon.castShadow = true;
+      moon.shadow.mapSize.set(2048, 2048);
+      const c = moon.shadow.camera;
+      c.left = -40;
+      c.right = 40;
+      c.top = 40;
+      c.bottom = -40;
+      c.near = 1;
+      c.far = 120;
+      moon.shadow.bias = -0.0004;
+      moon.shadow.normalBias = 0.03;
+    }
+    this.scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh || !(m.material instanceof THREE.MeshStandardMaterial)) return;
+      m.receiveShadow = true;
+      m.castShadow = !(m.geometry instanceof THREE.PlaneGeometry);
+    });
   }
 
   setChapter(id: ChapterId, immediate = false) {
     this.chapter = id;
     const shot = SHOTS[id];
     for (const [k, f] of Object.entries(this.flows) as [FlowKey, Flow][]) {
-      f.targetIntensity = shot.focus === "all" ? 1 : shot.focus === k ? 1.6 : 0.25;
+      f.targetIntensity = shot.focus === "all" ? 1 : shot.focus.includes(k) ? 1.6 : 0.22;
     }
-    this.domeMat.uniforms.uGlow.value = shot.focus === "dome" || shot.focus === "all" ? 1 : 0.35;
+    this.domeMat.uniforms.uGlow.value = shot.dome ? 1 : 0.35;
     if (immediate || this.opts.reducedMotion) {
       this.camPos.copy(shot.pos);
       this.camTarget.copy(shot.target);
@@ -575,10 +756,30 @@ export class ProcessScene {
 
     for (const f of Object.values(this.flows)) f.update(t, dt === 0 ? 1 : dt);
 
-    // gas dome breathing (gas holder filling / emptying)
-    const breathe = 0.74 + Math.sin(t * 0.6) * 0.035;
+    // gas roof breathing (gas holder filling / emptying)
+    const fill = Math.sin(t * 0.6);
+    const breathe = 0.74 + fill * 0.035;
     this.dome.scale.set(1, breathe, 1);
     this.domeMat.uniforms.uTime.value = t;
+    // the emergency flare only burns while the gas holder is near full — a safety device, never routine
+    const flare = Math.max(0, (fill - 0.7) / 0.3);
+    this.flameMat.uniforms.uTime.value = t;
+    this.flameMat.uniforms.uSize.value = 0.25 + 0.75 * flare;
+    this.flame.visible = flare > 0.02 || this.chapter === "biogas";
+    this.flame.lookAt(this.camera.position.x, this.flame.position.y, this.camera.position.z);
+    // side-entry agitators
+    for (const a of this.agitators) a.rotation.x = t * 2.4;
+    // delivery truck: drives in, unloads, returns (24 s cycle)
+    const ct = (t % 24) / 24;
+    const leg = ct < 0.4 ? ct / 0.4 : ct < 0.55 ? 1 : 1 - (ct - 0.55) / 0.45;
+    const e = leg * leg * (3 - 2 * leg);
+    this.truck.position.set(THREE.MathUtils.lerp(-58, -16.5, e), 0, THREE.MathUtils.lerp(10.5, 6.4, e));
+    this.truck.rotation.y = ct < 0.55 ? 0.1 : Math.PI + 0.1;
+    // digestate tanker crossing the field
+    const ft = (t % 30) / 30;
+    const sweep = ft < 0.5 ? ft * 2 : 2 - ft * 2;
+    this.tractor.position.set(-23 + sweep * 20, 0, -18 + Math.sin(ft * Math.PI * 2) * 0.4);
+    this.tractor.rotation.y = ft < 0.5 ? 0.1 : Math.PI + 0.1;
 
     // bubbles
     const pos = this.bubbles.geometry.attributes.position as THREE.BufferAttribute;

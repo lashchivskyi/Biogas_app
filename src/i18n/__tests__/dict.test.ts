@@ -20,6 +20,8 @@ describe.each(LOCALES.filter((l) => l !== "en"))("dictionary %s", (locale) => {
     const raw = (await import(`../dict/${locale}.ts`)).default;
     const own = leaves(raw);
     for (const k of own.keys()) expect(ref.has(k), `${locale}: unknown key ${k}`).toBe(true);
+    const sharedTechnicalKeys = new Set(["labels.units.t", "labels.units.ha", "labels.units.m3", "labels.units.km", "labels.units.kwh", "labels.units.mwh", "labels.units.pct", "labels.units.kw", "labels.units.kwe", "flow.mwh", "flow.nm3"]);
+    for (const k of ref.keys()) expect(own.has(k) || sharedTechnicalKeys.has(k), `${locale}: missing translation ${k}`).toBe(true);
     const merged = leaves(await getDictionary(locale));
     expect([...merged.keys()].sort()).toEqual([...ref.keys()].sort());
     for (const [k, v] of merged) {

@@ -6,7 +6,7 @@ import { PageHero } from "@/components/PageHero";
 import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
-import { contentLang, HUB } from "@/content/hub";
+import { localizedHub, localizedSegment } from "@/content/localized";
 import { SEGMENTS, segmentBySlug } from "@/content/segments";
 import { countryName, fmt, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/biogas/[sl
   const { lang, slug } = await params;
   const s = segmentBySlug(slug);
   if (!s) return {};
-  const cl = contentLang(lang);
-  const seo = s.seo[cl];
+  const locale = lang as Locale;
+  const seo = localizedSegment(s, locale, await getDictionary(locale));
   return {
     title: seo.title,
     description: seo.description,
-    alternates: alternates(cl, `/biogas/${s.slug}`, ["en", "uk"]),
+    alternates: alternates(locale, `/biogas/${s.slug}`),
     openGraph: { title: seo.title, description: seo.description, type: "article" },
   };
 }
@@ -37,9 +37,8 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   if (!s) notFound();
   const locale = lang as Locale;
   const d = await getDictionary(locale);
-  const cl = contentLang(locale);
-  const seo = s.seo[cl];
-  const H = HUB[cl].sector;
+  const seo = localizedSegment(s, locale, d);
+  const H = localizedHub(locale, d).sector;
   const seg = d.fit.segments[s.id];
   const ex = EXAMPLES.find((e) => e.id === s.exampleId)!;
   const a = assess(ex.input, getCountry(ex.input.countryCode), { lang: coreLang(locale) });
@@ -64,7 +63,6 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
 
       <section className="container-x grid gap-10 py-16 lg:grid-cols-[1.4fr_1fr]">
         <article>
-          {locale !== "en" && locale !== "uk" && <p className="mb-6 rounded-2xl bg-surface2 p-4 text-sm text-ink2">{d.common.englishOnly}</p>}
           {seo.intro.slice(1).map((p) => <p key={p} className="text-lg leading-relaxed text-ink2">{p}</p>)}
 
           <h2 className="font-display mt-10 text-2xl font-semibold">{H.drivers}</h2>
@@ -106,7 +104,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-bold">{f.eur(r.capexEur[2])} – {f.eur(r.capexEur[0])}</dd></div>
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-bold">{f.years(r.paybackYears[1])}</dd></div>
             </dl>
-            <p className="mt-3 text-xs text-muted">{a.verdict.reasons[0]} {H.disclaimer}</p>
+            <p className="mt-3 text-xs text-muted">{d.result.tone[a.verdict.id]} {H.disclaimer}</p>
             <Link href={calcHref} className="btn btn-primary mt-5 w-full">{H.calcCta}</Link>
             <Link href={`${base}/samples/${ex.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline">{d.samples.open} <Icon name="arrow" size={16} /></Link>
           </div>

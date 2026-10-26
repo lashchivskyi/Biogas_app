@@ -4,7 +4,7 @@ import { Icon } from "@/components/brand/Icon";
 import { PageHero } from "@/components/PageHero";
 import { PricingPlans } from "@/components/payments/PricingPlans";
 import { Emblem } from "@/components/three/Emblem";
-import { PLAN_PRICES_EUR_CENTS } from "@/config/plans";
+import { PLAN_IDS, PLAN_PRICES_EUR_CENTS } from "@/config/plans";
 import { SITE, absoluteUrl } from "@/config/site";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
@@ -27,7 +27,7 @@ export default async function PricingPage({ params }: PageProps<"/[lang]/pricing
         <div className="pointer-events-none absolute -top-6 right-0 hidden lg:block"><Emblem size={220} /></div>
       </PageHero>
       <section className="container-x -mt-4 pb-16 pt-8">
-        <PricingPlans locale={locale} d={{ pricing: d.pricing, checkout: d.checkout, common: d.common }} demo={paymentsMode().demo} />
+        <PricingPlans locale={locale} d={{ pricing: d.pricing, checkout: d.checkout, common: d.common, country: d.country }} demo={paymentsMode().demo} />
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted">
           {P.trust.map((t) => <span key={t} className="flex items-center gap-2"><Icon name="shield" size={18} className="text-brand" />{t}</span>)}
         </div>
@@ -59,7 +59,7 @@ export default async function PricingPage({ params }: PageProps<"/[lang]/pricing
             hasOfferCatalog: {
               "@type": "OfferCatalog",
               name: P.title,
-              itemListElement: (["report", "expert"] as const).map((p) => ({
+              itemListElement: PLAN_IDS.map((p) => ({
                 "@type": "Offer",
                 name: P.plans[p].name,
                 priceSpecification: { "@type": "PriceSpecification", minPrice: PLAN_PRICES_EUR_CENTS[p].C / 100, maxPrice: PLAN_PRICES_EUR_CENTS[p].A / 100, priceCurrency: "EUR" },

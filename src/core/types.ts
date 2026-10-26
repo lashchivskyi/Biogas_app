@@ -38,7 +38,12 @@ export type BusinessTypeId =
   | "biogas_developer"
   | "municipal_biowaste"
   | "sugar_ethanol"
-  | "palm_oil_mill";
+  | "palm_oil_mill"
+  | "sugar_beet_factory"
+  | "potato_processor"
+  | "olive_oil_mill"
+  | "wastewater_treatment"
+  | "distillery";
 
 export type AnimalKind =
   | "dairy_cow"
@@ -67,7 +72,14 @@ export type FeedstockTypeId =
   | "vinasse"
   | "press_mud"
   | "pome"
-  | "municipal_biowaste";
+  | "municipal_biowaste"
+  | "sugar_beet_pulp_pressed"
+  | "potato_processing"
+  | "olive_pomace"
+  | "sewage_sludge"
+  | "grain_stillage"
+  | "fish_waste"
+  | "maize_silage";
 
 export type HandlingId =
   | "field_spreading"
@@ -91,6 +103,10 @@ export interface FeedstockLineInput {
   housing?: Housing; // cattle only
   /** Overrides catalogue default dry matter (% of fresh matter). */
   dryMatterPct?: number;
+  /** Laboratory VS as percent of dry matter; overrides the feedstock catalogue. */
+  vsPctOfDm?: number;
+  /** Laboratory BMP in litres CH4 per kg VS; process realisation still applies. */
+  methaneYieldLPerKgVs?: number;
   /** How many months per year the stream exists (waste streams). Default from catalogue. */
   monthsActive?: number;
   startMonth?: number; // 1..12
@@ -159,6 +175,8 @@ export interface FeedstockLineResult {
   tonnesYear: number;
   monthlyTonnes: number[];
   dryMatterPct: number;
+  vsPctOfDm: number;
+  methaneYieldLPerKgVs: number;
   vsTonnesYear: number;
   ch4M3Year: number; // gross, at the scenario's yield point, before process realisation
   ch4Fraction: number;
@@ -217,6 +235,7 @@ export interface DigesterDesign {
   olrKgVsM3Day: number;
   monthlyHeatDemandKwh: number[];
   heatDemandKwhYear: number;
+  pasteurisationHeatKwhYear: number; // incremental heat above ordinary substrate heating
   storageVolumeM3: number;
   storageCovered: number;
   storageNew: number;
@@ -228,6 +247,10 @@ export interface EnergyBalance {
   route: RouteId;
   ch4ProducedM3: number;
   ch4LeakedM3: number;
+  ch4ToChpM3: number;
+  ch4ToBoilerM3: number;
+  ch4ToUpgraderM3: number;
+  ch4FlaredM3: number;
   gasEnergyKwh: number; // usable gas energy after leakage
   flaredKwh: number;
   chpKwEl: number;
@@ -235,6 +258,7 @@ export interface EnergyBalance {
   chpEtaTh: number;
   elGrossKwh: number;
   elParasiticKwh: number;
+  cngCompressionKwh: number;
   elNetKwh: number;
   elSelfConsumedKwh: number;
   elExportedKwh: number;
@@ -246,6 +270,7 @@ export interface EnergyBalance {
   heatUsefulKwh: number; // economically useful (matched to a real demand)
   biomethaneNm3: number;
   rawBiogasNm3PerHour: number;
+  rawBiogasDesignNm3PerHour: number; // seasonal peak or annual flow / design operating hours, whichever is larger
   upgradingSlipM3: number;
   methaneLossShare: number; // of production: leaks + CHP slip + upgrading slip + flare (unburned)
   monthly: {
@@ -343,6 +368,13 @@ export interface Assessment {
   scores: Score[];
   overall: { value: number; explanation: string[] };
   verdict: { id: VerdictId; reasons: string[]; whatWouldChange: string[] };
+  /**
+   * Whether the answer survives the scenario range: positive NPV even in the conservative case (clear_go),
+   * negative even in the optimistic case (clear_no), or the sign flips between them (grey).
+   */
+  robustness: "clear_go" | "grey" | "clear_no" | "insufficient";
+  /** Sensitivity ids that hurt NPV most — what to verify first. */
+  drivers: string[];
   confidence: { level: Confidence; score: number; reasons: string[] };
   missingData: string[];
   warnings: string[];

@@ -397,3 +397,65 @@ details > summary::-webkit-details-marker {
     display: block !important;
   }
 }
+
+/* ---------- Animated logo mark (header) — see components/brand/Logo.tsx ---------- */
+.lm-animated .lm-rear {
+  transform-box: view-box;
+  transform-origin: 13.2px 20.6px;
+  animation: lm-turn 9s ease-in-out infinite;
+}
+.lm-animated .lm-check {
+  stroke-dasharray: 100;
+  animation: lm-draw 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.lm-animated .lm-h {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lm-flash 9s ease-out infinite;
+}
+.lm-animated .lm-h2 {
+  animation-delay: 0.12s;
+}
+.lm-animated .lm-c {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lm-pulse 9s ease-in-out infinite;
+}
+.group\/logo:hover .lm-animated .lm-check,
+.group\/logo:focus-visible .lm-animated .lm-check {
+  animation: lm-draw-once 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+/* the molecule turns in depth: rear bonds swing behind the carbon */
+@keyframes lm-turn {
+  0%, 100% { transform: rotate(0deg) scaleX(1); opacity: 1; }
+  30% { transform: rotate(-14deg) scaleX(0.82); opacity: 0.75; }
+  60% { transform: rotate(10deg) scaleX(0.9); opacity: 0.9; }
+}
+/* the verdict: the check is redrawn once per cycle, then holds */
+@keyframes lm-draw {
+  0%, 74% { stroke-dashoffset: 0; }
+  80% { stroke-dashoffset: 100; }
+  92%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes lm-draw-once {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes lm-flash {
+  0%, 88% { transform: scale(1); filter: none; }
+  93% { transform: scale(1.35); filter: drop-shadow(0 0 2px #3ddc97); }
+  100% { transform: scale(1); filter: none; }
+}
+@keyframes lm-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lm-animated .lm-rear,
+  .lm-animated .lm-check,
+  .lm-animated .lm-h,
+  .lm-animated .lm-c,
+  .group\/logo:hover .lm-animated .lm-check {
+    animation: none;
+  }
+}

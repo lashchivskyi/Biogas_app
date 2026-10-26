@@ -4,10 +4,9 @@ import type { Dict } from "@/i18n";
 const SCN_COLOR: Record<ScenarioId, string> = { conservative: "#c0392b", base: "#0e7a55", optimistic: "#2f6fdb" };
 const f = (s: string, v: string) => s.replace("{v}", v);
 
-/** Cumulative undiscounted cash flow of the three scenarios (EUR). Where the line crosses 0 is payback. */
-export function CashFlowChart({ scenarios, t, scn, compact }: { scenarios: Record<ScenarioId, ScenarioResult>; t: Dict["charts"]; scn: Dict["labels"]["scenario"]; compact: (v: number) => string }) {
+/** Cumulative undiscounted cash flow (EUR), for the selected scenarios. Crossing 0 marks payback. */
+export function CashFlowChart({ scenarios, t, scn, compact, ids = ["conservative", "base", "optimistic"] }: { scenarios: Record<ScenarioId, ScenarioResult>; t: Dict["charts"]; scn: Dict["labels"]["scenario"]; compact: (v: number) => string; ids?: ScenarioId[] }) {
   const W = 640, H = 260, pl = 56, pr = 16, pt = 14, pb = 30;
-  const ids: ScenarioId[] = ["conservative", "base", "optimistic"];
   const all = ids.flatMap((id) => scenarios[id].fin.cumulative);
   const n = scenarios.base.fin.cumulative.length;
   const minY = Math.min(0, ...all);

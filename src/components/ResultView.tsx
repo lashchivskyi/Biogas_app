@@ -4,6 +4,7 @@ import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { makeFormat, sig2 } from "@/lib/format";
+import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { keyDriver } from "@/lib/whatif";
 import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
 import { FlowDiagram } from "./FlowDiagram";
@@ -52,6 +53,47 @@ function Fold({ title, children, open = false }: { title: string; children: Reac
   );
 }
 
+const ROBUST_STYLE = {
+  clear_go: { box: "border-good/40 bg-brandsoft/40", dot: "bg-good" },
+  grey: { box: "border-amber-300 bg-amber-50/70", dot: "bg-amber-500" },
+  clear_no: { box: "border-red-200 bg-red-50/60", dot: "bg-red-500" },
+} as const;
+
+/** How firm the answer is across the scenario range, what drives it, and what a bankable estimate still needs. */
+function Robustness({ a, R, eur }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string }) {
+  const status = a.robustness as keyof typeof ROBUST_STYLE;
+  const S = ROBUST_STYLE[status];
+  const drivers = a.drivers.map((id) => a.sensitivity.find((s) => s.id === id)).filter((s) => s !== undefined);
+  return (
+    <section className={`mt-4 rounded-2xl border p-5 md:p-6 ${S.box}`} aria-labelledby="robust-h">
+      <h2 id="robust-h" className="flex items-center gap-2 text-lg font-bold">
+        <span aria-hidden className={`inline-block h-2.5 w-2.5 rounded-full ${S.dot}`} />
+        {R.robust.title}
+      </h2>
+      <p className="mt-2 text-[15px] text-ink">{status === "clear_go" ? R.robust.go : status === "clear_no" ? R.robust.no : R.robust.grey}</p>
+      <p className="num mt-1 text-sm text-ink2">{f(R.robust.npv, { lo: eur(a.ranges.npvEur[0]), base: eur(a.ranges.npvEur[1]), hi: eur(a.ranges.npvEur[2]) })}</p>
+      {status !== "clear_no" && drivers.length > 0 && (
+        <div className="mt-3">
+          {status === "clear_go" && <div className="text-sm font-semibold">{R.robust.drivers}</div>}
+          <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-sm">
+            {drivers.map((s) => <li key={s.id}>{s.label} <span className="num text-muted">({eur(s.deltaNpvEur)})</span></li>)}
+          </ol>
+        </div>
+      )}
+      <p className="mt-4 text-xs text-ink2">{R.robust.accuracy}</p>
+      {status !== "clear_no" && (
+        <details className="group mt-2 text-sm">
+          <summary className="flex cursor-pointer items-center gap-1.5 font-semibold">
+            <span aria-hidden className="inline-block text-muted transition group-open:rotate-90">›</span>
+            {R.robust.stepsTitle}
+          </summary>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-ink2">{R.robust.steps.map((x) => <li key={x}>{x}</li>)}</ol>
+        </details>
+      )}
+    </section>
+  );
+}
+
 export interface ResultViewProps {
   a: Assessment;
   d: ResultDict;
@@ -59,7 +101,7 @@ export interface ResultViewProps {
   currency: string;
   countryNotes?: string[];
   /** "free": verdict + key numbers + energy flow; the rest is a locked teaser. */
-  access: "free" | "full";
+  access: "free" | "standard" | "full";
   /** Rendered inside the locked teaser (client button opening checkout). */
   unlockSlot?: ReactNode;
   /** Rendered after the report (what-if, contact…). */
@@ -68,7 +110,9 @@ export interface ResultViewProps {
   methodologyHref: string;
 }
 
-export function ResultView({ a, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref }: ResultViewProps) {
+export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref }: ResultViewProps) {
+  const stressLabels = sensitivityLabels(locale, d);
+  const a = { ...raw, sensitivity: raw.sensitivity.map((s) => ({ ...s, label: stressLabels[s.id] ?? s.label })) };
   const R = d.result;
   const L = d.labels;
   const F = makeFormat(locale, L.units);
@@ -79,7 +123,7 @@ export function ResultView({ a, d, locale, currency, countryNotes = [], access, 
   const e = best.energy;
   const heatLost = Math.max(0, e.heatNetAvailableKwh - e.heatUsefulKwh);
   const driver = keyDriver(a);
-  const full = access === "full";
+  const full = access !== "free";
 
   return (
     <div>
@@ -100,6 +144,8 @@ export function ResultView({ a, d, locale, currency, countryNotes = [], access, 
         )}
         <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
       </div>
+
+      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} />}
 
       {/* ---------- Plain summary ---------- */}
       <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
@@ -187,7 +233,7 @@ export function ResultView({ a, d, locale, currency, countryNotes = [], access, 
       {!full ? (
         <LockedTeaser R={R} unlockSlot={unlockSlot} samplesHref={samplesHref} />
       ) : (
-        <FullSections a={a} d={d} F={F} currency={currency} methodologyHref={methodologyHref} />
+        <FullSections a={a} d={d} F={F} locale={locale} currency={currency} methodologyHref={methodologyHref} extended={access === "full"} />
       )}
 
       {afterSlot}
@@ -256,15 +302,31 @@ function MarketCheck({ a, R, F }: { a: Assessment; R: ResultDict["result"]; F: R
   );
 }
 
-function FullSections({ a, d, F, currency, methodologyHref }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; currency: string; methodologyHref: string }) {
+function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; currency: string; methodologyHref: string; extended: boolean }) {
   const R = d.result;
   const L = d.labels;
   const { n0, n1, eur, years, pct, compact } = F;
   const best = a.scenarios.base;
   const route = a.bestRoute;
   const routes: RouteId[] = ["chp", "boiler", "biomethane"];
+  const moneyLabels = financialLabels(locale, d);
+  const localRows = (rows: { id: string; label: string; eur: number }[]) => rows.map((row) => ({ ...row, label: moneyLabels[row.id] ?? row.label }));
   return (
     <>
+      {!extended && <Section title={L.scenario.base} sub={f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat label={R.rowRevenue} value={eur(best.opexRev.revenueEur)} />
+          <Stat label={R.rowOpex} value={eur(best.opexRev.opexEur)} />
+          <Stat label={R.rowEbitda} value={eur(best.fin.ebitdaEurYear)} />
+          <Stat label={R.rowNpv} value={eur(best.fin.npvEur)} />
+          <Stat label={R.rowCapex} value={eur(best.capex.totalEur)} />
+          <Stat label={R.rowPayback} value={years(best.fin.simplePaybackYears)} />
+          <Stat label={R.rowIrr} value={best.fin.irr === null ? "—" : pct(best.fin.irr, 1)} />
+          <Stat label={R.rowDscr} value={best.fin.dscrMin === null ? "—" : n1(best.fin.dscrMin)} />
+        </div>
+        <div className="card mt-3 p-4"><CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={compact} ids={["base"]} /></div>
+      </Section>}
+      {extended && <>
       {/* ---------- Scenarios ---------- */}
       <Section title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
         <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
@@ -403,6 +465,7 @@ function FullSections({ a, d, F, currency, methodologyHref }: { a: Assessment; d
       </Section>
 
       {/* ---------- Details ---------- */}
+      </>}
       <Section title={R.detailsTitle}>
         <div className="space-y-3">
           <Fold title={R.dFeed} open>
@@ -445,9 +508,9 @@ function FullSections({ a, d, F, currency, methodologyHref }: { a: Assessment; d
 
           <Fold title={R.dMoney}>
             <div className="grid gap-6 md:grid-cols-3">
-              <LineTable title="CAPEX" rows={best.capex.lines} total={best.capex.totalEur} totalLabel={R.total} compact={compact} />
-              <LineTable title={R.rowOpex} rows={best.opexRev.opex} total={best.opexRev.opexEur} totalLabel={R.total} compact={compact} />
-              <LineTable title={R.rowRevenue} rows={best.opexRev.revenue} total={best.opexRev.revenueEur} totalLabel={R.total} compact={compact} />
+              <LineTable title="CAPEX" rows={localRows(best.capex.lines)} total={best.capex.totalEur} totalLabel={R.total} compact={compact} />
+              <LineTable title={R.rowOpex} rows={localRows(best.opexRev.opex)} total={best.opexRev.opexEur} totalLabel={R.total} compact={compact} />
+              <LineTable title={R.rowRevenue} rows={localRows(best.opexRev.revenue)} total={best.opexRev.revenueEur} totalLabel={R.total} compact={compact} />
             </div>
             <p className="mt-3 text-xs text-muted">{f(R.moneyNote, { fx: n1(a.fx), cur: currency })}</p>
           </Fold>

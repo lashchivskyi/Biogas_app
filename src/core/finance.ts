@@ -30,9 +30,6 @@ export interface CashFlowInput {
   /** Fixed nominal revenue, e.g. a feed-in tariff (not escalated). */
   fixedRevenue?: number;
   opexEur: number;
-  /** Cost of CHP major overhaul, EUR (0 when no CHP) */
-  overhaulEur: number;
-  overhaulEveryYears: number;
   horizon: number;
   discount: number;
   energyEsc: number;
@@ -54,8 +51,7 @@ export function buildFinancials(i: CashFlowInput): FinancialResult {
     const opex = i.opexEur * oEsc;
     const e = rev - opex;
     ebitda.push(e);
-    const overhaul = i.overhaulEur > 0 && t % i.overhaulEveryYears === 0 && t < i.horizon ? i.overhaulEur * oEsc : 0;
-    flows.push(e - overhaul);
+    flows.push(e);
   }
 
   const steadyEbitda = i.energyRevenue + i.otherRevenue + (i.fixedRevenue ?? 0) - i.opexEur;

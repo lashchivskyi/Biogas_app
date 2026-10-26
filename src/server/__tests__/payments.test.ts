@@ -3,7 +3,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { PLAN_PRICES_EUR_CENTS } from "@/config/plans";
+import { PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
 import { EXAMPLES } from "@/core/examples";
 
 // isolate the JSON stores before the modules read their paths
@@ -26,7 +26,7 @@ beforeAll(async () => {
 });
 
 const input = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
-const req = (plan: "report" | "expert", exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, input: input(exampleId) });
+const req = (plan: PlanId, exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, input: input(exampleId) });
 
 describe("monobank webhook signature", () => {
   it("accepts a valid ECDSA-SHA256 signature over the raw body and rejects tampering", () => {
@@ -68,9 +68,9 @@ describe("checkout", () => {
     expect(ua.order.priceTier).toBe("C");
     expect(ua.order.amountMinor).toBe(PLAN_PRICES_EUR_CENTS.report.C);
     expect(ua.order.currency).toBe("EUR");
-    const de = await S.startCheckout(req("expert", "de_guelle")); // DE → tier A
+    const de = await S.startCheckout(req("standard", "de_guelle")); // DE → tier A
     expect(de.order.priceTier).toBe("A");
-    expect(de.order.amountMinor).toBe(PLAN_PRICES_EUR_CENTS.expert.A);
+    expect(de.order.amountMinor).toBe(PLAN_PRICES_EUR_CENTS.standard.A);
   });
 
   it("uses the demo provider outside production and returns a private report token", async () => {
@@ -101,6 +101,8 @@ describe("checkout", () => {
   it("validates input", () => {
     expect(S.checkoutSchema.safeParse(req("report")).success).toBe(true);
     expect(S.checkoutSchema.safeParse({ ...req("report"), plan: "premium" }).success).toBe(false);
+    expect(S.checkoutSchema.safeParse({ ...req("report"), plan: "expert" }).success).toBe(false);
+    expect(S.checkoutSchema.safeParse(req("standard")).success).toBe(true);
     expect(S.checkoutSchema.safeParse({ ...req("report"), consent: false }).success).toBe(false);
     expect(S.checkoutSchema.safeParse({ ...req("report"), lang: "xx" }).success).toBe(false);
     expect(S.checkoutSchema.safeParse({ ...req("report"), email: "nope" }).success).toBe(false);

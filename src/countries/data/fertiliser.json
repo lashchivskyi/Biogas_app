@@ -1,0 +1,19 @@
+{
+ "source": "World Bank Commodity Price Data (Pink Sheet), monthly, 2025M10\u20132026M09; urea (Middle East), TSP (US Gulf), KCl (Brazil)",
+ "period": [
+  "2025M10",
+  "2026M09"
+ ],
+ "usdPerT": {
+  "urea": 507.3,
+  "tsp": 639.8,
+  "kcl": 378.6
+ },
+ "usdPerEur": 1.13,
+ "farmGateMarkup": 1.35,
+ "eurPerKg": {
+  "N": 1.32,
+  "P2O5": 1.66,
+  "K2O": 0.75
+ }
+}

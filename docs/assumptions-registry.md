@@ -3,16 +3,16 @@
 > Файл генерується командою `npm run docs:registry` з `src/core/engineeringParams.ts`, `src/countries/ua.ts` та `src/core/scenarios.ts`. **Не редагуйте вручну.**
 > Тип: FACT — прочитано в джерелі; ASSUMPTION — рішення команди; ESTIMATE — наближена оцінка, яку треба перевірити; CALCULATION — похідне.
 
-Всього параметрів: 153. Довіра LOW: 110, MEDIUM: 34, HIGH: 9.
+Всього параметрів: 158. Довіра LOW: 95, MEDIUM: 53, HIGH: 10.
 
-## Фізика та процес (44)
+## Фізика та процес (46)
 
 | id | Параметр | Значення | Одиниця | Тип | Довіра | Джерело | Країна | Дата |
 |---|---|---:|---|---|---|---|---|---|
-| `eng.ch4_lhv_kwh_m3` | Lower heating value of methane | 9.97 | kWh/m³ CH₄ | FACT | HIGH | FNR, Biogas Basisdaten Deutschland (2008) — read in full | GLOBAL | 2026-10-23 |
-| `eng.gwp_ch4` | Global warming potential of CH₄ (100 y) | 28 | kgCO₂e/kgCH₄ | FACT | HIGH | IPCC AR5 (GWP100, without climate feedback) | GLOBAL | 2026-10-23 |
+| `eng.ch4_lhv_kwh_m3` | Lower heating value of methane | 9.97 | kWh/Nm³ CH₄ | FACT | HIGH | FNR, Biogas Basisdaten Deutschland (2008) — read in full | GLOBAL | 2008-12-31 |
+| `eng.gwp_ch4` | Global warming potential of biogenic CH₄ (100 y) | 27 | kgCO₂e/kgCH₄ | FACT | HIGH | IPCC AR6 WGIII Annex II, Table 9 (biogenic CH₄) | GLOBAL | 2022-04-04 |
 | `eng.ch4_density_kg_m3` | Methane density at 0 °C, 1 atm | 0.717 | kg/m³ | FACT | HIGH | Physical constant | GLOBAL | 2026-10-23 |
-| `eng.biogas_density_kg_m3` | Biogas density (≈55 % CH₄) | 1.2 | kg/m³ | ESTIMATE | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
+| `eng.co2_density_kg_m3` | Dry CO₂ density at 0 °C, 1 atm | 1.963 | kg/Nm³ | FACT | HIGH | 44.010 kg/kmol (NIST) ÷ 22.414 Nm³/kmol | GLOBAL | 2026-10-23 |
 | `eng.gas_emission_factor_t_mwh` | Natural-gas combustion emission factor | 0.202 | tCO₂/MWh | FACT | HIGH | IPCC default 56.1 kgCO₂/GJ | GLOBAL | 2026-10-23 |
 | `eng.natgas_lhv_kwh_m3` | Natural gas lower heating value | 9.5 | kWh/m³ | ASSUMPTION | MEDIUM | Typical pipeline gas; invoice value may differ | GLOBAL | 2026-10-23 |
 | `eng.rampup_year1` | Year-1 output share (biological start-up) | 0.75 | — | ASSUMPTION | MEDIUM | Typical commissioning curve 3–6 months | GLOBAL | 2026-10-23 |
@@ -34,8 +34,9 @@
 | `eng.storage_months` | Gas-tight digestate storage required | 6 | months | ASSUMPTION | MEDIUM | Typical agronomic closed-season requirement; to be set by local law | GLOBAL | 2026-10-23 |
 | `eng.parasitic_base_kwh_t` | Plant electricity use, base | 3 | kWh/t FM | ESTIMATE | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.parasitic_dm_kwh_t_per_pct` | Plant electricity use per % DM of mix | 0.15 | kWh/t FM per %DM | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
+| `eng.pasteurisation_temp_c` | ABP pasteurisation temperature used in screening | 70 | °C | ASSUMPTION | MEDIUM | EU Regulation 142/2011 Annex V (consolidated 2025-10-29): 70 °C for 60 min for applicable Cat. 3 streams; exemptions and non-EU rules require review | GLOBAL | 2026-10-23 |
+| `eng.pasteurisation_heat_recovery` | Heat recovery from ABP pasteurisation before mesophilic digestion | 0.6 | — | ASSUMPTION | LOW | Pre-FEED plate heat exchanger allowance; requires supplier heat balance | GLOBAL | 2026-10-23 |
 | `eng.digestate_n_retention` | Share of feed nitrogen retained in digestate | 0.85 | — | ESTIMATE | MEDIUM | NH₃ and storage losses 10–20 % | GLOBAL | 2026-10-23 |
-| `eng.biogas_mass_kg_per_m3` | Mass removed with biogas | 1.2 | kg/m³ | ESTIMATE | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.self_consumption_coincidence` | Share of customer electricity load coinciding with biogas generation | 0.85 | — | ASSUMPTION | LOW | Biogas CHP runs ≈24/7; barn/cooling/process loads are largely continuous. Without a load profile this is a guess | GLOBAL | 2026-10-23 |
 | `eng.poultry_inhib_threshold` | Poultry share of VS above which NH₃ inhibition starts | 0.35 | — | ESTIMATE | LOW | Ammonia inhibition literature, typical 3 g NH₄-N/L | GLOBAL | 2026-10-23 |
 | `eng.poultry_inhib_loss_per_10pct` | Yield loss per 10 pp poultry VS above threshold | 0.04 | — | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
@@ -44,6 +45,7 @@
 | `eng.upgrade_slip_share` | CH₄ slip in membrane upgrading | 0.007 | — | ESTIMATE | LOW | Literature 0.1–1 %; membranes toward the top of the range | GLOBAL | 2026-10-23 |
 | `eng.biomethane_ch4_purity` | CH₄ content of biomethane | 0.97 | — | ASSUMPTION | HIGH | Grid-injection quality | GLOBAL | 2026-10-23 |
 | `eng.upgrade_kwh_per_nm3_raw` | Electricity for upgrading + compression | 0.3 | kWh/Nm³ raw biogas | ESTIMATE | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
+| `eng.cng_compression_kwh_nm3` | Additional compression of biomethane to ~250 bar for road CNG | 0.15 | kWh/Nm³ biomethane | ESTIMATE | LOW | Burckhardt Compression CNG compressor technical sheet (2022), 12–19 bar suction to 251 bar discharge: ~0.13–0.16 kWh/Nm³ shaft power; electrical input and low suction pressure may raise it | GLOBAL | 2026-10-23 |
 | `eng.upgrade_min_nm3h` | Raw-biogas flow below which biomethane is flagged as sub-scale | 60 | Nm³/h | ASSUMPTION | MEDIUM | EBA: average EU biomethane plant 483 m³/h; operating UA plants start at ~3 Mm³/a (≈400 Nm³/h) | GLOBAL | 2026-10-23 |
 | `eng.nitrates_limit_kg_n_ha` | N application ceiling from organic fertiliser | 170 | kgN/ha·a | ASSUMPTION | MEDIUM | EU Nitrates Directive 91/676/EEC; UA alignment pending (EU accession) | GLOBAL | 2026-10-23 |
 | `eng.digestate_n_gain_own_manure` | Extra plant-available N from digesting own manure | 0.15 | of total N | ESTIMATE | LOW | Digestion raises NH₄ share; literature 10–25 % | GLOBAL | 2026-10-23 |
@@ -54,7 +56,7 @@
 | `eng.dry_digestion_dm_pct` | DM above which high-solids digestion is considered | 22 | % | ASSUMPTION | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.wet_solids_feeding_dm_pct` | DM above which a solids feeder / recirculation is needed | 12 | % | ASSUMPTION | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 
-## Когенерація (12)
+## Когенерація (10)
 
 | id | Параметр | Значення | Одиниця | Тип | Довіра | Джерело | Країна | Дата |
 |---|---|---:|---|---|---|---|---|---|
@@ -63,15 +65,13 @@
 | `eng.chp_eta_el_100` | CHP electrical efficiency at 100 kW | 0.36 | — | ESTIMATE | MEDIUM | Typical gas engine data sheets | GLOBAL | 2026-10-23 |
 | `eng.chp_eta_el_250` | CHP electrical efficiency at 250 kW | 0.39 | — | ESTIMATE | MEDIUM | Typical gas engine data sheets | GLOBAL | 2026-10-23 |
 | `eng.chp_eta_el_500` | CHP electrical efficiency at 500 kW | 0.41 | — | ESTIMATE | MEDIUM | Typical gas engine data sheets | GLOBAL | 2026-10-23 |
-| `eng.chp_eta_total` | CHP total efficiency (el + th) | 0.85 | — | FACT | HIGH | FNR, Biogas Basisdaten Deutschland (2008) — read in full (≈85 %) | GLOBAL | 2026-10-23 |
+| `eng.chp_eta_total` | CHP total efficiency (el + th) | 0.85 | — | ESTIMATE | MEDIUM | FNR, Biogas Basisdaten Deutschland (2008) — read in full (≈85 %); supplier heat and power guarantees needed | GLOBAL | 2008-12-31 |
 | `eng.chp_heat_recovery` | Share of CHP thermal output recoverable to a heating circuit | 0.92 | — | ESTIMATE | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
-| `eng.chp_design_hours` | CHP design full-load hours | 8000 | h/a | FACT | HIGH | FNR, Biogas Basisdaten Deutschland (2008) — read in full (7 500–8 000 h) | GLOBAL | 2026-10-23 |
+| `eng.chp_design_hours` | CHP design full-load hours | 8000 | h/a | ASSUMPTION | MEDIUM | FNR, Biogas Basisdaten Deutschland (2008) — read in full (7 500–8 000 h); availability differs by service contract | GLOBAL | 2008-12-31 |
 | `eng.chp_min_kw` | Smallest CHP the model treats as technically sensible | 25 | kWel | ASSUMPTION | MEDIUM | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data — Below this, CHP is a hobby-scale installation; model returns NOT RECOMMENDED unless another route works | GLOBAL | 2026-10-23 |
-| `eng.chp_overhaul_share` | CHP major overhaul cost, share of CHP CAPEX | 0.22 | — | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
-| `eng.chp_overhaul_years` | Years between CHP major overhauls | 6 | a | ESTIMATE | MEDIUM | ≈40 000–48 000 h | GLOBAL | 2026-10-23 |
 | `eng.chp_slip_share` | Unburned CH₄ (methane slip) in CHP exhaust | 0.01 | — | ESTIMATE | LOW | Literature: 0.5–2 % of CH₄ fed to engine | GLOBAL | 2026-10-23 |
 
-## CAPEX (база ЄС, 2025 EUR) (30)
+## CAPEX (база ЄС, 2025 EUR) (32)
 
 | id | Параметр | Значення | Одиниця | Тип | Довіра | Джерело | Країна | Дата |
 |---|---|---:|---|---|---|---|---|---|
@@ -104,51 +104,56 @@
 | `eng.capex.upgrade_ref_eur` | Membrane upgrading unit at 250 Nm³/h raw biogas (incl. compression) | 900000 | EUR | ESTIMATE | LOW | Market check 2026-10: reviews and vendors give 2 500–3 500 EUR per Nm³/h at 250–700 Nm³/h (≈ 3 600 EUR per Nm³/h here incl. small-scale premium); see docs/capex-benchmark.md | GLOBAL | 2026-10-23 |
 | `eng.capex.upgrade_scale_exp` | Upgrading scale exponent | 0.65 | — | ASSUMPTION | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.capex.injection_fixed` | Compression, metering, injection station | 350000 | EUR | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
+| `eng.capex.cng_fixed` | Bio-CNG off-grid offtake: filling post + 3–4 cascade trailers (≈ 4 000–5 000 Nm³ each) | 450000 | EUR | ESTIMATE | LOW | Virtual-pipeline practice (IEA Bioenergy Task 37; SATAT CBG plants in India; Brazilian bio-GNV); TO VERIFY with supplier quotes | GLOBAL | 2026-10-23 |
+| `eng.capex.cng_per_nm3h` | Bio-CNG high-pressure (250 bar) compression | 1000 | EUR per Nm³/h biomethane | ESTIMATE | LOW | Reciprocating CNG compressors 100–1 000 Nm³/h; TO VERIFY | GLOBAL | 2026-10-23 |
 | `eng.capex.pipeline_eur_km` | Pipeline to gas main | 200000 | EUR/km | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 
-## OPEX (8)
+## OPEX (9)
 
 | id | Параметр | Значення | Одиниця | Тип | Довіра | Джерело | Країна | Дата |
 |---|---|---:|---|---|---|---|---|---|
 | `eng.opex.labour_min_hours` | Minimum operator time | 750 | h/a | ASSUMPTION | MEDIUM | FNR 2008: 3–7 h/(kWel·a); ≈ 2 h/day floor for small farm plants (revised 2026-10 from 1 400 h) | GLOBAL | 2026-10-23 |
-| `eng.opex.labour_hours_per_kw` | Operator time per kWel | 5 | h/(kWel·a) | FACT | MEDIUM | FNR, Biogas Basisdaten Deutschland (2008) — read in full (3–7) | GLOBAL | 2026-10-23 |
+| `eng.opex.labour_hours_per_kw` | Operator time per kWel | 5 | h/(kWel·a) | ESTIMATE | LOW | FNR, Biogas Basisdaten Deutschland (2008) — read in full (3–7); current staffing plan needed | GLOBAL | 2008-12-31 |
 | `eng.opex.chp_service_eur_kwh` | CHP service + oil + spare parts | 0.022 | EUR/kWhel | ESTIMATE | LOW | Typical 1.5–2.5 ct/kWh | GLOBAL | 2026-10-23 |
 | `eng.opex.maintenance_share` | Maintenance of non-CHP plant | 0.02 | of CAPEX/a | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.opex.insurance_share` | Insurance | 0.005 | of CAPEX/a | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.opex.monitoring_fixed` | Lab tests, safety inspections, gas monitoring | 5000 | EUR/a | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 | `eng.opex.upgrade_maintenance_share` | Upgrading maintenance | 0.04 | of upgrading CAPEX/a | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
+| `eng.opex.cng_haul_eur_nm3` | Bio-CNG road haulage to the offtaker (30–60 km) | 0.04 | EUR/Nm³ | ESTIMATE | LOW | Cascade trailer ≈ 4 500 Nm³ per trip, ≈ 150–200 € per round trip incl. driver; TO VERIFY with hauliers | GLOBAL | 2026-10-23 |
 | `eng.opex.certification_eur_nm3` | Certification, trading, balancing for biomethane | 0.03 | EUR/Nm³ | ESTIMATE | LOW | Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data | GLOBAL | 2026-10-23 |
 
-## Ринок країни: Україна (26)
+## Ринок країни: Україна (28)
 
 | id | Параметр | Значення | Одиниця | Тип | Довіра | Джерело | Країна | Дата |
 |---|---|---:|---|---|---|---|---|---|
-| `econ.fx_local_per_eur` | Exchange rate | 49 | UAH/EUR | ASSUMPTION | MEDIUM | NBU level of late 2025/2026, rounded; adjust when stale | UA | 2026-10-23 |
-| `econ.electricity_retail_eur_kwh` | Average all-in business electricity price (default if customer gives none) | 0.17 | EUR/kWh | ESTIMATE | LOW | GMK Center (2026-01-19): day-ahead market 5 548 UAH/MWh Jan-2025 → 6 881 UAH/MWh Dec-2025; gas $373→$498/tcm; NEURC transmission 686.23 UAH/MWh; plus distribution & supplier margin (not found in a primary source) — Customer-supplied price always overrides. TO VERIFY with 5 customer invoices. | UA | 2026-10-23 |
-| `econ.electricity_export_eur_kwh` | Value of surplus electricity exported without support | 0.085 | EUR/kWh | ESTIMATE | LOW | GMK Center (2026-01-19): day-ahead market 5 548 UAH/MWh Jan-2025 → 6 881 UAH/MWh Dec-2025; gas $373→$498/tcm; NEURC transmission 686.23 UAH/MWh; day-ahead average less profile/balancing discount | UA | 2026-10-23 |
-| `econ.self_consumption_variable_share` | Share of the bill actually avoided by self-generation | 0.85 | — | ASSUMPTION | LOW | Fixed network/capacity charges remain | UA | 2026-10-23 |
-| `econ.gas_price_eur_mwh` | Business natural-gas price | 46 | EUR/MWh | ESTIMATE | LOW | GMK Center (2026-01-19): day-ahead market 5 548 UAH/MWh Jan-2025 → 6 881 UAH/MWh Dec-2025; gas $373→$498/tcm; NEURC transmission 686.23 UAH/MWh; ≈ $498/tcm | UA | 2026-10-23 |
-| `econ.heat_value_eur_kwh_th` | Value of useful heat (displaced industrial gas, delivered) | 0.058 | EUR/kWh th | ESTIMATE | LOW | GMK Center (2026-01-19): day-ahead market 5 548 UAH/MWh Jan-2025 → 6 881 UAH/MWh Dec-2025; gas $373→$498/tcm; NEURC transmission 686.23 UAH/MWh; ≈ $498/tcm ≈ 0.045 EUR/kWh fuel + network, / 0.9 boiler efficiency | UA | 2026-10-23 |
+| `econ.fx_local_per_eur` | Exchange rate | 47.093 | UAH/EUR | FACT | HIGH | Eurostat ert_bil_eur_a, ECB reference rate, annual average 2025 | UA | 2025-12-31 |
+| `econ.electricity_retail_eur_kwh` | Average all-in business electricity price excl. VAT (default if the customer gives none) | 0.17 | EUR/kWh | ESTIMATE | MEDIUM | Market operator day-ahead 5.5–6.9 k UAH/MWh (2025, GMK Center) + Ukrenergo transmission 713–928 UAH/MWh (2026) + distribution & supply; cross-checked with business invoices — Customer-supplied price always overrides | UA | 2026-08-01 |
+| `econ.electricity_spot_eur_kwh` | Wholesale electricity price (market average) | 0.132 | EUR/kWh | ESTIMATE | MEDIUM | Day-ahead market average 2025 ≈ 6 200 UAH/MWh (GMK Center) ÷ 47.09 UAH/€ — press-reported, to be confirmed with the market operator | UA | 2025-12-31 |
+| `econ.export_haircut` | Share of the wholesale price realised for surplus power | 0.7 | — | ASSUMPTION | MEDIUM | 30 % profile & balancing discount for a small seller (assumption) | UA | 2026-10-23 |
+| `econ.self_consumption_variable_share` | Share of the bill actually avoided by self-generation | 0.85 | — | ASSUMPTION | MEDIUM | Capacity & fixed network charges are not avoided (≈ 10–20 % of a business bill, same rule as every market) | UA | 2026-10-23 |
+| `econ.gas_price_eur_mwh` | Business natural-gas price | 46 | EUR/MWh | ESTIMATE | MEDIUM | Industrial gas ≈ $498/tcm (Dec 2025, GMK Center) incl. transmission | UA | 2025-12-31 |
+| `econ.heat_value_eur_kwh_th` | Value of useful heat (displaced industrial gas / 0.9 boiler efficiency) | 0.0511 | EUR/kWh th | CALCULATION | MEDIUM | Business gas price ÷ 0.9 | UA | 2026-10-23 |
 | `econ.biomethane_price_cons_eur_nm3` | Realised biomethane price, conservative (domestic gas, no premium) | 0.4 | EUR/Nm³ | ESTIMATE | LOW | IEA commentary 'From farms to fuel: Ukraine's biomethane opportunity' (2026): domestic gas ≈382 EUR/tcm before the Middle-East conflict | UA | 2026-10-23 |
 | `econ.biomethane_price_base_eur_nm3` | Realised biomethane price, base (partly exported/certified) | 0.6 | EUR/Nm³ | ESTIMATE | LOW | IEA commentary 'From farms to fuel: Ukraine's biomethane opportunity' (2026): production cost ≈650 EUR/tcm; profitable price 800–900 | UA | 2026-10-23 |
 | `econ.biomethane_price_opt_eur_nm3` | Realised biomethane price, optimistic (EU export with certificates) | 0.85 | EUR/Nm³ | ESTIMATE | LOW | IEA commentary 'From farms to fuel: Ukraine's biomethane opportunity' (2026): top EU markets up to 1 000 EUR/tcm | UA | 2026-10-23 |
-| `econ.labour_eur_h` | Fully loaded operator cost | 4.5 | EUR/h | ESTIMATE | LOW | Operator ≈ 35 000 UAH/month loaded, 160 h; TO VERIFY | UA | 2026-10-23 |
+| `econ.labour_official_eur_h` | Official hourly labour cost, economy-wide (wages + employer costs) | 4.3 | EUR/h | CALCULATION | MEDIUM | Derzhstat average wage 26.5 k UAH/month (Jul 2025) × 1.22 employer contributions ÷ 160 h ÷ 47.09 UAH/€ | UA | 2026-10-23 |
+| `econ.operator_wage_ratio` | Plant operator wage relative to the economy-wide average | 1.14 | — | ASSUMPTION | MEDIUM | Skilled plant operator ≈ 30 k UAH/month gross vs the 26.5 k average → ≈ 4.9 €/h operator cost | UA | 2026-10-23 |
 | `econ.transport_eur_tkm` | Road transport of liquid/solid organic feedstock | 0.11 | EUR/(t·km) | ESTIMATE | LOW | Tanker/tipper rate incl. empty return; diesel-driven; TO VERIFY with 3 hauliers | UA | 2026-10-23 |
-| `econ.transport_fixed_eur_t` | Loading/unloading per tonne | 1.2 | EUR/t | ESTIMATE | LOW | Handling estimate | UA | 2026-10-23 |
-| `econ.capex_factor` | Local CAPEX relative to EU baseline | 0.85 | — | ESTIMATE | LOW | Cheaper civil/labour; imported CHP/upgrading priced as EU. Half of UA plant equipment is local (IEA 2026) | UA | 2026-10-23 |
-| `econ.discount_rate` | Discount rate (EUR-equivalent, incl. country risk) | 0.13 | — | ASSUMPTION | LOW | WACC-type rate for a small UA project incl. war-risk premium; not a market quote | UA | 2026-10-23 |
-| `econ.energy_escalation` | Annual real escalation of energy prices (EUR terms) | 0.02 | — | ASSUMPTION | LOW | Conservative; UAH price rises offset by depreciation | UA | 2026-10-23 |
-| `econ.opex_escalation` | Annual escalation of operating costs (EUR terms) | 0.03 | — | ASSUMPTION | LOW | Wage growth > CPI in UA | UA | 2026-10-23 |
+| `econ.transport_fixed_eur_t` | Loading/unloading per tonne | 0.7 | EUR/t | CALCULATION | MEDIUM | 0.6 €/t pump & loader + 0.02 h/t × 4.9 €/h labour (same KTBL-based formula as every market) | UA | 2026-10-23 |
+| `econ.capex_factor` | Local CAPEX relative to EU baseline | 0.85 | — | CALCULATION | MEDIUM | Calibrated on Ukrainian projects: with 0.85 the model is within +8 % of 320 kW and within the market band at 1.3 MW (docs/capex-benchmark.md); imported CHP/upgrading priced as EU, half of plant equipment local (IEA 2026) | UA | 2026-10-23 |
+| `econ.discount_rate` | Discount rate (EUR-equivalent, incl. country & war risk) | 0.153 | — | CALCULATION | MEDIUM | 6.0 % mature-market project WACC + 0.6 × country risk premium 15.54 % (Ca; Damodaran, Country Default Spreads and Risk Premiums (ctryprem.xlsx, update of 2026-01-05, ratings 2026-02-16)) | UA | 2026-02-16 |
+| `econ.energy_escalation` | Annual real escalation of energy prices (EUR terms) | 0.02 | — | ASSUMPTION | MEDIUM | Conservative; UAH price rises offset by depreciation (EUR terms) | UA | 2026-10-23 |
+| `econ.opex_escalation` | Annual escalation of operating costs (EUR terms) | 0.03 | — | ASSUMPTION | MEDIUM | Wage growth > CPI in UA (NBU inflation report) | UA | 2026-10-23 |
 | `econ.horizon_years` | Evaluation horizon | 15 | a | ASSUMPTION | MEDIUM | Shorter than the 20-y technical life — conservative | UA | 2026-10-23 |
-| `econ.debt_share` | Debt share for DSCR test | 0.5 | — | ASSUMPTION | LOW | Typical EBRD/IFI-style lending for agrifood | UA | 2026-10-23 |
-| `econ.debt_interest` | Debt interest rate (EUR) | 0.1 | — | ASSUMPTION | LOW | IFI-backed credit lines 8–11 % | UA | 2026-10-23 |
-| `econ.debt_tenor_years` | Debt tenor | 7 | a | ASSUMPTION | LOW | Typical for agri/energy credit lines | UA | 2026-10-23 |
-| `econ.fert_n_eur_kg` | Mineral nitrogen price | 1.1 | EUR/kg N | ESTIMATE | LOW | Ammonium nitrate ≈ 18–22 k UAH/t; TO VERIFY | UA | 2026-10-23 |
-| `econ.fert_p2o5_eur_kg` | Mineral phosphorus price | 1.2 | EUR/kg P₂O₅ | ESTIMATE | LOW | TO VERIFY | UA | 2026-10-23 |
-| `econ.fert_k2o_eur_kg` | Mineral potassium price | 0.7 | EUR/kg K₂O | ESTIMATE | LOW | TO VERIFY | UA | 2026-10-23 |
-| `econ.digestate_handling_eur_t` | Incremental digestate handling on adequate land | 2 | EUR/t | ESTIMATE | LOW | Pumping + spreading | UA | 2026-10-23 |
-| `econ.digestate_excess_eur_t` | Digestate that has no adequate land | 4 | EUR/t | ESTIMATE | LOW | Third-party spreading/transport | UA | 2026-10-23 |
-| `econ.grid_ef_t_mwh` | Grid emission factor | 0.33 | tCO₂/MWh | ESTIMATE | LOW | Order of magnitude; TO VERIFY with national inventory | UA | 2026-10-23 |
+| `econ.debt_share` | Debt share for DSCR test | 0.5 | — | ASSUMPTION | MEDIUM | Typical EBRD/IFI-style lending for agrifood | UA | 2026-10-23 |
+| `econ.debt_interest` | Debt interest rate (EUR) | 0.1 | — | FACT | MEDIUM | EBRD / IFC-backed agri-food credit lines in Ukraine 8–11 % (2025–2026 programmes) | UA | 2026-10-23 |
+| `econ.debt_tenor_years` | Debt tenor | 7 | a | ASSUMPTION | MEDIUM | Typical for agri/energy credit lines (EBRD, IFC, EIB programmes) | UA | 2026-10-23 |
+| `econ.fert_n_eur_kg` | Mineral nitrogen price | 1.32 | EUR/kg N | CALCULATION | MEDIUM | World Bank Commodity Price Data (Pink Sheet), monthly, 2025M10–2026M09; urea (Middle East), TSP (US Gulf), KCl (Brazil); nutrient content → €/kg × 1.35 farm-gate markup | UA | 2026-09-28 |
+| `econ.fert_p2o5_eur_kg` | Mineral phosphorus price | 1.66 | EUR/kg P₂O₅ | CALCULATION | MEDIUM | World Bank Commodity Price Data (Pink Sheet), monthly, 2025M10–2026M09; urea (Middle East), TSP (US Gulf), KCl (Brazil); nutrient content → €/kg × 1.35 farm-gate markup | UA | 2026-09-28 |
+| `econ.fert_k2o_eur_kg` | Mineral potassium price | 0.75 | EUR/kg K₂O | CALCULATION | MEDIUM | World Bank Commodity Price Data (Pink Sheet), monthly, 2025M10–2026M09; urea (Middle East), TSP (US Gulf), KCl (Brazil); nutrient content → €/kg × 1.35 farm-gate markup | UA | 2026-09-28 |
+| `econ.digestate_handling_eur_t` | Incremental digestate handling on adequate land | 1.6 | EUR/t | CALCULATION | MEDIUM | 1.2 €/t machinery + 0.08 h/t × 4.9 €/h labour (same formula as every market) | UA | 2026-10-23 |
+| `econ.digestate_excess_eur_t` | Digestate that has no adequate land | 3.6 | EUR/t | CALCULATION | MEDIUM | 2.5 €/t + 0.22 h/t × 4.9 €/h labour (same formula as every market) | UA | 2026-10-23 |
+| `econ.grid_ef_t_mwh` | Grid emission factor | 0.25 | tCO₂/MWh | FACT | HIGH | Ember via Our World in Data, carbon intensity of electricity generation (lifecycle-free, gCO2/kWh), 2022 | UA | 2022-12-31 |
 
 ## Сценарії (33)
 
