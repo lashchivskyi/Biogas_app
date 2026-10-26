@@ -36,7 +36,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
 
   const kwEq = route === "chp" ? energy.chpKwEl : (energy.gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
 
-  const selfShare = p.get("econ.self_consumption_variable_share");
+  const selfShare = demand.electricityPriceKnown ? p.get("eng.invoice_variable_share") : p.get("econ.self_consumption_variable_share");
   const exportPrice = p.get("econ.electricity_spot_eur_kwh") * p.get("econ.export_haircut") * scenario.energyPriceMult * mods.energyPrice;
   const bmKey = scenario.biomethanePriceKey;
   const marketBm = p.get(`econ.biomethane_price_${bmKey}_eur_nm3`) * mods.energyPrice;

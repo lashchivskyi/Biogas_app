@@ -3,6 +3,7 @@ import { CLIMATE_BENCHMARKS } from "./climateBenchmarks";
 
 export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 export const HOURS_IN_MONTH = DAYS_IN_MONTH.map((d) => d * 24);
+export const HOURS_PER_YEAR = HOURS_IN_MONTH.reduce((sum, hours) => sum + hours, 0);
 
 export function meanTemp(t: number[]): number {
   return t.reduce((a, b) => a + b, 0) / t.length;

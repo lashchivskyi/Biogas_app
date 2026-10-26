@@ -15,7 +15,8 @@ import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, R
 export function biomethaneOfftake(ctx: RunContext, energy: EnergyBalance) {
   const p = ctx.params;
   const km = ctx.input.site.gasGridKm ?? 2;
-  const nm3h = Math.max(energy.biomethaneNm3 / 8000, 5);
+  const purity = p.get("eng.biomethane_ch4_purity");
+  const nm3h = Math.max(energy.rawBiogasDesignNm3PerHour * energy.rawBiogasCh4Share / purity, 5);
   const pipelineEur = km * p.get("eng.capex.pipeline_eur_km");
   const cngEur = p.get("eng.capex.cng_fixed") + p.get("eng.capex.cng_per_nm3h") * nm3h;
   const haulEurYear = energy.biomethaneNm3 * p.get("eng.opex.cng_haul_eur_nm3");
@@ -131,7 +132,8 @@ export function buildCapex(
   add("contingency", T("Contingency", "Непередбачені витрати"), subtotal2 * p.get("eng.capex.contingency_share"));
 
   // Country, scenario and sensitivity multipliers act on the whole stack (they are cost levels).
-  const mult = p.get("econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex;
+  const routeFactor = `econ.capex_factor_${route}`;
+  const mult = p.get(p.has(routeFactor) ? routeFactor : "econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex;
   const scaled = lines.map((l) => ({ ...l, eur: l.eur * mult }));
   return { lines: scaled, totalEur: scaled.reduce((a, l) => a + l.eur, 0) };
 }

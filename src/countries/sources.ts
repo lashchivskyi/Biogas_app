@@ -1,10 +1,12 @@
-import type { Confidence, DataKind } from "@/core/types";
+import type { Confidence, DataKind, ParameterEvidence, ParameterRange, RouteId } from "@/core/types";
 import climate from "./data/climate.json";
 import risk from "./data/country-risk.json";
 import fert from "./data/fertiliser.json";
 import gridEf from "./data/grid-ef.json";
 import stats from "./data/statistics.json";
 import calibration from "./data/capex-calibration.json";
+import observations from "./data/market-observations.json";
+import { ENGINEERING_MAP } from "@/core/engineeringParams";
 
 /**
  * Sourced market data. Generated JSON (scripts/data/*.py) holds the official statistics;
@@ -17,6 +19,8 @@ export interface Sourced {
   confidence: Confidence;
   source: string;
   date: string;
+  evidence?: ParameterEvidence;
+  range?: ParameterRange;
 }
 
 type Stats = {
@@ -28,19 +32,101 @@ type Stats = {
   dayAhead: Record<string, { eurMwh?: number; bzn: string; from?: string; to?: string }>;
 };
 const S = stats as unknown as Stats;
-const CAL = calibration as unknown as { countries: Record<string, { factor?: number; n: number; confidence: Confidence; ids: string[] }> };
+const CAL = calibration as unknown as { countries: Record<string, { factor?: number; n: number; confidence: Confidence; applied?: boolean; ids: string[]; biomethane?: { factor: number; n: number } }> };
 const R = risk as { source: string; countries: Record<string, { rating: string; crp: number }> };
 const EF = gridEf as { source: string; countries: Record<string, { year: number; tCo2Mwh: number }> };
 const FERT = fert as { source: string; period: string[]; eurPerKg: { N: number; P2O5: number; K2O: number } };
 
 const per = (p: string[]) => p.join(" & ");
 
+interface Observation {
+  country: string;
+  parameter: "elec" | "lab";
+  currency: string;
+  unit: string;
+  value?: number;
+  regionalValues?: Record<string, number>;
+  regionIds?: string[];
+  bounds?: number[];
+  period: string;
+  scope: string;
+  method: string;
+  urls: string[];
+  confidence: Confidence;
+  wage?: { monthly: number; employerMultiplier: number; annualHours: number };
+  timeOfUse?: { rates: number[]; weeklyHours: number[]; fuelAdjustment: number; monthlyDemand: number; billingKw: number; monthlyKwh: number; monthlyService: number };
+}
+const OBSERVATIONS = observations.observations as Observation[];
+
+/** Convert a checked local observation without disguising load/cost assumptions as measured data. */
+export function observedMarketValue(code: string, item: "elec" | "lab", regionId?: string): Sourced | undefined {
+  const row = OBSERVATIONS.find((r) => r.country === code && r.parameter === item);
+  if (!row) return undefined;
+  const fx = fxFor(row.currency);
+  if (!fx || fx.value <= 0) return undefined;
+  const tou = row.timeOfUse;
+  const wage = row.wage;
+  const local = tou
+    ? tou.rates.reduce((sum, rate, i) => sum + rate * tou.weeklyHours[i], 0) / tou.weeklyHours.reduce((a, b) => a + b, 0)
+      + tou.fuelAdjustment + (tou.monthlyDemand * tou.billingKw + tou.monthlyService) / tou.monthlyKwh
+    : wage ? wage.monthly * 12 * wage.employerMultiplier / wage.annualHours
+    : regionId ? row.regionalValues?.[regionId] ?? row.value : row.value;
+  if (local === undefined) return undefined;
+  const divisor = fx.value * (row.unit === "local/MWh" ? 1000 : 1);
+  const regionalProxy = row.regionIds && (!regionId || !row.regionIds.includes(regionId));
+  const scope = `${row.scope}${regionId && row.regionalValues?.[regionId] ? ` Selected macro-region reference for ${regionId}.` : ""}`;
+  const source = `${scope} ${row.method} FX: ${fx.source}. ${row.urls.join("; ")}`;
+  const year = row.period.slice(0, 4);
+  const components: NonNullable<ParameterEvidence["components"]> = [
+    { name: `FX (${fx.date})`, value: fx.value, unit: `${row.currency}/EUR`, origin: "MARKET_DATA" },
+  ];
+  if (tou) {
+    tou.rates.forEach((rate, i) => {
+      components.push({ name: `TOU rate ${i + 1}`, value: rate, unit: `${row.currency}/kWh`, origin: "MARKET_DATA" });
+      components.push({ name: `Reference load weight ${i + 1}`, value: tou.weeklyHours[i], unit: "h/week", origin: "ENGINEERING_ASSUMPTION" });
+    });
+    components.push(
+      { name: "Fuel adjustment", value: tou.fuelAdjustment, unit: `${row.currency}/kWh`, origin: tou.fuelAdjustment ? "MARKET_DATA" : "ENGINEERING_ASSUMPTION" },
+      { name: "Demand charge", value: tou.monthlyDemand, unit: `${row.currency}/kW/month`, origin: tou.monthlyDemand ? "MARKET_DATA" : "ENGINEERING_ASSUMPTION" },
+      { name: "Service charge", value: tou.monthlyService, unit: `${row.currency}/month`, origin: tou.monthlyService ? "MARKET_DATA" : "ENGINEERING_ASSUMPTION" },
+      { name: "Reference billing demand", value: tou.billingKw, unit: "kW", origin: "ENGINEERING_ASSUMPTION" },
+      { name: "Reference monthly electricity", value: tou.monthlyKwh, unit: "kWh/month", origin: "ENGINEERING_ASSUMPTION" },
+    );
+  } else if (wage) components.push(
+    { name: "Monthly employee wage", value: wage.monthly, unit: `${row.currency}/month`, origin: "MARKET_DATA" },
+    { name: "Employer multiplier", value: wage.employerMultiplier, unit: "—", origin: "ENGINEERING_ASSUMPTION" },
+    { name: "Annual working hours", value: wage.annualHours, unit: "h/year", origin: "ENGINEERING_ASSUMPTION" },
+  );
+  else components.push({ name: "Published local tariff", value: local, unit: row.unit.replace("local", row.currency), origin: "MARKET_DATA" });
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(row.period) ? row.period
+    : row.period.includes("Q2") ? `${year}-06-30`
+    : /^\d{4}-\d{2}$/.test(row.period) ? `${row.period}-01` : `${year}-09-01`;
+  return {
+    value: local / divisor,
+    kind: "CALCULATION",
+    confidence: regionalProxy ? "LOW" : row.confidence,
+    source,
+    date,
+    evidence: { checkedOn: observations.checkedOn, period: row.period, urls: row.urls, scope, method: `${row.method} ${observations.valuation}`, components, assumptions: tou ? ["Reference weekly load and billing demand; customer invoice takes precedence"] : wage ? ["Employer multiplier and annual working hours are assumed; specialist pay may differ"] : undefined },
+    range: row.bounds ? { low: row.bounds[0] / divisor, high: row.bounds[1] / divisor, basis: "observed" } : undefined,
+  };
+}
+
+/** Energy/Ft charges only: a generator does not automatically reduce billed peak demand. */
+export function electricityVariableShareFor(code: string): number {
+  const row = OBSERVATIONS.find((r) => r.country === code && r.parameter === "elec");
+  const tou = row?.timeOfUse;
+  if (!tou) return ENGINEERING_MAP["eng.invoice_variable_share"].value;
+  const energy = tou.rates.reduce((sum, rate, i) => sum + rate * tou.weeklyHours[i], 0) / tou.weeklyHours.reduce((a, b) => a + b, 0) + tou.fuelAdjustment;
+  return energy / (energy + (tou.monthlyDemand * tou.billingKw + tou.monthlyService) / tou.monthlyKwh);
+}
+
 /**
  * Values read in national primary sources for countries outside the Eurostat price surveys (checked 2026-10-25/26).
  * `lab` is the final operator cost in €/h (method in labourFor); `capex` overrides the labour-based factor only
  * where a market benchmark shows the formula is off.
  */
-type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number };
+type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number; route?: RouteId };
 const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "capex", Manual>>> = {
   UA: {
     spot: { v: 0.132, src: "Day-ahead market average 2025 ≈ 6 200 UAH/MWh (GMK Center) ÷ 47.09 UAH/€ — press-reported, to be confirmed with the market operator", conf: "MEDIUM", date: "2025-12-31" },
@@ -59,7 +145,7 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     lab: { v: 40.8, ratio: 0.7, src: "BLS Employer Costs for Employee Compensation, private industry, Dec 2025: $46.15 per hour worked ÷ 1.13 $/€", conf: "HIGH", date: "2025-12-31" },
     elec: { v: 0.102, src: "EIA Electric Power Monthly table 5.6.A: U.S. commercial 14.5 ¢ and industrial 9.6 ¢/kWh (Aug 2026); farms/processors taken at ≈ 11.5 ¢ — state prices differ by ×3 (CA ≈ 24–30 ¢)", conf: "MEDIUM", date: "2026-10-01" },
     gas: { v: 15.2, src: "EIA Natural Gas Prices: industrial $5.23/Mcf (2025 annual) → $17.2/MWh", conf: "HIGH", date: "2026-06-30" },
-    capex: { v: 1.12, src: "Labour formula gives 0.97, but US EPA AgSTAR cost data ($1 100–1 500 per cow at 500 cows) sit ≈ 15–25 % above the model at factor 1.0 (docs/capex-benchmark.md, point 9): higher engineering, permitting and interconnection cost", conf: "MEDIUM", date: "2026-10-24" },
+    capex: { v: 1.12, route: "chp", src: "Labour formula gives 0.97, but US EPA AgSTAR cost data ($1 100–1 500 per cow at 500 cows) sit ≈ 15–25 % above the model at factor 1.0 (docs/capex-benchmark.md, point 9): higher engineering, permitting and interconnection cost", conf: "MEDIUM", date: "2026-10-24" },
   },
   CA: {
     spot: { v: 0.028, src: "Alberta Electric System Operator / MSA Q4 2025 report: 2025 average pool price CAD 43.68/MWh ÷ 1.5787 CAD/€", conf: "HIGH", date: "2025-12-31" },
@@ -78,7 +164,6 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
   KZ: {
     spot: { v: 0.020, src: "Ministry of Energy ceiling generation tariffs 2025 (≈ 12 KZT/kWh typical) ÷ 589.9 KZT/€ — ceiling, not a market price", conf: "LOW", date: "2025-02-01" },
     lab: { v: 5.6, src: "Bureau of National Statistics: average nominal wage 2025 443 315 KZT/month × 12 × 1.14 employer contributions ÷ 1 850 h = 3 278 KZT/h ÷ 589.9 KZT/€", conf: "MEDIUM", date: "2025-12-31" },
-    elec: { v: 0.054, src: "Almaty Energosbyt: average price for customers 31.85 KZT/kWh excl. VAT from 15 Jul 2025 (regional tariffs differ; Astana-REK applied for 31.67)", conf: "MEDIUM", date: "2025-07-15" },
   },
   MX: {
     spot: { v: 0.041, src: "Day-ahead price SIN Jan–Oct 2025 880 MXN/MWh (IMCO, citing CENACE data) ÷ 21.67 MXN/€ — press-reported", conf: "MEDIUM", date: "2025-10-31" },
@@ -95,32 +180,36 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     spot: { v: 0.042, src: "CCEE PLD Sudeste/Centro-Oeste, mid-2025 mean R$ 262.6/MWh (InformaCCEE Jun 2025) ÷ 6.3072 BRL/€ — partial year, to be replaced by the full-year mean", conf: "MEDIUM", date: "2025-06-25" },
     lab: { v: 5.2, src: "IBGE PNAD Contínua: average habitual income from work 2025 R$ 3 560/month × 13.33 × 1.358 employer costs ÷ 1 950 h = 33 R$/h ÷ 6.3072 BRL/€", conf: "MEDIUM", date: "2025-12-31" },
     gas: { v: 44.9, src: "Gasmig industrial tariff R$ 3.089/m³ (Minas Gerais, 2025 revision) at 10.9 kWh/m³ (GCV) = 283 R$/MWh; CNI: industrial gas ≈ US$ 20/MMBtu incl. taxes (2025) — state tariffs differ", conf: "MEDIUM", date: "2025-12-31" },
-    capex: { v: 0.95, src: "BNDES-financed 2.15 MW biogas plant, Elias Fausto (SP): R$ 56.2 M ≈ 4 150 €/kW — at German level despite low labour cost (import duties on engines, upgrading and membranes); single project", conf: "LOW", date: "2024-03-01" },
+    capex: { v: 0.95, route: "chp", src: "BNDES-financed 2.15 MW biogas plant, Elias Fausto (SP): R$ 56.2 M ≈ 4 150 €/kW — at German level despite low labour cost (import duties on engines, upgrading and membranes); single project", conf: "LOW", date: "2024-03-01" },
   },
   TH: {
-    lab: { v: 2.4, src: "Average monthly wage ≈ 15 700 THB (secondary source, NSO table not verified) × 12 × 1.05 social security ÷ 2 200 h ÷ 37.1 THB/€", conf: "LOW", date: "2025-12-31" },
-    elec: { v: 0.106, src: "ERC: average tariff 3.95 THB/kWh excl. VAT (base 3.78 + Ft 0.1623), May–Aug 2026", conf: "HIGH", date: "2026-05-01" },
   },
   VN: {
     lab: { v: 2.2, src: "National Statistics Office LFS: salaried employees ≈ 9.4 M VND/month × 12 × 1.215 employer contributions ÷ 2 100 h = 65 300 VND/h ÷ 29 639 VND/€", conf: "MEDIUM", date: "2025-09-30" },
-    elec: { v: 0.074, src: "EVN Decision 599/QĐ-EVN (7 May 2025): average retail price 2 204.07 VND/kWh excl. VAT from 10 May 2025 ÷ 29 639 VND/€ — all-customer average, not the business band (press-reported; verify on evn.com.vn)", conf: "MEDIUM", date: "2025-05-10" },
   },
   IN: {
     spot: { v: 0.039, src: "IEX day-ahead market average FY 2025-26 Rs 3.86/kWh ÷ 98.52 INR/€", conf: "HIGH", date: "2026-03-31" },
     lab: { v: 1.3, src: "MoSPI PLFS: regular wage/salaried employees ≈ Rs 22 000/month (2025) × 12 × 1.15 employer EPF/ESI ÷ 2 300 h = 132 INR/h ÷ 98.52 INR/€", conf: "MEDIUM", date: "2025-12-31" },
     // PPAC domestic gas price 2025 ≈ $6.4–7.0/MMBtu (FIPI / PPAC monthly series) + ≈ $1.5/MMBtu transport & distribution to an industrial user (assumption) → €/MWh
-    gas: { v: 24.8, src: "PPAC domestic natural-gas price 2025, monthly $6.25–7.02/MMBtu (average ≈ $6.7; FIPI Policy & Economic Reports) + $1.5/MMBtu pipeline & distribution adder (assumption) = $8.2/MMBtu × 3.412 MWh/MMBtu ÷ 1.13 $/€", conf: "MEDIUM", date: "2026-01-31" },
+    gas: { v: 24.8, src: "PPAC domestic natural-gas price 2025, monthly $6.25–7.02/MMBtu (average ≈ $6.7; FIPI Policy & Economic Reports) + $1.5/MMBtu pipeline & distribution adder (assumption) = $8.2/MMBtu × 3.412 MMBtu/MWh ÷ 1.13 $/€", conf: "MEDIUM", date: "2026-01-31" },
     elec: { v: 0.076, src: "Industrial ≈ 6.7 INR/kWh (Intratec index, Dec 2025) + demand charges ≈ 0.8 INR/kWh; state tariffs 5.5–9 INR/kWh (CEA tariff report 2026)", conf: "LOW", date: "2025-12-31" },
-    capex: { v: 0.55, src: "SATAT CBG plant, Bagalkot (Karnataka): ₹ 42 crore for 10.2 t/day CBG from 200 t/day press mud ≈ 1 000 Nm³/h raw biogas → ≈ €4.3 M vs ≈ €8 M for the same plant at German prices; Indian-made digesters and upgrading. Single project — check against SATAT tenders", conf: "LOW", date: "2025-06-30" },
+    capex: { v: 0.55, route: "biomethane", src: "SATAT CBG plant, Bagalkot (Karnataka): ₹ 42 crore for 10.2 t/day CBG from 200 t/day press mud ≈ 1 000 Nm³/h raw biogas → ≈ €4.3 M vs ≈ €8 M for the same plant at German prices; Indian-made digesters and upgrading. Single project — check against SATAT tenders", conf: "LOW", date: "2025-06-30" },
   },
 };
 
-/** Biomethane / bio-CNG prices read in official sources for markets outside EU grid injection: [conservative, base, optimistic] €/Nm³. */
-const BIOMETHANE: Record<string, { v: [number, number, number]; src: string; conf: Confidence; date: string }> = {
-  IN: { v: [0.39, 0.5, 0.55], src: "MoPNG SATAT procurement price Rs 1 478/MMBtu excl. GST from 1 Jun 2025 (85 % of average CNG retail) = Rs 48.8/Nm³ → 0.50 €/Nm³; conservative = floor Rs 54/kg (≈ Rs 38.8/Nm³); optimistic = direct industrial/CNG-station sale", conf: "MEDIUM", date: "2025-06-01" },
-};
-export function biomethaneFor(code: string) {
-  return BIOMETHANE[code];
+/** Unsubsidised gas-parity reference; procurement eligibility is never inferred from the country. */
+export function biomethaneFor(code: string): { v: [number, number, number]; src: string; conf: Confidence; date: string } | undefined {
+  if (code !== "IN") return undefined;
+  const gas = gasFor(code);
+  if (!gas) return undefined;
+  const base = gas.value / 1000 * ENGINEERING_MAP["eng.ch4_lhv_kwh_m3"].value * ENGINEERING_MAP["eng.biomethane_ch4_purity"].value;
+  return { v: [base * 0.8, base, base * 1.3], src: `Uncontracted industrial gas-parity reference: ${gas.value} EUR/MWh LHV × product LHV; engineering range 80–130% of parity, not observed transactions. ${gas.source}. GOBARdhan procurement is conditional and shown only as a separate support case; buyer quotation and logistics required.`, conf: "LOW", date: "2026-10-26" };
+}
+
+/** Conditional producer procurement price, not a universal commercial offtake or a capital grant. */
+export function indiaCbgProcurementPrice(): number {
+  const productLhv = ENGINEERING_MAP["eng.ch4_lhv_kwh_m3"].value * ENGINEERING_MAP["eng.biomethane_ch4_purity"].value;
+  return 2110 * productLhv * ENGINEERING_MAP["eng.gas_hhv_lhv_ratio"].value / 293.0710701722222 / fxFor("INR")!.value;
 }
 
 export function fxFor(currency: string): Sourced | undefined {
@@ -129,7 +218,9 @@ export function fxFor(currency: string): Sourced | undefined {
   return f && { value: +f.perEur.toFixed(f.perEur > 100 ? 0 : 3), kind: "FACT", confidence: "HIGH", source: `Eurostat ert_bil_eur_a, ECB reference rate, annual average ${f.year}`, date: `${f.year}-12-31` };
 }
 
-export function electricityFor(code: string): Sourced | undefined {
+export function electricityFor(code: string, regionId?: string): Sourced | undefined {
+  const observed = observedMarketValue(code, "elec", regionId);
+  if (observed) return observed;
   const e = S.electricity[code];
   // Published official statistic for a defined consumer band — used directly, so HIGH (the band average, not the customer's own tariff).
   if (e) return { value: e.eurKwh, kind: "FACT", confidence: "HIGH", source: `Eurostat nrg_pc_205: non-household electricity, band IC (500–1 999 MWh/a), excl. VAT & recoverable taxes, mean of ${per(e.periods)}`, date: S.fetchedOn };
@@ -139,9 +230,12 @@ export function electricityFor(code: string): Sourced | undefined {
 
 export function gasFor(code: string): Sourced | undefined {
   const g = S.gas[code];
-  if (g) return { value: g.eurMwh, kind: "FACT", confidence: "HIGH", source: `Eurostat nrg_pc_203: non-household gas, band I3 (10 000–99 999 GJ/a), excl. VAT & recoverable taxes, mean of ${per(g.periods)}`, date: S.fetchedOn };
+  const ratio = ENGINEERING_MAP["eng.gas_hhv_lhv_ratio"].value;
+  const conversion = `EUR/MWh HHV × ${ratio} → EUR/MWh LHV; composition-dependent engineering conversion, not a new measured tariff. Eurostat gas prices use GCV: https://ec.europa.eu/eurostat/documents/3859598/7787004/KS-GQ-16-006-N.pdf/23fb64e3-0bc0-4812-9294-3034cf640af3`;
+  if (g) return { value: g.eurMwh * ratio, kind: "CALCULATION", confidence: "MEDIUM", source: `Eurostat nrg_pc_203: non-household gas, band I3 (10 000–99 999 GJ/a), excl. VAT & recoverable taxes, mean of ${per(g.periods)}. ${conversion}`, date: S.fetchedOn };
   const m = MANUAL[code]?.gas;
-  return m && { value: m.v, kind: m.conf === "HIGH" ? "FACT" : "ESTIMATE", confidence: m.conf, source: m.src, date: m.date };
+  const hhv = ["GB", "US", "CA", "MX", "IN"].includes(code);
+  return m && { value: m.v * (hhv ? ratio : 1), kind: "CALCULATION", confidence: m.conf === "LOW" ? "LOW" : "MEDIUM", source: `${m.src}. ${hhv ? conversion : "Original volumetric-gas estimate retained on the model LHV basis; verify invoice calorific value."}`, date: m.date };
 }
 
 /** Wholesale electricity price, €/kWh: the official day-ahead average where published (ENTSO-E via Energy-Charts), else the country's own published value. */
@@ -149,7 +243,8 @@ export function spotFor(code: string): Sourced | undefined {
   const d = S.dayAhead[code];
   if (d?.eurMwh) return { value: +(d.eurMwh / 1000).toFixed(3), kind: "FACT", confidence: "HIGH", source: `Day-ahead average ${d.eurMwh} €/MWh, bidding zone ${d.bzn}, ${d.from} – ${d.to} (Energy-Charts / ENTSO-E)`, date: S.fetchedOn };
   const m = MANUAL[code]?.spot;
-  return m && { value: m.v, kind: m.conf === "HIGH" && !["AR", "MD", "KZ"].includes(code) ? "FACT" : "ESTIMATE", confidence: m.conf, source: m.src, date: m.date };
+  const proxy = ["AR", "MD", "KZ"].includes(code);
+  return m && { value: m.v, kind: m.conf === "HIGH" && !proxy ? "FACT" : "ESTIMATE", confidence: proxy ? "LOW" : m.conf, source: `${m.src}${proxy ? "; regulated purchase/ceiling price is not a generator export offer — confirm a PPA" : ""}`, date: m.date };
 }
 
 /** Share of the wholesale price a small seller realises for surplus power (shape & balancing discount). */
@@ -172,6 +267,8 @@ export function operatorRatioFor(code: string): Sourced {
 
 /** Official hourly labour cost, economy-wide (wages + employer costs) — HIGH where Eurostat publishes it. */
 export function labourOfficialFor(code: string): Sourced | undefined {
+  const observed = observedMarketValue(code, "lab");
+  if (observed) return observed;
   const l = S.labour[code];
   if (l) return { value: l.eurH, kind: "FACT", confidence: "HIGH", source: `Eurostat lc_lci_lev: hourly labour cost (wages + employer costs), industry, construction & services, ${l.year}`, date: `${l.year}-12-31` };
   const m = MANUAL[code]?.lab;
@@ -184,17 +281,17 @@ export function labourFor(code: string): Sourced | undefined {
   if (!o) return undefined;
   const r = operatorRatioFor(code);
   const value = +(o.value * r.value).toFixed(1);
-  return { value, kind: "CALCULATION", confidence: o.confidence === "LOW" ? "LOW" : "MEDIUM", source: `${o.value} €/h official labour cost × ${r.value} operator ratio`, date: o.date };
+  return { value, kind: "CALCULATION", confidence: o.confidence === "LOW" ? "LOW" : "MEDIUM", source: `${o.value} €/h official labour cost × ${r.value} assumed operator ratio. ${o.source}`, date: o.date, evidence: o.evidence, range: o.range ? { ...o.range, low: o.range.low * r.value, high: o.range.high * r.value } : undefined };
 }
 
 /** Local CAPEX factor: 72 % of a plant is internationally priced equipment, 28 % civil works & installation scaled by local operator cost (Germany = 1). */
-export function capexFactorFor(code: string): Sourced | undefined {
+export function capexFactorFor(code: string, route: RouteId = "chp"): Sourced | undefined {
   const m = MANUAL[code]?.capex;
-  if (m) return { value: m.v, kind: "CALCULATION", confidence: m.conf, source: m.src, date: m.date };
+  if (m && route === (m.route ?? "chp")) return { value: m.v, kind: "CALCULATION", confidence: "LOW", source: `${route} only. ${m.src}. Reconstructed single-project/historical benchmark, not independently validated.`, date: m.date, range: { low: m.v * 0.7, high: m.v * 1.3, basis: "engineering" } };
   // Published plant costs (scripts/calibrate-capex.ts): only MEDIUM calibrations are applied; LOW ones are kept for the record.
   const cal = CAL.countries[code];
-  if (cal?.factor !== undefined && cal.confidence === "MEDIUM") {
-    return { value: cal.factor, kind: "CALCULATION", confidence: "MEDIUM", source: `Calibrated to ${cal.n} published CHP plant costs (${cal.ids.join(", ")}); see docs/capex-benchmark.md, section 6`, date: "2026-10-26" };
+  if (route === "chp" && cal?.applied === true && cal.factor !== undefined && cal.confidence === "MEDIUM") {
+    return { value: cal.factor, kind: "CALCULATION", confidence: "LOW", source: `Provisional CHP fit to ${cal.n} published costs (${cal.ids.join(", ")}); reconstructed feedstock/configuration, no independent validation; see docs/capex-benchmark.md, section 6`, date: "2026-10-26", range: { low: cal.factor * 0.7, high: cal.factor * 1.3, basis: "engineering" } };
   }
   const l = labourFor(code);
   const de = labourFor("DE");
@@ -203,7 +300,8 @@ export function capexFactorFor(code: string): Sourced | undefined {
   // The 72 % traded-equipment share holds for markets that import their plant (EU, GB, CA); where local manufacturers
   // or import duties dominate, the formula is only indicative until a project benchmark exists.
   const benchmarked = Boolean(S.labour[code]) || code === "GB" || code === "CA";
-  return { value: f, kind: "CALCULATION", confidence: benchmarked && l.confidence !== "LOW" ? "MEDIUM" : "LOW", source: `0.72 traded equipment + 0.28 × local/German operator labour cost (${l.value}/${de.value} €/h); cost split after DBFZ/Fraunhofer cost study (2024)${benchmarked ? "" : "; no national cost benchmark found — supplier quotes needed"}`, date: l.date };
+  const budget = route === "biomethane" ? cal?.biomethane : undefined;
+  return { value: f, kind: "CALCULATION", confidence: benchmarked && l.confidence !== "LOW" && !budget ? "MEDIUM" : "LOW", source: `${route}: unvalidated location-cost assumption, not a route-specific project calibration. 0.72 traded equipment + 0.28 × local/German operator labour cost (${l.value}/${de.value} €/h); assumed cost split informed by DBFZ/Fraunhofer (2024); supplier quotes needed${budget ? `. Published project budgets/model ratio ≈ ${budget.factor} at comparable size, not an as-built calibration; broader upper sensitivity bound retained.` : ""}`, date: l.date, range: { low: f * 0.7, high: Math.max(f * 1.3, budget ? budget.factor * 1.2 : 0), basis: "engineering" } };
 }
 
 /** EUR-equivalent project discount rate = 6.0 % mature-market project WACC + 0.6 × Damodaran country risk premium (λ-approach), capped at 16 %. */

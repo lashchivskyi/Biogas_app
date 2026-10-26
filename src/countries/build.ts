@@ -1,9 +1,10 @@
 import type { CountryAdapter, Region, RegulatoryRegime, SupportInfo } from "@/core/country";
 import { prov } from "@/core/params";
 import type { Confidence, Provenance } from "@/core/types";
+import { ENGINEERING_MAP } from "@/core/engineeringParams";
 import { regulatoryFor } from "./regulatory";
 import {
-  biomethaneFor, capexFactorFor, haircutFor, labourOfficialFor, operatorRatioFor, spotFor, CLIMATE_SOURCE, climateRegionsFor, debtRateFor, discountFor, electricityFor, fertiliserFor, fxFor, gasFor, gridEfFor, labourFor,
+  biomethaneFor, capexFactorFor, haircutFor, labourOfficialFor, operatorRatioFor, spotFor, CLIMATE_SOURCE, climateRegionsFor, debtRateFor, discountFor, electricityFor, electricityVariableShareFor, fertiliserFor, fxFor, gasFor, gridEfFor, labourFor,
   type Sourced,
 } from "./sources";
 
@@ -57,15 +58,15 @@ const SRC = "National estimate (project team, 2026-10) — no official series fo
  * (Eurostat, ECB, national regulators, EIA, DESNZ, World Bank, Ember, Damodaran — see sources.ts) and
  * falls back to the profile's ESTIMATE only where none was found. Derived values document their formula.
  */
-export function marketParams(c: CountryProfile): Provenance[] {
+export function marketParams(c: CountryProfile, regionId?: string): Provenance[] {
   const o = { country: c.code, date: "2026-10-25" };
   const L = "LOW" as const;
   const P = (id: string, label: string, s: Sourced | undefined, fallback: number, unit: string, note?: string) =>
     s
-      ? prov(id, label, s.value, unit, s.kind, s.source, s.confidence, { country: c.code, date: s.date, note })
+      ? prov(id, label, s.value, unit, s.kind, s.source, s.confidence, { country: c.code, date: s.date, note, evidence: s.evidence, range: s.range })
       : prov(id, label, fallback, unit, "ESTIMATE", SRC, L, { ...o, note });
 
-  const elec = electricityFor(c.code);
+  const elec = electricityFor(c.code, regionId);
   const gas = gasFor(c.code);
   const gasV = gas?.value ?? c.gas;
   const lab = labourFor(c.code);
@@ -73,32 +74,35 @@ export function marketParams(c: CountryProfile): Provenance[] {
   const disc = discountFor(c.code);
   // Biomethane without support ≈ wholesale gas (≈ 80 % of the business price) + green premium where grid injection & certificates exist.
   const own = c.bmOverride || !(c.inj && c.regime === "EU");
-  const bmBase = own ? c.bm[1] : +(((gasV * 0.8 + (c.inj ? 20 : 0)) * 9.67) / 1000).toFixed(2);
+  const productLhv = ENGINEERING_MAP["eng.ch4_lhv_kwh_m3"].value * ENGINEERING_MAP["eng.biomethane_ch4_purity"].value;
+  const boilerEff = ENGINEERING_MAP["eng.boiler_efficiency"].value;
+  const bmBase = own ? c.bm[1] : ((gasV * 0.8 + (c.inj ? 20 : 0)) * productLhv) / 1000;
   const bmOfficial = own ? biomethaneFor(c.code) : undefined;
   const bmSrc = bmOfficial
     ? bmOfficial.src
     : own
       ? `${SRC}; local market for biomethane / RNG without credits`
-      : `CALCULATION: (0.8 × business gas ${gasV} €/MWh${c.inj ? " + 20 €/MWh green-gas premium (guarantees of origin / blending demand)" : ""}) × 9.67 kWh/Nm³`;
-  const bmConf: Confidence = bmOfficial ? bmOfficial.conf : gas && !own ? "MEDIUM" : "LOW";
+      : `CALCULATION: (0.8 × business gas ${gasV} €/MWh LHV${c.inj ? " + 20 €/MWh LHV green-gas premium (uncontracted engineering assumption)" : ""}) × ${productLhv} kWh LHV/Nm³. No guaranteed offtake or certificate eligibility.`;
+  const bmConf: Confidence = bmOfficial ? bmOfficial.conf : "LOW";
   const bm: [number, number, number] = bmOfficial ? bmOfficial.v : own ? c.bm : [+(bmBase * 0.8).toFixed(2), bmBase, +(bmBase * 1.35).toFixed(2)];
 
   const out: Provenance[] = [
     P("econ.fx_local_per_eur", "Exchange rate", fxFor(c.currency), c.fx, `${c.currency}/EUR`),
-    P("econ.electricity_retail_eur_kwh", "Business electricity price, all-in excl. VAT (default if the customer gives none)", elec, c.elec, "EUR/kWh", "National average for a mid-size business — your own bill is always better"),
+    P("econ.electricity_retail_eur_kwh", "Business electricity reference, excl. VAT (default if the customer gives none)", elec, c.elec, "EUR/kWh", elec?.evidence?.scope ?? "National reference for a mid-size business — customer tariff and bill take precedence"),
     P("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor(c.code), +(c.exp / 0.85).toFixed(3), "EUR/kWh", "Official day-ahead or wholesale average where published"),
     prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", haircutFor(c.code).value, "—", "ASSUMPTION", haircutFor(c.code).source, "MEDIUM", o),
-    prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", 0.85, "—", "ASSUMPTION", "Capacity & fixed network charges (≈ 10–20 % of a business bill in EU tariff structures, ACER 2024) are not avoided", "MEDIUM", o),
-    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / 0.9 boiler efficiency)", +(gasV / 1000 / 0.9).toFixed(4), "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh ÷ 0.9`, gas?.confidence ?? L, o),
-    P("econ.gas_price_eur_mwh", "Business natural-gas price, excl. VAT", gas, c.gas, "EUR/MWh"),
-    prov("econ.biomethane_price_cons_eur_nm3", "Biomethane price without support, conservative", bm[0], "EUR/Nm³", "CALCULATION", `${bmSrc}; × 0.8`, bmConf, o),
+    prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", electricityVariableShareFor(c.code), "—", "ASSUMPTION", "TOU reference: energy/Ft portion only, demand/service charges retained. Else 85% engineering allowance. User invoice uses the generic allowance until its energy/demand split is known.", "MEDIUM", { ...o, range: electricityVariableShareFor(c.code) === ENGINEERING_MAP["eng.invoice_variable_share"].value ? ENGINEERING_MAP["eng.invoice_variable_share"].range : undefined }),
+    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, o),
+    P("econ.gas_price_eur_mwh", "Business natural-gas price, excl. VAT, LHV basis", gas, c.gas, "EUR/MWh LHV"),
+    prov("econ.biomethane_price_cons_eur_nm3", "Biomethane price without support, conservative", bm[0], "EUR/Nm³", "CALCULATION", `${bmSrc}; conservative scenario reference ${bm[0]} EUR/Nm³`, bmConf, o),
     prov("econ.biomethane_price_base_eur_nm3", "Biomethane price without support, base", bm[1], "EUR/Nm³", "CALCULATION", bmSrc, bmConf, o),
-    prov("econ.biomethane_price_opt_eur_nm3", "Biomethane price without support, optimistic", bm[2], "EUR/Nm³", "CALCULATION", `${bmSrc}; × 1.35 (premium offtake, e.g. transport fuel)`, bmConf, o),
+    prov("econ.biomethane_price_opt_eur_nm3", "Biomethane price without support, optimistic", bm[2], "EUR/Nm³", "CALCULATION", `${bmSrc}; optimistic scenario reference ${bm[2]} EUR/Nm³`, bmConf, o),
     P("econ.labour_official_eur_h", "Official hourly labour cost, economy-wide (wages + employer costs)", labourOfficialFor(c.code), +(c.labour / operatorRatioFor(c.code).value).toFixed(1), "EUR/h"),
     prov("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", operatorRatioFor(c.code).value, "—", "ASSUMPTION", operatorRatioFor(c.code).source, "MEDIUM", o),
     prov("econ.transport_eur_tkm", "Road transport of organic feedstock", +(0.06 + 0.003 * labV).toFixed(3), "EUR/(t·km)", "CALCULATION", "0.06 €/t·km vehicle & fuel + 0.003 × driver labour cost (€/h); matches KTBL slurry haulage ≈ 0.12–0.16 €/t·km in Germany", "MEDIUM", o),
     prov("econ.transport_fixed_eur_t", "Loading/unloading per tonne", +(0.6 + 0.02 * labV).toFixed(2), "EUR/t", "CALCULATION", "0.6 €/t pump & loader + 0.02 h/t × labour cost (KTBL Betriebsplanung machine-cost norms, scaled by national labour cost)", lab?.confidence ?? L, o),
     P("econ.capex_factor", "Local CAPEX relative to the German baseline", capexFactorFor(c.code), c.capex, "—", "Equipment (CHP, upgrading, membranes, pumps) is internationally priced; civil works follow local costs"),
+    ...(["chp", "boiler", "biomethane"] as const).map((route) => P(`econ.capex_factor_${route}`, `${route}: local CAPEX factor`, capexFactorFor(c.code, route), c.capex, "—", "Route-specific factor; reconstructed project costs are not independently validated quotations")),
     P("econ.discount_rate", "Discount rate (EUR-equivalent, incl. country risk)", disc, c.disc, "—"),
     prov("econ.energy_escalation", "Annual escalation of energy prices (EUR terms)", 0.02, "—", "ASSUMPTION", "At the ECB/Fed inflation target — no real energy-price growth assumed (conservative)", "MEDIUM", o),
     prov("econ.opex_escalation", "Annual escalation of operating costs (EUR terms)", 0.025, "—", "ASSUMPTION", "Inflation target + 0.5 pp wage drift", "MEDIUM", o),
@@ -152,6 +156,7 @@ export function buildAdapter(c: CountryProfile, regulatory = regulatoryFor(c.reg
     maturity: c.maturity ?? "profile",
     dataStatus: dataStatus(params, false),
     params,
+    paramsForRegion: (regionId) => marketParams(c, regionId).filter((p) => p.id === "econ.electricity_retail_eur_kwh"),
     regions: regionsFor(c.code, c.regions),
     support: c.support,
     regime: c.regime,

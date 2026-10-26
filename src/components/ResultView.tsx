@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
+import { INTL_TAG } from "@/i18n/config";
 import { makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
@@ -313,6 +314,7 @@ function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result
 }
 
 function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; currency: string; methodologyHref: string; extended: boolean }) {
+  const parameterNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 4 }).format;
   const R = d.result;
   const L = d.labels;
   const { n0, n1, eur, years, pct, compact } = F;
@@ -576,6 +578,35 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
           <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>
             <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={methodologyHref}>→</Link></p>
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
+            {extended && !!a.parameterSensitivity?.length && (
+              <div className="mt-4 border-t border-line pt-3">
+                <p className="text-sm font-semibold">{R.sensTitle}</p>
+                <p className="mt-1 text-xs text-muted">{R.sensSub}</p>
+                <dl className="mt-2 grid gap-3 sm:grid-cols-2">
+                  {a.parameterSensitivity.map((s) => {
+                    const evidence = a.marketEvidence?.find((p) => p.id === s.parameterId);
+                    return <div key={s.parameterId} className="min-w-0 rounded-lg border border-line p-3 text-xs">
+                      <dt lang="en" className="font-semibold">{evidence?.label ?? s.parameterId}</dt>
+                      <dd className="num mt-1">{parameterNumber(s.lowInput)} … {parameterNumber(s.highInput)} {evidence?.unit}</dd>
+                      <dd className="num mt-1">{R.colRange}: {eur(Math.min(s.lowNpvEur, s.highNpvEur))} … {eur(Math.max(s.lowNpvEur, s.highNpvEur))}</dd>
+                    </div>;
+                  })}
+                </dl>
+              </div>
+            )}
+            {!!a.marketEvidence?.length && (
+              <details className="mt-4 text-xs">
+                <summary className="cursor-pointer font-semibold">{R.assumptionsText}</summary>
+                <dl lang="en" className="mt-2 space-y-3 break-words">
+                  {a.marketEvidence.map((p) => <div key={p.id}>
+                    <dt className="font-semibold">{p.label}: <span className="num">{parameterNumber(p.value)} {p.unit}</span> · {p.origin ?? p.kind} · {p.confidence}</dt>
+                    <dd className="mt-1 text-muted">{p.source}</dd>
+                    {p.evidence && <dd className="mt-1 text-muted">{p.evidence.period} · checked {p.evidence.checkedOn} · {p.evidence.scope}</dd>}
+                    {p.evidence?.components && <dd className="mt-1 text-muted">{p.evidence.components.map((c) => `${c.name}: ${parameterNumber(c.value)} ${c.unit} (${c.origin})`).join("; ")}</dd>}
+                  </div>)}
+                </dl>
+              </details>
+            )}
           </Fold>
         </div>
       </Section>

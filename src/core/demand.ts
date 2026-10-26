@@ -41,7 +41,7 @@ export function customerDemand(ctx: RunContext): CustomerDemand {
       heatKwh = e.heatKwhYear as number;
       heatKnown = true;
     } else if ((e.gasM3Year ?? 0) > 0) {
-      heatKwh = (e.gasM3Year as number) * lhv * 0.88;
+      heatKwh = (e.gasM3Year as number) * lhv * boilerEff;
       heatKnown = true;
     }
   }

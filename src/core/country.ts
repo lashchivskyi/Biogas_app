@@ -80,6 +80,8 @@ export interface CountryAdapter {
   /** What backs the key prices: calibrated (local invoices + projects), official statistics, or national estimates. */
   dataStatus: "calibrated" | "official" | "estimated";
   params: Provenance[];
+  /** Optional sourced regional overrides merged over params; does not change feedstock properties. */
+  paramsForRegion?: (regionId: string) => Provenance[];
   regions: Region[];
   support: SupportInfo;
   regime: RegulatoryRegime;

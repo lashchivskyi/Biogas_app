@@ -117,7 +117,7 @@ interface CountryAdapter {
 
 `npm test` (Vitest): модель і баланси, усі країнові адаптери, приклади, NPV/IRR, сценарії, чутливість, провенанс, платежі та локалізація. Перевірки: `npm run lint`, `npm run typecheck`, `npm run build`. Актуальні результати кейсів доступні на `/[lang]/samples`; не зберігайте ручні копії чисел.
 
-Скрипти зі сталим призначенням: `benchmark.ts` — CAPEX проти опублікованих об'єктів; `calibrate-capex.ts` — оновлення країнової калібровки; `sweep.ts` і `thresholds.ts` — масштабні розгортки. Команди: `npx tsx scripts/<name>.ts`. Data-refresh інструменти й джерела описані в [data-sources.md](data-sources.md); історичні дослідження попиту — в [market-research.md](market-research.md).
+Скрипти зі сталим призначенням: `benchmark.ts` — CAPEX проти опублікованих об'єктів; `calibrate-capex.ts` — read-only перевірка бюджетів/CAPEX, оновлення набору лише з `--write`; `sweep.ts` і `thresholds.ts` — масштабні розгортки. Команди: `npx tsx scripts/<name>.ts`. Data-refresh інструменти й джерела описані в [data-sources.md](data-sources.md); історичні дослідження попиту — в [market-research.md](market-research.md).
 
 Перед запуском продажів: постійне сховище й резервні копії замість локальних JSON для кількох інстансів; production auth/HTTPS/домен; перевірка юридичних реквізитів і приватності; перевірка даних C2–C6 з [data-sources.md](data-sources.md); порівняння щонайменше 10 реальних проєктів із ручним ТЕО. Це відкриті вимоги, не підтвердження готовності.
 

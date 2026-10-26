@@ -1,4 +1,4 @@
-import { HOURS_IN_MONTH } from "./climate";
+import { HOURS_IN_MONTH, HOURS_PER_YEAR } from "./climate";
 import type { RunContext } from "./context";
 import type { CustomerDemand } from "./demand";
 import type { DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
@@ -27,7 +27,7 @@ export function chpEtaEl(kw: number, get: (id: string) => number): number {
   return pts[0][1];
 }
 
-const roundKw = (kw: number) => (kw < 100 ? Math.round(kw / 5) * 5 : Math.round(kw / 10) * 10);
+const roundKw = (kw: number) => (kw < 100 ? Math.ceil(kw / 5) * 5 : Math.ceil(kw / 10) * 10);
 
 export function runEnergy(
   route: RouteId,
@@ -91,24 +91,26 @@ export function runEnergy(
 
   if (route === "chp") {
     // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.
-    const qNom = Math.max(...gasM.map((g, i) => g / HOURS_IN_MONTH[i])) * (8760 / designHours);
+    const qNom = Math.max(...gasM.map((g, i) => g / HOURS_IN_MONTH[i])) * (HOURS_PER_YEAR / designHours);
     let eta = 0.36;
     let kw = qNom * eta;
-    for (let k = 0; k < 4; k++) {
+    for (let k = 0; k < 30; k++) {
       eta = chpEtaEl(Math.max(kw, 1), (id) => p.get(id));
       kw = qNom * eta;
     }
     chpKw = kw < 1 ? 0 : roundKw(kw);
+    // Rounding changes efficiency: ensure the installed engine can actually absorb design fuel input.
+    while (chpKw > 0 && chpKw / chpEtaEl(chpKw, (id) => p.get(id)) + 1e-8 < qNom) chpKw += chpKw < 100 ? 5 : 10;
     etaEl = chpEtaEl(Math.max(chpKw, 1), (id) => p.get(id));
     const etaTh = Math.max(0, etaTotal - etaEl);
     const qInstalled = etaEl > 0 ? chpKw / etaEl : 0;
-    const hoursEff = Math.max(0, scenario.chpHours - (mods.extraDowntimePp / 100) * 8760);
+    const hoursEff = Math.max(0, Math.min(HOURS_PER_YEAR, scenario.chpHours - (mods.extraDowntimePp / 100) * HOURS_PER_YEAR));
     const heatPerGas = recovery * etaTh;
 
     for (let i = 0; i < 12; i++) {
       const G = gasM[i];
       const D = dig[i];
-      const cap = (qInstalled * HOURS_IN_MONTH[i] * hoursEff) / 8760;
+      const cap = (qInstalled * HOURS_IN_MONTH[i] * hoursEff) / HOURS_PER_YEAR;
       let gC = Math.min(G, cap);
       let gB = 0;
       let ext = 0;
@@ -143,7 +145,7 @@ export function runEnergy(
       const usable = Math.max(0, net);
       monthlyElNet[i] = usable;
       elNet += usable;
-      const coincident = demand.electricityKwhYear * (HOURS_IN_MONTH[i] / 8760) * coincidence;
+      const coincident = demand.electricityKwhYear * (HOURS_IN_MONTH[i] / HOURS_PER_YEAR) * coincidence;
       const self = Math.min(usable, coincident);
       elSelf += self;
       if (input.energy.hasGridConnection) elExport += usable - self;
@@ -237,6 +239,7 @@ export function runEnergy(
     heatUsefulKwh: heatUseful,
     biomethaneNm3: bioNm3,
     rawBiogasNm3PerHour: route === "biomethane" ? rawToUpgrade / designHours : feed.biogasM3Year / designHours,
+    rawBiogasCh4Share: frac,
     rawBiogasDesignNm3PerHour: route === "biomethane"
       ? Math.max(rawToUpgrade / designHours, ...gasM.map((g, i) => (g - Math.min(g, dig[i] / boilerEff)) / lhv / frac / HOURS_IN_MONTH[i]))
       : Math.max(feed.biogasM3Year / designHours, ...feed.monthlyCh4M3.map((m3, i) => m3 / frac / HOURS_IN_MONTH[i])),

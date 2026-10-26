@@ -1,5 +1,6 @@
 import type { SupportInfo, SupportScheme } from "@/core/country";
 import { region, type CountryProfile } from "./build";
+import { indiaCbgProcurementPrice } from "./sources";
 
 /**
  * 32 national profiles (Ukraine has its own calibrated adapter in ua.ts).
@@ -11,7 +12,7 @@ import { region, type CountryProfile } from "./build";
 
 const CHECKED = "2026-10-24";
 const none = (en: string, uk: string): SupportInfo => ({ summary: { en, uk }, availableForNewSmallProjects: false, checkedOn: CHECKED, schemes: [] });
-const sup = (en: string, uk: string, schemes: SupportScheme[], open = true): SupportInfo => ({ summary: { en, uk }, availableForNewSmallProjects: open, checkedOn: CHECKED, schemes });
+const sup = (en: string, uk: string, schemes: SupportScheme[], open = true, checkedOn = CHECKED): SupportInfo => ({ summary: { en, uk }, availableForNewSmallProjects: open, checkedOn, schemes });
 const sch = (s: Omit<SupportScheme, "checkedOn">): SupportScheme => ({ ...s, checkedOn: CHECKED });
 
 const EU_BM: [number, number, number] = [0.4, 0.55, 0.8];
@@ -250,9 +251,9 @@ export const PROFILES: CountryProfile[] = [
     code: "IN", name: "India", currency: "INR", fx: 95, tier: "C", regime: "GENERIC", inj: false,
     elec: 0.09, exp: 0.05, gas: 40, labour: 3, capex: 0.6, disc: 0.12, debtRate: 0.1, tkm: 0.05, bm: [0.35, 0.45, 0.6], fertN: 0.5, fertFactor: 0.45, ef: 0.71,
     regions: [region("punjab", "Punjab", [12.8, 15.8, 20.8, 27.0, 31.3, 32.5, 30.5, 29.8, 28.8, 25.3, 19.3, 14.3]), region("maharashtra", "Maharashtra (Pune)", [20.8, 22.5, 25.5, 28.5, 29.0, 26.5, 24.8, 24.3, 24.5, 24.8, 22.5, 20.5])],
-    support: sup("SATAT offtake for compressed biogas (CBG) and a CBG blending obligation (1 % FY26 → 5 % FY29); GOBARdhan scheme (₹23 731 crore, FY2027–2036) with capital assistance.", "Збут стиснутого біогазу (CBG) за SATAT і обов'язок домішування CBG (1 % FY26 → 5 % FY29); програма GOBARdhan (₹23 731 крор, FY2027–2036) з капітальною допомогою.", [
-      sch({ id: "in.cbg", name: "SATAT CBG offtake + central financial assistance", status: "open", biomethaneEurNm3: 0.6, capexGrantShare: 0.1, routes: ["biomethane"], note: { en: "CBG sold as transport fuel; price and assistance assumed for illustration — confirm current MoPNG / MNRE terms.", uk: "CBG продається як пальне; ціна та допомога прийняті для ілюстрації — уточніть умови MoPNG / MNRE." }, source: "Renewable Watch (Dec 2025), Deccan Herald (GOBARdhan); not verified", confidence: "LOW" }),
-    ]),
+    support: sup("MoPNG (29 Aug 2026): GOBARdhan producer procurement ₹2,110/MMBtu. Conditional support case, not guaranteed commercial offtake; eligibility and contract terms require confirmation. No unverified capital grant is assumed.", "MoPNG (29.08.2026): закупівельна ціна GOBARdhan для виробників — ₹2 110/MMBtu. Це умовний сценарій підтримки, а не гарантований комерційний збут; участь та договірні умови потрібно підтвердити. Непідтверджений капітальний грант не враховується.", [
+      { id: "in.cbg", name: "GOBARdhan conditional CBG procurement", status: "uncertain", biomethaneEurNm3: indiaCbgProcurementPrice(), routes: ["biomethane"], note: { en: "MoPNG (29 Aug 2026): producer procurement ₹2,110/MMBtu. EUR/Nm³ conversion assumes HHV pricing, 97% CH₄ and documented annual FX. Eligibility, effective contract terms, quality and transport require confirmation. No capital grant or additional ₹10/kg payment is added.", uk: "MoPNG (29.08.2026): закупівельна ціна для виробника — ₹2 110/MMBtu. Перерахунок у EUR/Nm³ передбачає ціну за HHV, 97% CH₄ та задокументований середньорічний курс. Право на участь, договірні умови, якість газу й доставку потрібно підтвердити. Капітальний грант і додаткові ₹10/кг не нараховуються." }, source: "MoPNG / PIB, 2026-08-29: https://www.pib.gov.in/PressReleseDetailm.aspx?PRID=2304467&lang=1&reg=3", confidence: "MEDIUM", checkedOn: "2026-10-26" },
+    ], false, "2026-10-26"),
     notes: { en: ["Dung collection from many small holdings is the main logistics challenge; urea is subsidised, so digestate N has low cash value."], uk: ["Головний виклик логістики — збір гною з багатьох малих господарств; сечовина субсидована, тож азот дигестату має низьку грошову цінність."] },
   },
   {

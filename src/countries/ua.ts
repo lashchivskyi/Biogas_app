@@ -2,7 +2,7 @@ import type { CountryAdapter, Region } from "@/core/country";
 import { prov } from "@/core/params";
 import { regionsFor } from "./build";
 import { regulatoryFor } from "./regulatory";
-import { type Sourced, discountFor, electricityFor, spotFor, fertiliserFor, fxFor, gasFor, gridEfFor } from "./sources";
+import { type Sourced, capexFactorFor, discountFor, electricityFor, spotFor, fertiliserFor, fxFor, gasFor, gridEfFor } from "./sources";
 
 const SRC_NORMALS =
   "Climate normals 1991–2020 rounded by the project team (not a download). Replace with ERA5/Open-Meteo in phase 2";
@@ -32,7 +32,7 @@ export const UA_REGIONS: Region[] = [
 const SRC_IEA = "IEA commentary 'From farms to fuel: Ukraine's biomethane opportunity' (2026)";
 
 const src = (id: string, label: string, v: Sourced | undefined, unit: string, note?: string) =>
-  prov(id, label, v!.value, unit, v!.kind, v!.source, v!.confidence, { country: "UA", date: v!.date, note });
+  prov(id, label, v!.value, unit, v!.kind, v!.source, v!.confidence, { country: "UA", date: v!.date, note, evidence: v!.evidence, range: v!.range });
 
 export const UA_PARAMS = [
   src("econ.fx_local_per_eur", "Exchange rate", fxFor("UAH"), "UAH/EUR"),
@@ -49,7 +49,9 @@ export const UA_PARAMS = [
   prov("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", 1.14, "—", "ASSUMPTION", "Skilled plant operator ≈ 30 k UAH/month gross vs the 26.5 k average → ≈ 4.9 €/h operator cost", "MEDIUM", { country: "UA" }),
   prov("econ.transport_eur_tkm", "Road transport of liquid/solid organic feedstock", 0.11, "EUR/(t·km)", "ESTIMATE", "Tanker/tipper rate incl. empty return; diesel-driven; TO VERIFY with 3 hauliers", "LOW", { country: "UA" }),
   prov("econ.transport_fixed_eur_t", "Loading/unloading per tonne", 0.7, "EUR/t", "CALCULATION", "0.6 €/t pump & loader + 0.02 h/t × 4.9 €/h labour (same KTBL-based formula as every market)", "MEDIUM", { country: "UA" }),
-  prov("econ.capex_factor", "Local CAPEX relative to EU baseline", 0.85, "—", "CALCULATION", "Calibrated on Ukrainian projects: with 0.85 the model is within +8 % of 320 kW and within the market band at 1.3 MW (docs/capex-benchmark.md); imported CHP/upgrading priced as EU, half of plant equipment local (IEA 2026)", "MEDIUM", { country: "UA" }),
+  prov("econ.capex_factor", "Legacy CHP reference factor (route factors drive calculations)", 0.85, "—", "CALCULATION", "Provisional fit to historical Ukrainian CHP references; no independent local validation or biomethane calibration. See docs/capex-benchmark.md.", "LOW", { country: "UA", date: "2026-10-26" }),
+  prov("econ.capex_factor_chp", "CHP: local CAPEX factor", 0.85, "—", "CALCULATION", "Provisional fit to published Ukrainian CHP projects; no independent validation. Does not calibrate upgrading/injection costs or quantify war-risk construction premiums.", "LOW", { country: "UA", date: "2026-10-26", range: { low: 0.595, high: 1.105, basis: "engineering" } }),
+  ...(["boiler", "biomethane"] as const).map((route) => src(`econ.capex_factor_${route}`, `${route}: local CAPEX factor`, capexFactorFor("UA", route), "—", "No local route-specific project calibration; supplier quotation required")),
   src("econ.discount_rate", "Discount rate (EUR-equivalent, incl. country & war risk)", discountFor("UA"), "—"),
   prov("econ.energy_escalation", "Annual real escalation of energy prices (EUR terms)", 0.02, "—", "ASSUMPTION", "Conservative; UAH price rises offset by depreciation (EUR terms)", "MEDIUM", { country: "UA" }),
   prov("econ.opex_escalation", "Annual escalation of operating costs (EUR terms)", 0.03, "—", "ASSUMPTION", "Wage growth > CPI in UA (NBU inflation report)", "MEDIUM", { country: "UA" }),
@@ -69,10 +71,10 @@ export const UA: CountryAdapter = {
   code: "UA",
   nameEn: "Ukraine",
   currency: "UAH",
-  maturity: "operational",
+  maturity: "profile",
   params: UA_PARAMS,
   regions: regionsFor("UA", UA_REGIONS),
-  dataStatus: "calibrated",
+  dataStatus: "official",
   regime: "UA",
   biomethaneInjection: true,
   priceTier: "C",

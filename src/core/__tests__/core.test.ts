@@ -301,14 +301,15 @@ describe("robustness of the answer", () => {
     for (const e of EXAMPLES) {
       const a = run(e.input);
       const [lo, , hi] = a.ranges.npvEur;
-      const expected = lo > 0 ? "clear_go" : hi <= 0 ? "clear_no" : "grey";
+      const expected = a.verdict.id === "INSUFFICIENT_DATA" ? "insufficient" : lo > 0 ? "clear_go" : hi <= 0 ? "clear_no" : "grey";
       expect(a.robustness, e.id).toBe(expected);
       expect(a.drivers.length, e.id).toBeLessThanOrEqual(3);
     }
   });
   it("covers clear go, clear no and grey cases among the templates", () => {
     const set = new Set(EXAMPLES.map((e) => run(e.input).robustness));
-    expect([...set].sort()).toEqual(["clear_go", "clear_no", "grey"]);
+    expect([...set]).toEqual(expect.arrayContaining(["clear_go", "clear_no", "grey"]));
+    expect([...set].every((s) => ["clear_go", "clear_no", "grey", "insufficient"].includes(s))).toBe(true);
   });
 });
 

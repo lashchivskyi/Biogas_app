@@ -15,6 +15,14 @@ function leaves(o: unknown, path = "", out = new Map<string, string>()): Map<str
 const vars = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
 const ref = leaves(en);
 
+it("keeps screening uncertainty copy intact in every locale without claiming validated accuracy", async () => {
+  for (const locale of LOCALES) {
+    const d = await getDictionary(locale);
+    expect(d.result.robust.accuracy, locale).toContain("BMP");
+    expect(d.result.robust.accuracy, locale).not.toMatch(/\?{3}|\uFFFD|±30|AACE/);
+  }
+});
+
 describe.each(LOCALES.filter((l) => l !== "en"))("dictionary %s", (locale) => {
   it("has exactly the English keys, same array lengths and the same {placeholders}", async () => {
     const raw = (await import(`../dict/${locale}.ts`)).default;

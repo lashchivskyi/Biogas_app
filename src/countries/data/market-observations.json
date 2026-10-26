@@ -1,0 +1,72 @@
+{
+  "checkedOn": "2026-10-26",
+  "valuation": "Local-currency observations are converted using the documented annual-average FX in statistics.json, not an invented current exchange rate. Ranges describe tariffs/applicability, not probability intervals.",
+  "observations": [
+    {
+      "country": "BR",
+      "parameter": "elec",
+      "currency": "BRL",
+      "unit": "local/MWh",
+      "value": 840.76,
+      "regionalValues": { "santa-catarina": 720.19, "parana": 720.19, "rio-grande-do-sul": 720.19, "sao-paulo": 951.49, "minas-gerais": 951.49, "goias": 914.12, "mato-grosso": 914.12, "pernambuco": 773.65 },
+      "bounds": [720.19, 951.49],
+      "period": "2026-05",
+      "scope": "MME/ANEEL billed industrial electricity, national and macro-regional averages; regulated supply, not a free-market PPA. Macro-regions do not resolve state/network tariffs.",
+      "method": "MME Informativo Tarifario, 1st semester 2026, table 7, p.38; local R$/MWh divided by 1000 and BRL/EUR.",
+      "urls": ["https://www.gov.br/mme/pt-br/assuntos/secretarias/secretaria-nacional-energia-eletrica/informativo-tarifario-do-setor-eletrico/informativo-tarifario-do-setor-eletrico-semestral-ano-2026.pdf"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "VN",
+      "parameter": "elec",
+      "currency": "VND",
+      "unit": "local/kWh",
+      "timeOfUse": { "rates": [1833, 1190, 3398], "weeklyHours": [96, 42, 30], "fuelAdjustment": 0, "monthlyDemand": 0, "billingKw": 0, "monthlyKwh": 1, "monthlyService": 0 },
+      "bounds": [1190, 3398],
+      "period": "2025-05-10",
+      "scope": "Manufacturing at 22 to below 110 kV, excluding VAT. Continuous weekly consumption is an explicit reference profile, not a measured customer load.",
+      "method": "Decision 1279/QD-BCT: normal/off-peak/peak rates weighted by 96/42/30 hours per week. Subsequent timing changes preserve these weekly totals; a customer bill/load profile overrides the reference.",
+      "urls": ["https://en.evn.com.vn/d/en-US/news/RETAIL%20ELECTRICITY%20TARIFF-60-28-252", "https://nghison.evn.vn/d4/news/Thong-bao-ve-viec-thay-doi-khung-gio-cao-diem-thap-diem-cua-he-thong-dien-Quoc-gia-8-4601.aspx"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "TH",
+      "parameter": "elec",
+      "currency": "THB",
+      "unit": "local/kWh",
+      "timeOfUse": { "rates": [4.1839, 2.6037], "weeklyHours": [65, 103], "fuelAdjustment": 0.1623, "monthlyDemand": 132.93, "billingKw": 500, "monthlyKwh": 200000, "monthlyService": 312.24 },
+      "bounds": [3.0998862, 4.6800862],
+      "period": "2026-09/2026-12",
+      "scope": "PEA medium/large general service TOU, 22-33 kV, excluding VAT. Reference 500 kW/200 MWh per month, continuous load; public holidays and transformer losses are excluded.",
+      "method": "Published PEA TOU energy rates + current Ft; add demand and service charges for the stated reference. Self-generation only avoids the energy/Ft portion; no peak-demand reduction is assumed.",
+      "urls": ["https://www.pea.co.th/sites/default/files/documents/tariff/EN_Electricity_Tariffs_May_2023.pdf", "https://www.pea.co.th/en/our-services/tariff/ft"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "TH",
+      "parameter": "lab",
+      "currency": "THB",
+      "unit": "local/hour",
+      "wage": { "monthly": 15853.1, "employerMultiplier": 1.05, "annualHours": 2200 },
+      "period": "2026-Q2",
+      "scope": "BOT/NSO average monthly employee wage, not a specialist biogas operator quotation.",
+      "method": "Monthly wage x12 x1.05 employer allowance /2200 hours /THB per EUR. Employer allowance and working hours are engineering assumptions.",
+      "urls": ["https://www.bot.or.th/en/statistics/sdds.html"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "KZ",
+      "parameter": "elec",
+      "currency": "KZT",
+      "unit": "local/kWh",
+      "value": 43.13,
+      "regionIds": ["south"],
+      "bounds": [39.3, 43.13],
+      "period": "2026-09-12",
+      "scope": "Energosbyt Almaty non-household group 2, excluding VAT. Applicable reference for the Almaty region only; special industrial/food producer group is 39.30 KZT/kWh.",
+      "method": "Published local tariff /KZT per EUR. Outside Almaty this is a regional proxy and remains LOW until a local tariff or customer bill is supplied.",
+      "urls": ["https://esalmaty.kz/ru/business-tariffs"],
+      "confidence": "MEDIUM"
+    }
+  ]
+}

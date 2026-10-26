@@ -4,13 +4,19 @@ export function npv(rate: number, flows: number[]): number {
   return flows.reduce((acc, cf, t) => acc + cf / Math.pow(1 + rate, t), 0);
 }
 
-/** IRR by bisection; null when no sign change in [-0.9, 5]. */
+/** Unique conventional-project IRR by bisection; non-conventional flows may have multiple roots. */
 export function irr(flows: number[]): number | null {
+  if (flows.some((v) => !Number.isFinite(v))) return null;
+  const signs = flows.filter((v) => v !== 0).map((v) => Math.sign(v));
+  const changes = signs.slice(1).filter((s, i) => s !== signs[i]).length;
+  if (changes !== 1) return null;
   let lo = -0.9;
   let hi = 5;
   const f = (r: number) => npv(r, flows);
   const flo = f(lo);
   const fhi = f(hi);
+  if (flo === 0) return lo;
+  if (fhi === 0) return hi;
   if (!Number.isFinite(flo) || !Number.isFinite(fhi) || flo * fhi > 0) return null;
   for (let i = 0; i < 100; i++) {
     const mid = (lo + hi) / 2;

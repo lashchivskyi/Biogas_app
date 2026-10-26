@@ -12,7 +12,7 @@ export function assessQuality(
   base: ScenarioResult,
   demand: CustomerDemand,
   T: Tr,
-  ctx: { currency: string; profileOnly: boolean },
+  ctx: { currency: string; profileOnly: boolean; unvalidatedCapital?: boolean },
 ): { level: Confidence; score: number; reasons: string[]; missing: string[]; missingCodes: QualityGapId[] } {
   let score = 80;
   const reasons: string[] = [];
@@ -43,7 +43,11 @@ export function assessQuality(
   }
   if (ctx.profileOnly) {
     score -= 6;
-    reasons.push(T("No official business-price statistics for this country — national estimates used; enter your own prices", "Для цієї країни немає офіційної статистики цін для бізнесу — використано національні оцінки; введіть власні ціни"));
+    reasons.push(T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract", "Принаймні одна ціна, що впливає на цей маршрут, ґрунтується на непідтвердженому ринковому орієнтирі або недоговірному збуті — уточніть застосовний тариф чи контракт із покупцем"));
+  }
+  if (ctx.unvalidatedCapital) {
+    score -= 8;
+    reasons.push(T("Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations", "CAPEX цього маршруту не має незалежного локального підтвердження — отримайте зіставні комерційні пропозиції постачальників"));
   }
   if (!demand.electricityKnown) {
     score -= 12;

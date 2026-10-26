@@ -5,7 +5,26 @@
 
 export type DataKind = "FACT" | "ASSUMPTION" | "CALCULATION" | "ESTIMATE";
 export type Confidence = "LOW" | "MEDIUM" | "HIGH";
+export type EvidenceOrigin = "MEASURED" | "USER_INPUT" | "MARKET_DATA" | "ENGINEERING_ASSUMPTION" | "CALCULATED_VALUE";
 export type QualityGapId = "lab" | "electricity" | "electricity_price" | "heat" | "land" | "distance" | "disposal";
+
+/** Evidence about an input, distinct from the date/precision of its numeric conversion. */
+export interface ParameterEvidence {
+  checkedOn: string;
+  period: string;
+  urls: string[];
+  scope: string;
+  method: string;
+  assumptions?: string[];
+  components?: { name: string; value: number; unit: string; origin: EvidenceOrigin }[];
+}
+
+/** Bounds in the parameter's own unit; not a statistical confidence interval. */
+export interface ParameterRange {
+  low: number;
+  high: number;
+  basis: "observed" | "engineering";
+}
 
 /** Every numeric parameter used by the model carries its origin. */
 export interface Provenance {
@@ -16,9 +35,12 @@ export interface Provenance {
   kind: DataKind;
   source: string;
   country: string; // ISO code, "EU", or "GLOBAL"
-  date: string; // ISO date of the source / of the assumption
+  date: string; // ISO source/assumption date; "undated" for customer values with no invoice date
   confidence: Confidence;
   note?: string;
+  evidence?: ParameterEvidence;
+  range?: ParameterRange;
+  origin?: EvidenceOrigin;
 }
 
 export type ScenarioId = "conservative" | "base" | "optimistic";
@@ -271,6 +293,7 @@ export interface EnergyBalance {
   heatUsefulKwh: number; // economically useful (matched to a real demand)
   biomethaneNm3: number;
   rawBiogasNm3PerHour: number;
+  rawBiogasCh4Share: number; // dry-gas methane volume fraction before upgrading
   rawBiogasDesignNm3PerHour: number; // seasonal peak or annual flow / design operating hours, whichever is larger
   upgradingSlipM3: number;
   methaneLossShare: number; // of production: leaks + CHP slip + upgrading slip + flare (unburned)
@@ -362,6 +385,10 @@ export interface Assessment {
   routeMatrix: Record<RouteId, Record<ScenarioId, ScenarioResult>>;
   bestRoute: RouteId;
   sensitivity: SensitivityItem[];
+  /** One-at-a-time bounds from applicable parameter evidence; not a statistical confidence interval. */
+  parameterSensitivity?: { parameterId: string; lowInput: number; highInput: number; lowNpvEur: number; highNpvEur: number; basis: ParameterRange["basis"] }[];
+  /** Evidence as actually used for this region, rather than the default national registry. */
+  marketEvidence?: Provenance[];
   breakEven: {
     capexReductionPct: number | null;
     energyPriceIncreasePct: number | null;

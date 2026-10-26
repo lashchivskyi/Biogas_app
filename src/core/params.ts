@@ -1,4 +1,4 @@
-import type { Confidence, DataKind, Provenance } from "./types";
+import type { Confidence, DataKind, EvidenceOrigin, ParameterEvidence, ParameterRange, Provenance } from "./types";
 
 /**
  * Parameter bag: single source of truth for every number the model uses.
@@ -62,7 +62,7 @@ export function prov(
   kind: DataKind,
   source: string,
   confidence: Confidence,
-  opts: { country?: string; date?: string; note?: string } = {},
+  opts: { country?: string; date?: string; note?: string; evidence?: ParameterEvidence; range?: ParameterRange; origin?: EvidenceOrigin } = {},
 ): Provenance {
   return {
     id,
@@ -75,6 +75,9 @@ export function prov(
     country: opts.country ?? "GLOBAL",
     date: opts.date ?? "2026-10-23",
     note: opts.note,
+    evidence: opts.evidence,
+    range: opts.range,
+    origin: opts.origin ?? (kind === "CALCULATION" ? "CALCULATED_VALUE" : kind === "ASSUMPTION" || kind === "ESTIMATE" ? "ENGINEERING_ASSUMPTION" : opts.country && opts.country !== "GLOBAL" ? "MARKET_DATA" : undefined),
   };
 }
 

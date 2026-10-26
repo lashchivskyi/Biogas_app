@@ -1,15 +1,16 @@
 /**
  * CAPEX calibration per country. For every published plant cost in src/countries/data/capex-benchmarks.json the script
  * sizes a model input to the published capacity (bisection on the model's own output), reads the model's CAPEX at
- * capex_factor = 1, and derives the factor that would reproduce the published total. Results are written to
- * src/countries/data/capex-calibration.json and read by src/countries/sources.ts.
- * Usage: npx tsx scripts/calibrate-capex.ts
+ * route factor = 1. Reconstructed inputs are not independently validated designs. Costs remain nominal
+ * in their stated year; unknown dates/scopes never qualify as current engineering validation.
+ * Usage: npx tsx scripts/calibrate-capex.ts [--write] (read-only by default).
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { assess } from "../src/core";
 import type { Assessment, ProjectInput, RouteId } from "../src/core/types";
 import { getCountry } from "../src/countries";
+import { ENGINEERING_MAP } from "../src/core/engineeringParams";
 
 interface Benchmark {
   id: string;
@@ -22,6 +23,11 @@ interface Benchmark {
   quality: "project" | "company" | "academic" | "press" | "aggregate";
   source: string;
   build: "agri_chp" | "agri_biomethane" | "food_waste_chp";
+  publishedOn?: string;
+  costStatus?: "budget" | "realised";
+  sourceGroup?: string;
+  role?: "fit" | "check";
+  url?: string;
 }
 
 const DIR = resolve(import.meta.dirname ?? ".", "../src/countries/data");
@@ -56,7 +62,7 @@ function input(b: Benchmark, q: number): ProjectInput {
   };
 }
 
-const metric = (a: Assessment, b: Benchmark) => (b.route === "chp" ? a.routesBase.chp.energy.chpKwEl : a.routesBase.biomethane.energy.biomethaneNm3 / 8000);
+const metric = (a: Assessment, b: Benchmark) => (b.route === "chp" ? a.routesBase.chp.energy.chpKwEl : a.routesBase.biomethane.energy.biomethaneNm3 / ENGINEERING_MAP["eng.chp_design_hours"].value);
 
 /** Bisection on the model's own output: smallest input whose output reaches the target. */
 function sizeFor(b: Benchmark): { q: number; a: Assessment } {
@@ -70,40 +76,56 @@ function sizeFor(b: Benchmark): { q: number; a: Assessment } {
   return { q: hi, a: f(hi) };
 }
 
-const strength = (b: Benchmark) => (b.year >= 2024 && (b.quality === "project" || b.quality === "company" || b.quality === "academic") ? "strong" : b.year >= 2023 && b.quality !== "aggregate" ? "medium" : "weak");
+const strength = (b: Benchmark) => (!b.publishedOn || !b.costStatus || b.year < 2024 ? "weak" : b.costStatus === "budget" ? "budget" : "documented");
 
 const rows: Array<Record<string, unknown>> = [];
 for (const b of bench.benchmarks) {
   const { q, a } = sizeFor(b);
   const c = getCountry(b.country);
-  const current = c.params.find((p) => p.id === "econ.capex_factor")!.value;
+  const current = c.params.find((p) => p.id === `econ.capex_factor_${b.route}`)?.value ?? c.params.find((p) => p.id === "econ.capex_factor")!.value;
   const modelAt1 = a.routesBase[b.route as RouteId].capex.totalEur / current;
-  const achieved = b.route === "chp" ? a.routesBase.chp.energy.chpKwEl : a.routesBase.biomethane.energy.biomethaneNm3 / 8000;
+  const achieved = metric(a, b);
   rows.push({
     id: b.id, country: b.country, route: b.route, size: b.size, achievedSize: Math.round(achieved), input: Math.round(q),
-    capexEur: b.capexEur, modelAt1: Math.round(modelAt1), factor: +(b.capexEur / modelAt1).toFixed(2), strength: strength(b), year: b.year, quality: b.quality, source: b.source,
+    capexEur: b.capexEur, modelAt1: Math.round(modelAt1), factor: +(b.capexEur / modelAt1).toFixed(4), strength: strength(b), year: b.year, quality: b.quality, source: b.source,
+    costStatus: b.costStatus ?? "unverified", publishedOn: b.publishedOn, sourceGroup: b.sourceGroup, role: b.role, url: b.url,
+    reconstruction: "Feedstock, site and grid connection reconstructed; no as-built scope or inflation index supplied",
   });
 }
 
-const mean = (xs: number[]) => xs.reduce((x, y) => x + y, 0) / xs.length;
+const median = (xs: number[]) => {
+  const ordered = [...xs].sort((a, b) => a - b);
+  const mid = Math.floor(ordered.length / 2);
+  return ordered.length % 2 ? ordered[mid] : (ordered[mid - 1] + ordered[mid]) / 2;
+};
 const byCountry: Record<string, Array<Record<string, unknown>>> = {};
 for (const r of rows) (byCountry[r.country as string] ??= []).push(r);
-/** Country factor = mean of CHP-route benchmarks that are not weak (the common route, comparable config). Biomethane points are reported separately. */
-const countries: Record<string, { factor: number; n: number; confidence: "MEDIUM" | "LOW"; ids: string[]; biomethane?: { factor: number; n: number; note: string } }> = {};
+/** Diagnostic candidates only: point count alone cannot establish independent validation or matching scope. */
+const countries: Record<string, { factor: number; n: number; confidence: "LOW"; applied: false; ids: string[]; biomethane?: { factor: number; n: number; note: string } }> = {};
 for (const [code, list] of Object.entries(byCountry)) {
-  const chp = list.filter((r) => r.route === "chp" && r.strength !== "weak");
+  const chp = list.filter((r) => r.route === "chp" && r.strength === "documented" && r.role !== "check");
   const bm = list.filter((r) => r.route === "biomethane" && r.strength !== "weak");
   const entry: (typeof countries)[string] = {
-    factor: chp.length ? +mean(chp.map((r) => r.factor as number)).toFixed(2) : NaN,
+    factor: chp.length ? +median(chp.map((r) => r.factor as number)).toFixed(4) : NaN,
     n: chp.length,
-    confidence: chp.length >= 2 ? "MEDIUM" : "LOW",
+    confidence: "LOW",
+    applied: false,
     ids: list.map((r) => r.id as string),
   };
-  if (bm.length) entry.biomethane = { factor: +mean(bm.map((r) => r.factor as number)).toFixed(2), n: bm.length, note: "Biomethane points show the model's upgrading/injection CAPEX is lower than published projects; not applied to the country factor (it applies to all routes)." };
+  if (bm.length) entry.biomethane = { factor: +median(bm.map((r) => r.factor as number)).toFixed(4), n: bm.length, note: "Budget comparisons, not realised construction costs or independent validation. Not applied as a universal country/route factor; use for scoped sensitivity and obtain matching supplier quotations." };
   if (Number.isNaN(entry.factor)) delete (entry as { factor?: number }).factor;
   countries[code] = entry;
 }
 
-writeFileSync(resolve(DIR, "capex-calibration.json"), JSON.stringify({ generatedOn: "2026-10-26", method: "published plant cost ÷ model CAPEX at capex_factor 1, median per country; weak points reported but not used", benchmarks: rows, countries }, null, 2), "utf-8");
+const comparisons = rows.filter((r) => r.role === "check").map((r) => {
+  const fit = rows.find((f) => f.role === "fit" && f.country === r.country && f.route === r.route);
+  if (!fit) return { id: r.id, status: "no separate fit point" };
+  const predictedEur = (r.modelAt1 as number) * (fit.factor as number);
+  return { id: r.id, fitId: fit.id, predictedEur: Math.round(predictedEur), statedBudgetEur: r.capexEur, errorPct: +((predictedEur / (r.capexEur as number) - 1) * 100).toFixed(2), independent: fit.sourceGroup !== r.sourceGroup, note: "Withheld budget comparison only; same developer, reconstructed inputs, not as-built accuracy" };
+});
+const result = { generatedOn: new Date().toISOString().slice(0, 10), method: "Nominal stated cost / route-specific model at factor 1; diagnostic median, unknown dates/scopes excluded. No automatic promotion by sample count, no unsupported inflation adjustment, budgets separate from realised costs.", benchmarks: rows, countries, comparisons };
+if (process.argv.includes("--write")) writeFileSync(resolve(DIR, "capex-calibration.json"), JSON.stringify(result, null, 2) + "\n", "utf-8");
+else console.log("Read-only audit; pass --write to update the calibration dataset.");
 for (const r of rows) console.log(`${String(r.id).padEnd(16)} ${r.country} ${String(r.route).padEnd(10)} size ${String(r.size).padStart(5)} → achieved ${String(r.achievedSize).padStart(5)} | input ${String(r.input).padStart(7)} | published €${(Number(r.capexEur) / 1e6).toFixed(2)} M | model@1 €${(Number(r.modelAt1) / 1e6).toFixed(2)} M | factor ${r.factor} (${r.strength})`);
 console.log(countries);
+console.log(comparisons);

@@ -20,6 +20,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.gas_emission_factor_t_mwh", "Natural-gas combustion emission factor", 0.202, "tCO₂/MWh", "FACT", "IPCC default 56.1 kgCO₂/GJ", "HIGH"),
 
   prov("eng.natgas_lhv_kwh_m3", "Natural gas lower heating value", 9.5, "kWh/m³", "ASSUMPTION", "Typical pipeline gas; invoice value may differ", "MEDIUM"),
+  prov("eng.gas_hhv_lhv_ratio", "Natural gas HHV/LHV conversion", 1.11, "—", "ASSUMPTION", "Ontario GHG reporting guide: natural gas LHV = HHV / 1.11; gas composition/invoice calorific value takes precedence. https://www.ontario.ca/page/guide-greenhouse-gas-emissions-reporting", "MEDIUM", { date: "2026-10-26", range: { low: 1.09, high: 1.12, basis: "engineering" } }),
   prov("eng.rampup_year1", "Year-1 output share (biological start-up)", 0.75, "—", "ASSUMPTION", "Typical commissioning curve 3–6 months", "MEDIUM"),
 
   // --- digester process ---
@@ -46,6 +47,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.digestate_n_retention", "Share of feed nitrogen retained in digestate", 0.85, "—", "ESTIMATE", "NH₃ and storage losses 10–20 %", "MEDIUM"),
 
   prov("eng.self_consumption_coincidence", "Share of customer electricity load coinciding with biogas generation", 0.85, "—", "ASSUMPTION", "Biogas CHP runs ≈24/7; barn/cooling/process loads are largely continuous. Without a load profile this is a guess", "LOW"),
+  prov("eng.invoice_variable_share", "Avoidable share of an unsplit customer electricity bill", 0.85, "—", "ASSUMPTION", "Generic 85% allowance until customer energy, demand and fixed charges are separated; not a measured tariff. Country TOU defaults use their own energy-only share.", "LOW", { date: "2026-10-26", range: { low: 0.7, high: 1, basis: "engineering" } }),
 
   // --- inhibition & mix limits ---
   prov("eng.poultry_inhib_threshold", "Poultry share of VS above which NH₃ inhibition starts", 0.35, "—", "ESTIMATE", "Ammonia inhibition literature, typical 3 g NH₄-N/L", "LOW"),

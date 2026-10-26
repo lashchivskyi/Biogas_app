@@ -1,4 +1,5 @@
 import { climateSummary } from "./climate";
+import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
 import type { CountryAdapter, SupportScheme } from "./country";
 import { tr, type CoreLang } from "./i18n";
@@ -8,7 +9,7 @@ import { classifyPlant, runScenarioRoute } from "./economics";
 import { ENGINEERING_MAP } from "./engineeringParams";
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
-import { Params, toMap } from "./params";
+import { Params, prov, toMap } from "./params";
 import { assessQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
@@ -18,14 +19,14 @@ import { decideVerdict } from "./verdict";
 
 export const ROUTES: RouteId[] = ["chp", "boiler", "biomethane"];
 
-export function buildParams(country: CountryAdapter): Params {
-  const map = { ...ENGINEERING_MAP, ...toMap(country.params) };
+export function buildParams(country: CountryAdapter, regionId?: string): Params {
+  const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(regionId && country.paramsForRegion ? country.paramsForRegion(regionId) : []) };
   return new Params(map);
 }
 
 /** Every parameter, engineering + scenario + country, for the registry document and the methodology page. */
-export function allProvenance(country: CountryAdapter) {
-  return [...Object.values(ENGINEERING_MAP), ...country.params, ...scenarioProvenance()];
+export function allProvenance(country: CountryAdapter, regionId?: string) {
+  return [...buildParams(country, regionId).all(), ...scenarioProvenance()];
 }
 
 function makeCtx(input: Assessment["input"], country: CountryAdapter, params: Params, scenario: ScenarioId, mods: Modifiers, lang: CoreLang, support?: SupportScheme): RunContext {
@@ -51,7 +52,7 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang } = {}): Assessment {
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";
   const T = tr(lang);
-  const params = buildParams(country);
+  const params = buildParams(country, input.regionId);
   const fx = params.get("econ.fx_local_per_eur");
   const run = (route: RouteId, scn: ScenarioId, mods: Modifiers = NO_MODS, support?: SupportScheme) =>
     runScenarioRoute(makeCtx(input, country, params, scn, mods, lang, support), route);
@@ -80,6 +81,40 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const opt = matrix[bestRoute].optimistic;
   const ctxBase = makeCtx(input, country, params, "base", NO_MODS, lang);
   const demand = customerDemand(ctxBase);
+  // Isolate evidence for the selected base route; the main usage log also includes alternatives and what-if runs.
+  const selectedParams = params.fork();
+  runScenarioRoute(makeCtx(input, country, selectedParams, "base", NO_MODS, lang), bestRoute);
+  const usedMarket = selectedParams.usedIds().filter((id) => id.startsWith("econ.") || id === "eng.invoice_variable_share");
+  const marketEvidence = usedMarket.filter((id) => id !== "econ.electricity_retail_eur_kwh" || !demand.electricityPriceKnown).map((id) => params.prov(id));
+  if (demand.electricityPriceKnown) marketEvidence.push(prov(
+    "econ.electricity_retail_eur_kwh", "Customer electricity price (invoice split not verified)", demand.electricityPriceEurKwh, "EUR/kWh", "CALCULATION",
+    `USER_INPUT ${input.energy.electricityPriceLocalPerKwh} ${country.currency}/kWh / FX ${fx}; ${params.prov("econ.fx_local_per_eur").source}. Invoice date not supplied; energy/demand split assumed separately.`, "MEDIUM",
+    { country: country.code, date: "undated", origin: "USER_INPUT" },
+  ));
+  if (demand.gasPriceKnown) marketEvidence.push(prov(
+    "econ.heat_value_eur_kwh_th", "Useful heat displaced at customer gas price", demand.heatValueEurKwh, "EUR/kWh th", "CALCULATION",
+    `USER_INPUT ${input.energy.gasPriceLocalPerM3} ${country.currency}/m3 / FX ${fx} / assumed natural-gas LHV / boiler efficiency. Invoice and calorific value not independently verified.`, "MEDIUM",
+    { country: country.code, date: "undated", origin: "USER_INPUT" },
+  ));
+  const rangeIds = usedMarket.filter((id) => {
+    if (!params.prov(id).range) return false;
+    if (id === "econ.electricity_retail_eur_kwh") return !demand.electricityPriceKnown;
+    if ((id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share") && base.energy.elSelfConsumedKwh <= 0) return false;
+    return id.startsWith("econ.capex_factor_") || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share";
+  });
+  const parameterSensitivity = rangeIds.map((id) => {
+    const { low, high, basis } = params.prov(id).range!;
+    const npvAt = (value: number) => {
+      const overrides: Record<string, number> = { [id]: value };
+      if (id === "econ.electricity_retail_eur_kwh" && value > 0) {
+        // Keep the same fixed charges when varying the energy rate; avoid inventing a demand-charge saving.
+        const fixed = params.get(id) * (1 - params.get("econ.self_consumption_variable_share"));
+        overrides["econ.self_consumption_variable_share"] = Math.max(0, Math.min(1, (value - fixed) / value));
+      }
+      return runScenarioRoute(makeCtx(input, country, params.with(overrides), "base", NO_MODS, lang), bestRoute).fin.npvEur;
+    };
+    return { parameterId: id, lowInput: low, highInput: high, lowNpvEur: npvAt(low), highNpvEur: npvAt(high), basis };
+  });
 
   // ---- sensitivity (best route, base scenario) ----
   const tests: Array<[string, string, Partial<Modifiers>]> = [
@@ -136,15 +171,20 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     neighboursWithin300m: !!input.site.neighboursWithin300m,
     nearProtectedOrWaterArea: !!input.site.nearProtectedOrWaterArea,
     exportsElectricity: base.energy.elExportedKwh > 0,
-    gasGridInjection: bestRoute === "biomethane",
+    gasGridInjection: bestRoute === "biomethane" && biomethaneOfftake(ctxBase, base.energy).mode === "grid",
     lang,
   });
   const pointsOf = { LOW: 1, MEDIUM: 2, HIGH: 3 } as const;
   const regPoints = regItems.reduce((a, i) => a + pointsOf[i.effort], 0);
   const regComplexity = regPoints >= 17 ? "HIGH" : regPoints >= 13 ? "MEDIUM" : "LOW";
 
-  const ownPrice = (input.energy.electricityPriceLocalPerKwh ?? 0) > 0;
-  const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: country.dataStatus === "estimated" && !ownPrice });
+  const priceIds: string[] = [];
+  if (!demand.electricityPriceKnown && (base.energy.elSelfConsumedKwh > 0 || base.energy.elPurchasedKwh > 0)) priceIds.push("econ.electricity_retail_eur_kwh");
+  if (base.energy.elExportedKwh > 0) priceIds.push("econ.electricity_spot_eur_kwh");
+  if (!demand.gasPriceKnown && (base.energy.heatUsefulKwh > 0 || base.energy.heatExternalPurchasedKwh > 0)) priceIds.push("econ.heat_value_eur_kwh_th");
+  if (bestRoute === "biomethane") priceIds.push("econ.biomethane_price_base_eur_nm3");
+  const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
+  const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: params.prov(capexId).confidence === "LOW" });
   const { scores, overall } = computeScores({
     input, base, cons, opt, demand, logistics, digestate,
     regulatoryPoints: regPoints,
@@ -234,6 +274,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     ...country.approachNotes[lang],
     supportIncluded ? T("WARNING: an assumed, non-guaranteed support payment is included.", "УВАГА: у розрахунок включено припущену підтримку, яка не гарантована.") : T("The verdict excludes subsidies; national support is shown as separate cases.", "Вердикт не враховує субсидій; національна підтримка показана окремими сценаріями."),
     T("This is a preliminary (screening) assessment — not a detailed engineering design and not a commercial offer.", "Це попередня (скринінгова) оцінка: не детальний інженерний проєкт і не комерційна пропозиція."),
+    T("Financial results are pre-tax project cash flows. Depreciation, income taxes, working capital, financing fees and detailed debt covenants are not modelled; DSCR is an EBITDA-based screening ratio, not lender CFADS.", "Фінансові результати розраховані за грошовими потоками проєкту до оподаткування. Амортизація, податок на прибуток, оборотний капітал, комісії за фінансування та детальні кредитні ковенанти не моделюються; DSCR — попередній показник на основі EBITDA, а не банківського CFADS."),
+    ...(parameterSensitivity.length ? [T("Parameter bounds are tested individually using the applicable market/CAPEX evidence. These engineering or tariff ranges are not statistical confidence intervals and do not replace supplier quotations or customer bills.", "Межі параметрів перевірені окремо за доступними країновими даними й оцінками CAPEX. Інженерні та тарифні діапазони не є статистичними довірчими інтервалами й не замінюють комерційних пропозицій та рахунків споживача.")] : []),
   ];
 
   const used = params.usedIds();
@@ -246,6 +288,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     routeMatrix: matrix,
     bestRoute,
     sensitivity,
+    parameterSensitivity,
+    marketEvidence,
     breakEven,
     scores,
     overall,
