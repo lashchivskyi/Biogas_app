@@ -45,7 +45,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDef> = {
 
 export const SCENARIO_ORDER: ScenarioId[] = ["conservative", "base", "optimistic"];
 
-/** Registry entries so the scenario spread appears in docs/assumptions-registry.md. */
+/** Registry entries so the scenario spread appears on /[lang]/methodology. */
 export function scenarioProvenance(): Provenance[] {
   const out: Provenance[] = [];
   const src = "Project-team scenario design; spread intentionally wider than expected error";

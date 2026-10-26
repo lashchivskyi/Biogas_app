@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+/.nyc_output/
 
 # next.js
 /.next/
@@ -19,6 +22,7 @@
 
 # production
 /build
+/dist/
 
 # misc
 .DS_Store
@@ -29,6 +33,40 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+*.log.*
+
+# disposable caches and tooling output
+.cache/
+.vite/
+.vitest/
+.turbo/
+.eslintcache
+.stylelintcache
+
+# temporary investigations, exports and editor/merge leftovers
+/tmp/
+/temp/
+/.tmp/
+/.tmp-*
+/artifacts/
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+*~
+*.heapsnapshot
+*.cpuprofile
+
+# Python data-refresh tools
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+/.venv/
+/venv/
 
 # env files (can opt-in for committing if needed)
 .env*

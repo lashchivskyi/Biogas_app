@@ -45,7 +45,8 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   const base = `/${lang}`;
   return (
     <html lang={INTL_TAG[lang]}>
-      <body className="flex min-h-screen flex-col">
+      {/* Extensions such as Grammarly add body attributes before hydration; descendant checks stay active. */}
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <LocaleProvider locale={lang}>
         <a href="#main" className="skip-link">{d.nav.skip}</a>
         <SiteHeader locale={lang} t={d.nav} descriptor={d.brand.descriptor} languageOptions={LANGUAGE_OPTIONS} />

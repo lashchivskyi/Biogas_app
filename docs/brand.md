@@ -24,7 +24,7 @@
 
 Молекула метану CH₄, у якій два передні зв'язки утворюють **галочку** (✓): вуглець — у вершині, водні — на кінцях, два інші водні — позаду (глибина). Ідея: «вердикт — у самій молекулі».
 
-- SVG: `src/components/brand/Logo.tsx`, favicon `public/icon.svg`, OG-зображення `src/app/[lang]/opengraph-image.tsx`.
+- SVG: `src/components/brand/Logo.tsx`, favicon `src/app/icon.svg`, OG-зображення `src/app/[lang]/opengraph-image.tsx`.
 - Кольори: фон `#0b1d16`, сигнальний зелений `#3ddc97`, білий, бурштиновий акцент `#e8a521` (задній водень).
 - Wordmark: `metha` + `lytics` (друга частина — сигнальним зеленим), шрифт Unbounded 600.
 

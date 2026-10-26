@@ -263,7 +263,7 @@ export class ProcessScene {
   onFirstFrame?: () => void;
   private firstFrameSent = false;
 
-  constructor(private canvas: HTMLCanvasElement, opts: SceneOptions) {
+  constructor(canvas: HTMLCanvasElement, opts: SceneOptions) {
     this.opts = opts;
     const high = opts.quality === "high";
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: !high, alpha: false, powerPreference: "high-performance" });

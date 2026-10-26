@@ -3,7 +3,7 @@
 Run:  python -I scripts/rank-countries.py      -> prints ranking, writes docs/data/country-ranking.json
 
 SCORES ARE EXPERT JUDGMENT (0-5) per criterion, with an evidence tag:
-  V = verified in this research session (source in docs/international-markets.md)
+  V = verified in this research session (source in docs/market-research.md, section 9)
   T = measured in Google Trends in this session (UA, PL, CZ, DE, TR, HU, US, CA only; see docs/data/trends*.json)
   K = background knowledge, NOT verified in this session -> treat as a hypothesis
 Change a number here and re-run; weights are explicit and editable.
