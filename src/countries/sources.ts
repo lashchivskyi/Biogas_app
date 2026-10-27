@@ -7,6 +7,7 @@ import stats from "./data/statistics.json";
 import calibration from "./data/capex-calibration.json";
 import observations from "./data/market-observations.json";
 import { ENGINEERING_MAP } from "@/core/engineeringParams";
+import { periodEnd } from "@/core/modelAudit";
 
 /**
  * Sourced market data. Generated JSON (scripts/data/*.py) holds the official statistics;
@@ -23,19 +24,22 @@ export interface Sourced {
   range?: ParameterRange;
 }
 
+type PriceRow = { periods: string[]; sourceUpdated?: string; fetchedOn?: string; url?: string };
 type Stats = {
   fetchedOn: string;
-  electricity: Record<string, { eurKwh: number; periods: string[] }>;
-  gas: Record<string, { eurMwh: number; periods: string[] }>;
+  electricity: Record<string, PriceRow & { eurKwh: number; bands?: Record<string, PriceRow & { eurKwh: number }> }>;
+  gas: Record<string, PriceRow & { eurMwh: number; bands?: Record<string, PriceRow & { eurMwh: number }> }>;
   labour: Record<string, { eurH: number; year: string }>;
   fx: Record<string, { perEur: number; year: string }>;
-  dayAhead: Record<string, { eurMwh?: number; bzn: string; from?: string; to?: string }>;
+  fxReference?: { asOf: string; fetchedOn: string; url: string; rates: Record<string, number> };
+  fxNational?: Record<string, { perEur: number; asOf: string; fetchedOn: string; url: string }>;
+  dayAhead: Record<string, { eurMwh?: number; bzn: string; from?: string; to?: string; fetchedOn?: string; url?: string }>;
 };
 const S = stats as unknown as Stats;
 const CAL = calibration as unknown as { countries: Record<string, { factor?: number; n: number; confidence: Confidence; applied?: boolean; ids: string[]; biomethane?: { factor: number; n: number } }> };
-const R = risk as { source: string; countries: Record<string, { rating: string; crp: number }> };
+const R = risk as { source: string; observedThrough: string; publishedOn: string; checkedOn: string; url: string; countries: Record<string, { rating: string; crp: number }> };
 const EF = gridEf as { source: string; countries: Record<string, { year: number; tCo2Mwh: number }> };
-const FERT = fert as { source: string; period: string[]; eurPerKg: { N: number; P2O5: number; K2O: number } };
+const FERT = fert;
 
 const per = (p: string[]) => p.join(" & ");
 
@@ -53,6 +57,8 @@ interface Observation {
   method: string;
   urls: string[];
   confidence: Confidence;
+  validFrom?: string;
+  validUntil?: string;
   wage?: { monthly: number; employerMultiplier: number; annualHours: number };
   timeOfUse?: { rates: number[]; weeklyHours: number[]; fuelAdjustment: number; monthlyDemand: number; billingKw: number; monthlyKwh: number; monthlyService: number };
 }
@@ -107,7 +113,7 @@ export function observedMarketValue(code: string, item: "elec" | "lab", regionId
     confidence: regionalProxy ? "LOW" : row.confidence,
     source,
     date,
-    evidence: { checkedOn: observations.checkedOn, period: row.period, urls: row.urls, scope, method: `${row.method} ${observations.valuation}`, components, assumptions: tou ? ["Reference weekly load and billing demand; customer invoice takes precedence"] : wage ? ["Employer multiplier and annual working hours are assumed; specialist pay may differ"] : undefined },
+    evidence: { checkedOn: observations.checkedOn, period: row.period, observedThrough: row.period.includes("/") ? row.period.slice(0, 7) + "-01" : periodEnd(row.period), validFrom: row.validFrom, validUntil: row.validUntil, urls: row.urls, scope, method: `${row.method} ${observations.valuation}`, components, assumptions: tou ? ["Reference weekly load and billing demand; customer invoice takes precedence"] : wage ? ["Employer multiplier and annual working hours are assumed; specialist pay may differ"] : undefined },
     range: row.bounds ? { low: row.bounds[0] / divisor, high: row.bounds[1] / divisor, basis: "observed" } : undefined,
   };
 }
@@ -126,7 +132,7 @@ export function electricityVariableShareFor(code: string): number {
  * `lab` is the final operator cost in €/h (method in labourFor); `capex` overrides the labour-based factor only
  * where a market benchmark shows the formula is off.
  */
-type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number; route?: RouteId };
+type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number; route?: RouteId; gasBasis?: "HHV" | "LHV" };
 const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "capex", Manual>>> = {
   UA: {
     spot: { v: 0.132, src: "Day-ahead market average 2025 ≈ 6 200 UAH/MWh (GMK Center) ÷ 47.09 UAH/€ — press-reported, to be confirmed with the market operator", conf: "MEDIUM", date: "2025-12-31" },
@@ -179,7 +185,7 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
   BR: {
     spot: { v: 0.042, src: "CCEE PLD Sudeste/Centro-Oeste, mid-2025 mean R$ 262.6/MWh (InformaCCEE Jun 2025) ÷ 6.3072 BRL/€ — partial year, to be replaced by the full-year mean", conf: "MEDIUM", date: "2025-06-25" },
     lab: { v: 5.2, src: "IBGE PNAD Contínua: average habitual income from work 2025 R$ 3 560/month × 13.33 × 1.358 employer costs ÷ 1 950 h = 33 R$/h ÷ 6.3072 BRL/€", conf: "MEDIUM", date: "2025-12-31" },
-    gas: { v: 44.9, src: "Gasmig industrial tariff R$ 3.089/m³ (Minas Gerais, 2025 revision) at 10.9 kWh/m³ (GCV) = 283 R$/MWh; CNI: industrial gas ≈ US$ 20/MMBtu incl. taxes (2025) — state tariffs differ", conf: "MEDIUM", date: "2025-12-31" },
+    gas: { v: 44.9, gasBasis: "HHV", src: "Gasmig industrial tariff R$ 3.089/m³ (Minas Gerais, 2025 revision) at 10.9 kWh/m³ (GCV) = 283 R$/MWh; CNI: industrial gas ≈ US$ 20/MMBtu incl. taxes (2025) — state tariffs differ", conf: "MEDIUM", date: "2025-12-31" },
     capex: { v: 0.95, route: "chp", src: "BNDES-financed 2.15 MW biogas plant, Elias Fausto (SP): R$ 56.2 M ≈ 4 150 €/kW — at German level despite low labour cost (import duties on engines, upgrading and membranes); single project", conf: "LOW", date: "2024-03-01" },
   },
   TH: {
@@ -196,6 +202,41 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     capex: { v: 0.55, route: "biomethane", src: "SATAT CBG plant, Bagalkot (Karnataka): ₹ 42 crore for 10.2 t/day CBG from 200 t/day press mud ≈ 1 000 Nm³/h raw biogas → ≈ €4.3 M vs ≈ €8 M for the same plant at German prices; Indian-made digesters and upgrading. Single project — check against SATAT tenders", conf: "LOW", date: "2025-06-30" },
   },
 };
+
+/** Nominal quotes already documented above, retained in their original currency.
+ * Revaluing FX never updates the underlying tariff/wage observation period. */
+const LOCAL_QUOTES: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab", [number, string, string]>>> = {
+  UA: { spot: [6.2, "UAH", "2025-12-31"], lab: [26500 * 1.22 / 160, "UAH", "2025-07-31"], gas: [498 / 9.5, "USD", "2025-12-31"] },
+  GB: { spot: [.0812, "GBP", "2025-12-31"], elec: [.245, "GBP", "2026-06-30"], gas: [40.3, "GBP", "2026-06-30"], lab: [26.5, "GBP", "2025-04-30"] },
+  US: { spot: [.047, "USD", "2025-12-31"], elec: [.115, "USD", "2026-08-31"], gas: [17.2, "USD", "2025-12-31"], lab: [46.15, "USD", "2025-12-31"] },
+  CA: { spot: [.04368, "CAD", "2025-12-31"], elec: [.107, "CAD", "2025-04-01"], gas: [18, "CAD", "2025-12-31"], lab: [48.1, "CAD", "2025-12-31"] },
+  TR: { spot: [2.55, "TRY", "2025-12-31"], lab: [248.1 * 1.34, "TRY", "2025-12-25"] },
+  MD: { spot: [2.54, "MDL", "2026-03-31"], lab: [128, "MDL", "2025-12-31"] },
+  KZ: { spot: [12, "KZT", "2025-02-01"], lab: [3278, "KZT", "2025-12-31"] },
+  MX: { spot: [.88, "MXN", "2025-10-31"], elec: [1.8, "MXN", "2025-12-31"], gas: [17.1, "USD", "2025-12-31"], lab: [132, "MXN", "2025-12-31"] },
+  AR: { spot: [61.5, "ARS", "2025-03-01"], elec: [97, "ARS", "2025-03-01"], lab: [12470, "ARS", "2025-12-31"] },
+  BR: { spot: [.2626, "BRL", "2025-06-25"], gas: [283, "BRL", "2025-12-31"], lab: [33, "BRL", "2025-12-31"] },
+  VN: { lab: [65300, "VND", "2025-09-30"] },
+  IN: { spot: [3.86, "INR", "2026-03-31"], elec: [7.5, "INR", "2025-12-31"], gas: [8.2 * 3.412, "USD", "2025-12-31"], lab: [132, "INR", "2025-12-31"] },
+};
+
+function manualValue(code: string, item: "elec" | "gas" | "spot" | "lab"): Sourced | undefined {
+  const m = MANUAL[code]?.[item];
+  if (!m) return undefined;
+  const quote = LOCAL_QUOTES[code]?.[item];
+  const fx = quote && fxFor(quote[1]);
+  const observed = quote?.[2] ?? m.date;
+  return {
+    value: quote && fx ? quote[0] / fx.value : m.v,
+    kind: "CALCULATION", confidence: m.conf === "LOW" || fx?.confidence === "LOW" ? "LOW" : "MEDIUM",
+    date: observed,
+    source: `${m.src}. Historical quote/estimate retained; ${quote && fx ? `original nominal amount ${quote[0]} ${quote[1]} per model unit / dated FX ${fx.value} (${fx.date}); replaces the historical EUR conversion above` : "original historical EUR conversion retained; current local quotation unavailable"}. No claim of a current customer contract or a verified latest tariff.`,
+    evidence: { checkedOn: "undated", period: observed, observedThrough: observed, urls: [], scope: "Historical national/regional reference; latest publication and customer applicability require verification", method: "Preserve original observation period; revalue only the documented nominal quote at dated FX when available", components: quote && fx ? [
+      { name: "Documented nominal reference (may include estimated adders)", value: quote[0], unit: quote[1], origin: "ENGINEERING_ASSUMPTION" },
+      { name: `FX (${fx.date})`, value: fx.value, unit: `${quote[1]}/EUR`, origin: "MARKET_DATA" },
+    ] : undefined },
+  };
+}
 
 /** Unsubsidised gas-parity reference; procurement eligibility is never inferred from the country. */
 export function biomethaneFor(code: string): { v: [number, number, number]; src: string; conf: Confidence; date: string } | undefined {
@@ -214,37 +255,52 @@ export function indiaCbgProcurementPrice(): number {
 
 export function fxFor(currency: string): Sourced | undefined {
   if (currency === "EUR") return { value: 1, kind: "FACT", confidence: "HIGH", source: "Euro", date: S.fetchedOn };
+  const national = S.fxNational?.[currency];
+  const reference = S.fxReference;
+  const rate = national?.perEur ?? reference?.rates[currency];
+  const date = national?.asOf ?? reference?.asOf;
+  const url = national?.url ?? reference?.url;
+  if (rate && date && url) return {
+    value: rate, kind: "FACT", confidence: "HIGH", source: `Dated official EUR reference rate ${date}; not a bank execution quote. ${url}`, date,
+    evidence: { checkedOn: national?.fetchedOn ?? reference!.fetchedOn, period: date, observedThrough: date, urls: [url], scope: `${currency} per EUR; dated reference, not a guaranteed transaction rate`, method: "Direct official reference quotation; observation date is preserved" },
+  };
   const f = S.fx[currency];
-  return f && { value: +f.perEur.toFixed(f.perEur > 100 ? 0 : 3), kind: "FACT", confidence: "HIGH", source: `Eurostat ert_bil_eur_a, ECB reference rate, annual average ${f.year}`, date: `${f.year}-12-31` };
+  return f && { value: f.perEur, kind: "FACT", confidence: "LOW", source: `Eurostat ert_bil_eur_a, annual average ${f.year}; historical fallback, current valuation rate unavailable`, date: `${f.year}-12-31` };
 }
 
-export function electricityFor(code: string, regionId?: string): Sourced | undefined {
+export function electricityFor(code: string, regionId?: string, annualKwh?: number): Sourced | undefined {
   const observed = observedMarketValue(code, "elec", regionId);
   if (observed) return observed;
-  const e = S.electricity[code];
+  const national = S.electricity[code];
+  const mwh = annualKwh === undefined || annualKwh <= 0 ? undefined : annualKwh / 1000;
+  const band = mwh === undefined ? "MWH500-1999" : mwh < 20 ? "MWH_LT20" : mwh < 500 ? "MWH20-499" : mwh < 2000 ? "MWH500-1999" : mwh < 20000 ? "MWH2000-19999" : mwh < 70000 ? "MWH20000-69999" : mwh < 150000 ? "MWH70000-149999" : "MWH_GE150000";
+  const e = national?.bands?.[band] ?? national;
   // Published official statistic for a defined consumer band — used directly, so HIGH (the band average, not the customer's own tariff).
-  if (e) return { value: e.eurKwh, kind: "FACT", confidence: "HIGH", source: `Eurostat nrg_pc_205: non-household electricity, band IC (500–1 999 MWh/a), excl. VAT & recoverable taxes, mean of ${per(e.periods)}`, date: S.fetchedOn };
-  const m = MANUAL[code]?.elec;
-  return m && { value: m.v, kind: m.conf === "HIGH" ? "FACT" : "ESTIMATE", confidence: m.conf, source: m.src, date: m.date };
+  if (e) return { value: e.eurKwh, kind: "FACT", confidence: national.bands?.[band] || band === "MWH500-1999" ? "HIGH" : "LOW", source: `Eurostat nrg_pc_205: non-household electricity, ${national.bands?.[band] ? band : "MWH500-1999 reference fallback"}, excl. VAT & recoverable taxes, latest published ${per(e.periods)}; population statistic, not a customer tariff`, date: periodEnd(e.periods.join(" ")) ?? "undated", evidence: { checkedOn: e.fetchedOn ?? S.fetchedOn, period: per(e.periods), observedThrough: periodEnd(e.periods.join(" ")), publishedOn: e.sourceUpdated?.slice(0, 10), urls: [e.url ?? "https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_205/default/table"], scope: `Consumer band ${band}; ${mwh === undefined ? "customer load unknown, reference band assumed" : `${mwh} MWh/year customer load`}; existing-site load, new plant auxiliary load may change the applicable band`, method: "Latest published semester for the selected band, without averaging older semesters" } };
+  return manualValue(code, "elec");
 }
 
-export function gasFor(code: string): Sourced | undefined {
-  const g = S.gas[code];
+export function gasFor(code: string, annualGasM3?: number): Sourced | undefined {
+  const gj = annualGasM3 === undefined || annualGasM3 <= 0 ? undefined : annualGasM3 * ENGINEERING_MAP["eng.natgas_lhv_kwh_m3"].value * ENGINEERING_MAP["eng.gas_hhv_lhv_ratio"].value * 0.0036;
+  const band = gj === undefined ? "GJ10000-99999" : gj < 1000 ? "GJ_LT1000" : gj < 10000 ? "GJ1000-9999" : gj < 100000 ? "GJ10000-99999" : gj < 1000000 ? "GJ100000-999999" : gj < 4000000 ? "GJ1000000-3999999" : "GJ_GE4000000";
+  const national = S.gas[code];
+  const g = national?.bands?.[band] ?? national;
   const ratio = ENGINEERING_MAP["eng.gas_hhv_lhv_ratio"].value;
   const conversion = `EUR/MWh HHV × ${ratio} → EUR/MWh LHV; composition-dependent engineering conversion, not a new measured tariff. Eurostat gas prices use GCV: https://ec.europa.eu/eurostat/documents/3859598/7787004/KS-GQ-16-006-N.pdf/23fb64e3-0bc0-4812-9294-3034cf640af3`;
-  if (g) return { value: g.eurMwh * ratio, kind: "CALCULATION", confidence: "MEDIUM", source: `Eurostat nrg_pc_203: non-household gas, band I3 (10 000–99 999 GJ/a), excl. VAT & recoverable taxes, mean of ${per(g.periods)}. ${conversion}`, date: S.fetchedOn };
+  if (g) return { value: g.eurMwh * ratio, kind: "CALCULATION", confidence: national.bands?.[band] || band === "GJ10000-99999" ? "MEDIUM" : "LOW", source: `Eurostat nrg_pc_203: non-household gas, ${national.bands?.[band] ? band : "GJ10000-99999 reference fallback"}, excl. VAT & recoverable taxes, latest published ${per(g.periods)}. ${conversion}`, date: periodEnd(g.periods.join(" ")) ?? "undated", evidence: { checkedOn: g.fetchedOn ?? S.fetchedOn, period: per(g.periods), observedThrough: periodEnd(g.periods.join(" ")), publishedOn: g.sourceUpdated?.slice(0, 10), urls: [g.url ?? "https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_203/default/table"], scope: `${band}; ${gj === undefined ? "reference band, customer gas use unknown" : "annual gas input converted to GJ HHV with assumed calorific value"}`, method: conversion } };
   const m = MANUAL[code]?.gas;
-  const hhv = ["GB", "US", "CA", "MX", "IN"].includes(code);
-  return m && { value: m.v * (hhv ? ratio : 1), kind: "CALCULATION", confidence: m.conf === "LOW" ? "LOW" : "MEDIUM", source: `${m.src}. ${hhv ? conversion : "Original volumetric-gas estimate retained on the model LHV basis; verify invoice calorific value."}`, date: m.date };
+  const reference = manualValue(code, "gas");
+  const hhv = m?.gasBasis === "HHV" || ["GB", "US", "CA", "MX", "IN"].includes(code);
+  return reference && { ...reference, value: reference.value * (hhv ? ratio : 1), source: `${reference.source}. ${hhv ? conversion : "Original volumetric-gas estimate retained on the model LHV basis; verify invoice calorific value."}` };
 }
 
 /** Wholesale electricity price, €/kWh: the official day-ahead average where published (ENTSO-E via Energy-Charts), else the country's own published value. */
 export function spotFor(code: string): Sourced | undefined {
   const d = S.dayAhead[code];
-  if (d?.eurMwh) return { value: +(d.eurMwh / 1000).toFixed(3), kind: "FACT", confidence: "HIGH", source: `Day-ahead average ${d.eurMwh} €/MWh, bidding zone ${d.bzn}, ${d.from} – ${d.to} (Energy-Charts / ENTSO-E)`, date: S.fetchedOn };
-  const m = MANUAL[code]?.spot;
+  if (d?.eurMwh) return { value: d.eurMwh / 1000, kind: "FACT", confidence: "HIGH", source: `Day-ahead average ${d.eurMwh} €/MWh, bidding zone ${d.bzn}, ${d.from} – ${d.to} (Energy-Charts / ENTSO-E)`, date: d.to?.slice(0, 10) ?? "undated", evidence: { checkedOn: d.fetchedOn ?? "undated", period: `${d.from} / ${d.to}`, observedThrough: d.to?.slice(0, 10), urls: [d.url ?? "https://api.energy-charts.info/"], scope: `Wholesale bidding zone ${d.bzn}; not a guaranteed export PPA`, method: "Observed interval average; preserve observation and last successful download dates even when a later refresh fails" } };
+  const m = manualValue(code, "spot");
   const proxy = ["AR", "MD", "KZ"].includes(code);
-  return m && { value: m.v, kind: m.conf === "HIGH" && !proxy ? "FACT" : "ESTIMATE", confidence: proxy ? "LOW" : m.conf, source: `${m.src}${proxy ? "; regulated purchase/ceiling price is not a generator export offer — confirm a PPA" : ""}`, date: m.date };
+  return m && { ...m, confidence: proxy ? "LOW" : m.confidence, source: `${m.source}${proxy ? "; regulated purchase/ceiling price is not a generator export offer — confirm a PPA" : ""}` };
 }
 
 /** Share of the wholesale price a small seller realises for surplus power (shape & balancing discount). */
@@ -271,8 +327,7 @@ export function labourOfficialFor(code: string): Sourced | undefined {
   if (observed) return observed;
   const l = S.labour[code];
   if (l) return { value: l.eurH, kind: "FACT", confidence: "HIGH", source: `Eurostat lc_lci_lev: hourly labour cost (wages + employer costs), industry, construction & services, ${l.year}`, date: `${l.year}-12-31` };
-  const m = MANUAL[code]?.lab;
-  return m && { value: m.v, kind: m.conf === "HIGH" ? "FACT" : "CALCULATION", confidence: m.conf, source: m.src, date: m.date };
+  return manualValue(code, "lab");
 }
 
 /** Plant operator cost, €/h = official labour cost × operator ratio. */
@@ -311,7 +366,7 @@ export function discountFor(code: string): Sourced | undefined {
   const c = R.countries[code];
   if (!c) return undefined;
   const v = +Math.min(0.16, BASE_WACC + COUNTRY_RISK_LAMBDA * c.crp).toFixed(3);
-  return { value: v, kind: "CALCULATION", confidence: "MEDIUM", source: `${(BASE_WACC * 100).toFixed(1)} % mature-market project WACC + ${COUNTRY_RISK_LAMBDA} × country risk premium ${(c.crp * 100).toFixed(2)} % (${c.rating}; ${R.source})`, date: "2026-02-16" };
+  return { value: v, kind: "CALCULATION", confidence: "MEDIUM", source: `${(BASE_WACC * 100).toFixed(1)} % assumed mature-market project WACC + ${COUNTRY_RISK_LAMBDA} assumed exposure × rating-based country risk premium ${(c.crp * 100).toFixed(4)} % (${c.rating}; ${R.source}). Not a project-specific WACC or bank offer. ${R.url}`, date: R.observedThrough, evidence: { checkedOn: R.checkedOn, period: R.observedThrough, observedThrough: R.observedThrough, publishedOn: R.publishedOn, urls: [R.url], scope: "Rating-based CRP; baseline WACC and lambda are engineering/financial assumptions", method: "6% + 0.6 × CRP, capped at 16%; does not replace project financing terms" } };
 }
 
 export function debtRateFor(code: string): Sourced | undefined {
@@ -329,7 +384,19 @@ export function gridEfFor(code: string): Sourced | undefined {
 }
 
 export function fertiliserFor(nutrient: "N" | "P2O5" | "K2O", factor = 1): Sourced {
-  return { value: +(FERT.eurPerKg[nutrient] * factor).toFixed(2), kind: "CALCULATION", confidence: "MEDIUM", source: `${FERT.source}; nutrient content → €/kg × 1.35 farm-gate markup${factor !== 1 ? ` × ${factor} national subsidy factor` : ""}`, date: `${FERT.period[1].slice(0, 4)}-${FERT.period[1].slice(5)}-28` };
+  const commodity = { N: "urea", P2O5: "tsp", K2O: "kcl" }[nutrient] as "urea" | "tsp" | "kcl";
+  const fx = fxFor("USD")!;
+  const scale = FERT.farmGateMarkup * factor / 1000 / FERT.nutrientShares[nutrient] / fx.value;
+  const references = [...Object.values(FERT.quarterlyUsdPerT).map((q) => q[commodity]), FERT.latestUsdPerT[commodity]];
+  const observedThrough = periodEnd(FERT.latestMonth)!;
+  return { value: FERT.usdPerT[commodity] * scale, kind: "CALCULATION", confidence: "MEDIUM", source: `${FERT.source}; trailing 12-month reference, not latest-month or local delivered quote. USD/t / nutrient share / dated USD/EUR × assumed ${FERT.farmGateMarkup} farm-gate markup${factor !== 1 ? ` × assumed ${factor} national factor (not verified eligibility)` : ""}. ${FERT.url}`, date: observedThrough,
+    evidence: { checkedOn: FERT.checkedOn, period: FERT.period.join(" / "), observedThrough, publishedOn: FERT.publishedOn, urls: [FERT.url], scope: "World commodity reference; actual digestate nutrient substitution and local fertiliser price require confirmation", method: "Trailing-year mean retained to reduce short-term volatility; range spans recent quarterly/latest-month commodity prices at the same valuation FX", components: [
+      { name: "Trailing-year commodity reference", value: FERT.usdPerT[commodity], unit: "USD/t product", origin: "MARKET_DATA" },
+      { name: `Latest-month reference (${FERT.latestMonth})`, value: FERT.latestUsdPerT[commodity], unit: "USD/t product", origin: "MARKET_DATA" },
+      { name: `FX (${fx.date})`, value: fx.value, unit: "USD/EUR", origin: "MARKET_DATA" },
+      { name: "Farm-gate markup", value: FERT.farmGateMarkup, unit: "—", origin: "ENGINEERING_ASSUMPTION" },
+    ] }, range: { low: Math.min(...references) * scale, high: Math.max(...references) * scale, basis: "observed" },
+  };
 }
 
 export interface ClimateRegion {

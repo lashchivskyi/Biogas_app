@@ -52,6 +52,10 @@ export const inputSchema = z.object({
   finance: z.object({ debtShare: optNum(0.9) }).optional(),
   labAnalysisAvailable: z.boolean().optional(),
   assumedSupportEurPerKwh: optNum(1).optional(),
+}).superRefine((input, ctx) => {
+  if (!COUNTRIES[input.countryCode].regions.some((region) => region.id === input.regionId)) {
+    ctx.addIssue({ code: "custom", path: ["regionId"], message: "Region does not belong to the selected country" });
+  }
 });
 
 export const leadSchema = z.object({

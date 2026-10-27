@@ -214,7 +214,7 @@ describe("data quality and honesty", () => {
       expect(p.source.length, p.id).toBeGreaterThan(5);
       expect(["FACT", "ASSUMPTION", "CALCULATION", "ESTIMATE"]).toContain(p.kind);
       expect(["LOW", "MEDIUM", "HIGH"]).toContain(p.confidence);
-      expect(p.date, p.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(p.date, p.id).toMatch(/^(\d{4}-\d{2}-\d{2}|undated)$/);
       expect(p.unit.length, p.id).toBeGreaterThan(0);
     }
   });

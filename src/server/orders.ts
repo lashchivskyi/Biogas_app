@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import type { ProjectInput } from "@/core";
+import type { Assessment, ProjectInput } from "@/core";
 import type { PlanId } from "@/config/plans";
 import { dataFile, exclusive, readJsonArray, writeJsonArray } from "./jsonFile";
 
@@ -28,8 +28,9 @@ export interface Order {
   status: OrderStatus;
   lang: string;
   customer: { email: string; name?: string; company?: string; vatId?: string };
-  /** The project the report is about (re-assessed on the server when the report is opened). */
+  /** Project input and immutable calculation saved at checkout. Legacy orders have no snapshot. */
   input: ProjectInput;
+  assessmentSnapshot?: Assessment;
   notes: string;
   history: Array<{ at: string; status: OrderStatus; source: string }>;
 }

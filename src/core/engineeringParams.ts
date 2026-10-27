@@ -11,6 +11,17 @@ import type { Provenance } from "./types";
 const FNR08 = "FNR, Biogas Basisdaten Deutschland (2008) — read in full";
 const ENG = "Engineering judgement, typical ranges (IEA Bioenergy Task 37 / FNR / KTBL); TO VERIFY with supplier data";
 
+/** Paired full-load BIOGAS values, TEDOM 50 Hz catalogue, page 1, edition 03/2025.
+ * A screening reference, not equipment selection; 60 Hz sites require a local offer. */
+export const CHP_REFERENCE = [
+  [20, .297, .614], [30, .309, .608], [44, .326, .583], [83, .350, .506],
+  [106, .366, .490], [124, .369, .491], [166, .377, .493], [182, .391, .480],
+  [200, .391, .479], [354, .402, .451], [430, .394, .464], [528, .402, .445],
+  [600, .427, .436], [800, .431, .433], [999, .426, .464], [1200, .430, .460],
+  [1560, .426, .464], [1840, .436, .436], [2300, .434, .434],
+] as const;
+const CHP_SOURCE = "TEDOM Basic Technical Data, BIOGAS 50 Hz, edition 03/2025, p.1. Full-load reference, ISO 3046-1 fuel tolerance; site gas, temperature, emissions and 60 Hz equipment require supplier guarantees. https://www.tedom.com/wp-content/uploads/2023/12/TEDOM-CHP-Units-50-Hz.pdf";
+
 export const ENGINEERING_PARAMS: Provenance[] = [
   // --- physical constants ---
   prov("eng.ch4_lhv_kwh_m3", "Lower heating value of methane", 9.97, "kWh/Nm³ CH₄", "FACT", FNR08, "HIGH", { date: "2008-12-31" }),
@@ -55,13 +66,11 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.fat_share_warning", "Fat/grease share of VS above which overload risk", 0.25, "—", "ESTIMATE", ENG, "LOW"),
 
   // --- CHP ---
-  prov("eng.chp_eta_el_25", "CHP electrical efficiency at 25 kW", 0.29, "—", "ESTIMATE", "Typical gas engine data sheets (FNR 2008 range 30–40 %)", "MEDIUM"),
-  prov("eng.chp_eta_el_50", "CHP electrical efficiency at 50 kW", 0.33, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
-  prov("eng.chp_eta_el_100", "CHP electrical efficiency at 100 kW", 0.36, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
-  prov("eng.chp_eta_el_250", "CHP electrical efficiency at 250 kW", 0.39, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
-  prov("eng.chp_eta_el_500", "CHP electrical efficiency at 500 kW", 0.41, "—", "ESTIMATE", "Typical gas engine data sheets", "MEDIUM"),
-  prov("eng.chp_eta_total", "CHP total efficiency (el + th)", 0.85, "—", "ESTIMATE", FNR08 + " (≈85 %); supplier heat and power guarantees needed", "MEDIUM", { date: "2008-12-31" }),
-  prov("eng.chp_heat_recovery", "Share of CHP thermal output recoverable to a heating circuit", 0.92, "—", "ESTIMATE", ENG, "MEDIUM"),
+  ...CHP_REFERENCE.flatMap(([kw, el, th]) => [
+    prov(`eng.chp_eta_el_${kw}`, `CHP reference electrical efficiency at ${kw} kW`, el, "—", "ESTIMATE", CHP_SOURCE, "MEDIUM", { date: "2025-03-01" }),
+    prov(`eng.chp_eta_th_${kw}`, `CHP reference thermal efficiency at ${kw} kW`, th, "—", "ESTIMATE", CHP_SOURCE, "MEDIUM", { date: "2025-03-01" }),
+  ]),
+  prov("eng.chp_heat_recovery", "Heat delivery allowance after rated CHP thermal output", 0.92, "—", "ESTIMATE", "Engineering allowance for losses between the manufacturer's recovered-heat circuit and the plant; not a second exhaust recovery efficiency", "MEDIUM"),
   prov("eng.chp_design_hours", "CHP design full-load hours", 8000, "h/a", "ASSUMPTION", FNR08 + " (7 500–8 000 h); availability differs by service contract", "MEDIUM", { date: "2008-12-31" }),
   prov("eng.chp_min_kw", "Smallest CHP the model treats as technically sensible", 25, "kWel", "ASSUMPTION", ENG, "MEDIUM", { note: "Below this, CHP is a hobby-scale installation; model returns NOT RECOMMENDED unless another route works" }),
   prov("eng.chp_slip_share", "Unburned CH₄ (methane slip) in CHP exhaust", 0.01, "—", "ESTIMATE", "Literature: 0.5–2 % of CH₄ fed to engine", "LOW"),
@@ -74,14 +83,14 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.cng_compression_kwh_nm3", "Additional compression of biomethane to ~250 bar for road CNG", 0.15, "kWh/Nm³ biomethane", "ESTIMATE", "Burckhardt Compression CNG compressor technical sheet (2022), 12–19 bar suction to 251 bar discharge: ~0.13–0.16 kWh/Nm³ shaft power; electrical input and low suction pressure may raise it", "LOW"),
   prov("eng.upgrade_min_nm3h", "Raw-biogas flow below which biomethane is flagged as sub-scale", 60, "Nm³/h", "ASSUMPTION", "EBA: average EU biomethane plant 483 m³/h; operating UA plants start at ~3 Mm³/a (≈400 Nm³/h)", "MEDIUM"),
 
-  // --- engineering CAPEX (EU baseline, 2025 EUR) ---
-  prov("eng.capex.digester_eur_m3_1000", "Digester tank incl. insulation, mixers, heating, membrane roof, at 1 000 m³", 190, "EUR/m³ working", "ESTIMATE", "Market check 2026-10: German component data (fermenter 500–1 200 m³ ≈ €80–100k, 2012) inflated ≈ +40 % (DBFZ/Fraunhofer for BMWK 2024) → €120–200/m³; set at the upper end. See docs/capex-benchmark.md", "LOW", { note: "Scales as V^-0.2; replace with 3–5 supplier quotations" }),
+  // --- engineering CAPEX (reconstructed EU baseline; not current supplier quotations) ---
+  prov("eng.capex.digester_eur_m3_1000", "Digester tank incl. insulation, mixers, heating, membrane roof, at 1 000 m³", 190, "EUR/m³ working", "ESTIMATE", "Historical German component data (fermenter 500–1 200 m³ ≈ €80–100k, 2012) inflated by an unverified ≈ +40 % allowance → €120–200/m³; no current supplier quotation. See docs/capex-benchmark.md", "LOW", { date: "2012-12-31", note: "Scales as V^-0.2; replace with 3–5 current supplier quotations" }),
   prov("eng.capex.digester_scale_exp", "Digester unit-cost scale exponent", -0.2, "—", "ASSUMPTION", ENG, "LOW"),
   prov("eng.capex.lagoon_eur_m3", "Covered anaerobic lagoon (liner, HDPE gas-tight cover, gas collection)", 30, "EUR/m³", "ESTIMATE", "Order of magnitude from POME/swine lagoon projects (SE Asia, Latin America); TO VERIFY", "LOW"),
   prov("eng.capex.high_rate_eur_m3", "High-rate reactor (UASB/EGSB) incl. equalisation", 650, "EUR/m³ working", "ESTIMATE", "Industrial anaerobic wastewater reactors; TO VERIFY with supplier quotes", "LOW"),
   prov("eng.capex.cover_existing_eur_m3", "Gas-tight cover on an existing lagoon/tank", 12, "EUR/m³", "ESTIMATE", ENG, "LOW"),
   prov("eng.capex.storage_new_eur_m3", "New gas-tight covered digestate storage", 45, "EUR/m³", "ESTIMATE", ENG, "LOW"),
-  prov("eng.capex.chp_eur_kw_100", "CHP unit incl. installation at 100 kWel", 1500, "EUR/kWel", "ESTIMATE", "FNR 2008: 560–900 EUR/kWel (150–500 kW), inflated ≈ ×1.8 to 2025", "LOW"),
+  prov("eng.capex.chp_eur_kw_100", "CHP unit incl. installation at 100 kWel", 1500, "EUR/kWel", "ESTIMATE", "FNR 2008: 560–900 EUR/kWel (150–500 kW), reconstructed with unverified ×1.8 escalation allowance; not a 2025/2026 equipment quote", "LOW", { date: "2008-12-31" }),
   prov("eng.capex.chp_scale_exp", "CHP unit-cost scale exponent", -0.25, "—", "ASSUMPTION", ENG, "LOW"),
   prov("eng.capex.gas_system_fixed", "Gas holder, flare, desulphurisation: fixed part", 30000, "EUR", "ESTIMATE", ENG, "LOW"),
   prov("eng.capex.gas_system_per_nm3h", "Gas system variable part", 40, "EUR per Nm³/h raw biogas", "ESTIMATE", ENG, "LOW"),

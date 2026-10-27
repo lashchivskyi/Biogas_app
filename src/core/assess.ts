@@ -10,6 +10,7 @@ import { ENGINEERING_MAP } from "./engineeringParams";
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
 import { Params, prov, toMap } from "./params";
+import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
 import { assessQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
@@ -19,18 +20,20 @@ import { decideVerdict } from "./verdict";
 
 export const ROUTES: RouteId[] = ["chp", "boiler", "biomethane"];
 
-export function buildParams(country: CountryAdapter, regionId?: string): Params {
-  const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(regionId && country.paramsForRegion ? country.paramsForRegion(regionId) : []) };
+export function buildParams(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]): Params {
+  const overrides = regionId && energy && country.paramsForProject ? country.paramsForProject({ regionId, energy }) : regionId && country.paramsForRegion ? country.paramsForRegion(regionId) : [];
+  const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(overrides) };
   return new Params(map);
 }
 
 /** Every parameter, engineering + scenario + country, for the registry document and the methodology page. */
-export function allProvenance(country: CountryAdapter, regionId?: string) {
-  return [...buildParams(country, regionId).all(), ...scenarioProvenance()];
+export function allProvenance(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]) {
+  return [...buildParams(country, regionId, energy).all(), ...scenarioProvenance()];
 }
 
 function makeCtx(input: Assessment["input"], country: CountryAdapter, params: Params, scenario: ScenarioId, mods: Modifiers, lang: CoreLang, support?: SupportScheme): RunContext {
-  const region = country.regions.find((r) => r.id === input.regionId) ?? country.regions[0];
+  const region = country.regions.find((r) => r.id === input.regionId);
+  if (!region) throw new Error(`Region ${input.regionId} does not belong to ${country.code}`);
   return { input, country, params, scenario: SCENARIOS[scenario], mods, region, fx: params.get("econ.fx_local_per_eur"), lang, t: tr(lang), support };
 }
 
@@ -49,10 +52,14 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
   return (a + b) / 2;
 }
 
-export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang } = {}): Assessment {
+export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
+  if (input.countryCode !== country.code) throw new Error("Project country does not match the country adapter");
+  if (!country.regions.some((r) => r.id === input.regionId)) throw new Error(`Region ${input.regionId} does not belong to ${country.code}`);
+  const asOfDate = opts.asOfDate ?? DATA_REVIEW_AS_OF;
+  if (!isoDate(asOfDate)) throw new Error("Invalid assessment date");
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";
   const T = tr(lang);
-  const params = buildParams(country, input.regionId);
+  const params = buildParams(country, input.regionId, input.energy);
   const fx = params.get("econ.fx_local_per_eur");
   const run = (route: RouteId, scn: ScenarioId, mods: Modifiers = NO_MODS, support?: SupportScheme) =>
     runScenarioRoute(makeCtx(input, country, params, scn, mods, lang, support), route);
@@ -96,10 +103,20 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     `USER_INPUT ${input.energy.gasPriceLocalPerM3} ${country.currency}/m3 / FX ${fx} / assumed natural-gas LHV / boiler efficiency. Invoice and calorific value not independently verified.`, "MEDIUM",
     { country: country.code, date: "undated", origin: "USER_INPUT" },
   ));
+  const actualEvidence = new Map(selectedParams.usedIds().map((id) => [id, params.prov(id)]));
+  for (const p of marketEvidence) actualEvidence.set(p.id, p);
+  const dataAudit: NonNullable<Assessment["dataAudit"]> = {
+    modelVersion: MODEL_VERSION,
+    dataVersion: fingerprint({ catalog: CATALOG_VERSION, parameters: params.all(), region: ctxBase.region, support: country.support }),
+    inputVersion: fingerprint(input),
+    asOfDate,
+    checks: [...actualEvidence.values()].map((p) => checkEvidence(p, asOfDate)),
+  };
   const rangeIds = usedMarket.filter((id) => {
     if (!params.prov(id).range) return false;
     if (id === "econ.electricity_retail_eur_kwh") return !demand.electricityPriceKnown;
     if ((id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share") && base.energy.elSelfConsumedKwh <= 0) return false;
+    if (id.startsWith("econ.fert_")) return base.opexRev.revenue.some((line) => line.id === "digestate" && line.eur > 0);
     return id.startsWith("econ.capex_factor_") || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share";
   });
   const parameterSensitivity = rangeIds.map((id) => {
@@ -185,6 +202,12 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (bestRoute === "biomethane") priceIds.push("econ.biomethane_price_base_eur_nm3");
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
   const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: params.prov(capexId).confidence === "LOW" });
+  const expiredPrices = dataAudit.checks.filter((check) => (priceIds.includes(check.parameterId) && check.status === "EXPIRED") || (check.observedThrough && check.observedThrough > asOfDate) || (check.publishedOn && check.publishedOn > asOfDate));
+  if (expiredPrices.length) {
+    quality.level = "LOW";
+    quality.score = Math.min(quality.score, 34);
+    quality.reasons.push(T("A price affecting this route is expired or unavailable as of the assessment date; current applicable evidence is required before a verdict", "Ціна, що впливає на цей маршрут, втратила чинність або ще не була доступна на дату оцінки; для висновку потрібні чинні застосовні дані"));
+  }
   const { scores, overall } = computeScores({
     input, base, cons, opt, demand, logistics, digestate,
     regulatoryPoints: regPoints,
@@ -267,6 +290,12 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (base.energy.flaredKwh / gasKwh > 0.1) warnings.push(T(`≈${flareShare} % of the biogas finds no use (flared): review CHP size or seasonality.`, `≈${flareShare} % біогазу не знаходить використання (факел): перегляньте розмір КГУ чи сезонність.`));
   if (digestate.status === "LIABILITY") warnings.push(T("In this configuration the digestate is a cost rather than an asset.", "Дигестат у цій конфігурації — скоріше витрата, ніж актив."));
   if (bestRoute === "biomethane" && !country.biomethaneInjection) warnings.push(T("Grid injection of biomethane is not yet an established pathway in this country: plan for local use (bio-CNG/LNG) or a pioneer connection.", "Ін'єкція біометану в мережу в цій країні ще не усталена: плануйте локальне використання (bio-CNG/LNG) або першопрохідне приєднання."));
+  if (bestRoute === "chp") {
+    warnings.push(T("CHP performance uses a 50 Hz biogas full-load catalogue reference (03/2025), interpolated between ratings; part-load, ambient derating and 60 Hz equipment require supplier confirmation.", "Показники CHP взято з каталогу біогазових установок 50 Hz за 03/2025 з інтерполяцією між типорозмірами. Часткове навантаження, вплив температури та обладнання 60 Hz потребують підтвердження виробника."));
+    if (base.energy.chpKwEl < 20 || base.energy.chpKwEl > 2300) warnings.push(T("CHP rating is outside the 20–2300 kW reference curve; endpoint efficiency is only a proxy. Obtain a multi-engine or equipment-specific design.", "Потужність CHP виходить за діапазон референсної кривої 20–2300 kW; використано граничний ККД як наближення. Потрібен підбір конкретного обладнання або кількох двигунів."));
+  }
+  const reviewChecks = dataAudit.checks.filter((check) => ["EXPIRED", "REVIEW_REQUIRED", "UNDATED"].includes(check.status) && check.parameterId.startsWith("econ."));
+  if (reviewChecks.length) warnings.push(T(`Market data require review (${reviewChecks.map((check) => check.parameterId).join(", ")}). Observation dates and validity are shown in the evidence; these are not verified current customer quotations.`, `Ринкові дані потребують перевірки (${reviewChecks.map((check) => check.parameterId).join(", ")}). Періоди й строки дії наведено в джерелах; це не підтверджені актуальні пропозиції для замовника.`));
 
   const supportIncluded = (input.assumedSupportEurPerKwh ?? 0) > 0;
   const notes = [
@@ -280,6 +309,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
 
   const used = params.usedIds();
   return {
+    dataAudit,
     input,
     countryCode: country.code,
     fx,

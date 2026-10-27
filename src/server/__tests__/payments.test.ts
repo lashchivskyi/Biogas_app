@@ -89,6 +89,24 @@ describe("checkout", () => {
     expect(after?.notes).toMatch(/check manually/);
   });
 
+  it("rejects payment in a different currency even when the numeric amount matches", async () => {
+    const { order } = await S.startCheckout(req("report"));
+    const after = await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: "USD" }, "test");
+    expect(after?.status).not.toBe("paid");
+    expect(after?.notes).toMatch(/check manually/);
+  });
+
+  it("persists the exact assessment with model/data/input versions before payment and preserves it on updates", async () => {
+    const { order } = await S.startCheckout(req("report"));
+    const snapshot = JSON.stringify(order.assessmentSnapshot);
+    expect(order.assessmentSnapshot!.dataAudit!.modelVersion).toBe("0.2.0");
+    expect(order.assessmentSnapshot!.dataAudit!.dataVersion).toMatch(/^[0-9a-f]{16}$/);
+    expect(order.assessmentSnapshot!.dataAudit!.asOfDate).toBe(order.createdAt.slice(0, 10));
+    expect(JSON.stringify((await O.orders.byToken(order.reportToken))!.assessmentSnapshot)).toBe(snapshot);
+    await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: "EUR" }, "test");
+    expect(JSON.stringify((await O.orders.byToken(order.reportToken))!.assessmentSnapshot)).toBe(snapshot);
+  });
+
   it("paid is sticky against late pending/failed webhooks, but a refund is recorded", async () => {
     const { order } = await S.startCheckout(req("report"));
     await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: "EUR" }, "test");

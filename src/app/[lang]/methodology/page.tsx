@@ -3,6 +3,7 @@ import { PageHero } from "@/components/PageHero";
 import { HelpTooltip } from "@/components/HelpTooltip";
 import { CountryFlag } from "@/components/CountryFlag";
 import { allProvenance } from "@/core";
+import { isoDate } from "@/core/modelAudit";
 import { COUNTRIES, COUNTRY_ORDER, UA } from "@/countries";
 import { countryName, getDictionary, INTL_TAG, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
@@ -162,7 +163,7 @@ export default async function MethodologyPage({ params }: PageProps<"/[lang]/met
                         <td className="methodology-kind">{p.kind}</td>
                         <td><span className={`methodology-badge ${CONF_STYLE[p.confidence]}`}>{p.confidence}</span></td>
                         <td className="methodology-source">{p.source} <span className="text-muted">· {p.country}</span></td>
-                        <td className="num methodology-date"><time dateTime={p.date}>{new Intl.DateTimeFormat(INTL_TAG[locale], { dateStyle: "short", timeZone: "UTC", calendar: "gregory" }).format(new Date(`${p.date}T00:00:00Z`))}</time></td>
+                        <td className="num methodology-date">{isoDate(p.date) ? <time dateTime={p.date}>{new Intl.DateTimeFormat(INTL_TAG[locale], { dateStyle: "short", timeZone: "UTC", calendar: "gregory" }).format(new Date(`${p.date}T00:00:00Z`))}</time> : d.common.unknown}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -138,6 +138,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
   return (
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
+      {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">
@@ -602,6 +603,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
                     <dt className="font-semibold">{p.label}: <span className="num">{parameterNumber(p.value)} {p.unit}</span> · {p.origin ?? p.kind} · {p.confidence}</dt>
                     <dd className="mt-1 text-muted">{p.source}</dd>
                     {p.evidence && <dd className="mt-1 text-muted">{p.evidence.period} · checked {p.evidence.checkedOn} · {p.evidence.scope}</dd>}
+                    {a.dataAudit?.checks.find((check) => check.parameterId === p.id) && <dd className="mt-1 text-muted">{a.dataAudit.checks.find((check) => check.parameterId === p.id)!.status}: {a.dataAudit.checks.find((check) => check.parameterId === p.id)!.reason}</dd>}
                     {p.evidence?.components && <dd className="mt-1 text-muted">{p.evidence.components.map((c) => `${c.name}: ${parameterNumber(c.value)} ${c.unit} (${c.origin})`).join("; ")}</dd>}
                   </div>)}
                 </dl>

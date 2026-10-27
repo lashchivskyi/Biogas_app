@@ -14,7 +14,7 @@ import { refreshOrder } from "@/server/payments/service";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-/** Paid report. The token is an unguessable capability; the report is recomputed from the stored input. */
+/** Paid report. New orders retain their purchased calculation; legacy orders are explicitly recomputed. */
 export default async function ReportPage({ params }: PageProps<"/[lang]/report/[token]">) {
   const { lang, token } = await params;
   const locale = lang as Locale;
@@ -38,11 +38,12 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
     );
   }
 
-  const a = assess(order.input, country, { lang: cl });
+  const a = order.assessmentSnapshot ?? assess(order.input, country, { lang: cl, asOfDate: new Date().toISOString().slice(0, 10) });
   return (
     <main>
       <PageHero eyebrow={d.report.eyebrow} title={`${d.labels.business[order.input.businessType].label} · ${countryName(order.input.countryCode, locale)}`} lead={fmt(d.report.paidFor, { who, date })} />
       <div className="container-x py-8">
+        {!order.assessmentSnapshot && <p lang={cl} className="mb-4 rounded-lg bg-amber-50 p-3 text-sm">{cl === "uk" ? "Історичну версію розрахунку для цього замовлення не збережено. Нижче наведено повторну оцінку за поточною версією моделі та наявними даними." : "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data."}</p>}
         <div className="no-print mb-4 flex justify-end"><PrintButton label={d.report.print} /></div>
         <ResultView a={a} d={d} locale={locale} currency={country.currency} countryNotes={country.approachNotes[cl]} access={order.plan === "standard" ? "standard" : "full"} methodologyHref={`/${locale}/methodology`} />
       </div>

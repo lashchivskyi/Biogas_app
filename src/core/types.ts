@@ -17,6 +17,10 @@ export interface ParameterEvidence {
   method: string;
   assumptions?: string[];
   components?: { name: string; value: number; unit: string; origin: EvidenceOrigin }[];
+  observedThrough?: string;
+  publishedOn?: string;
+  validFrom?: string;
+  validUntil?: string;
 }
 
 /** Bounds in the parameter's own unit; not a statistical confidence interval. */
@@ -377,6 +381,14 @@ export interface Score {
 }
 
 export interface Assessment {
+  /** Reproducible model/data identity and time-sensitive evidence checks. */
+  dataAudit?: {
+    modelVersion: string;
+    dataVersion: string;
+    inputVersion: string;
+    asOfDate: string;
+    checks: { parameterId: string; status: "CONSTANT" | "ASSUMPTION" | "WITHIN_REVIEW_WINDOW" | "REVIEW_REQUIRED" | "EXPIRED" | "UNDATED"; observedThrough?: string; publishedOn?: string; checkedOn?: string; validUntil?: string; reason: string }[];
+  };
   input: ProjectInput;
   countryCode: string;
   fx: number;

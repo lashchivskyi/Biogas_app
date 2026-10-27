@@ -1,5 +1,5 @@
 import type { CoreLang } from "./i18n";
-import type { Confidence, Provenance, RegulatoryItem, RouteId } from "./types";
+import type { Confidence, ProjectInput, Provenance, RegulatoryItem, RouteId } from "./types";
 
 /**
  * Contract between the country-independent core and a market.
@@ -82,6 +82,8 @@ export interface CountryAdapter {
   params: Provenance[];
   /** Optional sourced regional overrides merged over params; does not change feedstock properties. */
   paramsForRegion?: (regionId: string) => Provenance[];
+  /** Consumer-band overrides for the actual project's annual energy use. */
+  paramsForProject?: (input: Pick<ProjectInput, "regionId" | "energy">) => Provenance[];
   regions: Region[];
   support: SupportInfo;
   regime: RegulatoryRegime;

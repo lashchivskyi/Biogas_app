@@ -11,7 +11,8 @@ import { LEVERS } from "@/lib/whatif";
 export function WhatIf({ input, base, country, locale, d, onApply }: { input: ProjectInput; base: Assessment; country: CountryAdapter; locale: Locale; d: Pick<Dict, "result" | "labels">; onApply: (next: ProjectInput) => void }) {
   const F = makeFormat(locale, d.labels.units);
   const fx = base.fx;
-  const rows = useMemo(() => LEVERS.map((l) => { const next = l.apply(input, fx); return { lever: l, next, a: assess(next, country) }; }), [input, country, fx]);
+  const asOfDate = base.dataAudit?.asOfDate;
+  const rows = useMemo(() => LEVERS.map((l) => { const next = l.apply(input, fx); return { lever: l, next, a: assess(next, country, { asOfDate }) }; }), [input, country, fx, asOfDate]);
   const basePb = base.scenarios.base.fin.simplePaybackYears;
   return (
     <section className="no-print mt-10" aria-labelledby="whatif-h">

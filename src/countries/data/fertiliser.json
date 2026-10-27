@@ -1,5 +1,8 @@
 {
  "source": "World Bank Commodity Price Data (Pink Sheet), monthly, 2025M10\u20132026M09; urea (Middle East), TSP (US Gulf), KCl (Brazil)",
+ "url": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Pink-Sheet-October-2026.pdf",
+ "publishedOn": "2026-10-02",
+ "checkedOn": "2026-10-27",
  "period": [
   "2025M10",
   "2026M09"
@@ -9,11 +12,14 @@
   "tsp": 639.8,
   "kcl": 378.6
  },
- "usdPerEur": 1.13,
+ "latestMonth": "2026-09",
+ "latestUsdPerT": { "urea": 407.5, "tsp": 690.0, "kcl": 367.5 },
+ "quarterlyUsdPerT": {
+  "2025-Q4": { "urea": 398.7, "tsp": 611.1, "kcl": 354.7 },
+  "2026-Q1": { "urea": 537.7, "tsp": 541.2, "kcl": 373.0 },
+  "2026-Q2": { "urea": 693.5, "tsp": 702.4, "kcl": 402.9 },
+  "2026-Q3": { "urea": 399.2, "tsp": 704.6, "kcl": 383.6 }
+ },
  "farmGateMarkup": 1.35,
- "eurPerKg": {
-  "N": 1.32,
-  "P2O5": 1.66,
-  "K2O": 0.75
- }
+ "nutrientShares": { "N": 0.46, "P2O5": 0.46, "K2O": 0.6 }
 }

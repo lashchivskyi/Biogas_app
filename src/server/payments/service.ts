@@ -2,6 +2,7 @@ import { z } from "zod";
 import { PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
 import { absoluteUrl } from "@/config/site";
 import { getCountry } from "@/countries";
+import { assess } from "@/core";
 import { isLocale } from "@/i18n/config";
 import { orders, type Order } from "../orders";
 import { inputSchema } from "../validate";
@@ -56,6 +57,7 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
     lang: input.lang,
     customer: { email: input.email, name: input.name || undefined, company: input.company || undefined, vatId: input.vatId || undefined },
     input: { ...input.input, lang: input.lang === "uk" ? "uk" : "en" },
+    assessmentSnapshot: assess({ ...input.input, lang: input.lang === "uk" ? "uk" : "en" }, country, { asOfDate: new Date().toISOString().slice(0, 10) }),
   });
   const reportPath = `/${input.lang}/report/${order.reportToken}`;
   const { redirectUrl, providerRef } = await provider.create(
@@ -70,8 +72,8 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
 /** Applies a provider-reported status; refuses a "paid" whose amount does not match the order. */
 export async function applyProviderStatus(order: Order, s: StatusResult, source: string): Promise<Order | null> {
   const sameCurrency = !s.currency || s.currency === order.currency;
-  if (s.status === "paid" && s.amountMinor !== undefined && sameCurrency && s.amountMinor !== order.amountMinor) {
-    return orders.update(order.id, { notes: `${order.notes}\n[${new Date().toISOString()}] Paid amount ${s.amountMinor} ≠ order ${order.amountMinor} ${order.currency} — check manually`.trim() }, source);
+  if (s.status === "paid" && (!sameCurrency || (s.amountMinor !== undefined && s.amountMinor !== order.amountMinor))) {
+    return orders.update(order.id, { notes: `${order.notes}\n[${new Date().toISOString()}] Payment mismatch: ${s.amountMinor ?? "unknown"} ${s.currency ?? "unknown"} vs order ${order.amountMinor} ${order.currency} — check manually`.trim() }, source);
   }
   return orders.update(order.id, { status: s.status, providerModifiedAt: s.modifiedAt }, source);
 }

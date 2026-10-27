@@ -14,7 +14,7 @@ import calibration from "@/countries/data/capex-calibration.json";
 const retail = "econ.electricity_retail_eur_kwh";
 const input = EXAMPLES.find((e) => e.id === "slaughter_5000")!.input;
 const withValues = (country: CountryAdapter, values: Record<string, number>): CountryAdapter => ({
-  ...country, paramsForRegion: undefined,
+  ...country, paramsForRegion: undefined, paramsForProject: undefined,
   params: country.params.map((p) => p.id in values ? { ...p, value: values[p.id] } : p),
 });
 

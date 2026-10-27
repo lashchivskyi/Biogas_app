@@ -3,7 +3,7 @@ import { region, type CountryProfile } from "./build";
 import { indiaCbgProcurementPrice } from "./sources";
 
 /**
- * 32 national profiles (Ukraine has its own calibrated adapter in ua.ts).
+ * 32 national profiles (Ukraine has a separate adapter in ua.ts; no independent calibration is implied).
  * The market numbers here are FALLBACK estimates only: build.ts replaces each one with an official
  * statistic from sources.ts wherever a series exists, and only the remainder is shown as an estimate.
  * Support schemes are listed only where at least a figure was found in this research or is a

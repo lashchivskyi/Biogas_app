@@ -1,19 +1,14 @@
 import { HOURS_IN_MONTH, HOURS_PER_YEAR } from "./climate";
 import type { RunContext } from "./context";
 import type { CustomerDemand } from "./demand";
+import { CHP_REFERENCE } from "./engineeringParams";
 import type { DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
 
 const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
 
 /** Electrical efficiency of a gas engine as a function of rating (log-linear between data points). */
-export function chpEtaEl(kw: number, get: (id: string) => number): number {
-  const pts: Array<[number, number]> = [
-    [25, get("eng.chp_eta_el_25")],
-    [50, get("eng.chp_eta_el_50")],
-    [100, get("eng.chp_eta_el_100")],
-    [250, get("eng.chp_eta_el_250")],
-    [500, get("eng.chp_eta_el_500")],
-  ];
+function chpEfficiency(kw: number, get: (id: string) => number, kind: "el" | "th"): number {
+  const pts: Array<[number, number]> = CHP_REFERENCE.map(([rating]) => [rating, get(`eng.chp_eta_${kind}_${rating}`)]);
   if (kw <= pts[0][0]) return pts[0][1];
   if (kw >= pts[pts.length - 1][0]) return pts[pts.length - 1][1];
   for (let i = 0; i < pts.length - 1; i++) {
@@ -26,6 +21,9 @@ export function chpEtaEl(kw: number, get: (id: string) => number): number {
   }
   return pts[0][1];
 }
+
+export const chpEtaEl = (kw: number, get: (id: string) => number) => chpEfficiency(kw, get, "el");
+export const chpEtaTh = (kw: number, get: (id: string) => number) => chpEfficiency(kw, get, "th");
 
 const roundKw = (kw: number) => (kw < 100 ? Math.ceil(kw / 5) * 5 : Math.ceil(kw / 10) * 10);
 
@@ -40,7 +38,6 @@ export function runEnergy(
   const { params: p, scenario, mods, input } = ctx;
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
   const boilerEff = p.get("eng.boiler_efficiency");
-  const etaTotal = p.get("eng.chp_eta_total");
   const recovery = p.get("eng.chp_heat_recovery");
   const designHours = p.get("eng.chp_design_hours");
   const slipChp = p.get("eng.chp_slip_share");
@@ -102,7 +99,7 @@ export function runEnergy(
     // Rounding changes efficiency: ensure the installed engine can actually absorb design fuel input.
     while (chpKw > 0 && chpKw / chpEtaEl(chpKw, (id) => p.get(id)) + 1e-8 < qNom) chpKw += chpKw < 100 ? 5 : 10;
     etaEl = chpEtaEl(Math.max(chpKw, 1), (id) => p.get(id));
-    const etaTh = Math.max(0, etaTotal - etaEl);
+    const etaTh = chpEtaTh(Math.max(chpKw, 1), (id) => p.get(id));
     const qInstalled = etaEl > 0 ? chpKw / etaEl : 0;
     const hoursEff = Math.max(0, Math.min(HOURS_PER_YEAR, scenario.chpHours - (mods.extraDowntimePp / 100) * HOURS_PER_YEAR));
     const heatPerGas = recovery * etaTh;
@@ -224,7 +221,7 @@ export function runEnergy(
     flaredKwh: flared,
     chpKwEl: chpKw,
     chpEtaEl: etaEl,
-    chpEtaTh: route === "chp" ? Math.max(0, etaTotal - etaEl) : 0,
+    chpEtaTh: route === "chp" ? chpEtaTh(Math.max(chpKw, 1), (id) => p.get(id)) : 0,
     elGrossKwh: elGross,
     elParasiticKwh: elPar,
     cngCompressionKwh,

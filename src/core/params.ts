@@ -73,7 +73,7 @@ export function prov(
     source,
     confidence,
     country: opts.country ?? "GLOBAL",
-    date: opts.date ?? "2026-10-23",
+    date: opts.date ?? "undated",
     note: opts.note,
     evidence: opts.evidence,
     range: opts.range,

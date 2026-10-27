@@ -79,6 +79,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const [restored, setRestored] = useState(false);
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [assessmentDate, setAssessmentDate] = useState<string>();
   const [error, setError] = useState("");
   const [preferredPlan, setPreferredPlan] = useState<PlanId>("report");
   const resultRef = useRef<HTMLDivElement>(null);
@@ -145,7 +146,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
   const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
-  const assessment = useMemo(() => (submitted ? assess(input, country) : null), [submitted, input, country]);
+  const assessment = useMemo(() => (submitted ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, input, country, assessmentDate]);
 
   function next() {
     setError("");
@@ -177,7 +178,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       return;
     }
     setSubmitted(true);
-    const a = assess(input, country);
+    const asOfDate = new Date().toISOString().slice(0, 10);
+    setAssessmentDate(asOfDate);
+    const a = assess(input, country, { asOfDate });
     track("calculator_submit", { verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }

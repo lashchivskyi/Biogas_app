@@ -8,8 +8,8 @@
 2. Відкриття звіту → діалог: план (`standard` / `report`), email, ім'я, компанія, VAT ID, згода з умовами. Обидва плани автоматичні; `expert` більше не приймається при оформленні.
 3. `POST /api/checkout` — сервер валідує вхід (`checkoutSchema`), **рахує ціну сам** з `PLAN_PRICES_EUR_CENTS` × tier країни проєкту, створює замовлення з випадковим `reportToken` (24 байти, base64url) і Stripe Checkout Session.
 4. Stripe-сторінка (картка, Apple Pay, Google Pay, Link, локальні методи — вмикаються в Stripe Dashboard). `success_url` = `/{lang}/report/{token}`.
-5. Webhook `POST /api/payments/webhook/stripe` (підпис перевіряється `stripe.webhooks.constructEvent`): `checkout.session.completed` / `async_payment_succeeded` → `paid`; `expired` / `async_payment_failed` → `expired`/`failed`; `charge.refunded` → `reversed`. Сума звіряється з замовленням; невідповідність не позначає оплату, а пише примітку «check manually».
-6. Сторінка звіту: якщо webhook ще не прийшов — `ReportPending` опитує `/api/payments/status?token=` і робить резервний запит статусу в Stripe (`refreshOrder`). Після оплати звіт перераховується із збереженого вводу — підробити вердикт неможливо.
+5. Webhook `POST /api/payments/webhook/stripe` (підпис перевіряється `stripe.webhooks.constructEvent`): `checkout.session.completed` / `async_payment_succeeded` → `paid`; `expired` / `async_payment_failed` → `expired`/`failed`; `charge.refunded` → `reversed`. Сума й валюта звіряються з замовленням; невідповідність не позначає оплату, а пише примітку «check manually».
+6. Сторінка звіту: якщо webhook ще не прийшов — `ReportPending` опитує `/api/payments/status?token=` і робить резервний запит статусу в Stripe (`refreshOrder`). Для нових замовлень сервер зберігає `assessmentSnapshot` з версіями моделі, даних, вводу й датою до створення платіжної сесії. Оплачений результат відтворюється зі знімка, без тихого перерахунку після оновлень. Для старих замовлень без знімка є явне повідомлення про повторну оцінку за поточною моделлю.
 7. Статус `paid` «липкий»: пізні `pending/failed` його не скасовують; повернення коштів (`reversed`) фіксується.
 
 ## 2. Налаштування Stripe

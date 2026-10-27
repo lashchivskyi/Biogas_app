@@ -1,6 +1,6 @@
 import type { CountryAdapter, Region, RegulatoryRegime, SupportInfo } from "@/core/country";
 import { prov } from "@/core/params";
-import type { Confidence, Provenance } from "@/core/types";
+import type { Confidence, ProjectInput, Provenance } from "@/core/types";
 import { ENGINEERING_MAP } from "@/core/engineeringParams";
 import { regulatoryFor } from "./regulatory";
 import {
@@ -58,7 +58,7 @@ const SRC = "National estimate (project team, 2026-10) — no official series fo
  * (Eurostat, ECB, national regulators, EIA, DESNZ, World Bank, Ember, Damodaran — see sources.ts) and
  * falls back to the profile's ESTIMATE only where none was found. Derived values document their formula.
  */
-export function marketParams(c: CountryProfile, regionId?: string): Provenance[] {
+export function marketParams(c: CountryProfile, regionId?: string, energy?: ProjectInput["energy"]): Provenance[] {
   const o = { country: c.code, date: "2026-10-25" };
   const L = "LOW" as const;
   const P = (id: string, label: string, s: Sourced | undefined, fallback: number, unit: string, note?: string) =>
@@ -66,8 +66,8 @@ export function marketParams(c: CountryProfile, regionId?: string): Provenance[]
       ? prov(id, label, s.value, unit, s.kind, s.source, s.confidence, { country: c.code, date: s.date, note, evidence: s.evidence, range: s.range })
       : prov(id, label, fallback, unit, "ESTIMATE", SRC, L, { ...o, note });
 
-  const elec = electricityFor(c.code, regionId);
-  const gas = gasFor(c.code);
+  const elec = electricityFor(c.code, regionId, energy?.electricityKwhYear);
+  const gas = gasFor(c.code, energy?.gasM3Year);
   const gasV = gas?.value ?? c.gas;
   const lab = labourFor(c.code);
   const labV = lab?.value ?? c.labour;
@@ -92,7 +92,7 @@ export function marketParams(c: CountryProfile, regionId?: string): Provenance[]
     P("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor(c.code), +(c.exp / 0.85).toFixed(3), "EUR/kWh", "Official day-ahead or wholesale average where published"),
     prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", haircutFor(c.code).value, "—", "ASSUMPTION", haircutFor(c.code).source, "MEDIUM", o),
     prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", electricityVariableShareFor(c.code), "—", "ASSUMPTION", "TOU reference: energy/Ft portion only, demand/service charges retained. Else 85% engineering allowance. User invoice uses the generic allowance until its energy/demand split is known.", "MEDIUM", { ...o, range: electricityVariableShareFor(c.code) === ENGINEERING_MAP["eng.invoice_variable_share"].value ? ENGINEERING_MAP["eng.invoice_variable_share"].range : undefined }),
-    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, o),
+    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, { ...o, date: gas?.date ?? "undated", evidence: gas?.evidence }),
     P("econ.gas_price_eur_mwh", "Business natural-gas price, excl. VAT, LHV basis", gas, c.gas, "EUR/MWh LHV"),
     prov("econ.biomethane_price_cons_eur_nm3", "Biomethane price without support, conservative", bm[0], "EUR/Nm³", "CALCULATION", `${bmSrc}; conservative scenario reference ${bm[0]} EUR/Nm³`, bmConf, o),
     prov("econ.biomethane_price_base_eur_nm3", "Biomethane price without support, base", bm[1], "EUR/Nm³", "CALCULATION", bmSrc, bmConf, o),
@@ -157,6 +157,7 @@ export function buildAdapter(c: CountryProfile, regulatory = regulatoryFor(c.reg
     dataStatus: dataStatus(params, false),
     params,
     paramsForRegion: (regionId) => marketParams(c, regionId).filter((p) => p.id === "econ.electricity_retail_eur_kwh"),
+    paramsForProject: ({ regionId, energy }) => marketParams(c, regionId, energy).filter((p) => ["econ.electricity_retail_eur_kwh", "econ.gas_price_eur_mwh", "econ.heat_value_eur_kwh_th", "econ.biomethane_price_cons_eur_nm3", "econ.biomethane_price_base_eur_nm3", "econ.biomethane_price_opt_eur_nm3"].includes(p.id)),
     regions: regionsFor(c.code, c.regions),
     support: c.support,
     regime: c.regime,

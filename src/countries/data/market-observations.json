@@ -1,6 +1,6 @@
 {
   "checkedOn": "2026-10-26",
-  "valuation": "Local-currency observations are converted using the documented annual-average FX in statistics.json, not an invented current exchange rate. Ranges describe tariffs/applicability, not probability intervals.",
+  "valuation": "Local-currency observations use the dated official reference FX in statistics.json where available. Unsupported currencies retain an explicitly LOW annual-average fallback. An updated FX does not refresh the tariff observation period. Ranges describe tariffs/applicability, not probability intervals.",
   "observations": [
     {
       "country": "BR",
@@ -37,6 +37,8 @@
       "timeOfUse": { "rates": [4.1839, 2.6037], "weeklyHours": [65, 103], "fuelAdjustment": 0.1623, "monthlyDemand": 132.93, "billingKw": 500, "monthlyKwh": 200000, "monthlyService": 312.24 },
       "bounds": [3.0998862, 4.6800862],
       "period": "2026-09/2026-12",
+      "validFrom": "2026-09-01",
+      "validUntil": "2026-12-31",
       "scope": "PEA medium/large general service TOU, 22-33 kV, excluding VAT. Reference 500 kW/200 MWh per month, continuous load; public holidays and transformer losses are excluded.",
       "method": "Published PEA TOU energy rates + current Ft; add demand and service charges for the stated reference. Self-generation only avoids the energy/Ft portion; no peak-demand reduction is assumed.",
       "urls": ["https://www.pea.co.th/sites/default/files/documents/tariff/EN_Electricity_Tariffs_May_2023.pdf", "https://www.pea.co.th/en/our-services/tariff/ft"],
