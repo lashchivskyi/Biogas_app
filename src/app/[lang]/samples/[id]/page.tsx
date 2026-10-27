@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/PageHero";
 import { PrintButton } from "@/components/PrintButton";
-import { ResultView } from "@/components/ResultView";
+import { ResultView, type ResultViewProps } from "@/components/ResultView";
+import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { SampleCaseBrief } from "@/components/SampleCaseBrief";
 import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
@@ -35,6 +36,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
   const cl = coreLang(locale);
   const a = assess(ex.input, country, { lang: cl });
   const title = exampleTitle(ex, d);
+  const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: country.approachNotes[cl], access: "full", methodologyHref: `/${locale}/methodology` };
   return (
     <main>
       <PageHero
@@ -49,7 +51,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
           <PrintButton label={d.report.print} />
         </div>
         <SampleCaseBrief id={ex.id} locale={locale} d={d} />
-        <ResultView a={a} d={d} locale={locale} currency={country.currency} countryNotes={country.approachNotes[cl]} access="full" methodologyHref={`/${locale}/methodology`} />
+        <CurrencyResultView {...report} serverView={<ResultView {...report} />} />
       </div>
     </main>
   );

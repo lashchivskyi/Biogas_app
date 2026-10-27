@@ -1,16 +1,21 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { assess } from "@/core";
+import { allProvenance } from "@/core/assess";
 import { EXAMPLES } from "@/core/examples";
-import { getCountry } from "@/countries";
+import { COUNTRIES, getCountry } from "@/countries";
 import { SEGMENTS } from "@/content/segments";
 import { localizedHub, localizedSegment } from "@/content/localized";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import NotFoundPage from "@/app/[lang]/not-found";
 import ErrorPage from "@/app/[lang]/error";
+import MethodologyPage from "@/app/[lang]/methodology/page";
 import { ResultView } from "@/components/ResultView";
-import { getDictionary, LOCALES } from "..";
+import { getDictionary, INTL_TAG, LOCALES, LOCALE_COUNTRY } from "..";
+import { methodologyCopy } from "../methodology";
+import { preferenceCopy } from "../preferences";
+vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined, toString: () => "" }) }));
 import { adminCopy } from "../admin";
 import { legalCopy } from "../legal";
 import { errorCopy, numberError } from "../errors";
@@ -31,6 +36,18 @@ const lineIds = new Set(assessments.flatMap((a) => Object.values(a.routesBase).f
 ]).map((l) => l.id)));
 
 describe.each(LOCALES)("localised surfaces %s", (locale) => {
+  it("renders a localised country registry without the old Ukraine-only calibration claim", async () => {
+    const copy = methodologyCopy[locale];
+    const page = await MethodologyPage({ params: Promise.resolve({ lang: locale }), searchParams: Promise.resolve({}) });
+    const html = renderToStaticMarkup(page);
+    const market = html.match(/<section[^>]*id="parameter-group-4"[\s\S]*?<\/section>/)![0];
+    expect(market).toContain(`data-country="${LOCALE_COUNTRY[locale]}"`);
+    expect(market).toContain(preferenceCopy(locale).change);
+    expect(copy.groups[4]).not.toMatch(/Ukraine|Україн|Ukrain|Ucrain|Ucrân|Oekraïn|Ukrajn|Ουκραν|Ukrayn|Ukrain|Ukrain|ยูเครน/i);
+    for (const text of Object.values(copy.registry)) expect(text).not.toMatch(/\uFFFD|\?{3}/);
+    expect(market).not.toContain("<select"); // Reuses the shared header settings instead of another location selector.
+  });
+
   it("provides legal, CRM and failure copy without missing positional entries", () => {
     const admin = adminCopy(locale);
     expect(Object.keys(admin.orderStatus)).toHaveLength(7);
@@ -97,5 +114,39 @@ it("keeps the selected region name consistent between the form and the report wi
   const before = assessment.climate.regionName;
   const html = renderToStaticMarkup(createElement(ResultView, { a: assessment, d: await getDictionary("de"), locale: "de", currency: "EUR", access: "standard", methodologyHref: "/de/methodology" }));
   expect(html).toContain(region.names?.de ?? region.name);
+  expect(html).toContain(`/de/methodology?c=DE&amp;r=${input.regionId}#parameter-group-4`);
   expect(assessment.climate.regionName).toBe(before);
+});
+
+describe("universal methodology registry", () => {
+  const render = async (query: Record<string, string | string[]>) => renderToStaticMarkup(await MethodologyPage({ params: Promise.resolve({ lang: "uk" }), searchParams: Promise.resolve(query) }));
+  const market = (html: string) => html.match(/<section[^>]*id="parameter-group-4"[\s\S]*?<\/section>/)![0];
+
+  it("shows each country's actual economic parameters, sources and units", async () => {
+    const format = new Intl.NumberFormat(INTL_TAG.uk, { maximumFractionDigits: 8 });
+    for (const country of Object.values(COUNTRIES)) {
+      const html = market(await render({ c: country.code }));
+      expect(html).toContain(`data-country="${country.code}"`);
+      for (const parameter of allProvenance(country).filter((p) => p.id.startsWith("econ."))) {
+        const row = html.match(new RegExp(`<tr data-parameter="${parameter.id.replaceAll(".", "\\.")}">[\\s\\S]*?<\\/tr>`))?.[0];
+        expect(row, `${country.code}/${parameter.id}`).toBeDefined();
+        expect(row).toContain(format.format(parameter.value));
+        expect(row).toContain(parameter.unit);
+      }
+    }
+  });
+
+  it("uses regional overrides and resets invalid regions or countries safely", async () => {
+    const region = market(await render({ c: "BR", r: "parana" }));
+    expect(region).toContain('data-region="parana"');
+    const retailRow = region.match(/<tr data-parameter="econ\.electricity_retail_eur_kwh">[\s\S]*?<\/tr>/)![0];
+    const fx = getCountry("BR").params.find((p) => p.id === "econ.fx_local_per_eur")!.value;
+    expect(retailRow).toContain(new Intl.NumberFormat(INTL_TAG.uk, { maximumFractionDigits: 8 }).format(720.19 / 1000 / fx));
+    expect(retailRow).not.toContain(new Intl.NumberFormat(INTL_TAG.uk, { maximumFractionDigits: 8 }).format(840.76 / 1000 / fx));
+    expect(region).not.toContain("UAH/EUR");
+    expect(market(await render({ c: "DE", r: "parana" }))).not.toContain("data-region=");
+    expect(market(await render({ c: "__proto__" }))).toContain('data-country="UA"');
+    expect(market(await render({ c: ["BR", "DE"] }))).toContain('data-country="UA"');
+    expect(market(await render({ c: "de" }))).toContain('data-country="DE"');
+  });
 });

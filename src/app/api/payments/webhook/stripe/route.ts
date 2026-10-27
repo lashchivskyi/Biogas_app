@@ -19,13 +19,13 @@ export async function POST(request: Request) {
   }
 
   if (event.type.startsWith("checkout.session.")) {
-    const s = event.data.object as { id: string; client_reference_id: string | null; status: string | null; payment_status: string; amount_subtotal: number | null; currency: string | null; payment_intent: string | { id: string } | null };
+    const s = event.data.object as { id: string; client_reference_id: string | null; status: string | null; payment_status: string; amount_subtotal: number | null; currency: string | null; payment_intent: string | { id: string } | null; customer_details?: { address?: { country?: string } } };
     const order = (await orders.findByProviderRef(s.id)) ?? (s.client_reference_id ? await orders.get(s.client_reference_id) : null);
     if (!order) return NextResponse.json({ ok: true, ignored: "unknown order" });
     const status = event.type === "checkout.session.async_payment_failed" ? "failed" : mapStripeSession(s);
     const pi = typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent?.id;
     if (pi && !order.paymentRef) await orders.update(order.id, { paymentRef: pi }, "webhook:stripe");
-    await applyProviderStatus(order, { status, amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase(), modifiedAt: new Date(event.created * 1000).toISOString() }, `webhook:stripe:${event.type}`);
+    await applyProviderStatus(order, { status, amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase(), billingCountry: s.customer_details?.address?.country, modifiedAt: new Date(event.created * 1000).toISOString() }, `webhook:stripe:${event.type}`);
   } else if (event.type === "charge.refunded") {
     const c = event.data.object as { payment_intent: string | null; amount_refunded: number; amount: number };
     // Record full refunds automatically; partial refunds are handled manually in the admin.

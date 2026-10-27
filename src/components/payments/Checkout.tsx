@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ProjectInput } from "@/core";
 import { PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
 import { fmt, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
+import { usePreferences } from "../LocaleProvider";
+import { preferenceCopy } from "@/i18n/preferences";
+import type { PublicPaymentQuote } from "@/server/payments/quote";
+import type { CurrencyPreference } from "@/lib/preferences";
 
 export type CheckoutDict = Pick<Dict, "checkout" | "pricing">;
 
@@ -29,20 +33,45 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   const [plan, setPlan] = useState<PlanId>(initialPlan);
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [quote, setQuote] = useState<PublicPaymentQuote | null>(null);
+  const [quoteRevision, setQuoteRevision] = useState(0);
+  const preferences = usePreferences();
+  const paymentCurrency = preferences.paymentCurrency === "AUTO" ? preferences.currency : preferences.paymentCurrency;
+  const copy = preferenceCopy(locale);
   const C = d.checkout;
   const tier = input ? (COUNTRIES[input.countryCode]?.priceTier ?? "A") : "A";
-  const price = (p: PlanId) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(priceFor(p, tier) / 100);
+  const quoteCurrency = quote?.currency ?? preferences.currency;
+  const rate = quote?.rate ?? (preferences.currency === "USD" ? preferences.usd.value : 1);
+  const formatPrice = (minor: number) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: quoteCurrency, maximumFractionDigits: 2 }).format(minor / 100);
+  const price = (p: PlanId) => formatPrice(Math.round(priceFor(p, tier) * rate));
+
+  useEffect(() => {
+    if (!isOpen || !input) return;
+    const controller = new AbortController();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- invalidate the old payment quote before requesting a new one
+    setQuote(null);
+    setError("");
+    fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json" }, signal: controller.signal,
+      body: JSON.stringify({ plan, lang: locale, input, paymentCurrency }),
+    }).then(async (response) => {
+      if (!response.ok) throw new Error(response.status === 503 ? C.unavailable : C.error);
+      return response.json() as Promise<PublicPaymentQuote>;
+    }).then((value) => { if (!controller.signal.aborted) setQuote(value); }).catch((error: Error) => { if (error.name !== "AbortError") setError(error.message); });
+    return () => controller.abort();
+  }, [isOpen, input, plan, locale, paymentCurrency, quoteRevision, C.unavailable, C.error]);
 
   function open() {
     setError("");
     setState("idle");
+    setIsOpen(true);
     ref.current?.showModal();
     track("checkout_open", { plan });
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!input) return;
+    if (!input || !quote) return;
     const fd = new FormData(e.currentTarget);
     setState("sending");
     setError("");
@@ -50,10 +79,11 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ plan, lang: locale, email: fd.get("email"), name: fd.get("name"), company: fd.get("company"), vatId: fd.get("vatId"), consent: fd.get("consent") === "on", input }),
+        body: JSON.stringify({ plan, lang: locale, email: fd.get("email"), name: fd.get("name"), company: fd.get("company"), vatId: fd.get("vatId"), consent: fd.get("consent") === "on", input, paymentCurrency, quoteToken: quote.token }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.redirectUrl) {
+        if (res.status === 409) setQuoteRevision((version) => version + 1);
         setError(res.status === 503 ? C.unavailable : C.error);
         setState("error");
         return;
@@ -69,7 +99,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   return (
     <>
       <button type="button" className={className} onClick={open}>{label}</button>
-      <dialog ref={ref} aria-labelledby={`${id}-h`} className="m-auto w-[min(560px,calc(100vw-24px))] rounded-3xl p-0 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm">
+      <dialog ref={ref} onClose={() => setIsOpen(false)} aria-labelledby={`${id}-h`} className="m-auto w-[min(560px,calc(100vw-24px))] rounded-3xl p-0 shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm">
         <div className="p-6 text-left sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <h2 id={`${id}-h`} className="font-display text-2xl font-semibold">{C.title}</h2>
@@ -79,7 +109,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
             <p className="mt-4 text-ink2">{C.noInput}</p>
           ) : (
             <form onSubmit={submit} className="mt-5 space-y-4">
-              <fieldset>
+              <fieldset disabled={state === "sending"}>
                 <legend className="label">{C.plan}</legend>
                 <div className="grid gap-2">
                   {PLAN_IDS.map((p) => (
@@ -96,6 +126,13 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
                   ))}
                 </div>
               </fieldset>
+              <div className="rounded-xl border border-line bg-surface2 p-3">
+                <label className="label" htmlFor={`${id}-currency`}>{copy.payment}</label>
+                {quote && quote.availableCurrencies.length > 1 ? <select id={`${id}-currency`} className="field" value={preferences.paymentCurrency === "AUTO" ? "AUTO" : quote.currency} onChange={(e) => preferences.setPaymentCurrency(e.target.value as CurrencyPreference)} disabled={state === "sending"}><option value="AUTO">{copy.automatic} ({quote.availableCurrencies.includes(preferences.currency) ? preferences.currency : "EUR"})</option>{quote.availableCurrencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}</select> : <p id={`${id}-currency`} className="num font-semibold">{quote?.currency ?? "—"}</p>}
+                {quote && <p className="num mt-2 text-xs text-muted">EUR → {quote.currency}: {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(quote.rate)} · {quote.rateDate}</p>}
+                <p className="mt-2 text-xs text-muted">{copy.billing}</p>
+                <p className="mt-2 text-xs text-muted">{copy.tax}</p>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-email`}>{C.email} *</label><input id={`${id}-email`} name="email" type="email" required maxLength={160} autoComplete="email" className="field" /></div>
                 <div><label className="label" htmlFor={`${id}-name`}>{C.name}</label><input id={`${id}-name`} name="name" maxLength={120} autoComplete="name" className="field" /></div>
@@ -112,7 +149,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
               </label>
               {demo && <p className="hint text-warn">{C.demo}</p>}
               {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-900">{error}</p>}
-              <button className="btn btn-primary w-full text-base" type="submit" disabled={state === "sending"}>{state === "sending" ? C.paying : fmt(C.pay, { price: price(plan) })}</button>
+              <button className="btn btn-primary w-full text-base" type="submit" disabled={state === "sending" || !quote}>{state === "sending" ? C.paying : fmt(C.pay, { price: quote ? formatPrice(quote.amountMinor) : "—" })}</button>
               <p className="text-center text-xs text-muted">{C.secure}</p>
             </form>
           )}

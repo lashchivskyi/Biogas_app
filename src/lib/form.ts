@@ -100,6 +100,25 @@ export function initialForm(businessType: BusinessTypeId, countryCode: string, r
   };
 }
 
+/** Keep physical/unfinished inputs across locale changes; never reinterpret old local invoices in a new market. */
+export function recontextualizeForm(f: FormState, country: CountryAdapter, regionId: string | undefined, locale: Locale): FormState {
+  const nf = new Intl.NumberFormat(INTL_TAG[locale], { useGrouping: false, maximumFractionDigits: 20 });
+  const reformat = (value: string) => { const n = formNumber(value ?? "", f.numberLocale); return n === undefined ? value ?? "" : nf.format(n); };
+  const changed = f.countryCode !== country.code;
+  const next = { ...f, numberLocale: locale, countryCode: country.code,
+    regionId: country.regions.some((r) => r.id === regionId) ? regionId! : !changed && country.regions.some((r) => r.id === f.regionId) ? f.regionId : country.regions[0].id,
+    lines: f.lines.map((line) => ({ ...line })),
+  };
+  const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm"] as const;
+  for (const key of numbers) next[key] = reformat(f[key]);
+  for (const line of next.lines) for (const key of ["quantity", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key]);
+  if (changed) {
+    for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice"] as const) next[key] = "";
+    for (const line of next.lines) for (const key of ["disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = "";
+  }
+  return next;
+}
+
 export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk"): ProjectInput {
   // Drafts saved before numberLocale existed used a dot or comma as the decimal mark,
   // never locale-specific grouping. Preserve that meaning when opening an old draft.

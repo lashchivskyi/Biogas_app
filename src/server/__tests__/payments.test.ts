@@ -1,8 +1,9 @@
 import { generateKeyPairSync, sign } from "node:crypto";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { fxFor } from "@/countries/sources";
 import { PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
 import { EXAMPLES } from "@/core/examples";
 
@@ -18,12 +19,17 @@ type Orders = typeof import("../orders");
 let P: Providers;
 let S: Service;
 let O: Orders;
+let Q: typeof import("../payments/quote");
 
 beforeAll(async () => {
   P = await import("../payments/providers");
   S = await import("../payments/service");
   O = await import("../orders");
+  Q = await import("../payments/quote");
 });
+
+afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); vi.restoreAllMocks(); });
+afterAll(() => rmSync(dir, { recursive: true, force: true })); // Only this test's mkdtemp directory.
 
 const input = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
 const req = (plan: PlanId, exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, input: input(exampleId) });
@@ -48,6 +54,23 @@ describe("monobank webhook signature", () => {
 });
 
 describe("stripe", () => {
+  it("passes the confirmed currency and subtotal without automatic FX and collects billing country", async () => {
+    const { order } = await S.startCheckout(req("report"));
+    vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_local_only");
+    const create = vi.spyOn(P.stripe().checkout.sessions, "create").mockResolvedValue({ id: "cs_test", url: "https://checkout.stripe.com/test" } as never);
+    await P.stripeProvider.create({ ...order, lang: "uk", currency: "USD", amountMinor: 21267 }, { success: "https://example.com/uk/report/token", cancel: "https://example.com/cancel", webhook: "https://example.com/webhook" }, { name: "Report", description: "Test" });
+    const sent = create.mock.calls[0][0]!;
+    expect(sent.adaptive_pricing).toEqual({ enabled: false });
+    expect(sent.locale).toBe("en");
+    expect(sent.billing_address_collection).toBe("required");
+    expect(sent.line_items?.[0].price_data).toMatchObject({ currency: "usd", unit_amount: 21267 });
+  });
+  it("maps the UI language to a supported hosted-checkout locale", () => {
+    expect(P.stripeCheckoutLocale("uk")).toBe("en");
+    expect(P.stripeCheckoutLocale("sr")).toBe("en");
+    expect(P.stripeCheckoutLocale("pt")).toBe("pt-BR");
+    expect(P.stripeCheckoutLocale("de")).toBe("de");
+  });
   it("maps checkout session states", () => {
     expect(P.mapStripeSession({ status: "complete", payment_status: "paid" })).toBe("paid");
     expect(P.mapStripeSession({ status: "expired", payment_status: "unpaid" })).toBe("expired");
@@ -63,6 +86,47 @@ describe("stripe", () => {
 });
 
 describe("checkout", () => {
+  it("binds the exact dated USD quote to the plan, language and project before creating an order", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
+    const request = { ...req("report"), paymentCurrency: "USD" as const };
+    const quote = Q.createPaymentQuote(request);
+    expect(quote.currency).toBe("USD");
+    expect(quote.amountMinor).toBe(Math.round(PLAN_PRICES_EUR_CENTS.report.C * fxFor("USD")!.value));
+    expect(quote.rateDate).toBe(fxFor("USD")!.date);
+    expect(Q.verifyPaymentQuote(quote.token, request)).toMatchObject({ amountMinor: quote.amountMinor, currency: "USD" });
+    expect(() => Q.verifyPaymentQuote(quote.token + "x", request)).toThrow(/Quote expired/);
+    expect(() => Q.verifyPaymentQuote(quote.token, { ...request, plan: "standard" })).toThrow();
+    expect(() => Q.verifyPaymentQuote(quote.token, { ...request, lang: "uk" })).toThrow();
+    expect(() => Q.verifyPaymentQuote(quote.token, { ...request, input: input("de_guelle") })).toThrow();
+    const { order } = await S.startCheckout({ ...request, quoteToken: quote.token });
+    expect(order.amountMinor).toBe(quote.amountMinor);
+    expect(order.paymentQuote?.rateDate).toBe(quote.rateDate);
+    expect(order.currency).toBe("USD");
+    const after = await S.applyProviderStatus(order, { status: "paid", amountMinor: quote.amountMinor, currency: "USD", billingCountry: "CA" }, "test");
+    expect(after?.billingCountry).toBe("CA");
+    expect(after?.input.countryCode).toBe("UA");
+    expect(after?.priceTier).toBe("C");
+    vi.setSystemTime(new Date("2026-10-27T12:31:00Z"));
+    expect(() => Q.verifyPaymentQuote(quote.token, request)).toThrow();
+  });
+  it("falls back to EUR for stale conversion rates and refuses unavailable UAH quotations", () => {
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-11-20T00:00:00Z"));
+    expect(Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" }).currency).toBe("EUR");
+    expect(Q.availablePaymentCurrencies()).toEqual(["EUR"]);
+    vi.stubEnv("PAYMENT_PROVIDER", "monobank"); vi.stubEnv("MONOBANK_TOKEN", "test-no-network");
+    expect(() => Q.createPaymentQuote(req("report"))).toThrow(/FX unavailable/);
+    vi.setSystemTime(new Date("2026-10-27T00:00:00Z"));
+    const quote = Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" });
+    expect(quote.availableCurrencies).toEqual(["UAH"]);
+    expect(quote.currency).toBe("UAH");
+    expect(quote.amountMinor).toBe(Math.round(PLAN_PRICES_EUR_CENTS.report.C * fxFor("UAH")!.value));
+  });
+  it("does not mark a payment as paid without both the amount and currency", async () => {
+    const { order } = await S.startCheckout(req("report"));
+    for (const status of [{ status: "paid" as const }, { status: "paid" as const, amountMinor: order.amountMinor }, { status: "paid" as const, currency: order.currency }]) {
+      expect((await S.applyProviderStatus(order, status, "test"))?.status).not.toBe("paid");
+    }
+  });
   it("prices the order from config × the PROJECT country tier, never from the client", async () => {
     const ua = await S.startCheckout(req("report", "slaughter_5000")); // UA → tier C
     expect(ua.order.priceTier).toBe("C");

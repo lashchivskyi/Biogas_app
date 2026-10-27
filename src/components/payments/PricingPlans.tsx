@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import type { ProjectInput } from "@/core";
 import { PLAN_IDS, priceFor } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
-import { fmt, type Dict, type Locale } from "@/i18n";
+import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
 import { formToInput, type FormState } from "@/lib/form";
-import { guessCountry } from "@/lib/geo";
 import { Icon } from "../brand/Icon";
 import { UnlockButton } from "./Checkout";
-import { CountrySelect } from "../CountrySelect";
+import { usePreferences } from "../LocaleProvider";
+import { preferenceCopy } from "@/i18n/preferences";
 
 /**
  * Pricing cards. Price follows the PROJECT country (selectable, defaults to the calculator draft or geo guess).
@@ -19,11 +19,11 @@ import { CountrySelect } from "../CountrySelect";
  */
 export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict, "pricing" | "checkout" | "common" | "country">; demo: boolean }) {
   const P = d.pricing;
-  const [country, setCountry] = useState("GB");
+  const preferences = usePreferences();
+  const country = preferences.country;
   const [input, setInput] = useState<ProjectInput | null>(null);
 
   useEffect(() => {
-    let c = guessCountry(locale).code;
     try {
       const raw = localStorage.getItem("mx.form.v2");
       if (raw) {
@@ -34,26 +34,24 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
           if (inp.feedstocks.length) {
             // eslint-disable-next-line react-hooks/set-state-in-effect -- browser-only draft
             setInput(inp);
-            c = f.countryCode;
           }
         }
       }
     } catch {
       /* ignore */
     }
-    setCountry(c);
   }, [locale]);
 
   const tier = COUNTRIES[country]?.priceTier ?? "A";
-  const money = (cents: number) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(cents / 100);
+  const money = (cents: number) => `${preferences.currency === "USD" ? "≈ " : ""}${new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: preferences.currency, maximumFractionDigits: preferences.currency === "USD" ? 2 : 0 }).format(Math.round(cents * (preferences.currency === "USD" ? preferences.usd.value : 1)) / 100)}`;
   const base = `/${locale}`;
-  const activeInput = input?.countryCode === country ? input : null;
+  const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) ? input : null;
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-sm">
-        <label htmlFor="pr-country" className="font-semibold text-ink2">{fmt(P.tierNote, { country: "" }).replace(/\s*$/, "")}</label>
-        <div className="w-full max-w-xs"><CountrySelect id="pr-country" value={country} onChange={setCountry} locale={locale} search={d.country.search} empty={d.country.empty} /></div>
+        <span className="font-semibold text-ink2">{fmt(P.tierNote, { country: countryName(country, locale) })}</span>
+        <button type="button" className="font-semibold text-brand underline" onClick={preferences.openSettings}>{preferenceCopy(locale).change}</button>
       </div>
       {/* The free screening is the entry point, not a package: shown as a strip above the two paid plans. */}
       <div className="mx-auto mb-6 flex max-w-4xl flex-col items-start gap-3 rounded-2xl border border-line bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -64,7 +62,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
             <div className="text-sm text-ink2">{P.freeDesc}</div>
           </div>
         </div>
-        <Link href={`${base}/calculator`} className="btn btn-ghost shrink-0">{P.freeCta}</Link>
+        <Link href={preferences.href(`${base}/calculator`)} className="btn btn-ghost shrink-0">{P.freeCta}</Link>
       </div>
       <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
         {PLAN_IDS.map((p) => {
@@ -84,7 +82,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
                 {activeInput ? (
                   <UnlockButton input={activeInput} locale={locale} d={d} demo={demo} plan={p} label={plan.cta} className={`btn w-full ${featured ? "btn-primary" : "btn-ghost"}`} />
                 ) : (
-                  <Link href={`${base}/calculator?c=${country}&plan=${p}`} className={`btn w-full ${featured ? "btn-primary" : "btn-ghost"}`}>{plan.cta}</Link>
+                  <Link href={preferences.href(`${base}/calculator?plan=${p}`)} className={`btn w-full ${featured ? "btn-primary" : "btn-ghost"}`}>{plan.cta}</Link>
                 )}
               </div>
             </article>
@@ -92,6 +90,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
         })}
       </div>
       <p className="mt-4 text-center text-xs text-muted">{P.regional}</p>
+      <p className="mt-2 text-center text-xs text-muted">{fmt(preferenceCopy(locale).display, { currency: preferences.currency, rate: new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(preferences.currency === "USD" ? preferences.usd.value : 1), date: preferences.usd.date })}</p>
     </div>
   );
 }

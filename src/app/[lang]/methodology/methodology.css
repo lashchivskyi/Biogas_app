@@ -177,6 +177,35 @@
   line-height: 1.6;
 }
 
+.methodology-filters {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.methodology-registryScope {
+  margin-top: 8px;
+  color: var(--brand-ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.methodology-countryName:hover {
+  color: var(--brand-ink);
+  text-decoration: underline;
+}
+
+.methodology-countryName:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+
+.methodology-table tbody tr[data-selected="true"] {
+  --row-bg: var(--brand-soft);
+}
+
 /* Keep the whole register available while bounding each table's footprint. */
 .methodology-tableFrame {
   max-height: 620px;
@@ -427,7 +456,8 @@
 }
 
 @media print {
-  .methodology-sectionNav {
+  .methodology-sectionNav,
+  .methodology-filters {
     display: none;
   }
 

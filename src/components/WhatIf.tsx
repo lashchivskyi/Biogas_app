@@ -6,10 +6,12 @@ import type { Assessment, CountryAdapter, ProjectInput } from "@/core";
 import { fmt, type Dict, type Locale } from "@/i18n";
 import { makeFormat } from "@/lib/format";
 import { LEVERS } from "@/lib/whatif";
+import { usePreferences } from "./LocaleProvider";
 
 /** Recomputes the verdict for each lever so the user sees what would actually change it. */
 export function WhatIf({ input, base, country, locale, d, onApply }: { input: ProjectInput; base: Assessment; country: CountryAdapter; locale: Locale; d: Pick<Dict, "result" | "labels">; onApply: (next: ProjectInput) => void }) {
-  const F = makeFormat(locale, d.labels.units);
+  const preferences = usePreferences();
+  const F = makeFormat(locale, d.labels.units, { currency: preferences.currency, rate: preferences.currency === "USD" ? preferences.usd.value : 1 });
   const fx = base.fx;
   const asOfDate = base.dataAudit?.asOfDate;
   const rows = useMemo(() => LEVERS.map((l) => { const next = l.apply(input, fx); return { lever: l, next, a: assess(next, country, { asOfDate }) }; }), [input, country, fx, asOfDate]);

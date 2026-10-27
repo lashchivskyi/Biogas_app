@@ -6,8 +6,8 @@ import type { Order, OrderStatus, ProviderId } from "../orders";
  * Payment providers. One is active at a time (env PAYMENT_PROVIDER):
  *
  *  - stripe   (default, international): Stripe Checkout — cards, Apple Pay, Google Pay, Link and the
- *             local methods enabled in the dashboard (BLIK, iDEAL, Bancontact, …). Adaptive Pricing in
- *             the dashboard shows the price in the buyer's currency. Webhooks verified with the signing secret.
+ *             local methods enabled in the dashboard (BLIK, iDEAL, Bancontact, …). Signed EUR/USD quotes;
+ *             Adaptive Pricing is disabled per session. Webhooks verified with the signing secret.
  *             NOTE: Stripe does not onboard Ukrainian legal entities — the merchant must be an entity in a
  *             Stripe-supported country (docs/payments.md).
  *  - monobank (optional, Ukraine): hosted page charging UAH; ECDSA-signed webhooks.
@@ -24,6 +24,7 @@ export interface StatusResult {
   amountMinor?: number;
   currency?: string;
   modifiedAt?: string;
+  billingCountry?: string;
 }
 
 export interface PaymentProvider {
@@ -48,6 +49,8 @@ export function mapStripeSession(s: { status: string | null; payment_status: str
   return "pending"; // open, or complete with async payment still processing
 }
 
+export const stripeCheckoutLocale = (locale: string) => locale === "uk" || locale === "sr" ? "en" : locale === "pt" ? "pt-BR" : locale === "en" ? "en-GB" : locale;
+
 export const stripeProvider: PaymentProvider = {
   id: "stripe",
   chargeCurrency: "EUR",
@@ -56,12 +59,13 @@ export const stripeProvider: PaymentProvider = {
       mode: "payment",
       client_reference_id: order.id,
       customer_email: order.customer.email,
-      locale: "auto",
+      locale: stripeCheckoutLocale(order.lang),
+      adaptive_pricing: { enabled: false }, // Keep the signed, explicitly confirmed EUR/USD quote unchanged.
       line_items: [
         {
           quantity: 1,
           price_data: {
-            currency: "eur",
+            currency: order.currency.toLowerCase(),
             unit_amount: order.amountMinor,
             tax_behavior: process.env.STRIPE_TAX === "1" ? "exclusive" : undefined,
             product_data: { name: product.name, description: product.description },
@@ -70,7 +74,7 @@ export const stripeProvider: PaymentProvider = {
       ],
       automatic_tax: process.env.STRIPE_TAX === "1" ? { enabled: true } : undefined,
       tax_id_collection: { enabled: true },
-      billing_address_collection: "auto",
+      billing_address_collection: "required",
       invoice_creation: { enabled: true },
       metadata: { orderId: order.id, plan: order.plan, country: order.input.countryCode },
       success_url: `${urls.success}${urls.success.includes("?") ? "&" : "?"}session_id={CHECKOUT_SESSION_ID}`,
@@ -82,7 +86,7 @@ export const stripeProvider: PaymentProvider = {
   async fetchStatus(order) {
     if (!order.providerRef) return null;
     const s = await stripe().checkout.sessions.retrieve(order.providerRef);
-    return { status: mapStripeSession(s), amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase() };
+    return { status: mapStripeSession(s), amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase(), billingCountry: s.customer_details?.address?.country ?? undefined };
   },
 };
 

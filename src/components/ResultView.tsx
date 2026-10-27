@@ -11,6 +11,7 @@ import { qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
 import { COUNTRIES } from "@/countries";
 import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
+import { preferenceCopy } from "@/i18n/preferences";
 import { FlowDiagram } from "./FlowDiagram";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
@@ -99,6 +100,7 @@ function Robustness({ a, R, eur }: { a: Assessment; R: ResultDict["result"]; eur
 }
 
 export interface ResultViewProps {
+  display?: { currency: "EUR" | "USD"; rate: number; date: string };
   a: Assessment;
   d: ResultDict;
   locale: Locale;
@@ -114,7 +116,7 @@ export interface ResultViewProps {
   methodologyHref: string;
 }
 
-export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref }: ResultViewProps) {
+export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
   const stressLabels = sensitivityLabels(locale, d);
   const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
   const a = {
@@ -124,7 +126,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
   };
   const R = d.result;
   const L = d.labels;
-  const F = makeFormat(locale, L.units);
+  const F = makeFormat(locale, L.units, display);
   const { n0, eur, money, years, range, compact } = F;
   const best = a.scenarios.base;
   const route = a.bestRoute;
@@ -139,6 +141,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
       {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
+      <p className="mb-3 text-xs text-muted">{f(preferenceCopy(locale).display, { currency: F.currency, rate: new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(F.exchangeRate), date: display.date })}</p>
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">
@@ -245,7 +248,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
       {!full ? (
         <LockedTeaser R={R} unlockSlot={unlockSlot} samplesHref={samplesHref} />
       ) : (
-        <FullSections a={a} d={d} F={F} locale={locale} currency={currency} methodologyHref={methodologyHref} extended={access === "full"} />
+        <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} />
       )}
 
       {afterSlot}
@@ -303,7 +306,7 @@ function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result
           const pos = perKw < m.lowEurPerKw ? R.below : perKw > m.highEurPerKw ? R.above : R.inRange;
           return (
             <li key={m.id} className="flex flex-col gap-0.5 border-t border-line pt-2 first:border-0 first:pt-0">
-              <span><b className="num">{F.n0(m.lowEurPerKw)}–{F.n0(m.highEurPerKw)} €/kW</b> — {marketLabel(locale, m.id) ?? m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
+              <span><b className="num">{F.n0(m.lowEurPerKw * F.exchangeRate)}–{F.n0(m.highEurPerKw * F.exchangeRate)} {F.currency}/kW</b> — {marketLabel(locale, m.id) ?? m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
               <span className="text-xs text-muted"><span lang="uk">{m.source}</span> · {m.year} · {marketQuality(locale, m.quality) ?? m.quality}</span>
             </li>
           );
@@ -314,11 +317,12 @@ function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result
   );
 }
 
-function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; currency: string; methodologyHref: string; extended: boolean }) {
+function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; methodologyHref: string; extended: boolean }) {
+  const registryHref = `${methodologyHref}?${new URLSearchParams({ c: a.countryCode, r: a.input.regionId })}#parameter-group-4`;
   const parameterNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 4 }).format;
   const R = d.result;
   const L = d.labels;
-  const { n0, n1, eur, years, pct, compact } = F;
+  const { n0, n1, eur, years, pct } = F;
   const best = a.scenarios.base;
   const route = a.bestRoute;
   const routes: RouteId[] = ["chp", "boiler", "biomethane"];
@@ -337,7 +341,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
           <Stat label={R.rowIrr} value={best.fin.irr === null ? "—" : pct(best.fin.irr, 1)} />
           <Stat label={R.rowDscr} value={best.fin.dscrMin === null ? "—" : n1(best.fin.dscrMin)} />
         </div>
-        <div className="card mt-3 p-4"><CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={compact} ids={["base"]} /></div>
+        <div className="card mt-3 p-4"><span className="text-xs text-muted">{F.currency}</span><CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={F.monetaryCompact} ids={["base"]} /></div>
       </Section>}
       {extended && <>
       {/* ---------- Scenarios ---------- */}
@@ -373,8 +377,8 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
             <p className="px-3 pb-3 text-xs text-muted">{f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}</p>
           </div>
           <div className="card p-4">
-            <div className="mb-2 text-sm font-semibold">{R.cashTitle}</div>
-            <CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={compact} />
+            <div className="mb-2 text-sm font-semibold">{R.cashTitle.replaceAll("€", F.currency).replaceAll("EUR", F.currency)}</div>
+            <CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={F.monetaryCompact} />
           </div>
         </div>
       </Section>
@@ -469,7 +473,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
 
       {/* ---------- Sensitivity ---------- */}
       <Section title={R.sensTitle} sub={R.sensSub}>
-        <div className="card p-4"><Tornado items={a.sensitivity} baseNpv={best.fin.npvEur} t={d.charts} compact={compact} /></div>
+        <div className="card p-4"><Tornado items={a.sensitivity} baseNpv={best.fin.npvEur} t={{ ...d.charts, sensHeader: d.charts.sensHeader.replaceAll("€", F.currency).replaceAll("EUR", F.currency) }} compact={F.monetaryCompact} /></div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <Stat label={R.beCapex} value={a.breakEven.capexReductionPct === null ? R.unreachable : a.breakEven.capexReductionPct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.capexReductionPct)} %`} note={R.beCapexNote} />
           <Stat label={R.bePrice} value={a.breakEven.energyPriceIncreasePct === null ? R.unreachable : a.breakEven.energyPriceIncreasePct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.energyPriceIncreasePct)} %`} note={R.bePriceNote} />
@@ -521,11 +525,11 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
 
           <Fold title={R.dMoney}>
             <div className="grid gap-6 md:grid-cols-3">
-              <LineTable title="CAPEX" rows={localRows(best.capex.lines)} total={best.capex.totalEur} totalLabel={R.total} compact={compact} />
-              <LineTable title={R.rowOpex} rows={localRows(best.opexRev.opex)} total={best.opexRev.opexEur} totalLabel={R.total} compact={compact} />
-              <LineTable title={R.rowRevenue} rows={localRows(best.opexRev.revenue)} total={best.opexRev.revenueEur} totalLabel={R.total} compact={compact} />
+              <LineTable title={`CAPEX (${F.currency})`} rows={localRows(best.capex.lines)} total={best.capex.totalEur} totalLabel={R.total} compact={F.monetaryCompact} />
+              <LineTable title={`${R.rowOpex} (${F.currency})`} rows={localRows(best.opexRev.opex)} total={best.opexRev.opexEur} totalLabel={R.total} compact={F.monetaryCompact} />
+              <LineTable title={`${R.rowRevenue} (${F.currency})`} rows={localRows(best.opexRev.revenue)} total={best.opexRev.revenueEur} totalLabel={R.total} compact={F.monetaryCompact} />
             </div>
-            <p className="mt-3 text-xs text-muted">{f(R.moneyNote, { fx: n1(a.fx), cur: currency })}</p>
+            <p className="mt-3 text-xs text-muted">{preferenceCopy(locale).costs}</p>
           </Fold>
 
           <Fold title={R.dDigestate}>
@@ -577,7 +581,7 @@ function FullSections({ a, d, F, locale, currency, methodologyHref, extended }: 
           </Fold>
 
           <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>
-            <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={methodologyHref}>→</Link></p>
+            <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={registryHref}>→</Link></p>
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
             {extended && !!a.parameterSensitivity?.length && (
               <div className="mt-4 border-t border-line pt-3">

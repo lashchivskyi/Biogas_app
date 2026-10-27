@@ -14,6 +14,7 @@ import { SEGMENTS } from "@/content/segments";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
+import { DisplayMoney } from "@/components/DisplayMoney";
 
 const SIGN_ICONS: IconName[] = ["factory", "scale", "heat"];
 const STEP_ICONS: IconName[] = ["clock", "doc", "shield", "chart"];
@@ -42,7 +43,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         title: `${d.examples[s.exampleId as keyof typeof d.examples] ?? s.exampleId} · ${countryName(country, locale)}`,
         verdict: d.labels.verdict[a.verdict.id],
         payback: F.years(r.paybackYears[1]),
-        capex: `${F.eur(r.capexEur[2])} – ${F.eur(r.capexEur[0])}`,
+        capex: <DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${F.eur(r.capexEur[2])} – ${F.eur(r.capexEur[0])}`} />,
         kw: `${F.range(r.kwEl[0], r.kwEl[2])} ${d.labels.units.kwe}`,
         biogas: `${F.range(r.biogasM3[0], r.biogasM3[2], (x) => F.compact(x))} m³`,
       },
@@ -151,12 +152,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                   <div className="font-display mt-2 text-3xl font-semibold">{d.labels.verdict[sample.verdict.id]}</div>
                   <p className="mt-1 text-sm text-muted">{sample.verdict.reasons[0]}</p>
                   <dl className="mt-6 grid grid-cols-2 gap-4">
-                    {[
+                    {([
                       [d.fit.biogas, `${F.range(sample.ranges.biogasM3[0], sample.ranges.biogasM3[2], (x) => F.compact(x))} m³`],
                       [d.fit.capacity, `${F.range(sample.ranges.kwEl[0], sample.ranges.kwEl[2])} ${d.labels.units.kw}`],
-                      [d.fit.investment, `${F.eur(sample.ranges.capexEur[2])} – ${F.eur(sample.ranges.capexEur[0])}`],
+                      [d.fit.investment, <DisplayMoney key="investment" value={sample.ranges.capexEur[2]} end={sample.ranges.capexEur[0]} initialText={`${F.eur(sample.ranges.capexEur[2])} – ${F.eur(sample.ranges.capexEur[0])}`} />],
                       [d.fit.payback, F.years(sample.scenarios.base.fin.simplePaybackYears)],
-                    ].map(([k, val]) => (
+                    ] as const).map(([k, val]) => (
                       <div key={k} className="rounded-xl bg-surface2 p-3"><dt className="text-xs text-muted">{k}</dt><dd className="num mt-0.5 text-lg font-bold">{val}</dd></div>
                     ))}
                   </dl>
@@ -171,7 +172,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                             <span className="absolute top-0 h-3 w-px bg-ink/40" style={{ left: "50%" }} />
                             <span className={`absolute top-0 h-3 rounded-full ${v < 0 ? "bg-bad/70" : "bg-brand"}`} style={v < 0 ? { right: "50%", width: `${w}%` } : { left: "50%", width: `${w}%` }} />
                           </div>
-                          <span className="num w-20 text-right font-semibold">{F.eur(v)}</span>
+                          <span className="num w-20 text-right font-semibold"><DisplayMoney value={v} initialText={F.eur(v)} /></span>
                         </div>
                       );
                     })}

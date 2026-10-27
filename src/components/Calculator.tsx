@@ -9,14 +9,14 @@ import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
-import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, uiDefaults } from "@/lib/form";
+import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, recontextualizeForm, uiDefaults } from "@/lib/form";
 import { parseLocalizedNumber } from "@/lib/localized-number";
 import { numberError } from "@/i18n/errors";
-import { useLocale } from "./LocaleProvider";
+import { useLocale, usePreferences } from "./LocaleProvider";
+import { preferenceCopy } from "@/i18n/preferences";
 import type { FormLine, FormState } from "@/lib/form";
-import { guessCountry } from "@/lib/geo";
 import { UnlockButton } from "./payments/Checkout";
-import { ResultView } from "./ResultView";
+import { CurrencyResultView as ResultView } from "./CurrencyResultView";
 import { WhatIf } from "./WhatIf";
 import { CountrySelect } from "./CountrySelect";
 import { CountryFlag } from "./CountryFlag";
@@ -74,8 +74,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const C = d.calc;
   const L = d.labels;
   const lang = coreLang(locale);
+  const preferences = usePreferences();
+  const { ready: contextReady, country: projectCountry, region: projectRegion, setLocation } = preferences;
+  const [formReady, setFormReady] = useState(false);
+  const initialized = useRef(false);
   const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", COUNTRIES.GB.regions[0].id, locale));
-  const [detected, setDetected] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -85,50 +88,43 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const resultRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
-  // URL deep link (?b=…&c=…) > stored draft > geo/timezone guess.
+  // A single project context feeds the form, prices and methodology. Locale changes only reformat inputs.
   useEffect(() => {
-    try {
+    if (!contextReady) return;
+    const adapter = COUNTRIES[projectCountry];
+    if (!projectRegion) setLocation(adapter.code, adapter.regions[0].id);
+    if (!initialized.current) {
+      initialized.current = true;
       const q = new URLSearchParams(window.location.search);
       const plan = q.get("plan");
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- explicit browser URL preference
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the browser draft after deterministic SSR
       if (PLAN_IDS.includes(plan as PlanId)) setPreferredPlan(plan as PlanId);
-      const guess = guessCountry(locale);
-      const c = q.get("c")?.toUpperCase();
-      const country = c && COUNTRIES[c] ? c : guess.code;
-      const b = q.get("b");
-      if (b && b in BUSINESS_TYPES) {
-        setForm(initialForm(b as BusinessTypeId, country, COUNTRIES[country].regions[0].id, locale));
-        setDetected(guess.source !== "locale" && !c ? country : null);
-        setStep(1);
-        track("calculator_deeplink", { business: b, country });
-        return;
-      }
-      if (c && COUNTRIES[c]) {
-        setForm(initialForm("dairy_farm", c, COUNTRIES[c].regions[0].id, locale));
-        return;
-      }
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as FormState;
-        if (parsed?.lines?.length && COUNTRIES[parsed.countryCode] && formToInput(parsed, COUNTRIES[parsed.countryCode], lang).feedstocks.length > 0) {
-          setForm(inputToForm(formToInput(parsed, COUNTRIES[parsed.countryCode], lang), locale));
+      let next = initialForm("dairy_farm", adapter.code, projectRegion ?? adapter.regions[0].id, locale);
+      let hasDraft = false;
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) as FormState : null;
+        if (parsed?.lines?.length && Object.hasOwn(COUNTRIES, parsed.countryCode)) {
+          next = recontextualizeForm(parsed, adapter, projectRegion, locale);
+          hasDraft = true;
           setRestored(true);
-          return;
         }
+      } catch { /* Draft storage is optional. */ }
+      const business = q.get("b");
+      if (business && Object.hasOwn(BUSINESS_TYPES, business)) {
+        if (!hasDraft || next.businessType !== business) next = initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? adapter.regions[0].id, locale);
+        setStep(1);
       }
-      setForm(initialForm("dairy_farm", country, COUNTRIES[country].regions[0].id, locale));
-      if (guess.source !== "locale") setDetected(country);
-    } catch {
-      /* private mode etc. */
+      setForm(next);
+      setFormReady(true);
+      return;
     }
-  }, [locale, lang]);
+    setForm((current) => recontextualizeForm(current, adapter, projectRegion, locale));
+  }, [contextReady, projectCountry, projectRegion, setLocation, locale]);
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-    } catch {
-      /* ignore */
-    }
-  }, [form]);
+    if (!formReady) return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* Private mode. */ }
+  }, [form, formReady]);
 
   const country = COUNTRIES[form.countryCode] ?? COUNTRIES.GB;
   const cur = country.currency;
@@ -189,6 +185,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     const ex = EXAMPLES.find((e) => e.id === id);
     if (!ex) return;
     setForm(inputToForm(ex.input, locale));
+    preferences.setLocation(ex.input.countryCode, ex.input.regionId);
     setSubmitted(false);
     setStep(1);
     track("example_loaded", { id });
@@ -200,8 +197,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     } catch {
       /* ignore */
     }
-    const g = guessCountry(locale).code;
-    setForm(initialForm("dairy_farm", g, COUNTRIES[g].regions[0].id, locale));
+    const g = preferences.country;
+    setForm(initialForm("dairy_farm", g, preferences.region ?? COUNTRIES[g].regions[0].id, locale));
     setSubmitted(false);
     setRestored(false);
     setStep(0);
@@ -261,11 +258,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               <h2 className="text-xl font-bold">{C.q2}</h2>
               <p className="hint !mt-1">{C.q2hint}</p>
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                <Field label={C.countryLabel} htmlFor="c-country" hint={detected === form.countryCode ? C.detected : undefined}>
-                  <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { setForm((f) => ({ ...f, countryCode: c, regionId: COUNTRIES[c].regions[0].id })); track("country_changed", { country: c }); }} />
+                <Field label={C.countryLabel} htmlFor="c-country" hint={preferenceCopy(locale).reset}>
+                  <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { preferences.setLocation(c, COUNTRIES[c].regions[0].id); track("country_changed", { country: c }); }} />
                 </Field>
                 <Field label={C.regionLabel} htmlFor="c-region">
-                  <select id="c-region" className="field" value={form.regionId} onChange={(e) => set("regionId", e.target.value)}>
+                  <select id="c-region" className="field" value={form.regionId} onChange={(e) => preferences.setLocation(form.countryCode, e.target.value)}>
                     {country.regions.map((r) => <option key={r.id} value={r.id}>{regionLabel(r, locale)}</option>)}
                   </select>
                 </Field>

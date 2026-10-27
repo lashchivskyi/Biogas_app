@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { cookies } from "next/headers";
 import { PageHero } from "@/components/PageHero";
+import { MethodologyFilters } from "@/components/MethodologyFilters";
 import { HelpTooltip } from "@/components/HelpTooltip";
 import { CountryFlag } from "@/components/CountryFlag";
 import { allProvenance } from "@/core";
 import { isoDate } from "@/core/modelAudit";
-import { COUNTRIES, COUNTRY_ORDER, UA } from "@/countries";
+import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
 import { countryName, getDictionary, INTL_TAG, type Locale } from "@/i18n";
+import { COUNTRY_COOKIE } from "@/i18n/config";
+import { readPreferenceCookie, resolvePreferences } from "@/lib/preferences";
 import { alternates } from "@/i18n/seo";
 import { methodologyCopy } from "@/i18n/methodology";
 import "./methodology.css";
@@ -46,13 +51,22 @@ function Cell({ c, id, locale, percentage = false }: { c: (typeof COUNTRIES)[str
   );
 }
 
-export default async function MethodologyPage({ params }: PageProps<"/[lang]/methodology">) {
+export default async function MethodologyPage({ params, searchParams }: PageProps<"/[lang]/methodology">) {
   const { lang } = await params;
+  const query = await searchParams;
   const locale = lang as Locale;
   const d = await getDictionary(locale);
   const M = d.method;
   const copy = methodologyCopy[locale];
-  const all = allProvenance(UA);
+  const requested = typeof query.c === "string" ? query.c.toUpperCase() : "";
+  const cookieStore = await cookies();
+  const saved = readPreferenceCookie(cookieStore.toString());
+  const selection = resolvePreferences({ locale, markets: COUNTRIES, query: new URLSearchParams({ ...(requested ? { c: requested } : {}), ...(typeof query.r === "string" ? { r: query.r } : {}) }), saved, visitorCountry: cookieStore.get(COUNTRY_COOKIE)?.value });
+  const country = COUNTRIES[selection.country];
+  const region = country.regions.find((r) => r.id === selection.region);
+  const regionName = region?.names?.[locale] ?? region?.name;
+  const all = allProvenance(country, region?.id);
+  const registryHref = (code: string) => `/${locale}/methodology?${new URLSearchParams({ c: code })}#parameter-group-4`;
   return (
     <main>
       <PageHero eyebrow={M.eyebrow} title={M.title} lead={M.lead} />
@@ -112,8 +126,8 @@ export default async function MethodologyPage({ params }: PageProps<"/[lang]/met
                 {COUNTRY_ORDER.map((code) => {
                   const c = COUNTRIES[code];
                   return (
-                    <tr key={code}>
-                      <th scope="row"><span className="methodology-countryName"><CountryFlag code={code} />{countryName(code, locale)}</span></th>
+                    <tr key={code} data-selected={code === country.code || undefined}>
+                      <th scope="row"><Link href={registryHref(code)} className="methodology-countryName" aria-current={code === country.code ? "true" : undefined}><CountryFlag code={code} />{countryName(code, locale)}</Link></th>
                       <td><span className={`methodology-badge ${c.dataStatus === "estimated" ? "bg-amber-100 text-amber-900" : "bg-brandsoft text-brandink"}`}>{copy.data[c.dataStatus === "calibrated" ? 0 : c.dataStatus === "official" ? 1 : 2]}</span></td>
                       <Cell c={c} locale={locale} id="econ.electricity_retail_eur_kwh" />
                       <Cell c={c} locale={locale} id="econ.electricity_spot_eur_kwh" />
@@ -136,10 +150,12 @@ export default async function MethodologyPage({ params }: PageProps<"/[lang]/met
           const rows = all.filter((p) => test(p.id));
           if (!rows.length) return null;
           return (
-            <section key={title} id={`parameter-group-${groupIndex}`} className="methodology-section" aria-labelledby={`parameter-title-${groupIndex}`}>
+            <section key={title} id={`parameter-group-${groupIndex}`} className="methodology-section" aria-labelledby={`parameter-title-${groupIndex}`} data-country={groupIndex === 4 ? country.code : undefined} data-region={groupIndex === 4 ? region?.id : undefined}>
               <div className="methodology-sectionHeading">
                 <h2 id={`parameter-title-${groupIndex}`}>{title} <span className="methodology-count">{rows.length}</span></h2>
+                {groupIndex === 4 && <p className="methodology-registryScope">{countryName(country.code, locale)} · {regionName ?? copy.registry.national}</p>}
               </div>
+              {groupIndex === 4 && <MethodologyFilters key={`${country.code}/${region?.id ?? ""}`} country={country.code} region={region?.id} copy={copy.registry} locale={locale} explicitSelection={COUNTRY_ORDER.includes(requested) || Boolean(saved && typeof saved === "object" && Object.hasOwn(COUNTRIES, (saved as { country?: string }).country ?? ""))} />}
               <div className="methodology-tableFrame" role="region" aria-labelledby={`parameter-title-${groupIndex}`} tabIndex={0}>
                 <table className="methodology-table methodology-registerTable" aria-labelledby={`parameter-title-${groupIndex}`}>
                   <colgroup>
@@ -157,7 +173,7 @@ export default async function MethodologyPage({ params }: PageProps<"/[lang]/met
                   </thead>
                   <tbody>
                     {rows.map((p) => (
-                      <tr key={p.id}>
+                      <tr key={p.id} data-parameter={p.id}>
                         <th scope="row" lang="en"><div className="methodology-parameterLabel">{p.label}</div><div className="methodology-parameterId">{p.id}</div>{p.note && <div className="methodology-parameterNote">{p.note}</div>}</th>
                         <td className="num methodology-numericCell methodology-parameterValue">{new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 8 }).format(p.value)} <span className="methodology-unit">{p.unit}</span></td>
                         <td className="methodology-kind">{p.kind}</td>

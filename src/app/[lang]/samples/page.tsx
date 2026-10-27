@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { CountryFlag } from "@/components/CountryFlag";
+import { DisplayMoney } from "@/components/DisplayMoney";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
@@ -37,10 +38,10 @@ export default async function SamplesPage({ params }: PageProps<"/[lang]/samples
             <p className="mt-2 text-sm text-ink2">{[...new Set(a.scenarios.base.feed.lines.map((line) => d.labels.feedstock[line.typeId]))].join(" · ")}</p>
             <span className={`mt-3 w-fit rounded-full px-3 py-1 text-xs font-bold ${TONE[a.verdict.id]}`}>{d.labels.verdict[a.verdict.id]}</span>
             <dl className="mt-4 grid flex-1 grid-cols-2 gap-3 text-sm">
-              <div><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-semibold">{F.eur(a.ranges.capexEur[1])}</dd></div>
+              <div><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-semibold"><DisplayMoney value={a.ranges.capexEur[1]} initialText={F.eur(a.ranges.capexEur[1])} /></dd></div>
               <div><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-semibold">{F.years(a.ranges.paybackYears[1])}</dd></div>
               <div><dt className="text-muted">{d.labels.route[a.bestRoute]}</dt><dd className="num font-semibold">{F.range(a.ranges.kwEl[0], a.ranges.kwEl[2])} {d.labels.units.kwe}</dd></div>
-              <div><dt className="text-muted">NPV</dt><dd className="num font-semibold">{F.eur(a.ranges.npvEur[1])}</dd></div>
+              <div><dt className="text-muted">NPV</dt><dd className="num font-semibold"><DisplayMoney value={a.ranges.npvEur[1]} initialText={F.eur(a.ranges.npvEur[1])} /></dd></div>
             </dl>
             <span className="mt-4 text-sm font-semibold text-brand group-hover:underline">{d.samples.open} →</span>
           </Link>

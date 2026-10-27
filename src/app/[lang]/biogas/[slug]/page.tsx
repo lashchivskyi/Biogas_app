@@ -12,6 +12,7 @@ import { countryName, fmt, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
+import { DisplayMoney } from "@/components/DisplayMoney";
 
 export function generateStaticParams() {
   return SEGMENTS.map((s) => ({ slug: s.slug }));
@@ -101,7 +102,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.biogas}</dt><dd className="num font-bold">{fmt(d.flow.m3Yr, { v: f.range(r.biogasM3[0], r.biogasM3[2], (x) => f.compact(x)) })}</dd></div>
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.capacity}</dt><dd className="num font-bold">{f.range(r.kwEl[0], r.kwEl[2])} {d.labels.units.kw}</dd></div>
-              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-bold">{f.eur(r.capexEur[2])} – {f.eur(r.capexEur[0])}</dd></div>
+              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-bold"><DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${f.eur(r.capexEur[2])} – ${f.eur(r.capexEur[0])}`} /></dd></div>
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-bold">{f.years(r.paybackYears[1])}</dd></div>
             </dl>
             <p className="mt-3 text-xs text-muted">{d.result.tone[a.verdict.id]} {H.disclaimer}</p>

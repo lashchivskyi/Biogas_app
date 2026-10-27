@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { Icon } from "../brand/Icon";
 
 export interface SegmentCard {
@@ -13,7 +13,7 @@ export interface SegmentCard {
   tendency: string;
   insight: string;
   conditions: string[];
-  example: { title: string; verdict: string; payback: string; capex: string; kw: string; biogas: string };
+  example: { title: string; verdict: string; payback: string; capex: ReactNode; kw: string; biogas: string };
 }
 
 const TONE = {

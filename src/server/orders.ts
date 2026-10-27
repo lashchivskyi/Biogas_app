@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import type { Assessment, ProjectInput } from "@/core";
 import type { PlanId } from "@/config/plans";
 import { dataFile, exclusive, readJsonArray, writeJsonArray } from "./jsonFile";
+import type { PaymentQuote } from "./payments/quote";
 
 export type OrderStatus = "created" | "pending" | "paid" | "failed" | "expired" | "reversed" | "cancelled";
 export type ProviderId = "stripe" | "monobank" | "demo";
@@ -20,6 +21,9 @@ export interface Order {
   /** Price in EUR cents from the plan table (reference, regardless of charge currency). */
   priceEurCents: number;
   priceTier: "A" | "B" | "C";
+  paymentQuote?: PaymentQuote;
+  /** Actual billing country returned by the payment provider; never inferred from project or language. */
+  billingCountry?: string;
   provider: ProviderId;
   providerRef?: string;
   /** Underlying payment id (e.g. Stripe PaymentIntent) for refund matching. */
@@ -77,7 +81,7 @@ export const orders = {
    * Apply a status change. `paid` is sticky against late `pending`/`failed` events (webhooks can
    * arrive out of order); `reversed` may follow `paid` (refund). Admin may override.
    */
-  update(id: string, patch: Partial<Pick<Order, "status" | "providerRef" | "paymentRef" | "providerModifiedAt" | "notes">>, source: string): Promise<Order | null> {
+  update(id: string, patch: Partial<Pick<Order, "status" | "providerRef" | "paymentRef" | "providerModifiedAt" | "notes" | "billingCountry">>, source: string): Promise<Order | null> {
     return exclusive(FILE, async () => {
       const all = await readJsonArray<Order>(FILE);
       const i = all.findIndex((o) => o.id === id);

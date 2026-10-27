@@ -11,7 +11,7 @@ export function sig2(v: number): number {
 export type Fmt = ReturnType<typeof makeFormat>;
 
 /** Locale-aware formatters. Compact notation and currency symbols come from Intl. */
-export function makeFormat(locale: Locale, units: Dict["labels"]["units"]) {
+export function makeFormat(locale: Locale, units: Dict["labels"]["units"], display: { currency: "EUR" | "USD"; rate: number } = { currency: "EUR", rate: 1 }) {
   const tag = INTL_TAG[locale];
   const nf0 = new Intl.NumberFormat(tag, { maximumFractionDigits: 0 });
   const nf1 = new Intl.NumberFormat(tag, { maximumFractionDigits: 1 });
@@ -22,7 +22,8 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"]) {
   const n0 = (v: number) => nf0.format(Math.round(v));
   const n1 = (v: number) => nf1.format(v);
   const compact = (v: number) => cmp.format(v);
-  const eur = (v: number) => cur("EUR").format(sig2(v));
+  const eur = (v: number) => cur(display.currency).format(sig2(v * display.rate));
+  const monetaryCompact = (v: number) => cmp.format(sig2(v * display.rate));
   const money = (v: number, code: string) => cur(code).format(sig2(v));
   const price = (v: number, code: string) => curFull(code).format(v);
   const years = (v: number | null) => (v === null || !Number.isFinite(v) ? units.never : v > 25 ? units.over25 : `${n1(v)} ${units.years}`);
@@ -34,5 +35,5 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"]) {
     const fh = f(hi);
     return fl === fh ? fl : `${fl} – ${fh}`;
   };
-  return { n0, n1, compact, eur, money, price, years, pct, range, sig2 };
+  return { n0, n1, compact, monetaryCompact, currency: display.currency, exchangeRate: display.rate, eur, money, price, years, pct, range, sig2 };
 }
