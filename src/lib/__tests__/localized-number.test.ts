@@ -13,7 +13,7 @@ describe.each(LOCALES)("number input %s", (locale) => {
     }
   });
   it("preserves project quantities and prices through a localised form", () => {
-    const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+    const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
     const modified = { ...input, feedstocks: [{ ...input.feedstocks[0], quantity: 1234.567, dryMatterPct: 17.123, purchasePricePerTonneLocal: -12.34 }] };
     const form = inputToForm(modified, locale);
     expect(invalidNumberStep(form)).toBeNull();
@@ -25,7 +25,7 @@ describe.each(LOCALES)("number input %s", (locale) => {
 });
 
 it("migrates an untagged old draft without interpreting decimal points as grouping", () => {
-  const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+  const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
   const form = inputToForm(input);
   delete form.numberLocale;
   form.lines[0].quantity = "1 234.567";
@@ -45,7 +45,7 @@ it("rejects partial or malformed numeric values", () => {
 });
 
 it("locates invalid numbers before partial projects can be submitted", () => {
-  const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+  const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
   const form = inputToForm(input, "de");
   form.lines[0].quantity = "12foo";
   expect(invalidNumberStep(form)).toBe(1);

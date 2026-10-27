@@ -126,6 +126,9 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.opex.monitoring_fixed", "Lab tests, safety inspections, gas monitoring", 5000, "EUR/a", "ESTIMATE", ENG, "LOW"),
   prov("eng.opex.upgrade_maintenance_share", "Upgrading maintenance", 0.04, "of upgrading CAPEX/a", "ESTIMATE", ENG, "LOW"),
   prov("eng.opex.cng_haul_eur_nm3", "Bio-CNG road haulage to the offtaker (30–60 km)", 0.04, "EUR/Nm³", "ESTIMATE", "Cascade trailer ≈ 4 500 Nm³ per trip, ≈ 150–200 € per round trip incl. driver; TO VERIFY with hauliers", "LOW"),
+  prov("eng.opex.reject_share_food_waste", "Pre-treatment rejects, packaged food waste", 0.1, "of input mass", "ESTIMATE", "Depackaging units reject typically 7–12 % of weighbridge food waste (Huber UK via ADBA, 2025)", "MEDIUM"),
+  prov("eng.opex.reject_share_biowaste", "Pre-treatment rejects, municipal biowaste", 0.2, "of input mass", "ESTIMATE", "Impurities in separately collected biowaste ≈ 8 % (door-to-door) – 16 % (street bins); rejects ≈ 2 × impurities through carry-over of organics (Alia/Comune di Prato, 2021; ARPA Umbria)", "MEDIUM"),
+  prov("eng.opex.reject_disposal_eur_t", "Disposal of pre-treatment rejects (incineration / landfill)", 100, "EUR/t", "ESTIMATE", "110–120 €/t national reference (CIC 2013, cited by Cittadinanzattiva); 22–84 €/t at regional landfills — replace with the local gate fee", "LOW"),
   prov("eng.opex.certification_eur_nm3", "Certification, trading, balancing for biomethane", 0.03, "EUR/Nm³", "ESTIMATE", ENG, "LOW"),
 
   // --- fertiliser / digestate agronomy ---

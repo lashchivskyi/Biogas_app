@@ -10,6 +10,13 @@ import { COUNTRIES, getCountry, UA } from "@/countries";
 const DE = COUNTRIES.DE;
 const UK = { lang: "uk" as const };
 const run = (i: ProjectInput) => assess(i, getCountry(i.countryCode));
+/** Ukrainian finishing-pig farm used as a model fixture (not a published sample). */
+const PIG_UA: ProjectInput = {
+  countryCode: "UA", regionId: "ternopil", businessType: "pig_farm",
+  feedstocks: [{ id: "a", animal: "pig_finisher", quantity: 5000 }],
+  energy: { electricityKwhYear: 700000, electricityPriceLocalPerKwh: 8.3, heatNeed: "seasonal_buildings", heatKwhYear: 450000, hasGridConnection: true },
+  site: { landHa: 1200, existingStorageM3: 4000, gasGridKm: 8 },
+};
 const UA_FX = UA.params.find((p) => p.id === "econ.fx_local_per_eur")!.value;
 
 const ex = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
@@ -53,7 +60,7 @@ describe("feedstock-first model", () => {
 
   it("uses the customer's dry matter, not only the catalogue default", () => {
     const mk = (dm: number) =>
-      assess({ ...ex("pig_5000"), feedstocks: [{ id: "a", animal: "pig_finisher", quantity: 1000, dryMatterPct: dm }] }, UA).scenarios.base.feed.ch4M3Year;
+      assess({ ...PIG_UA, feedstocks: [{ id: "a", animal: "pig_finisher", quantity: 1000, dryMatterPct: dm }] }, UA).scenarios.base.feed.ch4M3Year;
     expect(mk(8)).toBeGreaterThan(mk(4));
   });
 
@@ -94,7 +101,7 @@ describe("energy balance", () => {
   });
 
   it("separates produced heat from economically useful heat", () => {
-    const e = assess(ex("pig_5000"), UA).scenarios.base.energy;
+    const e = assess(PIG_UA, UA).scenarios.base.energy;
     expect(e.heatProducedKwh).toBeGreaterThan(e.heatUsefulKwh);
   });
 
@@ -108,7 +115,7 @@ describe("energy balance", () => {
 });
 
 describe("economics", () => {
-  const dairyProc = assess(ex("dairy_processor"), UA);
+  const dairyProc = assess(ex("ua_sugar"), UA);
   const base = dairyProc.scenarios.base;
 
   it("orders scenarios sensibly", () => {
@@ -120,7 +127,7 @@ describe("economics", () => {
   it("subsidies are zero unless explicitly assumed, and flagged", () => {
     expect(base.opexRev.revenue.some((r) => r.id === "support")).toBe(false);
     expect(dairyProc.supportIncluded).toBe(false);
-    const withSupport = assess({ ...ex("dairy_processor"), assumedSupportEurPerKwh: 0.05 }, UA, UK);
+    const withSupport = assess({ ...ex("ua_sugar"), assumedSupportEurPerKwh: 0.05 }, UA, UK);
     expect(withSupport.supportIncluded).toBe(true);
     expect(withSupport.scenarios.base.fin.npvEur).toBeGreaterThan(base.fin.npvEur);
     expect(withSupport.notes.join(" ")).toMatch(/не гарантована/);
@@ -168,7 +175,7 @@ describe("economics", () => {
 describe("logistics", () => {
   it("flags slurry hauled over long distances as critical", () => {
     const input: ProjectInput = {
-      ...ex("pig_5000"),
+      ...PIG_UA,
       feedstocks: [
         { id: "a", animal: "pig_finisher", quantity: 3000 },
         { id: "b", animal: "dairy_cow", quantity: 300, delivered: true, distanceKm: 60 },
@@ -181,7 +188,7 @@ describe("logistics", () => {
   });
 
   it("an on-site stream has no transport cost", () => {
-    const a = assess(ex("pig_5000"), UA);
+    const a = assess(PIG_UA, UA);
     expect(a.scenarios.base.feed.lines[0].transportCostEurYear).toBe(0);
   });
 });
@@ -251,15 +258,15 @@ describe("data quality and honesty", () => {
   });
 
   it("separates the seven scores and does not invent one magic number", () => {
-    const a = assess(ex("dairy_processor"), UA);
+    const a = assess(ex("ua_sugar"), UA);
     expect(a.scores.map((s) => s.id).sort()).toEqual(["economics", "energy", "environmental", "feedstock", "location", "regulatory", "technical"]);
     expect(a.overall.explanation.length).toBeGreaterThan(0);
   });
 
   it("reports digestate as a liability when there is no land", () => {
-    const a = assess(ex("dairy_processor"), UA);
+    const a = assess(ex("ua_sugar"), UA);
     expect(["SHORT", "OK", "UNKNOWN"]).toContain(a.digestate.adequacy);
-    const noLand = assess({ ...ex("dairy_processor"), site: { landHa: 0 } }, UA);
+    const noLand = assess({ ...ex("ua_sugar"), site: { landHa: 0 } }, UA);
     expect(noLand.digestate.adequacy).toBe("SHORT");
   });
 
@@ -291,8 +298,8 @@ describe("templates produce distinct, explained outcomes (regression: 'always we
     const { LEVERS } = await import("@/lib/whatif");
     const base = assess(ex("dairy_400"), UA).scenarios.base.fin.simplePaybackYears!;
     const co = assess(LEVERS.find((l) => l.id === "cosubstrate")!.apply(ex("dairy_400"), UA_FX), UA).scenarios.base.fin.simplePaybackYears!;
-    // food waste needs hygienisation + reception, so the gain is real but not free
-    expect(co).toBeLessThan(base * 0.8);
+    // At a €6/t gate fee the gain is small: food waste needs hygienisation, reception and disposal of ≈ 10 % packaging rejects.
+    expect(co).toBeLessThan(base);
   });
 });
 
@@ -323,11 +330,11 @@ describe("international model", () => {
   });
 
   it("support schemes are separate cases and never change the verdict", () => {
-    const input = ex("de_guelle");
+    const input = ex("de_nawaro");
     const a = assess(input, DE);
     expect(a.supportIncluded).toBe(false);
     expect(a.supportCases.length).toBeGreaterThan(0);
-    const g = a.supportCases.find((s) => s.schemeId === "de.guelle");
+    const g = a.supportCases.find((s) => s.schemeId === "de.tender");
     expect(g).toBeDefined();
     if (g?.eligible) expect(g.npvEur).toBeGreaterThan(a.scenarios.base.fin.npvEur);
   });

@@ -96,6 +96,9 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   ox("feedstock", T("Feedstock purchase (net of gate fees)", "Закупівля сировини (за вирахуванням плати за прийом)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0));
   ox("opportunity", T("Lost revenue from alternative feedstock use", "Втрачений дохід від альтернативного використання сировини"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
   ox("transport", T("Feedstock logistics (and digestate return)", "Логістика сировини (та повернення дигестату)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
+  // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled.
+  const rejectT = feed.lines.reduce((a, l) => a + l.tonnesYear * (l.typeId === "food_waste" ? p.get("eng.opex.reject_share_food_waste") : l.typeId === "municipal_biowaste" ? p.get("eng.opex.reject_share_biowaste") : 0), 0);
+  ox("rejects", T("Disposal of pre-treatment rejects (packaging, plastics, grit)", "Утилізація відходів сортування (упаковка, пластик, пісок)"), rejectT * p.get("eng.opex.reject_disposal_eur_t") * opexMult);
   ox("digestate_handling", T("Digestate handling (incremental)", "Поводження з дигестатом (інкрементально)"), dig.handlingCostEurYear);
   ox("el_purchased", T("Electricity purchased", "Закупівля електроенергії"), energy.elPurchasedKwh * demand.electricityPriceEurKwh);
   ox("heat_external", T("External heat for the digester", "Зовнішнє тепло для обігріву реактора"), energy.heatExternalPurchasedKwh * demand.heatValueEurKwh);

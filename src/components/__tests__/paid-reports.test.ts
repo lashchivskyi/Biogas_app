@@ -7,7 +7,7 @@ import { getCountry } from "@/countries";
 import en from "@/i18n/dict/en";
 import { ResultView, type ResultViewProps } from "../ResultView";
 
-const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
 const a = assess(input, getCountry(input.countryCode));
 const render = (access: ResultViewProps["access"]) => renderToStaticMarkup(createElement(ResultView, {
   a, d: en, locale: "en", currency: "EUR", access, methodologyHref: "/en/methodology",

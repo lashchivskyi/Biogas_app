@@ -84,7 +84,7 @@ describe("shared project and language preferences", () => {
 });
 
 describe("project changes preserve quantities without reinterpreting prices", () => {
-  const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+  const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
   it("keeps an unselected region empty instead of silently choosing the first climate profile", () => {
     const form = inputToForm(input, "de");
     const next = recontextualizeForm(form, COUNTRIES.DE, undefined, "de");

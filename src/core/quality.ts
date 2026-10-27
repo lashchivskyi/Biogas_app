@@ -53,7 +53,7 @@ export function assessQuality(
     score -= 12;
     gap("electricity", T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
   }
-  if (!demand.electricityPriceKnown) {
+  if (!demand.electricityPriceKnown && input.energy.electricityKwhYear !== 0) {
     score -= 6;
     gap("electricity_price", T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
   }
@@ -73,7 +73,9 @@ export function assessQuality(
     score -= 8;
     gap("distance", T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
   }
-  const paidLines = base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
+  // Delivered streams with a price (gate fee or purchase) are already priced; only own waste has a disposal cost to ask for.
+  const own = new Set(input.feedstocks.filter((f) => !(f.delivered && f.purchasePricePerTonneLocal !== undefined)).map((f) => f.id));
+  const paidLines = base.feed.lines.filter((l) => own.has(l.id) && FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
     score -= 5;
     gap("disposal", T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));

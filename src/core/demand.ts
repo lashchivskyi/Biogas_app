@@ -23,7 +23,8 @@ export function customerDemand(ctx: RunContext): CustomerDemand {
   const boilerEff = params.get("eng.boiler_efficiency");
   const priceMult = scenario.energyPriceMult * mods.energyPrice;
 
-  const electricityKnown = (e.electricityKwhYear ?? 0) > 0;
+  // An explicit 0 is an answer (self-supplied site or merchant plant), not missing data.
+  const electricityKnown = e.electricityKwhYear !== undefined && e.electricityKwhYear >= 0;
   const priceKnown = (e.electricityPriceLocalPerKwh ?? 0) > 0;
   const elPrice = (priceKnown ? (e.electricityPriceLocalPerKwh as number) / fx : retail) * priceMult;
 

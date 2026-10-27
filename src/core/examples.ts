@@ -2,8 +2,9 @@ import type { ProjectInput } from "./types";
 
 /**
  * Reference customers used by tests, the demo buttons in the calculator and docs/economics.md.
- * Each is an anonymised archetype built from the scale of plants of that type in that country (not a named company).
- * The verdict is whatever the unchanged model returns; the set is curated for realism and coverage, not for a verdict mix.
+ * One case per distinct business model (feedstock, process, scale or way of earning money), each placed in the market where
+ * that model is characteristic. Anonymised archetypes sized like real plants of the type, not named companies.
+ * Verdicts are whatever the model returns; the set is curated for coverage and realism, not for a verdict mix.
  */
 export interface ExampleCase {
   id: string;
@@ -18,7 +19,7 @@ const base = {
 };
 
 export const EXAMPLES: ExampleCase[] = [
-  // ---------------- STRONG: high-value residues or gate fees, year-round heat and power use ----------------
+  // ---------------- Strong: high-value residues or gate fees and a year-round energy use ----------------
   {
     id: "it_whey", title: "Italian cheese dairy, 40 kt whey", description: "Whey and fat sludge with paid disposal; steam and power used around the clock",
     input: {
@@ -32,126 +33,33 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "fr_food_35k", title: "Breton dairy cooperative, whey and flotation sludge", description: "Only low-value whey rejected by feed buyers enters the model; ordinary saleable whey is excluded.",
+    id: "pl_poultry", title: "Polish poultry processor, 14 kt residues", description: "Wielkopolska: category 3 residues and DAF fat with paid disposal; CHP covers cooling and process heat all year",
     input: {
-      countryCode: "FR", regionId: "bretagne", businessType: "dairy_processor",
+      countryCode: "PL", regionId: "wielkopolskie", businessType: "slaughterhouse",
       feedstocks: [
-        { id: "off-spec-whey", type: "dairy_whey", quantity: 45000, dryMatterPct: 5.5, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 18 },
-        { id: "dairy-daf", type: "dairy_fat_sludge", quantity: 1500, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 55 },
+        { id: "residues", type: "slaughter_residues", quantity: 12000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 250 },
+        { id: "daf-fat", type: "grease_trap_fat", quantity: 2000, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 300 },
       ],
-      energy: { electricityKwhYear: 5500000, heatNeed: "year_round_process", gasM3Year: 850000, hasGridConnection: true },
-      site: { landHa: 1200, gasGridKm: 0.6, neighboursWithin300m: true },
+      energy: { electricityKwhYear: 18000000, electricityPriceLocalPerKwh: 0.85, heatNeed: "year_round_process", gasM3Year: 2000000, hasGridConnection: true },
+      site: { landHa: 400, gasGridKm: 3 },
     },
   },
   {
-    id: "it_slaughter", title: "Italian slaughterhouse, 20 kt category 3 residues", description: "Emilia-Romagna pork plant: paid disposal of eligible category 3 animal by-products, steam and cooling all year",
+    id: "pl_frozen_veg", title: "Polish frozen-vegetable plant, 25 kt seasonal residues", description: "Mazovia: trimmings and rejects from a June–November freezing campaign, paid disposal; cold stores run all year",
     input: {
-      countryCode: "IT", regionId: "emilia", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 20000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 180 }],
-      energy: { electricityKwhYear: 12000000, electricityPriceLocalPerKwh: 0.225, heatNeed: "year_round_process", gasPriceLocalPerM3: 0.559, gasM3Year: 2000000, hasGridConnection: true },
-      site: { landHa: 80, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "de_biowaste", title: "German biowaste plant, 40 kt with gate fee", description: "Source-separated biowaste under a municipal contract; CHP heat to a district network; gate fee is the main revenue",
-    input: {
-      countryCode: "DE", regionId: "niedersachsen", businessType: "municipal_biowaste",
-      feedstocks: [{ id: "a", type: "municipal_biowaste", quantity: 40000, dryMatterPct: 25, monthsActive: 12, delivered: true, distanceKm: 25, purchasePricePerTonneLocal: -85, handling: "other" }],
-      energy: { electricityKwhYear: 2000000, electricityPriceLocalPerKwh: 0.206, heatNeed: "year_round_process", heatKwhYear: 3000000, hasGridConnection: true },
-      site: { landHa: 1000, gasGridKm: 2 },
-    },
-  },
-  {
-    id: "it_forsu", title: "Italian FORSU plant, 40 kt organic municipal waste", description: "Lazio-type merchant plant: municipal organic waste with a high gate fee; biomethane or CHP",
-    input: {
-      countryCode: "IT", regionId: "lazio", businessType: "municipal_biowaste",
-      feedstocks: [{ id: "a", type: "municipal_biowaste", quantity: 40000, dryMatterPct: 25, monthsActive: 12, delivered: true, distanceKm: 30, purchasePricePerTonneLocal: -110, handling: "other" }],
-      energy: { electricityKwhYear: 1800000, electricityPriceLocalPerKwh: 0.225, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 1200, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "at_dairy", title: "Austrian cheese dairy, 30 kt whey", description: "Upper Austria: whey and fat sludge with paid disposal; process heat year-round",
-    input: {
-      countryCode: "AT", regionId: "oberoesterreich", businessType: "dairy_processor",
-      feedstocks: [
-        { id: "a", type: "dairy_whey", quantity: 30000, dryMatterPct: 5.5, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 15 },
-        { id: "b", type: "dairy_fat_sludge", quantity: 2000, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 60 },
-      ],
-      energy: { electricityKwhYear: 6000000, electricityPriceLocalPerKwh: 0.192, heatNeed: "year_round_process", gasPriceLocalPerM3: 0.652, gasM3Year: 1200000, hasGridConnection: true },
-      site: { landHa: 150, gasGridKm: 0.8 },
-    },
-  },
-  {
-    id: "se_slaughter", title: "Swedish meat plant, 15 kt residues", description: "Skåne: category 3 residues with paid disposal; high gas price makes process heat valuable",
-    input: {
-      countryCode: "SE", regionId: "skane", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 15000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 1600 }],
-      energy: { electricityKwhYear: 8000000, electricityPriceLocalPerKwh: 1.303, heatNeed: "year_round_process", gasPriceLocalPerM3: 11.754, gasM3Year: 500000, hasGridConnection: true },
-      site: { landHa: 120, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "dk_slaughter", title: "Danish meat plant, 25 kt category 3 residues", description: "Jutland: category 3 residues and fat with paid disposal; year-round steam and cooling",
-    input: {
-      countryCode: "DK", regionId: "jutland", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 25000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 500 }],
-      energy: { electricityKwhYear: 12000000, electricityPriceLocalPerKwh: 0.972, heatNeed: "year_round_process", gasPriceLocalPerM3: 4.914, gasM3Year: 2500000, hasGridConnection: true },
-      site: { landHa: 200, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "de_bakery", title: "German bakery group, 12 kt residues", description: "Dough, bread and confectionery rejects with paid disposal; process heat for ovens and cleaning",
-    input: {
-      countryCode: "DE", regionId: "nrw", businessType: "other_industry",
-      feedstocks: [{ id: "a", type: "food_waste", quantity: 12000, dryMatterPct: 30, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 120 }],
-      energy: { electricityKwhYear: 3000000, electricityPriceLocalPerKwh: 0.206, heatNeed: "year_round_process", gasPriceLocalPerM3: 0.648, gasM3Year: 1500000, hasGridConnection: true },
-      site: { landHa: 50, gasGridKm: 0.5 },
-    },
-  },
-
-  {
-    id: "gb_slaughter", title: "UK poultry plant, 20 kt category 3 residues", description: "Midlands: category 3 residues and DAF fat with paid disposal; high UK power prices; steam and cooling all year",
-    input: {
-      countryCode: "GB", regionId: "midlands", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 20000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 120 }],
-      energy: { electricityKwhYear: 15000000, electricityPriceLocalPerKwh: 0.245, heatNeed: "year_round_process", gasPriceLocalPerM3: 0.38, gasM3Year: 2500000, hasGridConnection: true },
-      site: { landHa: 150, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "fr_slaughter", title: "French abattoir, 15 kt category 3 residues", description: "Brittany red-meat abattoir: category 3 residues with paid disposal; year-round steam for scalding and cleaning",
-    input: {
-      countryCode: "FR", regionId: "bretagne", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 15000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 150 }],
-      energy: { electricityKwhYear: 9000000, electricityPriceLocalPerKwh: 0.155, heatNeed: "year_round_process", gasPriceLocalPerM3: 0.59, gasM3Year: 1800000, hasGridConnection: true },
-      site: { landHa: 300, gasGridKm: 1 },
-    },
-  },
-  {
-    id: "dk_dairy", title: "Danish dairy, 30 kt whey and fat sludge", description: "Jutland dairy: whey treatment with paid disposal; process heat and power used year-round",
-    input: {
-      countryCode: "DK", regionId: "jutland", businessType: "dairy_processor",
-      feedstocks: [
-        { id: "a", type: "dairy_whey", quantity: 30000, dryMatterPct: 5.5, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 120 },
-        { id: "b", type: "dairy_fat_sludge", quantity: 1500, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 500 },
-      ],
-      energy: { electricityKwhYear: 6000000, electricityPriceLocalPerKwh: 0.972, heatNeed: "year_round_process", gasPriceLocalPerM3: 4.9, gasM3Year: 1200000, hasGridConnection: true },
-      site: { landHa: 400, gasGridKm: 1 },
-    },
-  },
-
-  // ---------------- POSSIBLE: economics depend on conditions (gate fee, price, seasonality, robustness) ----------------
-  {
-    id: "de_meat", title: "German meat processor, 17.5 kt residues", description: "Slaughter residues + DAF fat; high power and gas prices, disposal costs avoided",
-    input: {
-      countryCode: "DE", regionId: "niedersachsen", businessType: "slaughterhouse",
-      feedstocks: [
-        { id: "a", type: "slaughter_residues", quantity: 15000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 55 },
-        { id: "b", type: "grease_trap_fat", quantity: 2500, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 70 },
-      ],
-      energy: { electricityKwhYear: 14000000, heatNeed: "year_round_process", gasM3Year: 2400000, hasGridConnection: true },
+      countryCode: "PL", regionId: "mazowieckie", businessType: "fruit_veg_processor",
+      feedstocks: [{ id: "trimmings", type: "fruit_veg_residues", quantity: 25000, dryMatterPct: 12, monthsActive: 6, startMonth: 6, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 120 }],
+      energy: { electricityKwhYear: 15000000, electricityPriceLocalPerKwh: 0.85, heatNeed: "year_round_process", gasM3Year: 1500000, hasGridConnection: true },
       site: { landHa: 300, gasGridKm: 2 },
+    },
+  },
+  {
+    id: "es_wholesale_market", title: "Barcelona-type wholesale food market, 12 kt organic waste", description: "The market company digests unsold produce and organic waste on site instead of paying for off-site treatment; power for cold stores",
+    input: {
+      countryCode: "ES", regionId: "cataluna", businessType: "municipal_biowaste",
+      feedstocks: [{ id: "market-organics", type: "food_waste", quantity: 12000, dryMatterPct: 14, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 55 }],
+      energy: { electricityKwhYear: 9000000, electricityPriceLocalPerKwh: 0.133, heatNeed: "year_round_process", heatKwhYear: 2500000, hasGridConnection: true },
+      site: { landHa: 0, gasGridKm: 0.5, neighboursWithin300m: true },
     },
   },
   {
@@ -159,33 +67,20 @@ export const EXAMPLES: ExampleCase[] = [
     input: {
       countryCode: "GB", regionId: "midlands", businessType: "municipal_biowaste",
       feedstocks: [{ id: "a", type: "food_waste", quantity: 50000, dryMatterPct: 24, monthsActive: 12, startMonth: 1, delivered: true, distanceKm: 25, purchasePricePerTonneLocal: -30, handling: "other" }],
-      energy: { electricityKwhYear: 1500000, heatNeed: "none", hasGridConnection: true },
+      energy: { electricityKwhYear: 1500000, electricityPriceLocalPerKwh: 0.245, heatNeed: "none", hasGridConnection: true },
       site: { landHa: 2000, gasGridKm: 1 },
     },
   },
   {
-    id: "ua_sugar", title: "Sugar factory, 90 kt pressed beet pulp", description: "Ensiled pulp digested all year; power and heat replace grid electricity and factory gas",
+    id: "it_forsu", title: "Italian FORSU plant, 40 kt municipal organic waste", description: "Lazio: municipal organic fraction under a long contract with a high gate fee; CHP power exported",
     input: {
-      ...base, regionId: "vinnytsia", businessType: "sugar_beet_factory",
-      feedstocks: [{ id: "a", type: "sugar_beet_pulp_pressed", quantity: 90000, dryMatterPct: 23, monthsActive: 12, startMonth: 1, handling: "sold_as_feed", opportunityValuePerTonneLocal: 200 }],
-      energy: { electricityKwhYear: 20000000, electricityPriceLocalPerKwh: 8.6, heatNeed: "seasonal_buildings", gasM3Year: 9000000, gasPriceLocalPerM3: 22, hasGridConnection: true },
-      site: { landHa: 8000, gasGridKm: 1 },
+      countryCode: "IT", regionId: "lazio", businessType: "municipal_biowaste",
+      feedstocks: [{ id: "forsu", type: "municipal_biowaste", quantity: 40000, dryMatterPct: 28, monthsActive: 12, delivered: true, distanceKm: 30, purchasePricePerTonneLocal: -110, handling: "other" }],
+      energy: { electricityKwhYear: 1800000, electricityPriceLocalPerKwh: 0.22, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 1200, gasGridKm: 1 },
     },
   },
-  {
-    id: "dairy_processor",
-    title: "Молокозавод, 15 000 т сироватки на рік",
-    description: "Сироватка + жиро-осад, постійна потреба в парі/гарячій воді",
-    input: {
-      ...base, regionId: "lviv", businessType: "dairy_processor",
-      feedstocks: [
-        { id: "a", type: "dairy_whey", quantity: 15000, dryMatterPct: 5.5, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 600 },
-        { id: "b", type: "dairy_fat_sludge", quantity: 1200, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 1200 },
-      ],
-      energy: { electricityKwhYear: 5000000, electricityPriceLocalPerKwh: 8.8, heatNeed: "year_round_process", gasM3Year: 1800000, gasPriceLocalPerM3: 21, hasGridConnection: true },
-      site: { landHa: 450, gasGridKm: 0.5, neighboursWithin300m: false },
-    },
-  },
+  // ---------------- Possible: the answer depends on prices, contracts or the conservative case ----------------
   {
     id: "slaughter_5000",
     title: "М'ясокомбінат, 5 000 т відходів забою",
@@ -198,70 +93,82 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "it_food_30k", title: "Italian cannery, seasonal vegetable residues", description: "Emilia-Romagna: tomato-season residues plus a smaller continuous vegetable line; no year-round supply assumption for the tomato stream.",
+    id: "ua_sugar", title: "Sugar factory, 90 kt pressed beet pulp", description: "Ensiled pulp digested all year; power and heat replace grid electricity and factory gas",
     input: {
-      countryCode: "IT", regionId: "emilia", businessType: "fruit_veg_processor",
+      ...base, regionId: "vinnytsia", businessType: "sugar_beet_factory",
+      feedstocks: [{ id: "a", type: "sugar_beet_pulp_pressed", quantity: 90000, dryMatterPct: 23, monthsActive: 12, startMonth: 1, handling: "sold_as_feed", opportunityValuePerTonneLocal: 200 }],
+      energy: { electricityKwhYear: 20000000, electricityPriceLocalPerKwh: 8.6, heatNeed: "seasonal_buildings", gasM3Year: 9000000, gasPriceLocalPerM3: 22, hasGridConnection: true },
+      site: { landHa: 8000, gasGridKm: 1 },
+    },
+  },
+  {
+    id: "de_starch", title: "German potato-starch factory, 80 kt pulp", description: "Lower Saxony: potato pulp from an August–January campaign has only a low feed value; starch drying uses large amounts of steam",
+    input: {
+      countryCode: "DE", regionId: "niedersachsen", businessType: "potato_processor",
+      feedstocks: [{ id: "pulp", type: "potato_processing", quantity: 80000, dryMatterPct: 13, monthsActive: 6, startMonth: 8, handling: "sold_as_feed", opportunityValuePerTonneLocal: 5 }],
+      energy: { electricityKwhYear: 30000000, electricityPriceLocalPerKwh: 0.21, heatNeed: "year_round_process", gasM3Year: 10000000, hasGridConnection: true },
+      site: { landHa: 3000, gasGridKm: 1 },
+    },
+  },
+  {
+    id: "gb_whisky", title: "Scotch malt distillery, pot ale to steam", description: "Speyside: pot ale and spent lees digested on site; biogas replaces part of the gas for distillation steam; draff stays a cattle-feed sale",
+    input: {
+      countryCode: "GB", regionId: "scotland", businessType: "distillery",
+      feedstocks: [{ id: "pot-ale", type: "grain_stillage", quantity: 35000, dryMatterPct: 4.5, monthsActive: 11, startMonth: 9, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 6 }],
+      energy: { electricityKwhYear: 2500000, electricityPriceLocalPerKwh: 0.245, heatNeed: "year_round_process", gasM3Year: 3500000, hasGridConnection: true },
+      site: { landHa: 0, gasGridKm: 3, neighboursWithin300m: false },
+    },
+  },
+  {
+    id: "es_olive", title: "Andalusian olive-pomace plant, biomethane", description: "Córdoba: two-phase pomace (alperujo) from cooperative mills, stored in ponds and digested year-round; biomethane injected into the grid",
+    input: {
+      countryCode: "ES", regionId: "andalucia", businessType: "olive_oil_mill",
+      feedstocks: [{ id: "alperujo", type: "olive_pomace", quantity: 120000, dryMatterPct: 30, monthsActive: 12, delivered: true, distanceKm: 25, purchasePricePerTonneLocal: 0, handling: "other" }],
+      energy: { electricityKwhYear: 1500000, electricityPriceLocalPerKwh: 0.133, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 2500, gasGridKm: 3 },
+    },
+  },
+  {
+    id: "se_biowaste_fuel", title: "Swedish municipal biowaste to vehicle fuel", description: "Uppsala-type plant: separately collected food waste with a treatment fee; biogas upgraded and sold as bio-CNG for buses and refuse trucks",
+    input: {
+      countryCode: "SE", regionId: "uppsala", businessType: "municipal_biowaste",
+      feedstocks: [{ id: "a", type: "municipal_biowaste", quantity: 30000, dryMatterPct: 28, monthsActive: 12, delivered: true, distanceKm: 20, purchasePricePerTonneLocal: -500, handling: "other" }],
+      energy: { electricityKwhYear: 1200000, electricityPriceLocalPerKwh: 1.2, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 800, gasGridKm: 15 },
+    },
+  },
+  {
+    id: "dk_cluster", title: "Danish centralised plant, slurry + food waste, biomethane", description: "Jutland: a developer collects slurry from partner farms and food waste with a gate fee; biomethane to the gas grid, digestate returned to the farms",
+    input: {
+      countryCode: "DK", regionId: "jutland", businessType: "biogas_developer",
       feedstocks: [
-        { id: "tomato-campaign", type: "fruit_veg_residues", quantity: 18000, dryMatterPct: 12, monthsActive: 4, startMonth: 7, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 12 },
-        { id: "vegetable-line", type: "fruit_veg_residues", quantity: 5000, dryMatterPct: 8, monthsActive: 12, startMonth: 1, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 8 },
+        { id: "a", animal: "dairy_cow", quantity: 6000, housing: "year_round", delivered: true, distanceKm: 8, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
+        { id: "b", animal: "sow", quantity: 3000, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
+        { id: "c", type: "food_waste", quantity: 30000, dryMatterPct: 24, monthsActive: 12, delivered: true, distanceKm: 30, purchasePricePerTonneLocal: -220, handling: "other" },
       ],
-      energy: { electricityKwhYear: 3800000, heatNeed: "year_round_process", gasM3Year: 1100000, hasGridConnection: true },
-      site: { landHa: 0, gasGridKm: 1.5, neighboursWithin300m: true },
+      energy: { electricityKwhYear: 1500000, electricityPriceLocalPerKwh: 0.97, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 6000, gasGridKm: 2 },
     },
   },
   {
-    id: "br_food_40k", title: "Brazilian poultry processor, residues and grease", description: "Southern Brazil: segregated non-saleable residues, daily collection and energy for cooling and sanitation.",
+    id: "th_pome", title: "Thai palm-oil mill, POME", description: "POME in a covered lagoon, power for the mill",
     input: {
-      countryCode: "BR", regionId: "santa-catarina", businessType: "slaughterhouse",
-      feedstocks: [
-        { id: "non-saleable-residues", type: "slaughter_residues", quantity: 6000, dryMatterPct: 18, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 150 },
-        { id: "grease", type: "grease_trap_fat", quantity: 1000, dryMatterPct: 12, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 200 },
-      ],
-      energy: { electricityKwhYear: 8000000, heatNeed: "year_round_process", gasM3Year: 1500000, hasGridConnection: true },
-      site: { landHa: 0, gasGridKm: 7, neighboursWithin300m: false },
-    },
-  },
-
-  // ---------------- WEAK: a real feed exists, but the economics do not close without a stronger lever ----------------
-  {
-    id: "de_food_30k", title: "German regional brewery, 7 kt spent grain", description: "Spent grain has a feed market; diverting it has an opportunity cost. Steam and hot water are used at the brewery.",
-    input: {
-      countryCode: "DE", regionId: "niedersachsen", businessType: "brewery",
-      feedstocks: [{ id: "spent-grain", type: "brewery_spent_grain", quantity: 7000, monthsActive: 12, handling: "sold_as_feed", opportunityValuePerTonneLocal: 38 }],
-      energy: { electricityKwhYear: 3200000, heatNeed: "year_round_process", gasM3Year: 1100000, hasGridConnection: true },
-      site: { landHa: 0, gasGridKm: 0.4, neighboursWithin300m: true },
+      countryCode: "TH", regionId: "south", businessType: "palm_oil_mill",
+      feedstocks: [{ id: "a", type: "pome", quantity: 250000 }],
+      energy: { electricityKwhYear: 4000000, electricityPriceLocalPerKwh: 3.95, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 3000 },
     },
   },
   {
-    id: "es_food_35k", title: "Spanish pig farm, 12 000 finishing places and 1 800 sows", description: "Catalonia: own slurry only, nursery heating, existing storage and a long gas-grid connection.",
+    id: "mx_pig_lagoon", title: "Yucatán pig integrator, covered lagoon + genset", description: "25 000 finishing places and 2 500 sows; an unheated covered lagoon feeds generators that replace CFE power",
     input: {
-      countryCode: "ES", regionId: "cataluna", businessType: "pig_farm",
-      feedstocks: [{ id: "finishers", animal: "pig_finisher", quantity: 12000 }, { id: "sows", animal: "sow", quantity: 1800 }],
-      energy: { electricityKwhYear: 1600000, heatNeed: "year_round_process", heatKwhYear: 2400000, hasGridConnection: true },
-      site: { landHa: 1800, existingStorageM3: 8000, gasGridKm: 12, neighboursWithin300m: true },
+      countryCode: "MX", regionId: "yucatan", businessType: "pig_farm",
+      feedstocks: [{ id: "finishers", animal: "pig_finisher", quantity: 25000 }, { id: "sows", animal: "sow", quantity: 2500 }],
+      energy: { electricityKwhYear: 3000000, electricityPriceLocalPerKwh: 2.4, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 200 },
     },
   },
-  {
-    id: "us_dairy_rng", title: "US dairy, 3 000 cows, RNG", description: "Wisconsin dairy: power savings vs renewable natural gas with RINs",
-    input: {
-      countryCode: "US", regionId: "wisconsin", businessType: "dairy_farm",
-      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 3000, housing: "year_round" }, { id: "b", animal: "cattle_other", quantity: 1500, housing: "year_round" }],
-      energy: { electricityKwhYear: 2500000, heatNeed: "year_round_process", heatKwhYear: 800000, hasGridConnection: true },
-      site: { landHa: 2500, existingStorageM3: 40000, gasGridKm: 3 },
-    },
-  },
-  {
-    id: "de_guelle", title: "German dairy, 150 kW manure plant", description: "EEG Güllekleinanlage case: manure-only, tariff vs no-tariff",
-    input: {
-      countryCode: "DE", regionId: "bayern", businessType: "dairy_farm",
-      feedstocks: [
-        { id: "a", animal: "dairy_cow", quantity: 650, housing: "year_round" },
-        { id: "b", animal: "cattle_other", quantity: 300, housing: "year_round" },
-      ],
-      energy: { electricityKwhYear: 550000, heatNeed: "year_round_process", heatKwhYear: 250000, hasGridConnection: true },
-      site: { landHa: 450, existingStorageM3: 7000, gasGridKm: 5 },
-    },
-  },
+  // ---------------- Weak: a real feedstock, but the economics do not close without support or a stronger lever ----------------
   {
     id: "dairy_400",
     title: "Молочна ферма, 400 корів",
@@ -277,17 +184,6 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "pig_5000",
-    title: "Свинокомплекс, 5 000 місць відгодівлі",
-    description: "Гноївка свиней, взимку опалення приміщень",
-    input: {
-      ...base, regionId: "ternopil", businessType: "pig_farm",
-      feedstocks: [{ id: "a", animal: "pig_finisher", quantity: 5000 }],
-      energy: { electricityKwhYear: 700000, electricityPriceLocalPerKwh: 8.3, heatNeed: "seasonal_buildings", heatKwhYear: 450000, hasGridConnection: true },
-      site: { landHa: 1200, existingStorageM3: 4000, gasGridKm: 8 },
-    },
-  },
-  {
     id: "layers_200k",
     title: "Птахофабрика, 200 000 несучок",
     description: "Послід несучок, є ризик аміачного інгібування",
@@ -298,8 +194,63 @@ export const EXAMPLES: ExampleCase[] = [
       site: { landHa: 500, gasGridKm: 4 },
     },
   },
-
-  // ---------------- NOT RECOMMENDED: too small for a stand-alone plant; screening prevents an unsuitable investment ----------------
+  {
+    id: "ro_pig_complex", title: "Romanian pig complex, 30 000 places", description: "Timiș: large integrated pig unit with own land; slurry digested in heated tanks, heat for farrowing houses",
+    input: {
+      countryCode: "RO", regionId: "timis", businessType: "pig_farm",
+      feedstocks: [{ id: "finishers", animal: "pig_finisher", quantity: 30000 }, { id: "sows", animal: "sow", quantity: 3000 }],
+      energy: { electricityKwhYear: 4000000, electricityPriceLocalPerKwh: 0.94, heatNeed: "seasonal_buildings", heatKwhYear: 3000000, hasGridConnection: true },
+      site: { landHa: 3000, gasGridKm: 5 },
+    },
+  },
+  {
+    id: "de_nawaro", title: "German farm plant, maize silage + slurry, heat to a village network", description: "Lower Saxony NawaRo-type plant: purchased maize silage co-digested with own cattle slurry; power exported, CHP heat sold to a local heat network",
+    input: {
+      countryCode: "DE", regionId: "niedersachsen", businessType: "dairy_farm",
+      feedstocks: [
+        { id: "a", type: "maize_silage", quantity: 9000, dryMatterPct: 33, monthsActive: 12, delivered: true, distanceKm: 4, purchasePricePerTonneLocal: 42, handling: "other" },
+        { id: "b", animal: "dairy_cow", quantity: 250, housing: "year_round" },
+      ],
+      energy: { electricityKwhYear: 250000, electricityPriceLocalPerKwh: 0.22, heatNeed: "year_round_process", heatKwhYear: 1800000, hasGridConnection: true },
+      site: { landHa: 450, existingStorageM3: 4000, gasGridKm: 6 },
+    },
+  },
+  {
+    id: "fr_farm_injection", title: "French farm méthanisation, injection into the gas grid", description: "Pays de la Loire: a livestock farm co-digests manure with intermediate-crop silage and injects biomethane under a purchase tariff",
+    input: {
+      countryCode: "FR", regionId: "pays-de-la-loire", businessType: "cattle_farm",
+      feedstocks: [
+        { id: "a", animal: "dairy_cow", quantity: 220, housing: "year_round" },
+        { id: "b", animal: "cattle_other", quantity: 180, housing: "year_round" },
+        { id: "c", type: "maize_silage", quantity: 4500, dryMatterPct: 30, monthsActive: 12, delivered: true, distanceKm: 3, purchasePricePerTonneLocal: 35, handling: "other" },
+      ],
+      energy: { electricityKwhYear: 180000, electricityPriceLocalPerKwh: 0.155, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 380, existingStorageM3: 3000, gasGridKm: 2 },
+    },
+  },
+  {
+    id: "us_dairy_rng", title: "US dairy, 3 000 cows, RNG", description: "Wisconsin dairy: power savings vs renewable natural gas with RINs",
+    input: {
+      countryCode: "US", regionId: "wisconsin", businessType: "dairy_farm",
+      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 3000, housing: "year_round" }, { id: "b", animal: "cattle_other", quantity: 1500, housing: "year_round" }],
+      energy: { electricityKwhYear: 2500000, heatNeed: "year_round_process", heatKwhYear: 800000, hasGridConnection: true },
+      site: { landHa: 2500, existingStorageM3: 40000, gasGridKm: 3 },
+    },
+  },
+  {
+    id: "ca_ontario", title: "Ontario dairy with off-farm organics", description: "400 cows co-digesting trucked-in FOG and food-processing residues for tipping fees (≤ 50 % off-farm by rule); no feed-in tariff",
+    input: {
+      countryCode: "CA", regionId: "ontario", businessType: "dairy_farm",
+      feedstocks: [
+        { id: "cows", animal: "dairy_cow", quantity: 400, housing: "year_round" },
+        { id: "fog", type: "grease_trap_fat", quantity: 3000, dryMatterPct: 15, monthsActive: 12, delivered: true, distanceKm: 60, purchasePricePerTonneLocal: -50, handling: "other" },
+        { id: "food-processing", type: "fruit_veg_residues", quantity: 6000, dryMatterPct: 12, monthsActive: 12, delivered: true, distanceKm: 40, purchasePricePerTonneLocal: -25, handling: "other" },
+      ],
+      energy: { electricityKwhYear: 600000, electricityPriceLocalPerKwh: 0.17, heatNeed: "year_round_process", heatKwhYear: 400000, hasGridConnection: true },
+      site: { landHa: 500, existingStorageM3: 8000, gasGridKm: 5 },
+    },
+  },
+  // ---------------- Not recommended at this scale: the inquiry is real, the volume is too small for an own plant ----------------
   {
     id: "mixed_80",
     title: "Змішане господарство, 80 корів",
@@ -312,52 +263,51 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "pl_cows_60", title: "Polish family dairy, 60 cows", description: "Seasonal housing; manure only; no heat customer",
+    id: "gr_feta_small", title: "Greek feta dairy, 1.5 kt whey", description: "Thessaly: a family cheese dairy paying to dispose of sheep and goat whey; asks whether its own digester pays",
     input: {
-      countryCode: "PL", regionId: "wielkopolskie", businessType: "cattle_farm",
-      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 60, housing: "seasonal" }],
-      energy: { electricityKwhYear: 60000, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 90 },
+      countryCode: "GR", regionId: "thessaly", businessType: "dairy_processor",
+      feedstocks: [{ id: "whey", type: "dairy_whey", quantity: 1500, dryMatterPct: 6, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 15 }],
+      energy: { electricityKwhYear: 400000, electricityPriceLocalPerKwh: 0.17, heatNeed: "year_round_process", gasM3Year: 60000, hasGridConnection: true },
+      site: { landHa: 20 },
     },
   },
   {
-    id: "gb_farm_60", title: "English dairy, 60 cows", description: "Year-round housing; manure only; no year-round heat demand",
+    id: "md_winery", title: "Moldovan winery, 400 t grape marc", description: "Cahul: a mid-size winery with a September–October pomace peak that is landfilled today",
     input: {
-      countryCode: "GB", regionId: "south-west", businessType: "cattle_farm",
-      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 60, housing: "year_round" }],
-      energy: { electricityKwhYear: 60000, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 100 },
+      countryCode: "MD", regionId: "cahul", businessType: "fruit_veg_processor",
+      feedstocks: [{ id: "marc", type: "fruit_veg_residues", quantity: 400, dryMatterPct: 35, monthsActive: 2, startMonth: 9, handling: "field_spreading" }],
+      energy: { electricityKwhYear: 250000, electricityPriceLocalPerKwh: 3.0, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 120 },
     },
   },
   {
-    id: "ro_pigs_300", title: "Romanian family pig unit, 300 places", description: "Finishing unit; manure only; seasonal heating",
+    id: "nl_greenhouse", title: "Dutch tomato greenhouse, crop clearance residues", description: "A greenhouse grower with a winter crop change pays to remove plant residues and wants heat for the glasshouse",
     input: {
-      countryCode: "RO", regionId: "transilvania", businessType: "pig_farm",
-      feedstocks: [{ id: "a", animal: "pig_finisher", quantity: 300 }],
-      energy: { electricityKwhYear: 15000, heatNeed: "seasonal_buildings", heatKwhYear: 20000, hasGridConnection: true },
+      countryCode: "NL", regionId: "brabant", businessType: "fruit_veg_processor",
+      feedstocks: [{ id: "haulm", type: "fruit_veg_residues", quantity: 600, dryMatterPct: 12, monthsActive: 3, startMonth: 11, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 30 }],
+      energy: { electricityKwhYear: 900000, electricityPriceLocalPerKwh: 0.2, heatNeed: "greenhouse", gasM3Year: 300000, hasGridConnection: true },
+      site: { landHa: 0 },
+    },
+  },
+  {
+    id: "lv_town_small", title: "Latvian small town, 600 t separately collected biowaste", description: "Latgale: a municipality starting separate biowaste collection (mandatory in the EU since 2024) asks about its own digester",
+    input: {
+      countryCode: "LV", regionId: "latgale", businessType: "municipal_biowaste",
+      feedstocks: [{ id: "biowaste", type: "municipal_biowaste", quantity: 600, dryMatterPct: 30, monthsActive: 12, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: -40, handling: "other" }],
+      energy: { electricityKwhYear: 40000, electricityPriceLocalPerKwh: 0.14, heatNeed: "none", hasGridConnection: true },
       site: { landHa: 30 },
     },
   },
   {
-    id: "kz_cows_150", title: "Kazakh dairy farm, 150 cows", description: "Akmola: seasonal grazing and housing; manure only",
+    id: "cz_craft_brewery", title: "Czech craft brewery, 300 t spent grain", description: "South Moravia: a minibrewery whose spent grain already goes to local farmers as feed",
     input: {
-      countryCode: "KZ", regionId: "akmola", businessType: "cattle_farm",
-      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 150, housing: "seasonal" }],
-      energy: { electricityKwhYear: 80000, electricityPriceLocalPerKwh: 31.85, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 300 },
+      countryCode: "CZ", regionId: "jihomoravsky", businessType: "brewery",
+      feedstocks: [{ id: "spent-grain", type: "brewery_spent_grain", quantity: 300, monthsActive: 12, handling: "sold_as_feed", opportunityValuePerTonneLocal: 400 }],
+      energy: { electricityKwhYear: 150000, electricityPriceLocalPerKwh: 4.3, heatNeed: "year_round_process", gasM3Year: 40000, hasGridConnection: true },
+      site: { landHa: 0 },
     },
   },
-  {
-    id: "tr_cows_100", title: "Turkish dairy farm, 100 cows", description: "Konya: housed herd, manure only; no heat customer",
-    input: {
-      countryCode: "TR", regionId: "konya", businessType: "cattle_farm",
-      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 100, housing: "year_round" }],
-      energy: { electricityKwhYear: 90000, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 120 },
-    },
-  },
-
-  // ---------------- INSUFFICIENT DATA: the first inquiry lacks what the verdict needs ----------------
+  // ---------------- Insufficient data: a first inquiry before bills, land and laboratory data are known ----------------
   {
     id: "in_food_40k", title: "Indian biogas cooperative, cattle dung and press mud", description: "Punjab: short-haul purchased dung, seasonal sugar press mud and contracted digestate land; no guaranteed CBG premium.",
     input: {
@@ -380,12 +330,12 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "th_pome", title: "Thai palm-oil mill, POME", description: "POME in a covered lagoon, power for the mill",
+    id: "ar_feedlot", title: "Argentine feedlot, first inquiry", description: "Córdoba: a 4 000-head feedlot asks about biogas from pen manure; price, land and laboratory data are not yet known",
     input: {
-      countryCode: "TH", regionId: "south", businessType: "palm_oil_mill",
-      feedstocks: [{ id: "a", type: "pome", quantity: 250000 }],
-      energy: { electricityKwhYear: 4000000, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 3000 },
+      countryCode: "AR", regionId: "cordoba", businessType: "cattle_farm",
+      feedstocks: [{ id: "pen-manure", type: "cattle_solid_manure", quantity: 45000, monthsActive: 12, handling: "field_spreading" }],
+      energy: { electricityKwhYear: 900000, heatNeed: "none", hasGridConnection: true },
+      site: {},
     },
   },
 ];

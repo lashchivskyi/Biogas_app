@@ -107,7 +107,7 @@ it("keeps a stable localisation ID for every missing-input rule", () => {
 });
 
 it("keeps the selected region name consistent between the form and the report without mutating model output", async () => {
-  const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+  const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
   const country = getCountry(input.countryCode);
   const region = country.regions.find((r) => r.id === input.regionId)!;
   const assessment = assess(input, country, { lang: "en" });

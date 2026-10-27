@@ -86,7 +86,7 @@ describe("checkout", () => {
     vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
     expect(convertedPlanPrice(16000, "USD", 1.1193)).toBe(18000);
     expect(convertedPlanPrice(19000, "USD", 1.1193)).toBe(22000);
-    for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_guelle", "it_slaughter"]) {
+    for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_nawaro", "it_whey"]) {
       const request = { ...req(plan, example), paymentCurrency: "USD" as const };
       const quote = Q.createPaymentQuote(request);
       expect(quote.amountMinor % 1000).toBe(0);
@@ -107,7 +107,7 @@ describe("checkout", () => {
     expect(() => Q.verifyPaymentQuote(quote.token + "x", request)).toThrow(/Quote expired/);
     expect(() => Q.verifyPaymentQuote(quote.token, { ...request, plan: "standard" })).toThrow();
     expect(() => Q.verifyPaymentQuote(quote.token, { ...request, lang: "uk" })).toThrow();
-    expect(() => Q.verifyPaymentQuote(quote.token, { ...request, input: input("de_guelle") })).toThrow();
+    expect(() => Q.verifyPaymentQuote(quote.token, { ...request, input: input("de_nawaro") })).toThrow();
     const { order } = await S.startCheckout({ ...request, quoteToken: quote.token });
     expect(order.amountMinor).toBe(quote.amountMinor);
     expect(order.paymentQuote?.rateDate).toBe(quote.rateDate);
@@ -140,7 +140,7 @@ describe("checkout", () => {
     expect(ua.order.priceTier).toBe("C");
     expect(ua.order.amountMinor).toBe(PLAN_PRICES_EUR_CENTS.report.C);
     expect(ua.order.currency).toBe("EUR");
-    const de = await S.startCheckout(req("standard", "de_guelle")); // DE → tier A
+    const de = await S.startCheckout(req("standard", "de_nawaro")); // DE → tier A
     expect(de.order.priceTier).toBe("A");
     expect(de.order.amountMinor).toBe(PLAN_PRICES_EUR_CENTS.standard.A);
   });

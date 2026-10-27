@@ -38,12 +38,12 @@ describe("detailed sample inputs", () => {
 
   it("preserves exact tariff precision, negative gate fees and the seasonal starting month in localised copy", async () => {
     const d = await getDictionary("uk");
-    const slaughter = EXAMPLES.find((e) => e.id === "gb_slaughter")!;
+    const slaughter = EXAMPLES.find((e) => e.id === "gb_whisky")!;
     expect(sampleNotes(slaughter, "uk", d).operations.join(" ")).toContain("0,245 GBP/");
     const merchant = EXAMPLES.find((e) => e.id === "gb_food")!;
     expect(sampleNotes(merchant, "uk", d).operations.join(" ")).toContain("-30 GBP/");
-    const campaign = EXAMPLES.find((e) => e.id === "it_food_30k")!;
-    expect(sampleNotes(campaign, "uk", d).operations.join(" ")).toContain("липень");
+    const campaign = EXAMPLES.find((e) => e.id === "pl_frozen_veg")!;
+    expect(sampleNotes(campaign, "uk", d).operations.join(" ")).toContain("червень");
     const before = structuredClone(campaign.input);
     sampleNotes(campaign, "fr", await getDictionary("fr"));
     expect(campaign.input).toEqual(before);
@@ -73,8 +73,8 @@ describe("detailed sample inputs", () => {
     expect(recalculated.bestRoute).toBe(original.bestRoute);
   });
 
-  it("keeps the Italian summer campaign and Indian winter supply in their own months", () => {
-    for (const id of ["it_food_30k", "in_food_40k", "br_vinasse"]) {
+  it("keeps the Polish summer campaign and Indian winter supply in their own months", () => {
+    for (const id of ["pl_frozen_veg", "in_food_40k", "br_vinasse"]) {
       const e = detailed.find((e) => e.id === id)!;
       const restored = formToInput(inputToForm(e.input), getCountry(e.input.countryCode), "en");
       expect(restored.feedstocks.map((f) => f.startMonth)).toEqual(e.input.feedstocks.map((f) => f.startMonth));

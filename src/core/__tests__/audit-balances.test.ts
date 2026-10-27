@@ -42,7 +42,7 @@ describe("engineering and financial reconciliation", () => {
   });
 
   it("sizes a seasonal upgrading train for peak monthly flow", () => {
-    const r = assess(example("it_food_30k"), getCountry("IT")).routeMatrix.biomethane.base;
+    const r = assess(example("pl_frozen_veg"), getCountry("PL")).routeMatrix.biomethane.base;
     expect(r.energy.rawBiogasDesignNm3PerHour).toBeGreaterThan(r.energy.rawBiogasNm3PerHour);
     const upgrading = r.capex.lines.find((l) => l.id === "upgrading")!.eur;
     expect(upgrading).toBeGreaterThan(0);
@@ -118,7 +118,7 @@ describe("engineering and financial reconciliation", () => {
   });
 
   it("charges road bio-CNG for high-pressure compression beyond membrane upgrading", () => {
-    const input = example("br_food_40k");
+    const input = example("br_vinasse");
     const r = assess(input, getCountry("BR")).routeMatrix.biomethane.base;
     expect(r.capex.lines.some((l) => l.id === "cng")).toBe(true);
     expect(r.energy.cngCompressionKwh).toBeCloseTo(r.energy.biomethaneNm3 * buildParams(getCountry("BR")).get("eng.cng_compression_kwh_nm3"), 6);

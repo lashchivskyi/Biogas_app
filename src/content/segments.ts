@@ -26,7 +26,7 @@ export interface Segment {
 
 export const SEGMENTS: Segment[] = [
   {
-    slug: "meat-processing", id: "meat", businessType: "slaughterhouse", exampleId: "de_meat", tone: "good",
+    slug: "meat-processing", id: "meat", businessType: "slaughterhouse", exampleId: "slaughter_5000", tone: "good",
     seo: {
       en: {
         title: "Biogas for slaughterhouses and meat processing: payback",
@@ -237,7 +237,7 @@ export const SEGMENTS: Segment[] = [
     },
   },
   {
-    slug: "pig-farms", id: "pigs", businessType: "pig_farm", exampleId: "pig_5000", tone: "weak",
+    slug: "pig-farms", id: "pigs", businessType: "pig_farm", exampleId: "ro_pig_complex", tone: "weak",
     seo: {
       en: {
         title: "Biogas for pig farms from slurry: will it pay off?",
@@ -311,7 +311,7 @@ export const SEGMENTS: Segment[] = [
     },
   },
   {
-    slug: "breweries", id: "brewery", businessType: "brewery", exampleId: "de_food_30k", tone: "weak",
+    slug: "breweries", id: "brewery", businessType: "brewery", exampleId: "cz_craft_brewery", tone: "weak",
     seo: {
       en: {
         title: "Biogas for breweries from spent grain and effluent",

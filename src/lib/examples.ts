@@ -5,8 +5,7 @@ import { INTL_TAG, type Dict, type Locale } from "@/i18n";
 
 export function exampleTitle(e: ExampleCase, d: Pick<Dict, "examples" | "labels">, locale: Locale = "en") {
   const known = d.examples[e.id as keyof typeof d.examples];
-  // The historical name included a capacity that was not a calculated result.
-  if (known && e.id !== "de_guelle") return known;
+  if (known) return known;
   const n = new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 1 }).format;
   return [d.labels.business[e.input.businessType].label, ...e.input.feedstocks.map((f) => f.animal
     ? `${d.labels.animal[f.animal].label}: ${n(f.quantity)}`
