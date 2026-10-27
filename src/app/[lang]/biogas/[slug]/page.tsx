@@ -13,6 +13,7 @@ import { coreLang } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
+import { exampleTitle } from "@/lib/examples";
 
 export function generateStaticParams() {
   return SEGMENTS.map((s) => ({ slug: s.slug }));
@@ -97,7 +98,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           <div className="card p-6">
             <div className="eyebrow text-brand">{d.fit.modelCase}</div>
-            <div className="mt-1 text-sm text-muted">{d.examples[ex.id as keyof typeof d.examples] ?? ex.title} · {countryName(ex.input.countryCode, locale)}</div>
+            <div className="mt-1 text-sm text-muted">{exampleTitle(ex, d, locale)} · {countryName(ex.input.countryCode, locale)}</div>
             <div className="font-display mt-3 text-2xl font-semibold">{d.labels.verdict[a.verdict.id]}</div>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.biogas}</dt><dd className="num font-bold">{fmt(d.flow.m3Yr, { v: f.range(r.biogasM3[0], r.biogasM3[2], (x) => f.compact(x)) })}</dd></div>

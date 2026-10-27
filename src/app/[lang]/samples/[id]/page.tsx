@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/samples/[i
   const { lang, id } = await params;
   const d = await getDictionary(lang);
   const ex = EXAMPLES.find((e) => e.id === id);
-  const title = ex ? exampleTitle(ex, d) : id;
+  const title = ex ? exampleTitle(ex, d, lang as Locale) : id;
   return { title: `${d.report.sampleEyebrow}: ${title}${ex ? ` · ${countryName(ex.input.countryCode, lang as Locale)}` : ""}`, description: d.samples.lead, alternates: alternates(lang as Locale, `/samples/${id}`) };
 }
 
@@ -35,7 +35,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
   const country = getCountry(ex.input.countryCode);
   const cl = coreLang(locale);
   const a = assess(ex.input, country, { lang: cl });
-  const title = exampleTitle(ex, d);
+  const title = exampleTitle(ex, d, lang as Locale);
   const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: country.approachNotes[cl], access: "full", methodologyHref: `/${locale}/methodology` };
   return (
     <main>

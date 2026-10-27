@@ -31,7 +31,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
         const adapter = COUNTRIES[f.countryCode];
         if (adapter) {
           const inp = formToInput(f, adapter, coreLang(locale));
-          if (inp.feedstocks.length) {
+          if (inp.feedstocks.length && inp.regionId) {
             // eslint-disable-next-line react-hooks/set-state-in-effect -- browser-only draft
             setInput(inp);
           }
@@ -45,7 +45,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
   const tier = COUNTRIES[country]?.priceTier ?? "A";
   const money = (cents: number) => `${preferences.currency === "USD" ? "≈ " : ""}${new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: preferences.currency, maximumFractionDigits: 0 }).format(convertedPlanPrice(cents, preferences.currency, preferences.currency === "USD" ? preferences.usd.value : 1) / 100)}`;
   const base = `/${locale}`;
-  const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) ? input : null;
+  const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) && (!preferences.city || input.city?.signature === preferences.city.signature) ? input : null;
 
   if (!preferences.ready) return <div className="mx-auto h-64 max-w-4xl animate-pulse rounded-2xl bg-surface2" role="status" aria-label={preferenceCopy(locale).detecting} />;
 

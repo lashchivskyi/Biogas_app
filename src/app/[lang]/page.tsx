@@ -15,6 +15,7 @@ import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
+import { exampleTitle } from "@/lib/examples";
 
 const SIGN_ICONS: IconName[] = ["factory", "scale", "heat"];
 const STEP_ICONS: IconName[] = ["clock", "doc", "shield", "chart"];
@@ -29,18 +30,18 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   const F = makeFormat(locale, d.labels.units);
   const cl = coreLang(locale);
 
-  const run = (id: string): { a: Assessment; country: string } => {
+  const run = (id: string): { a: Assessment; country: string; example: (typeof EXAMPLES)[number] } => {
     const ex = EXAMPLES.find((e) => e.id === id)!;
-    return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode };
+    return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode, example: ex };
   };
   const segments: SegmentCard[] = SEGMENTS.map((s) => {
-    const { a, country } = run(s.exampleId);
+    const { a, country, example } = run(s.exampleId);
     const r = a.ranges;
     const txt = d.fit.segments[s.id];
     return {
       id: s.id, slug: s.slug, label: txt.label, businessType: s.businessType, tone: s.tone, tendency: d.fit.tones[s.tone], insight: txt.insight, conditions: [...txt.conditions],
       example: {
-        title: `${d.examples[s.exampleId as keyof typeof d.examples] ?? s.exampleId} · ${countryName(country, locale)}`,
+        title: `${exampleTitle(example, d, locale)} · ${countryName(country, locale)}`,
         verdict: d.labels.verdict[a.verdict.id],
         payback: F.years(r.paybackYears[1]),
         capex: <DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${F.eur(r.capexEur[2])} – ${F.eur(r.capexEur[0])}`} />,

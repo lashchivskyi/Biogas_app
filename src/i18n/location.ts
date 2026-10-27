@@ -1,0 +1,61 @@
+import type { Locale } from "./config";
+
+type Words = readonly [string, string, string, string, string, string, string, string];
+const words: Record<Locale, Words> = {
+  en: ["Project location", "Search for a city…", "The city sets the climate and heating demand. Prices use country references.", "Loading climate data…", "No city found. Try another spelling or search for a nearby town.", "Could not load the location. Please try again.", "Choose a regional profile instead", "Change location"],
+  uk: ["Локація проєкту", "Знайти місто…", "Місто визначає клімат і потребу в теплі. Ціни беруться з даних країни.", "Завантажуємо кліматичні дані…", "Місто не знайдено. Спробуйте інше написання або знайдіть сусідній населений пункт.", "Не вдалося завантажити локацію. Спробуйте ще раз.", "Вибрати регіональний профіль", "Змінити локацію"],
+  pl: ["Lokalizacja projektu", "Wyszukaj miasto…", "Miasto określa klimat i zapotrzebowanie na ciepło. Ceny pochodzą z danych krajowych.", "Pobieramy dane klimatyczne…", "Nie znaleziono miasta. Spróbuj innej pisowni lub wyszukaj pobliską miejscowość.", "Nie udało się wczytać lokalizacji. Spróbuj ponownie.", "Wybierz profil regionalny", "Zmień lokalizację"],
+  de: ["Projektstandort", "Stadt suchen…", "Die Stadt bestimmt Klima und Wärmebedarf. Preise beruhen auf Länderreferenzen.", "Klimadaten werden geladen…", "Keine Stadt gefunden. Versuchen Sie eine andere Schreibweise oder suchen Sie einen nahegelegenen Ort.", "Der Standort konnte nicht geladen werden. Bitte versuchen Sie es erneut.", "Stattdessen ein Regionalprofil wählen", "Standort ändern"],
+  fr: ["Lieu du projet", "Rechercher une ville…", "La ville détermine le climat et les besoins en chaleur. Les prix reposent sur les données du pays.", "Chargement des données climatiques…", "Aucune ville trouvée. Essayez une autre orthographe ou recherchez une commune voisine.", "Impossible de charger le lieu. Veuillez réessayer.", "Choisir plutôt un profil régional", "Changer de lieu"],
+  it: ["Località del progetto", "Cerca una città…", "La città determina il clima e il fabbisogno termico. I prezzi si basano sui dati nazionali.", "Caricamento dei dati climatici…", "Nessuna città trovata. Prova un’altra grafia o cerca una località vicina.", "Impossibile caricare la località. Riprova.", "Scegli un profilo regionale", "Cambia località"],
+  es: ["Ubicación del proyecto", "Buscar una ciudad…", "La ciudad determina el clima y la demanda de calor. Los precios se basan en datos del país.", "Cargando datos climáticos…", "No se ha encontrado la ciudad. Prueba otra escritura o busca una localidad cercana.", "No se ha podido cargar la ubicación. Inténtalo de nuevo.", "Elegir un perfil regional", "Cambiar ubicación"],
+  pt: ["Localização do projeto", "Buscar uma cidade…", "A cidade define o clima e a demanda de calor. Os preços usam referências nacionais.", "Carregando dados climáticos…", "Nenhuma cidade encontrada. Tente outra grafia ou busque uma cidade próxima.", "Não foi possível carregar a localização. Tente novamente.", "Escolher um perfil regional", "Alterar localização"],
+  nl: ["Projectlocatie", "Zoek een plaats…", "De plaats bepaalt het klimaat en de warmtevraag. Prijzen zijn gebaseerd op landelijke gegevens.", "Klimaatgegevens laden…", "Geen plaats gevonden. Probeer een andere spelling of zoek een nabijgelegen plaats.", "De locatie kon niet worden geladen. Probeer het opnieuw.", "Een regioprofiel kiezen", "Locatie wijzigen"],
+  cs: ["Místo projektu", "Vyhledat město…", "Město určuje klima a potřebu tepla. Ceny vycházejí z celostátních údajů.", "Načítáme klimatická data…", "Město nebylo nalezeno. Zkuste jiný zápis nebo vyhledejte blízkou obec.", "Místo se nepodařilo načíst. Zkuste to znovu.", "Vybrat regionální profil", "Změnit místo"],
+  sk: ["Lokalita projektu", "Vyhľadať mesto…", "Mesto určuje klímu a potrebu tepla. Ceny vychádzajú z údajov pre krajinu.", "Načítavame klimatické údaje…", "Mesto sa nenašlo. Skúste iný zápis alebo vyhľadajte blízku obec.", "Lokalitu sa nepodarilo načítať. Skúste to znova.", "Vybrať regionálny profil", "Zmeniť lokalitu"],
+  hu: ["A projekt helyszíne", "Település keresése…", "A település határozza meg az éghajlatot és a hőigényt. Az árak országos adatokon alapulnak.", "Éghajlati adatok betöltése…", "Nincs találat. Próbáljon más írásmódot, vagy keressen egy közeli települést.", "A helyszín nem tölthető be. Próbálja újra.", "Regionális profil választása", "Helyszín módosítása"],
+  ro: ["Amplasamentul proiectului", "Căutați un oraș…", "Orașul determină clima și necesarul de căldură. Prețurile se bazează pe datele țării.", "Se încarcă datele climatice…", "Orașul nu a fost găsit. Încercați altă scriere sau căutați o localitate apropiată.", "Amplasamentul nu a putut fi încărcat. Încercați din nou.", "Alegeți un profil regional", "Schimbați amplasamentul"],
+  bg: ["Местоположение на проекта", "Търсене на град…", "Градът определя климата и нуждите от топлина. Цените са по данни за страната.", "Зареждаме климатичните данни…", "Градът не е намерен. Опитайте друг правопис или потърсете близко населено място.", "Местоположението не може да се зареди. Опитайте отново.", "Изберете регионален профил", "Промяна на местоположението"],
+  sr: ["Lokacija projekta", "Pretražite grad…", "Grad određuje klimu i potrebe za toplotom. Cene se zasnivaju na podacima za zemlju.", "Učitavamo klimatske podatke…", "Grad nije pronađen. Pokušajte drugačiji naziv ili potražite obližnje naselje.", "Lokacija nije mogla da se učita. Pokušajte ponovo.", "Izaberite regionalni profil", "Promenite lokaciju"],
+  el: ["Τοποθεσία έργου", "Αναζήτηση πόλης…", "Η πόλη καθορίζει το κλίμα και τις ανάγκες θέρμανσης. Οι τιμές βασίζονται σε στοιχεία της χώρας.", "Φόρτωση κλιματικών δεδομένων…", "Δεν βρέθηκε πόλη. Δοκιμάστε άλλη γραφή ή αναζητήστε έναν κοντινό οικισμό.", "Δεν ήταν δυνατή η φόρτωση της τοποθεσίας. Δοκιμάστε ξανά.", "Επιλογή περιφερειακού προφίλ", "Αλλαγή τοποθεσίας"],
+  tr: ["Proje konumu", "Şehir arayın…", "Şehir, iklimi ve ısı ihtiyacını belirler. Fiyatlar ülke verilerine dayanır.", "İklim verileri yükleniyor…", "Şehir bulunamadı. Farklı bir yazım deneyin veya yakın bir yerleşim yeri arayın.", "Konum yüklenemedi. Tekrar deneyin.", "Bölgesel profil seçin", "Konumu değiştirin"],
+  lt: ["Projekto vieta", "Ieškoti miesto…", "Miestas lemia klimatą ir šilumos poreikį. Kainos grindžiamos šalies duomenimis.", "Įkeliami klimato duomenys…", "Miestas nerastas. Pabandykite rašyti kitaip arba ieškokite netoliese esančios gyvenvietės.", "Vietos įkelti nepavyko. Bandykite dar kartą.", "Pasirinkti regioninį profilį", "Keisti vietą"],
+  lv: ["Projekta atrašanās vieta", "Meklēt pilsētu…", "Pilsēta nosaka klimatu un siltuma vajadzības. Cenas balstās uz valsts datiem.", "Ielādējam klimata datus…", "Pilsēta nav atrasta. Izmēģiniet citu rakstību vai meklējiet tuvējo apdzīvoto vietu.", "Vietu neizdevās ielādēt. Mēģiniet vēlreiz.", "Izvēlēties reģionālo profilu", "Mainīt vietu"],
+  et: ["Projekti asukoht", "Otsi linna…", "Linn määrab kliima ja soojusvajaduse. Hinnad põhinevad riigi andmetel.", "Kliimaandmete laadimine…", "Linna ei leitud. Proovige teist kirjapilti või otsige lähedalasuvat asulat.", "Asukohta ei saanud laadida. Proovige uuesti.", "Vali piirkonnaprofiil", "Muuda asukohta"],
+  da: ["Projektets placering", "Søg efter en by…", "Byen bestemmer klima og varmebehov. Priserne bygger på landets referencedata.", "Henter klimadata…", "Ingen by fundet. Prøv en anden stavemåde, eller søg efter en nærliggende by.", "Stedet kunne ikke indlæses. Prøv igen.", "Vælg en regional profil", "Skift placering"],
+  sv: ["Projektets plats", "Sök efter en ort…", "Orten avgör klimat och värmebehov. Priserna bygger på landets referensdata.", "Hämtar klimatdata…", "Ingen ort hittades. Prova en annan stavning eller sök efter en närliggande ort.", "Platsen kunde inte laddas. Försök igen.", "Välj en regional profil", "Ändra plats"],
+  fi: ["Hankkeen sijainti", "Hae paikkakuntaa…", "Paikkakunta määrittää ilmaston ja lämmöntarpeen. Hinnat perustuvat maan viitetietoihin.", "Ladataan ilmastotietoja…", "Kaupunkia ei löytynyt. Kokeile toista kirjoitusasua tai etsi läheistä paikkakuntaa.", "Sijaintia ei voitu ladata. Yritä uudelleen.", "Valitse alueprofiili", "Vaihda sijaintia"],
+  vi: ["Địa điểm dự án", "Tìm thành phố…", "Thành phố quyết định khí hậu và nhu cầu nhiệt. Giá dựa trên dữ liệu quốc gia.", "Đang tải dữ liệu khí hậu…", "Không tìm thấy thành phố. Hãy thử cách viết khác hoặc tìm một địa điểm lân cận.", "Không tải được địa điểm. Vui lòng thử lại.", "Chọn hồ sơ khu vực", "Đổi địa điểm"],
+  th: ["ที่ตั้งโครงการ", "ค้นหาเมือง…", "เมืองที่เลือกใช้กำหนดสภาพภูมิอากาศและความต้องการความร้อน ส่วนราคาอ้างอิงข้อมูลของประเทศ", "กำลังโหลดข้อมูลภูมิอากาศ…", "ไม่พบเมือง ลองสะกดชื่อแบบอื่นหรือค้นหาเมืองใกล้เคียง", "โหลดที่ตั้งไม่ได้ โปรดลองอีกครั้ง", "เลือกข้อมูลภูมิภาคแทน", "เปลี่ยนที่ตั้ง"],
+};
+const gridHint: Record<Locale, string> = {
+  en: "Climate reference: nearest ERA5 grid cell (0.25°), without elevation adjustment.",
+  uk: "Кліматичний орієнтир: найближча клітинка ERA5 (0,25°), без поправки на висоту ділянки.",
+  pl: "Dane orientacyjne: najbliższa komórka siatki ERA5 (0,25°), bez korekty wysokości terenu.",
+  de: "Klimareferenz: nächstgelegene ERA5-Gitterzelle (0,25°), ohne Höhenkorrektur.",
+  fr: "Référence climatique : maille ERA5 la plus proche (0,25°), sans correction d’altitude.",
+  it: "Riferimento climatico: cella ERA5 più vicina (0,25°), senza correzione per l’altitudine.",
+  es: "Referencia climática: celda ERA5 más cercana (0,25°), sin corrección por altitud.",
+  pt: "Referência climática: célula ERA5 mais próxima (0,25°), sem correção de altitude.",
+  nl: "Klimaatreferentie: dichtstbijzijnde ERA5-rastercel (0,25°), zonder hoogtecorrectie.",
+  cs: "Klimatický podklad: nejbližší buňka sítě ERA5 (0,25°), bez korekce nadmořské výšky.",
+  sk: "Klimatický podklad: najbližšia bunka siete ERA5 (0,25°), bez korekcie nadmorskej výšky.",
+  hu: "Éghajlati referencia: a legközelebbi ERA5-rácscella (0,25°), magassági korrekció nélkül.",
+  ro: "Referință climatică: cea mai apropiată celulă ERA5 (0,25°), fără corecție de altitudine.",
+  bg: "Климатичен ориентир: най-близката клетка ERA5 (0,25°), без корекция за надморска височина.",
+  sr: "Klimatska referenca: najbliža ćelija mreže ERA5 (0,25°), bez korekcije nadmorske visine.",
+  el: "Κλιματική αναφορά: πλησιέστερο κελί ERA5 (0,25°), χωρίς διόρθωση υψομέτρου.",
+  tr: "İklim referansı: en yakın ERA5 ızgara hücresi (0,25°); rakım düzeltmesi uygulanmaz.",
+  lt: "Klimato atskaitos duomenys: artimiausias ERA5 tinklelio langelis (0,25°), be aukščio pataisos.",
+  lv: "Klimata atskaites dati: tuvākā ERA5 režģa šūna (0,25°), bez augstuma korekcijas.",
+  et: "Kliima võrdlusandmed: lähim ERA5 võrguruut (0,25°), ilma kõrgusparanduseta.",
+  da: "Klimareference: nærmeste ERA5-gittercelle (0,25°), uden højdekorrektion.",
+  sv: "Klimatreferens: närmaste ERA5-rutnätscell (0,25°), utan höjdkorrigering.",
+  fi: "Ilmaston viitetiedot: lähin ERA5-hilaruutu (0,25°), ilman korkeuskorjausta.",
+  vi: "Dữ liệu khí hậu tham chiếu: ô lưới ERA5 gần nhất (0,25°), chưa hiệu chỉnh theo độ cao.",
+  th: "ข้อมูลภูมิอากาศอ้างอิง: ช่องกริด ERA5 ที่ใกล้ที่สุด (0.25°) โดยไม่ปรับตามระดับความสูง",
+};
+export function locationCopy(locale: Locale) {
+  const [title, search, hint, loading, empty, error, fallback, change] = words[locale];
+  return { title, search, hint, loading, empty, error, fallback, change, grid: gridHint[locale] };
+}

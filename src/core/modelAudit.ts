@@ -2,7 +2,7 @@ import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import { SCENARIOS } from "./scenarios";
 import type { Assessment, Provenance } from "./types";
 
-export const MODEL_VERSION = "0.2.0";
+export const MODEL_VERSION = "0.4.0";
 /** Deterministic fallback for static examples. Live evaluations pass an explicit date. */
 export const DATA_REVIEW_AS_OF = "2026-10-27";
 type Check = NonNullable<Assessment["dataAudit"]>["checks"][number];

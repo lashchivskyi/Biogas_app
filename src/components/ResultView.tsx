@@ -12,6 +12,7 @@ import { keyDriver } from "@/lib/whatif";
 import { COUNTRIES } from "@/countries";
 import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
 import { preferenceCopy } from "@/i18n/preferences";
+import { locationCopy } from "@/i18n/location";
 import { FlowDiagram } from "./FlowDiagram";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
@@ -141,6 +142,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
       {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
+      {a.input.city && <p className="num mb-3 break-words text-xs text-muted">{locationCopy(locale).title}: {a.climate.regionName} · {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.latitude)}, {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.longitude)} · <a href={a.input.city.dataset ? "https://registry.opendata.aws/planette_era5_reanalysis/" : "https://open-meteo.com/en/docs/historical-weather-api"} className="underline" target="_blank" rel="noreferrer">{a.input.city.dataset ? "Copernicus ERA5 / NSF NCAR / Planette · 0.25°" : "ERA5 / Open-Meteo"}</a> {a.input.city.startDate.slice(0, 4)}–{a.input.city.endDate.slice(0, 4)}</p>}
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">

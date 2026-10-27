@@ -22,6 +22,14 @@ describe("visitor IP country", () => {
     for (const bad of ["XX", "T1", "error", "USA", null, { country: "US" }, "<html>"]) expect(countryCode(bad)).toBeUndefined();
     expect(countryFromHeaders(new Headers({ "x-vercel-ip-country": "XX", "cf-ipcountry": "PL" }))).toBe("PL");
   });
+  it.each(["CH", "PT", "JP", "AE"])("chooses English for newly detected unsupported %s ahead of other language hints", (country) => {
+    const request = (context: object) => new NextRequest("https://example.com", { headers: {
+      "x-vercel-ip-country": country, "accept-language": "uk,pl;q=0.9", cookie: `NEXT_LOCALE=uk; mx_context=${encodeURIComponent(JSON.stringify(context))}`,
+    } });
+    expect(pickLocale(request({ country: "UA", detectedCountry: "UA" }))).toBe("en");
+    expect(pickLocale(request({ country: "DE", detectedCountry: country }))).toBe("en");
+    expect(pickLocale(request({ country: "DE", detectedCountry: country, locationDefaultsVersion: 2 }))).toBe("uk");
+  });
   it("returns fresh CDN country without caching or invoking an external service", async () => {
     const fetcher = fetchMock(Response.json({ country: "IT" }));
     expect(await detectVisitorLocation({ hostname: "example.com", timeZone: "Europe/Kyiv", fetcher })).toEqual({ country: "IT", source: "ip" });

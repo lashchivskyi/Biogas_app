@@ -1,3 +1,5 @@
+import type { CityClimate } from "./location";
+
 /**
  * Domain types of the country-independent engineering/economic core.
  * Nothing in src/core may import from src/countries or src/app.
@@ -177,6 +179,7 @@ export interface FinanceInput {
 export interface ProjectInput {
   countryCode: string;
   regionId: string;
+  city?: CityClimate;
   businessType: BusinessTypeId;
   feedstocks: FeedstockLineInput[];
   energy: EnergyInput;

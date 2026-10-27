@@ -27,11 +27,11 @@ export const NATIVE_NAME: Record<Locale, string> = {
 
 export const coreLang = (l: Locale): "en" | "uk" => (l === "uk" ? "uk" : "en");
 
-/** Default UI locale for visitors from each supported country (geo detection). */
+/** Supported project markets and their default UI locales. Unsupported visitor countries use US/en/USD. */
 export const COUNTRY_LOCALE: Record<string, Locale> = {
   UA: "uk", PL: "pl", CZ: "cs", SK: "sk", HU: "hu", RO: "ro", MD: "ro", BG: "bg", RS: "sr", GR: "el", TR: "tr", LT: "lt", LV: "lv", EE: "et",
-  DE: "de", AT: "de", CH: "de", IT: "it", FR: "fr", BE: "fr", ES: "es", NL: "nl", DK: "da", SE: "sv", FI: "fi", GB: "en", IE: "en", US: "en",
-  CA: "en", AU: "en", MX: "es", AR: "es", CL: "es", CO: "es", BR: "pt", PT: "pt", IN: "en", TH: "th", VN: "vi", KZ: "en",
+  DE: "de", AT: "de", IT: "it", FR: "fr", ES: "es", NL: "nl", DK: "da", SE: "sv", FI: "fi", GB: "en", US: "en",
+  CA: "en", MX: "es", AR: "es", BR: "pt", IN: "en", TH: "th", VN: "vi", KZ: "en",
 };
 
 /** Default project country for each locale, when geo is unknown. */

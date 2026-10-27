@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: { globalNotFound: true },
+  outputFileTracingIncludes: { "/api/cities": ["./src/server/data/*"] },
   /* config options here */
   turbopack: {
     rules: {

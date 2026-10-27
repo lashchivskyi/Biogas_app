@@ -1,17 +1,16 @@
 """
-Monthly climate reference for every project region, from ERA5 reanalysis (ECMWF / Copernicus) via the
-Open-Meteo historical-weather API: mean of daily 2 m mean temperature over the most recent 10 complete calendar years (not WMO 30-year normals).
-Writes src/countries/data/climate.json. Re-run: python -I scripts/data/fetch_climate.py
-
-The API is free but rate-limited (≈ 26 weighted calls per 10-year location; 5 000/hour), so requests
-are spaced; a full run takes ≈ 80 minutes. Matching model/period locations are kept (resumable); each location keeps its own source and fetch date.
+Refresh representative regional profiles from the prepared offline ERA5 grid.
+Dry run: python -I scripts/data/fetch_climate.py
+Publish explicitly: python -I scripts/data/fetch_climate.py --write
+First prepare the grid with build_locations.py; no external API calls are made here.
+Existing historical profiles keep their original attribution until explicitly regenerated.
 """
-import json, os, tempfile, time, urllib.request, urllib.error, datetime
+import argparse, datetime, gzip, hashlib, json, math, os, struct, tempfile
+from pathlib import Path
 
-LAST_YEAR = datetime.date.today().year - 1
-START, END = f"{LAST_YEAR - 9}-01-01", f"{LAST_YEAR}-12-31"
 MODEL = "era5"
-OUT = "src/countries/data/climate.json"
+ROOT = Path(__file__).resolve().parents[2]
+OUT = str(ROOT / "src/countries/data/climate.json")
 
 # country, id, English name, local names {locale: name}, lat, lon  — regional agricultural / industrial centres
 L = [
@@ -304,58 +303,45 @@ def write_data(data, path=OUT):
             os.unlink(temporary)
 
 
-def fetch(lat, lon):
-    url = (f"https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}"
-           f"&start_date={START}&end_date={END}&daily=temperature_2m_mean&models={MODEL}&timezone=GMT")
-    for i in range(8):
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "methalytics-data/1.0"}), timeout=120) as r:
-                return json.load(r)
-        except urllib.error.HTTPError as e:
-            if e.code == 429:
-                print(f"API limit: retrying in {90 * (i + 1)} seconds", flush=True)
-                time.sleep(90 * (i + 1))
-                continue
-            raise
-        except (urllib.error.URLError, TimeoutError):
-            time.sleep(15)
-    raise RuntimeError("giving up")
-
-
 def main():
-    data = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {"source": "", "regions": {}}
-    source = f"ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature {START[:4]}–{END[:4]} (recent 10-year reference, not a WMO 30-year normal)"
-    for i, (cc, rid, en, loc, lat, lon) in enumerate(L):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--write', action='store_true')
+    args = parser.parse_args()
+    directory = ROOT / 'src/server/data'
+    manifest = json.loads((directory/'locations.json').read_text('utf-8'))
+    compressed = (directory/'era5-temperature.bin.gz').read_bytes()
+    if hashlib.sha256(compressed).hexdigest() != manifest['sha256']['era5-temperature.bin.gz']:
+        raise ValueError('Climate grid checksum mismatch')
+    grid = gzip.decompress(compressed)
+    g = manifest['grid']
+    assert len(grid) == g['bytes'] == g['latCount']*g['lonCount']*24
+    start, end = manifest['startDate'], manifest['endDate']
+    source = (f'ERA5 reanalysis (Copernicus/ECMWF) via NSF NCAR / Planette; day-weighted monthly mean 2 m temperature '
+              f'{start[:4]}–{end[:4]}; nearest 0.25 degree grid cell; no elevation downscaling; not a WMO 30-year normal')
+    previous = json.loads(Path(OUT).read_text('utf-8'))['regions']
+    data = {'source': source, 'fetchedOn': manifest['fetchedOn'], 'regions': {}}
+    changes = []
+    for cc, rid, en, loc, lat, lon in L:
         key = f"{cc}:{rid}"
-        prev = data["regions"].get(key)
-        if prev and prev.get("lat") == lat and prev.get("lon") == lon and prev.get("monthlyTempC") and prev.get("period") == [START, END] and prev.get("model") == MODEL:
-            prev.update({"name": en, "names": loc})
-            continue
-        d = fetch(lat, lon)
-        sums, counts = [0.0] * 12, [0] * 12
-        for day, t in zip(d["daily"]["time"], d["daily"]["temperature_2m_mean"]):
-            if t is None:
-                continue
-            m = int(day[5:7]) - 1
-            sums[m] += t
-            counts[m] += 1
-        expected = (datetime.date.fromisoformat(END) - datetime.date.fromisoformat(START)).days + 1
-        if sum(counts) != expected or any(c == 0 for c in counts):
-            raise RuntimeError(f"Incomplete climate data for {key}: {sum(counts)}/{expected}")
-        temps = [round(s / c, 1) for s, c in zip(sums, counts)]
+        ilat = max(0, min(g['latCount']-1, math.floor((lat-g['latStart'])/g['latStep']+0.5)))
+        ilon = math.floor((lon-g['lonStart'])/g['lonStep']+0.5) % g['lonCount']
+        temps = [value/10 for value in struct.unpack_from('<12h', grid, (ilat*g['lonCount']+ilon)*24)]
+        assert all(-70 <= t <= 55 for t in temps)
+        prev = previous.get(key, {})
+        if prev.get('monthlyTempC'):
+            changes.append(max(abs(a-b) for a, b in zip(temps, prev['monthlyTempC'])))
+        days = (datetime.date.fromisoformat(end)-datetime.date.fromisoformat(start)).days+1
         data["regions"][key] = {"country": cc, "id": rid, "name": en, "names": loc, "lat": lat, "lon": lon,
-                                "elevationM": d.get("elevation"), "monthlyTempC": temps, "days": sum(counts),
-                                "period": [START, END], "model": MODEL, "fetchedOn": datetime.date.today().isoformat(), "source": source}
+                                "gridLat": g['latStart']+ilat*g['latStep'], "gridLon": g['lonStart']+ilon*g['lonStep'],
+                                "elevationM": prev.get('elevationM'), "monthlyTempC": temps, "days": days,
+                                "period": [start, end], "model": MODEL, "fetchedOn": manifest['fetchedOn'], "source": source}
+    assert len(data['regions']) == len(L)
+    print(f'{len(L)} regional profiles validated; {start} to {end}; maximum monthly change {max(changes, default=0):.1f} C')
+    if args.write:
         write_data(data)
-        print(f"{i + 1}/{len(L)} {key} {temps}", flush=True)
-        time.sleep(float(os.environ.get("SPACING", "20")))
-    # keep only listed regions, in list order
-    order = [f"{cc}:{rid}" for cc, rid, *_ in L]
-    data["regions"] = {k: data["regions"][k] for k in order if k in data["regions"]}
-    data["source"] = source
-    data["fetchedOn"] = datetime.date.today().isoformat()
-    write_data(data)
-    print("done", len(data["regions"]))
+        print('Published regional profiles.')
+    else:
+        print('Dry run: existing profiles unchanged. Use --write after reviewing terrain-related differences.')
 
 
 if __name__ == "__main__":

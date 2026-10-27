@@ -1,6 +1,12 @@
 import type { Dict, Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
 
+/** Sort the visible labels, never ISO codes, flags or market priority. Do not mutate shared arrays. */
+export function alphabetically<T>(items: readonly T[], locale: Locale, label: (item: T) => string): T[] {
+  const collator = new Intl.Collator(INTL_TAG[locale], { sensitivity: "base", numeric: true });
+  return [...items].sort((a, b) => collator.compare(label(a), label(b)));
+}
+
 /** Round to 2 significant digits for ranges — we do not publish fake precision. */
 export function sig2(v: number): number {
   if (!Number.isFinite(v) || v === 0) return 0;

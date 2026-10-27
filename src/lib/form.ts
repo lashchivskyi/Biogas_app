@@ -3,6 +3,7 @@ import type { CountryAdapter } from "@/core/country";
 import type { AnimalKind, BusinessTypeId, FeedstockLineInput, FeedstockTypeId, HandlingId, HeatNeed, Housing, ProjectInput } from "@/core/types";
 import { INTL_TAG, type Locale } from "@/i18n/config";
 import { parseLocalizedNumber } from "./localized-number";
+import { cityRegionId, validCity, type CityClimate } from "@/core/location";
 
 /** Questionnaire state. Everything is a string so empty ≠ 0 (an empty field is "unknown"). Money in the project's local currency. */
 export interface FormLine {
@@ -29,6 +30,7 @@ export interface FormState {
   numberLocale?: Locale;
   countryCode: string;
   regionId: string;
+  city?: CityClimate;
   businessType: BusinessTypeId;
   lines: FormLine[];
   elecBillMonthly: string;
@@ -101,12 +103,13 @@ export function initialForm(businessType: BusinessTypeId, countryCode: string, r
 }
 
 /** Keep physical/unfinished inputs across locale changes; never reinterpret old local invoices in a new market. */
-export function recontextualizeForm(f: FormState, country: CountryAdapter, regionId: string | undefined, locale: Locale): FormState {
+export function recontextualizeForm(f: FormState, country: CountryAdapter, regionId: string | undefined, locale: Locale, projectCity?: CityClimate): FormState {
   const nf = new Intl.NumberFormat(INTL_TAG[locale], { useGrouping: false, maximumFractionDigits: 20 });
   const reformat = (value: string) => { const n = formNumber(value ?? "", f.numberLocale); return n === undefined ? value ?? "" : nf.format(n); };
   const changed = f.countryCode !== country.code;
+  const city = validCity(projectCity, country.code) && regionId === cityRegionId(projectCity) ? projectCity : undefined;
   const next = { ...f, numberLocale: locale, countryCode: country.code,
-    regionId: country.regions.some((r) => r.id === regionId) ? regionId! : "",
+    regionId: city ? cityRegionId(city) : country.regions.some((r) => r.id === regionId) ? regionId! : "", city,
     lines: f.lines.map((line) => ({ ...line })),
   };
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm"] as const;
@@ -161,11 +164,13 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
   const kwh = num(f.elecKwhYear) ?? (num(f.elecBillMonthly) ? ((num(f.elecBillMonthly) as number) * 12) / (price ?? def.electricityPerKwh) : undefined);
   const gasPrice = num(f.gasPrice);
   const gasM3 = f.gasUsed ? num(f.gasM3Year) ?? (num(f.gasBillMonthly) ? ((num(f.gasBillMonthly) as number) * 12) / (gasPrice ?? def.gasPerM3) : undefined) : undefined;
-  const region = country.regions.some((r) => r.id === f.regionId) ? f.regionId : "";
+  const city = validCity(f.city, country.code) && f.regionId === cityRegionId(f.city) ? f.city : undefined;
+  const region = city ? cityRegionId(city) : country.regions.some((r) => r.id === f.regionId) ? f.regionId : "";
 
   return {
     countryCode: country.code,
     regionId: region,
+    ...(city ? { city } : {}),
     businessType: f.businessType,
     lang,
     feedstocks,
@@ -215,6 +220,7 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
     numberLocale: locale,
     countryCode: i.countryCode,
     regionId: i.regionId,
+    ...(i.city ? { city: i.city } : {}),
     businessType: i.businessType,
     lines,
     elecBillMonthly: "",

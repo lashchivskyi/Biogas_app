@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS, type HandlingId } from "@/core";
 import { COUNTRIES } from "@/countries";
+import { verifyCity } from "./cities";
+import { cityRegionId, type CityClimate } from "@/core/location";
 
 const key = <T extends Record<string, unknown>>(o: T) => Object.keys(o) as [keyof T & string, ...(keyof T & string)[]];
 
@@ -30,6 +32,7 @@ export const lineSchema = z
 export const inputSchema = z.object({
   countryCode: z.enum(key(COUNTRIES)),
   regionId: z.string().max(40),
+  city: z.custom<CityClimate>((c) => !!c && typeof c === "object" && verifyCity(c, (c as CityClimate).countryCode), "Invalid or altered city climate; select the city again").optional(),
   lang: z.enum(["en", "uk"]).optional(),
   businessType: z.enum(key(BUSINESS_TYPES)),
   feedstocks: z.array(lineSchema).min(1).max(16),
@@ -53,7 +56,7 @@ export const inputSchema = z.object({
   labAnalysisAvailable: z.boolean().optional(),
   assumedSupportEurPerKwh: optNum(1).optional(),
 }).superRefine((input, ctx) => {
-  if (!COUNTRIES[input.countryCode].regions.some((region) => region.id === input.regionId)) {
+  if (input.city ? input.city.countryCode !== input.countryCode || input.regionId !== cityRegionId(input.city) : !COUNTRIES[input.countryCode].regions.some((region) => region.id === input.regionId)) {
     ctx.addIssue({ code: "custom", path: ["regionId"], message: "Region does not belong to the selected country" });
   }
 });

@@ -67,7 +67,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
   const country = COUNTRIES[selection.country];
   const region = country.regions.find((r) => r.id === selection.region);
   const regionName = region?.names?.[locale] ?? region?.name;
-  const all = allProvenance(country, region?.id);
+  const all = allProvenance(country, selection.region);
   const registryHref = (code: string) => `/${locale}/methodology?${new URLSearchParams({ c: code })}#parameter-group-4`;
   return (
     <main>
@@ -156,7 +156,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
                 <h2 id={`parameter-title-${groupIndex}`}><HelpTooltip description={groupHelp[groupIndex]}>{title}</HelpTooltip> <span className="methodology-count">{rows.length}</span></h2>
                 {groupIndex === 4 && <p className="methodology-registryScope">{countryName(country.code, locale)}{regionName ? " · " + regionName : ""}</p>}
               </div>
-              {groupIndex === 4 && <MethodologyFilters key={`${country.code}/${region?.id ?? ""}`} country={country.code} region={region?.id} copy={copy.registry} locale={locale} explicitSelection={COUNTRY_ORDER.includes(requested) || Boolean(saved && typeof saved === "object" && Object.hasOwn(COUNTRIES, (saved as { country?: string }).country ?? ""))} />}
+              {groupIndex === 4 && <MethodologyFilters key={`${country.code}/${selection.region ?? ""}`} country={country.code} region={selection.region} city={selection.city} copy={copy.registry} locale={locale} explicitSelection={COUNTRY_ORDER.includes(requested) || Boolean(saved && typeof saved === "object" && Object.hasOwn(COUNTRIES, (saved as { country?: string }).country ?? ""))} />}
               <div className="methodology-tableFrame" role="region" aria-labelledby={`parameter-title-${groupIndex}`} tabIndex={0}>
                 <table className="methodology-table methodology-registerTable" aria-labelledby={`parameter-title-${groupIndex}`}>
                   <colgroup>

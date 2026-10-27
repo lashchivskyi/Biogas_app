@@ -311,7 +311,7 @@ export const SEGMENTS: Segment[] = [
     },
   },
   {
-    slug: "breweries", id: "brewery", businessType: "brewery", exampleId: "brewery", tone: "weak",
+    slug: "breweries", id: "brewery", businessType: "brewery", exampleId: "de_food_30k", tone: "weak",
     seo: {
       en: {
         title: "Biogas for breweries from spent grain and effluent",

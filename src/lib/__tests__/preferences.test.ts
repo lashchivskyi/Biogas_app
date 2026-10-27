@@ -5,6 +5,7 @@ import { DisplayMoney } from "@/components/DisplayMoney";
 import { COUNTRIES } from "@/countries";
 import { EXAMPLES } from "@/core/examples";
 import { getDictionary, LOCALES } from "@/i18n";
+import { COUNTRY_LOCALE } from "@/i18n/config";
 import { preferenceCopy } from "@/i18n/preferences";
 import { adaptToLocation, contextHref, displayCurrency, normalizePreferences, readPreferenceCookie, resolvePreferences, swapLocaleUrl } from "../preferences";
 import { formToInput, inputToForm, recontextualizeForm } from "../form";
@@ -24,7 +25,30 @@ describe("shared project and language preferences", () => {
     expect(adaptToLocation(manual, "US", COUNTRIES).changed).toBe(false);
     expect(adaptToLocation(manual, "PL", COUNTRIES).preferences).toMatchObject({ country: "PL", displayCurrency: "EUR", paymentCurrency: "EUR", detectedCountry: "PL" });
     expect(adaptToLocation(manual, "XX", COUNTRIES).changed).toBe(false);
-    expect(adaptToLocation(manual, "ZZ", COUNTRIES).preferences.country).toBe("DE");
+    expect(adaptToLocation(manual, "ZZ", COUNTRIES).preferences.country).toBe("US");
+  });
+  it.each(["CH", "BE", "PT", "IE", "AU", "JP", "AE"])("defaults unsupported %s visitors to US/en/USD and keeps the real detected country", (country) => {
+    const current = normalizePreferences({ ...saved, detectedCountry: "UA" }, COUNTRIES, "GB");
+    const adapted = adaptToLocation(current, country, COUNTRIES);
+    expect(adapted).toMatchObject({ changed: true, language: "en", preferences: { country: "US", detectedCountry: country, displayCurrency: "USD", paymentCurrency: "USD", locationDefaultsVersion: 2 } });
+    expect(adapted.preferences.region).toBeUndefined();
+    expect(adapted.preferences.city).toBeUndefined();
+    expect(displayCurrency("AUTO", country)).toBe("USD");
+    expect(resolvePreferences({ locale: "uk", markets: COUNTRIES, visitorCountry: country }).country).toBe("US");
+    expect(adaptToLocation(adapted.preferences, country, COUNTRIES).changed).toBe(false);
+  });
+  it("migrates old unsupported-country defaults once without repeatedly overriding manual preferences", () => {
+    const old = normalizePreferences({ ...saved, detectedCountry: "CH" }, COUNTRIES, "GB");
+    const adapted = adaptToLocation(old, "CH", COUNTRIES);
+    expect(adapted.changed).toBe(true);
+    const manual = normalizePreferences({ ...adapted.preferences, ...saved }, COUNTRIES, "GB");
+    expect(adaptToLocation(manual, "CH", COUNTRIES)).toEqual({ changed: false, preferences: manual });
+    expect(adaptToLocation(manual, "JP", COUNTRIES)).toMatchObject({ changed: true, language: "en", preferences: { country: "US", displayCurrency: "USD" } });
+    expect(displayCurrency("EUR", "JP")).toBe("EUR");
+    expect(resolvePreferences({ locale: "uk", markets: COUNTRIES, visitorCountry: "JP", saved }).country).toBe("DE");
+  });
+  it("uses the same supported-country registry for server language negotiation and project adapters", () => {
+    expect(Object.keys(COUNTRY_LOCALE).sort()).toEqual(Object.keys(COUNTRIES).sort());
   });
   it("keeps a remembered project and currency independent of language and visitor location", () => {
     for (const locale of LOCALES) {

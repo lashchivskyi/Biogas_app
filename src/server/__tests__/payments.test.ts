@@ -5,6 +5,9 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { fxFor } from "@/countries/sources";
 import { convertedPlanPrice, PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
 import { EXAMPLES } from "@/core/examples";
+import { MODEL_VERSION } from "@/core/modelAudit";
+import { signCity } from "../cities";
+import { cityRegionId } from "@/core/location";
 
 // isolate the JSON stores before the modules read their paths
 const dir = mkdtempSync(join(tmpdir(), "biogas-pay-"));
@@ -66,11 +69,24 @@ describe("stripe", () => {
 });
 
 describe("checkout", () => {
+  it("retains the selected city and its exact climate evidence in the purchased assessment", async () => {
+    const region = (await import("@/countries")).COUNTRIES.UA.regions.find((r) => r.id === "lviv")!;
+    const city = signCity({ id: 702550, countryCode: "UA", name: "Lviv", admin1: "Lviv Oblast", latitude: 49.83826, longitude: 24.02324,
+      gridLatitude: 49.75, gridLongitude: 24, elevationM: region.altitudeM!, monthlyTempC: [...region.monthlyTempC], startDate: "2016-01-01", endDate: "2025-12-31", fetchedOn: "2026-10-27" });
+    const request = req("report");
+    const { order } = await S.startCheckout({ ...request, input: { ...request.input, city, regionId: cityRegionId(city) } });
+    expect(order.input.city).toEqual(city);
+    expect(order.assessmentSnapshot?.input.city).toEqual(city);
+    expect(order.assessmentSnapshot?.climate.regionName).toBe("Lviv, Lviv Oblast");
+    const before = JSON.stringify(order.assessmentSnapshot);
+    await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: order.currency }, "test");
+    expect(JSON.stringify((await O.orders.get(order.id))?.assessmentSnapshot)).toBe(before);
+  });
   it("uses the same commercial price rounded up to USD 10 for both plans in every country tier", () => {
     vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
     expect(convertedPlanPrice(16000, "USD", 1.1193)).toBe(18000);
     expect(convertedPlanPrice(19000, "USD", 1.1193)).toBe(22000);
-    for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_guelle", "pl_food_30k"]) {
+    for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_guelle", "it_slaughter"]) {
       const request = { ...req(plan, example), paymentCurrency: "USD" as const };
       const quote = Q.createPaymentQuote(request);
       expect(quote.amountMinor % 1000).toBe(0);
@@ -155,7 +171,7 @@ describe("checkout", () => {
   it("persists the exact assessment with model/data/input versions before payment and preserves it on updates", async () => {
     const { order } = await S.startCheckout(req("report"));
     const snapshot = JSON.stringify(order.assessmentSnapshot);
-    expect(order.assessmentSnapshot!.dataAudit!.modelVersion).toBe("0.2.0");
+    expect(order.assessmentSnapshot!.dataAudit!.modelVersion).toBe(MODEL_VERSION);
     expect(order.assessmentSnapshot!.dataAudit!.dataVersion).toMatch(/^[0-9a-f]{16}$/);
     expect(order.assessmentSnapshot!.dataAudit!.asOfDate).toBe(order.createdAt.slice(0, 10));
     expect(JSON.stringify((await O.orders.byToken(order.reportToken))!.assessmentSnapshot)).toBe(snapshot);

@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type PropsWithChildren } from "react";
 import { COUNTRY_COOKIE, LOCALE_COOKIE, LOCALE_COUNTRY, type Locale } from "@/i18n/config";
 import { detectVisitorLocation, type VisitorLocation } from "@/lib/visitor-location";
+import { cityRegionId, validCity, type CityClimate } from "@/core/location";
 import { adaptToLocation, contextHref, displayCurrency, DRAFT_STORAGE, normalizePreferences, PREFERENCES_COOKIE, PREFERENCES_STORAGE, readPreferenceCookie, resolvePreferences, swapLocaleUrl, type CurrencyPreference, type CurrencyReference, type PreferenceMarkets, type ProjectPreferences } from "@/lib/preferences";
 
 const LocaleContext = createContext<Locale>("en");
@@ -10,7 +11,8 @@ const defaultPreferences: ProjectPreferences = { country: "GB", displayCurrency:
 const PreferencesContext = createContext({
   ...defaultPreferences, ready: false, visitorCountry: undefined as string | undefined, currency: "EUR" as "EUR" | "USD", markets: {} as PreferenceMarkets,
   usd: { value: 1, date: "undated" } as CurrencyReference, settingsOpen: false,
-  setLocation: (() => {}) as (country: string, region?: string) => void,
+  setLocation: (() => {}) as (country: string, region?: string, city?: CityClimate) => void,
+  locationLoading: false, locationError: false,
   setDisplayCurrency: (() => {}) as (currency: CurrencyPreference) => void, setPaymentCurrency: (() => {}) as (currency: CurrencyPreference) => void,
   applyPreferences: (() => {}) as (patch: Partial<ProjectPreferences>) => void,
   openSettings: () => {}, closeSettings: () => {}, href: (path: string) => path,
@@ -21,6 +23,8 @@ export function LocaleProvider({ locale, children, markets = {}, usd = { value: 
   const [ready, setReady] = useState(false);
   const [visitorCountry, setVisitorCountry] = useState<string>();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState(false);
   const memoryPreferences = useRef<ProjectPreferences | undefined>(undefined);
   const persist = useCallback((value: ProjectPreferences) => {
     memoryPreferences.current = value;
@@ -35,7 +39,7 @@ export function LocaleProvider({ locale, children, markets = {}, usd = { value: 
     let lastCheck = 0;
     const controller = new AbortController();
     const load = () => {
-      let saved: unknown, draft: { countryCode?: string; regionId?: string } | undefined;
+      let saved: unknown, draft: { countryCode?: string; regionId?: string; city?: CityClimate } | undefined;
       try { saved = JSON.parse(localStorage.getItem(PREFERENCES_STORAGE) ?? "null"); draft = JSON.parse(localStorage.getItem(DRAFT_STORAGE) ?? "null"); } catch { /* Private mode or old draft. */ }
       return resolvePreferences({ locale, markets, query: new URLSearchParams(location.search), saved: memoryPreferences.current ?? readPreferenceCookie(document.cookie) ?? saved, draft, visitorCountry: visitor });
     };
@@ -67,7 +71,8 @@ export function LocaleProvider({ locale, children, markets = {}, usd = { value: 
                 window.location.replace(url);
                 return result;
               }
-              if (/\/(calculator|pricing)$/.test(window.location.pathname)) window.history.replaceState(null, "", url);
+              // Remove stale project query context on every page before read() resolves it again.
+              window.history.replaceState(null, "", url);
             }
           }
           read();
@@ -89,6 +94,7 @@ export function LocaleProvider({ locale, children, markets = {}, usd = { value: 
 
   const update = useCallback((next: ProjectPreferences) => {
     const value = normalizePreferences(next, markets, LOCALE_COUNTRY[locale]);
+    setLocationError(false);
     persist(value);
     setPreferences(value);
     // Contextual form controls must update the same URL as the header, including on reload/back.
@@ -96,8 +102,28 @@ export function LocaleProvider({ locale, children, markets = {}, usd = { value: 
       window.history.replaceState(null, "", contextHref(window.location.href, value));
     }
   }, [markets, locale, persist]);
-  const setLocation = useCallback((country: string, region?: string) => update({ ...preferences, country, region }), [preferences, update]);
-  const value = { ...preferences, ready, visitorCountry, currency: displayCurrency(preferences.displayCurrency, visitorCountry), markets, usd, settingsOpen,
+  // Restore a shared city URL even when this browser has no saved climate snapshot yet.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("r") ?? preferences.region ?? "";
+    // Offline data updates at release time, not on January 1. Preserve saved observation periods.
+    if (!ready || !/^city:\d+$/.test(requested) || (preferences.region === requested && validCity(preferences.city, preferences.country))) return;
+    const country = preferences.country;
+    const controller = new AbortController();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restore a server-resolved location from an explicit URL
+    setLocationLoading(true); setLocationError(false);
+    fetch(`/api/cities?${new URLSearchParams({ id: requested.slice(5), country, lang: locale })}`, { signal: controller.signal })
+      .then(async (r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(({ city }: { city: CityClimate }) => {
+        const current = memoryPreferences.current ?? preferences;
+        if (controller.signal.aborted || current.country !== country || !validCity(city, country) || cityRegionId(city) !== requested || (new URLSearchParams(window.location.search).get("r") ?? current.region) !== requested) return;
+        const next = { ...current, country, region: requested, city };
+        persist(next); setPreferences(next);
+      }).catch(() => { if (!controller.signal.aborted) setLocationError(true); })
+      .finally(() => { if (!controller.signal.aborted) setLocationLoading(false); });
+    return () => { controller.abort(); setLocationLoading(false); };
+  }, [ready, preferences, locale, persist]);
+  const setLocation = useCallback((country: string, region?: string, city?: CityClimate) => update({ ...(memoryPreferences.current ?? preferences), country, region, city }), [preferences, update]);
+  const value = { ...preferences, ready, visitorCountry, currency: displayCurrency(preferences.displayCurrency, visitorCountry), markets, usd, settingsOpen, locationLoading, locationError,
     setLocation,
     setDisplayCurrency: (displayCurrency: CurrencyPreference) => update({ ...preferences, displayCurrency }),
     setPaymentCurrency: (paymentCurrency: CurrencyPreference) => update({ ...preferences, paymentCurrency }),

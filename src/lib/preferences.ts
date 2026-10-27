@@ -1,38 +1,51 @@
 import { COUNTRY_LOCALE, isLocale, LOCALE_COUNTRY, type Locale } from "@/i18n/config";
+import { cityRegionId, validCity, type CityClimate } from "@/core/location";
 
 export const PREFERENCES_COOKIE = "mx_context";
 export const PREFERENCES_STORAGE = "mx.context.v1";
 export const DRAFT_STORAGE = "mx.form.v2";
 export type CurrencyPreference = "AUTO" | "EUR" | "USD";
-export type ProjectPreferences = { country: string; region?: string; displayCurrency: CurrencyPreference; paymentCurrency: CurrencyPreference; detectedCountry?: string };
+export type ProjectPreferences = { country: string; region?: string; city?: CityClimate; displayCurrency: CurrencyPreference; paymentCurrency: CurrencyPreference; detectedCountry?: string; locationDefaultsVersion?: 2 };
 export type PreferenceMarkets = Record<string, { currency: string; regions: { id: string; name: string; names?: Record<string, string> }[] }>;
 export type CurrencyReference = { value: number; date: string };
+
+/** Shared first-visit/IP-change policy; the detected visitor country itself is never relabelled US. */
+export function locationDefaults(country: string, markets: object = COUNTRY_LOCALE): { country: string; language: Locale; currency: "EUR" | "USD" } {
+  const supported = Object.hasOwn(markets, country);
+  const projectCountry = supported ? country : "US";
+  return { country: projectCountry, language: supported ? COUNTRY_LOCALE[country] ?? "en" : "en", currency: projectCountry === "US" ? "USD" : "EUR" };
+}
 
 export function normalizePreferences(raw: unknown, markets: PreferenceMarkets, fallback: string): ProjectPreferences {
   const p = raw && typeof raw === "object" ? raw as Partial<ProjectPreferences> : {};
   const country = typeof p.country === "string" && Object.hasOwn(markets, p.country) ? p.country : fallback;
-  return { country, region: markets[country]?.regions.some((r) => r.id === p.region) ? p.region : undefined,
+  const city = validCity(p.city, country) && p.region === cityRegionId(p.city) ? p.city : undefined;
+  const pendingCity = typeof p.region === "string" && /^city:[1-9]\d{0,9}$/.test(p.region);
+  return { country, ...(city ? { city } : {}), region: city ? cityRegionId(city) : pendingCity || markets[country]?.regions.some((r) => r.id === p.region) ? p.region : undefined,
     displayCurrency: ["AUTO", "EUR", "USD"].includes(p.displayCurrency ?? "") ? p.displayCurrency! : "AUTO",
     paymentCurrency: ["AUTO", "EUR", "USD"].includes(p.paymentCurrency ?? "") ? p.paymentCurrency! : "AUTO",
-    ...(typeof p.detectedCountry === "string" && /^[A-Z]{2}$/.test(p.detectedCountry) ? { detectedCountry: p.detectedCountry } : {}) };
+    ...(typeof p.detectedCountry === "string" && /^[A-Z]{2}$/.test(p.detectedCountry) ? { detectedCountry: p.detectedCountry } : {}),
+    ...(p.locationDefaultsVersion === 2 ? { locationDefaultsVersion: 2 as const } : {}) };
 }
 
 /** A newly detected IP country replaces earlier defaults and overrides once, without redirect loops. */
 export function adaptToLocation(current: ProjectPreferences, country: string, markets: PreferenceMarkets): { preferences: ProjectPreferences; language?: Locale; changed: boolean } {
-  if (!/^[A-Z]{2}$/.test(country) || ["XX", "T1"].includes(country) || current.detectedCountry === country) return { preferences: current, changed: false };
-  const currency = country === "US" ? "USD" : "EUR";
   const supported = Object.hasOwn(markets, country);
-  return { preferences: { ...current, detectedCountry: country, country: supported ? country : current.country,
-    region: supported && country !== current.country ? undefined : current.region, displayCurrency: currency, paymentCurrency: currency },
-    language: COUNTRY_LOCALE[country], changed: true };
+  // Migrate previously detected unsupported countries once, then retain manual choices until IP changes.
+  if (!/^[A-Z]{2}$/.test(country) || ["XX", "T1"].includes(country) || (current.detectedCountry === country && (supported || current.locationDefaultsVersion === 2))) return { preferences: current, changed: false };
+  const defaults = locationDefaults(country, markets);
+  return { preferences: { ...current, detectedCountry: country, locationDefaultsVersion: 2, country: defaults.country,
+    region: defaults.country !== current.country ? undefined : current.region, city: defaults.country !== current.country ? undefined : current.city,
+    displayCurrency: defaults.currency, paymentCurrency: defaults.currency },
+    language: defaults.language, changed: true };
 }
 
 /** Explicit project URL → remembered project → draft → location guess. Language is a fallback only. */
 export function resolvePreferences({ locale, markets, query, saved, draft, visitorCountry }: {
-  locale: Locale; markets: PreferenceMarkets; query?: URLSearchParams; saved?: unknown; draft?: { countryCode?: string; regionId?: string }; visitorCountry?: string;
+  locale: Locale; markets: PreferenceMarkets; query?: URLSearchParams; saved?: unknown; draft?: { countryCode?: string; regionId?: string; city?: CityClimate }; visitorCountry?: string;
 }): ProjectPreferences {
-  const fallback = visitorCountry && Object.hasOwn(markets, visitorCountry) ? visitorCountry : LOCALE_COUNTRY[locale];
-  const remembered = saved && typeof saved === "object" && Object.hasOwn(markets, (saved as ProjectPreferences).country ?? "") ? saved : draft ? { country: draft.countryCode, region: draft.regionId } : undefined;
+  const fallback = visitorCountry ? locationDefaults(visitorCountry, markets).country : LOCALE_COUNTRY[locale];
+  const remembered = saved && typeof saved === "object" && Object.hasOwn(markets, (saved as ProjectPreferences).country ?? "") ? saved : draft ? { country: draft.countryCode, region: draft.regionId, city: draft.city } : undefined;
   const base = normalizePreferences(remembered, markets, fallback);
   const c = query?.get("c")?.toUpperCase();
   if (c && Object.hasOwn(markets, c)) {
@@ -42,9 +55,9 @@ export function resolvePreferences({ locale, markets, query, saved, draft, visit
   return base;
 }
 
-/** USD is a US visitor default, never an inference from English or the plant's country. */
+/** Unsupported visitor markets share the US/USD default; language and project country do not set currency. */
 export function displayCurrency(preference: CurrencyPreference, visitorCountry?: string): "EUR" | "USD" {
-  return preference === "AUTO" ? visitorCountry === "US" ? "USD" : "EUR" : preference;
+  return preference === "AUTO" ? visitorCountry ? locationDefaults(visitorCountry).currency : "EUR" : preference;
 }
 
 export function readPreferenceCookie(cookie: string): unknown {

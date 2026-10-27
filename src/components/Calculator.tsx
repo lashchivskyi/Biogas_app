@@ -20,6 +20,8 @@ import { CurrencyResultView as ResultView } from "./CurrencyResultView";
 import { WhatIf } from "./WhatIf";
 import { CountrySelect } from "./CountrySelect";
 import { CountryFlag } from "./CountryFlag";
+import { CitySelect } from "./CitySelect";
+import { locationCopy } from "@/i18n/location";
 
 const STORAGE_KEY = "mx.form.v2";
 
@@ -68,14 +70,13 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
   );
 }
 
-const regionLabel = (r: { name: string; names?: Record<string, string> }, locale: Locale) => r.names?.[locale] ?? r.name;
 
 export function Calculator({ locale, d, examples, demo, samplesHref }: { locale: Locale; d: CalculatorDict; examples: ExampleSummary[]; demo: boolean; samplesHref: string }) {
   const C = d.calc;
   const L = d.labels;
   const lang = coreLang(locale);
   const preferences = usePreferences();
-  const { ready: contextReady, country: projectCountry, region: projectRegion, setLocation } = preferences;
+  const { ready: contextReady, country: projectCountry, region: projectRegion, city: projectCity } = preferences;
   const [formReady, setFormReady] = useState(false);
   const initialized = useRef(false);
   const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", "", locale));
@@ -98,28 +99,28 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       const plan = q.get("plan");
       // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the browser draft after deterministic SSR
       if (PLAN_IDS.includes(plan as PlanId)) setPreferredPlan(plan as PlanId);
-      let next = initialForm("dairy_farm", adapter.code, projectRegion ?? "", locale);
+      let next: FormState = { ...initialForm("dairy_farm", adapter.code, projectRegion ?? "", locale), city: projectCity };
       let hasDraft = false;
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) as FormState : null;
         if (parsed?.lines?.length && Object.hasOwn(COUNTRIES, parsed.countryCode)) {
-          next = recontextualizeForm(parsed, adapter, projectRegion, locale);
+          next = recontextualizeForm(parsed, adapter, projectRegion, locale, projectCity);
           hasDraft = true;
           setRestored(true);
         }
       } catch { /* Draft storage is optional. */ }
       const business = q.get("b");
       if (business && Object.hasOwn(BUSINESS_TYPES, business)) {
-        if (!hasDraft || next.businessType !== business) next = initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? "", locale);
+        if (!hasDraft || next.businessType !== business) next = { ...initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? "", locale), city: projectCity };
         setStep(1);
       }
       setForm(next);
       setFormReady(true);
       return;
     }
-    setForm((current) => recontextualizeForm(current, adapter, projectRegion, locale));
-  }, [contextReady, projectCountry, projectRegion, setLocation, locale]);
+    setForm((current) => recontextualizeForm(current, adapter, projectRegion, locale, projectCity));
+  }, [contextReady, projectCountry, projectRegion, projectCity, locale]);
   useEffect(() => {
     if (!formReady) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* Private mode. */ }
@@ -145,7 +146,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function next() {
     setError("");
-    if (step === 0 && !form.regionId) { setError(C.regionLabel + ": " + C.choose); return; }
+    if (step === 0 && !form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null && invalidStep <= step) {
       setError(numberError[locale]);
@@ -162,7 +163,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function calculate() {
     setError("");
-    if (!form.regionId) { setError(C.regionLabel + ": " + C.choose); setStep(0); return; }
+    if (!form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); setStep(0); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null) {
       setError(numberError[locale]);
@@ -186,7 +187,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     const ex = EXAMPLES.find((e) => e.id === id);
     if (!ex) return;
     setForm(inputToForm(ex.input, locale));
-    preferences.setLocation(ex.input.countryCode, ex.input.regionId);
+    preferences.setLocation(ex.input.countryCode, ex.input.regionId, ex.input.city);
     setSubmitted(false);
     setStep(1);
     track("example_loaded", { id });
@@ -199,7 +200,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       /* ignore */
     }
     const g = preferences.country;
-    setForm(initialForm("dairy_farm", g, preferences.region ?? "", locale));
+    setForm({ ...initialForm("dairy_farm", g, preferences.region ?? "", locale), city: preferences.city });
     setSubmitted(false);
     setRestored(false);
     setStep(0);
@@ -264,11 +265,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 <Field label={C.countryLabel} htmlFor="c-country" hint={preferenceCopy(locale).reset}>
                   <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { preferences.setLocation(c); track("country_changed", { country: c }); }} />
                 </Field>
-                <Field label={C.regionLabel} htmlFor="c-region">
-                  <select id="c-region" className="field" value={form.regionId} onChange={(e) => preferences.setLocation(form.countryCode, e.target.value)}>
-                    <option value="">{C.choose}</option>
-                    {country.regions.map((r) => <option key={r.id} value={r.id}>{regionLabel(r, locale)}</option>)}
-                  </select>
+                <Field label={locationCopy(locale).title} htmlFor="c-city">
+                  <CitySelect key={form.countryCode} id="c-city" country={form.countryCode} locale={locale} region={form.regionId} city={form.city} onChange={(region, city) => preferences.setLocation(form.countryCode, region, city)} />
                 </Field>
               </div>
               <p className="mt-2 flex items-center gap-2 text-xs text-muted">

@@ -4,32 +4,34 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { INTL_TAG, LOCALE_COOKIE, NATIVE_NAME, type Locale } from "@/i18n/config";
 import type { LanguageOption } from "@/i18n/language-options";
-import { methodologyCopy } from "@/i18n/methodology";
+import { locationCopy } from "@/i18n/location";
 import { preferenceCopy } from "@/i18n/preferences";
 import { contextHref, swapLocaleUrl } from "@/lib/preferences";
 import { usePreferences } from "./LocaleProvider";
 import { CountryFlag, CURRENCY_FLAGS } from "./CountryFlag";
 import { FlagSelect } from "./FlagSelect";
+import { CitySelect } from "./CitySelect";
+import { alphabetically } from "@/lib/format";
 
 /** One shared settings panel; language and project location are independent choices. */
 export function PreferenceMenu({ locale, label, options }: { locale: Locale; label: string; options: readonly LanguageOption[] }) {
   const p = usePreferences();
   const open = p.settingsOpen;
   const copy = preferenceCopy(locale);
-  const registry = methodologyCopy[locale].registry;
-  const [draft, setDraft] = useState({ country: p.country, region: p.region ?? "", currency: p.currency, language: locale });
+  const [draft, setDraft] = useState({ country: p.country, region: p.region ?? "", city: p.city, currency: p.currency, language: locale });
+  const [locationPending, setLocationPending] = useState(false);
   const wasOpen = useRef(false);
   const lastDetected = useRef(p.detectedCountry);
   const ref = useRef<HTMLDivElement>(null);
   const path = usePathname();
   useEffect(() => {
     if (open && (!wasOpen.current || lastDetected.current !== p.detectedCountry)) {
-      setDraft({ country: p.country, region: p.region ?? "", currency: p.currency, language: locale });
+      setDraft({ country: p.country, region: p.region ?? "", city: p.city, currency: p.currency, language: locale });
       requestAnimationFrame(() => ref.current?.querySelector<HTMLElement>("#pref-language")?.focus());
     }
     wasOpen.current = open;
     lastDetected.current = p.detectedCountry;
-  }, [open, p.country, p.region, p.currency, p.detectedCountry, locale]);
+  }, [open, p.country, p.region, p.city, p.currency, p.detectedCountry, locale]);
   useEffect(() => {
     const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) p.closeSettings(); };
     const onKey = (e: KeyboardEvent) => {
@@ -41,7 +43,7 @@ export function PreferenceMenu({ locale, label, options }: { locale: Locale; lab
 
   function apply(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    p.applyPreferences({ country: draft.country, region: draft.region || undefined, displayCurrency: draft.currency });
+    p.applyPreferences({ country: draft.country, region: draft.region || undefined, city: draft.city, displayCurrency: draft.currency });
     document.cookie = `${LOCALE_COOKIE}=${draft.language}; path=/; max-age=31536000; samesite=lax`;
     p.closeSettings();
     const url = contextHref(swapLocaleUrl(window.location.href, draft.language), { country: draft.country, region: draft.region || undefined });
@@ -58,12 +60,12 @@ export function PreferenceMenu({ locale, label, options }: { locale: Locale; lab
       {open && <div role="dialog" aria-label={copy.settings} className="fixed inset-x-3 top-16 z-50 max-h-[80dvh] overflow-auto rounded-2xl border border-line bg-white p-5 text-ink shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-11 sm:w-[420px]">
         <form onSubmit={apply} className="space-y-4">
           <h2 className="font-bold">{copy.settings}</h2>
-          <div><label className="label" htmlFor="pref-language">{label}</label><FlagSelect id="pref-language" value={draft.language} onChange={(language) => setDraft({ ...draft, language: language as Locale })} options={options.map(({ locale: l, countryCode }) => ({ value: l, label: NATIVE_NAME[l], flag: countryCode, lang: INTL_TAG[l] }))} /></div>
-          <div><label className="label" htmlFor="pref-country">{copy.project}</label><FlagSelect id="pref-country" value={draft.country} onChange={(country) => setDraft({ ...draft, country, region: "" })} options={Object.keys(p.markets).map((country) => ({ value: country, label: `${names.of(country)} · ${country}`, flag: country }))} /></div>
-          <div><label className="label" htmlFor="pref-region">{registry.region}</label><select id="pref-region" className="field" value={draft.region} onChange={(e) => setDraft({ ...draft, region: e.target.value })}><option value="">{registry.select}</option>{p.markets[draft.country]?.regions.map((r) => <option key={r.id} value={r.id}>{r.names?.[locale] ?? r.name}</option>)}</select></div>
+          <div><label className="label" htmlFor="pref-language">{label}</label><FlagSelect id="pref-language" value={draft.language} onChange={(language) => setDraft({ ...draft, language: language as Locale })} options={alphabetically(options.map(({ locale: l, countryCode }) => ({ value: l, label: NATIVE_NAME[l], flag: countryCode, lang: INTL_TAG[l] })), locale, (o) => o.label)} /></div>
+          <div><label className="label" htmlFor="pref-country">{copy.project}</label><FlagSelect id="pref-country" value={draft.country} onChange={(country) => setDraft({ ...draft, country, region: "", city: undefined })} options={alphabetically(Object.keys(p.markets).map((country) => ({ value: country, label: `${names.of(country)} · ${country}`, flag: country })), locale, (o) => o.label)} /></div>
+          <div><label className="label" htmlFor="pref-city">{locationCopy(locale).title}</label><CitySelect key={draft.country} id="pref-city" country={draft.country} locale={locale} region={draft.region} city={draft.city} onPendingChange={setLocationPending} onChange={(region, city) => setDraft((current) => ({ ...current, region: region ?? "", city }))} /></div>
           <div><label className="label" htmlFor="pref-currency">{copy.currency}</label><FlagSelect id="pref-currency" value={draft.currency} onChange={(currency) => setDraft({ ...draft, currency: currency as "EUR" | "USD" })} options={["EUR", "USD"].map((currency) => ({ value: currency, label: currency, flag: CURRENCY_FLAGS[currency] }))} /></div>
           <p className="text-xs leading-relaxed text-muted">{copy.reset}</p>
-          <button className="btn btn-primary w-full" type="submit">{copy.apply}</button>
+          <button className="btn btn-primary w-full" type="submit" disabled={locationPending}>{copy.apply}</button>
         </form>
       </div>}
     </div>

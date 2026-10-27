@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "dataset": "era5-planette-0.25",
+  "fetchedOn": "2026-10-27",
+  "startDate": "2016-01-01",
+  "endDate": "2025-12-31",
+  "grid": {
+    "latStart": 90,
+    "latStep": -0.25,
+    "latCount": 721,
+    "lonStart": -179.75,
+    "lonStep": 0.25,
+    "lonCount": 1440,
+    "months": 12,
+    "scale": 0.1,
+    "encoding": "int16-le",
+    "layout": "latitude,longitude,month",
+    "bytes": 24917760
+  },
+  "citiesByCountry": {
+    "AR": 1205,
+    "AT": 3045,
+    "BG": 333,
+    "BR": 5899,
+    "CA": 3336,
+    "CZ": 2780,
+    "DE": 11930,
+    "DK": 512,
+    "EE": 218,
+    "ES": 7425,
+    "FI": 929,
+    "FR": 15365,
+    "GB": 5921,
+    "GR": 1986,
+    "HU": 1240,
+    "IN": 7282,
+    "IT": 11861,
+    "KZ": 353,
+    "LT": 164,
+    "LV": 147,
+    "MD": 101,
+    "MX": 16880,
+    "NL": 2065,
+    "PL": 3870,
+    "RO": 7149,
+    "RS": 492,
+    "SE": 1326,
+    "SK": 844,
+    "TH": 1085,
+    "TR": 4315,
+    "UA": 5584,
+    "US": 21785,
+    "VN": 916
+  },
+  "sha256": {
+    "cities.json.gz": "6d5bbe33b0960eb8f9ea415c86147620deae333ca394aab8593ba579eb694311",
+    "era5-temperature.bin.gz": "85bd8e36ddae01fd82c5ce834ccdb30ad9622e982983dddfa0958103ffe8b0a5"
+  },
+  "geonames": {
+    "source": "https://download.geonames.org/export/dump/",
+    "license": "CC BY 4.0",
+    "files": {
+      "https://download.geonames.org/export/dump/cities500.zip": "4c16306582581fa599d246ef103d24d51ed7cdd615603e6bbf393bcd6b3eff42",
+      "https://download.geonames.org/export/dump/admin1CodesASCII.txt": "2e4867f5397acb056ea26377601b57af37cb4c81399770225018e9e439e91ad3",
+      "https://download.geonames.org/export/dump/alternateNamesV2.zip": "1741ffd3dfe705c7000ef9233319bc07fe83b58fdb1e0a6c5a10a41c97894e28"
+    },
+    "coverage": "cities500: populated places with >500 inhabitants or administrative seats; not every settlement"
+  },
+  "era5": {
+    "source": "https://registry.opendata.aws/planette_era5_reanalysis/",
+    "snapshot": "T496154V5F5T9PE3SHJ0",
+    "variable": "t2m",
+    "license": "Copernicus/CC BY 4.0",
+    "attribution": "Contains modified Copernicus Climate Change Service information; ECMWF ERA5, NSF NCAR, Planette",
+    "method": "Day-weighted monthly means, 10 completed years; nearest 0.25 degree grid cell; no elevation downscaling; not a WMO 30-year normal"
+  }
+}

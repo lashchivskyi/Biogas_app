@@ -1,4 +1,5 @@
 import { climateSummary } from "./climate";
+import { projectRegion } from "./location";
 import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
 import type { CountryAdapter, SupportScheme } from "./country";
@@ -21,7 +22,9 @@ import { decideVerdict } from "./verdict";
 export const ROUTES: RouteId[] = ["chp", "boiler", "biomethane"];
 
 export function buildParams(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]): Params {
-  const overrides = regionId && energy && country.paramsForProject ? country.paramsForProject({ regionId, energy }) : regionId && country.paramsForRegion ? country.paramsForRegion(regionId) : [];
+  // A city is a climate location, not a verified regional tariff area.
+  const marketRegion = regionId?.startsWith("city:") ? undefined : regionId;
+  const overrides = energy && country.paramsForProject ? country.paramsForProject({ regionId: marketRegion ?? "", energy }) : marketRegion && country.paramsForRegion ? country.paramsForRegion(marketRegion) : [];
   const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(overrides) };
   return new Params(map);
 }
@@ -32,8 +35,7 @@ export function allProvenance(country: CountryAdapter, regionId?: string, energy
 }
 
 function makeCtx(input: Assessment["input"], country: CountryAdapter, params: Params, scenario: ScenarioId, mods: Modifiers, lang: CoreLang, support?: SupportScheme): RunContext {
-  const region = country.regions.find((r) => r.id === input.regionId);
-  if (!region) throw new Error(`Region ${input.regionId} does not belong to ${country.code}`);
+  const region = projectRegion(input, country);
   return { input, country, params, scenario: SCENARIOS[scenario], mods, region, fx: params.get("econ.fx_local_per_eur"), lang, t: tr(lang), support };
 }
 
@@ -54,7 +56,7 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
 
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
   if (input.countryCode !== country.code) throw new Error("Project country does not match the country adapter");
-  if (!country.regions.some((r) => r.id === input.regionId)) throw new Error(`Region ${input.regionId} does not belong to ${country.code}`);
+  projectRegion(input, country);
   const asOfDate = opts.asOfDate ?? DATA_REVIEW_AS_OF;
   if (!isoDate(asOfDate)) throw new Error("Invalid assessment date");
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";

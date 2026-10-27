@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { COUNTRY_ORDER } from "@/countries";
 import { countryName, type Locale } from "@/i18n";
 import { CountryFlag } from "./CountryFlag";
+import { alphabetically } from "@/lib/format";
 
 /** Searchable combobox; flags supplement the localised names and ISO codes. */
 export function CountrySelect({ id, value, onChange, locale, search, empty }: {
@@ -13,7 +14,7 @@ export function CountrySelect({ id, value, onChange, locale, search, empty }: {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const list = useRef<HTMLUListElement>(null);
-  const options = useMemo(() => COUNTRY_ORDER.map((code) => ({ code, name: countryName(code, locale) })), [locale]);
+  const options = useMemo(() => alphabetically(COUNTRY_ORDER.map((code) => ({ code, name: countryName(code, locale) })), locale, (c) => c.name), [locale]);
   const filtered = options.filter((c) => `${c.name} ${c.code}`.toLocaleLowerCase(locale).includes(query.trim().toLocaleLowerCase(locale)));
 
   useEffect(() => {
