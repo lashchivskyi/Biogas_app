@@ -122,7 +122,7 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
   return out;
 }
 
-/** Regions with measured climate (ERA5) for the country; the profile's hand-written regions are only a fallback. */
+/** Regions with sourced ERA5 reanalysis; hand-written profiles are only a fallback. */
 export function regionsFor(code: string, fallback: Region[]): Region[] {
   const sourced = climateRegionsFor(code);
   if (!sourced.length) return fallback;
@@ -131,7 +131,7 @@ export function regionsFor(code: string, fallback: Region[]): Region[] {
     name: r.name,
     names: Object.keys(r.names).length ? r.names : undefined,
     monthlyTempC: r.monthlyTempC,
-    tempSource: `${CLIMATE_SOURCE} at ${r.lat}°, ${r.lon}°`,
+    tempSource: `${r.source ?? CLIMATE_SOURCE} at ${r.lat}°, ${r.lon}°`,
     altitudeM: r.elevationM,
   }));
 }

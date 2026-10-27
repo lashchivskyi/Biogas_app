@@ -11,11 +11,43 @@ import { COUNTRIES, getCountry } from "@/countries";
 import { discountFor, electricityFor, fertiliserFor, fxFor, gasFor, spotFor } from "@/countries/sources";
 import statistics from "@/countries/data/statistics.json";
 import risk from "@/countries/data/country-risk.json";
+import climate from "@/countries/data/climate.json";
 import { inputSchema } from "@/server/validate";
 
 const template = EXAMPLES.find((e) => e.id === "slaughter_5000")!.input;
 const asOfDate = "2026-10-27";
 const priceId = "econ.electricity_retail_eur_kwh";
+
+describe("regional climate evidence", () => {
+  it("provides complete, dated and reproducible climate inputs for every supported project region", () => {
+    const records = climate.regions as unknown as Record<string, { country: string; id: string; lat: number; lon: number; elevationM: number; monthlyTempC: number[]; days: number; period: string[]; model: string; fetchedOn: string; source: string }>;
+    const lastYear = Number(climate.fetchedOn.slice(0, 4)) - 1;
+    const firstYear = lastYear - 9;
+    const expectedDays = (Date.UTC(lastYear + 1, 0, 1) - Date.UTC(firstYear, 0, 1)) / 86400000;
+    expect(Object.keys(records)).toHaveLength(Object.values(COUNTRIES).reduce((n, c) => n + c.regions.length, 0));
+    for (const country of Object.values(COUNTRIES)) {
+      expect(country.regions.length).toBeGreaterThan(0);
+      for (const region of country.regions) {
+        const row = records[`${country.code}:${region.id}`];
+        expect(row, `${country.code}/${region.id}`).toBeDefined();
+        expect(row.country).toBe(country.code);
+        expect(row.id).toBe(region.id);
+        expect(row.model).toBe("era5");
+        expect(row.period).toEqual([`${firstYear}-01-01`, `${lastYear}-12-31`]);
+        expect(row.days).toBe(expectedDays);
+        expect(row.fetchedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(row.source).toContain(`${firstYear}–${lastYear}`);
+        expect(Math.abs(row.lat)).toBeLessThanOrEqual(90);
+        expect(Math.abs(row.lon)).toBeLessThanOrEqual(180);
+        expect(Number.isFinite(row.elevationM)).toBe(true);
+        expect(row.monthlyTempC).toHaveLength(12);
+        expect(row.monthlyTempC.every((t) => Number.isFinite(t) && t >= -70 && t <= 55)).toBe(true);
+        expect(region.monthlyTempC).toEqual(row.monthlyTempC);
+        expect(region.tempSource).toContain(row.source);
+      }
+    }
+  });
+});
 
 describe("release gate: country, scale and regional reconciliation", () => {
   for (const country of Object.values(COUNTRIES)) {

@@ -1,19 +1,21 @@
 """
-Monthly climate normals for every project region, from ERA5 reanalysis (ECMWF / Copernicus) via the
-Open-Meteo historical-weather API: mean of daily 2 m mean temperature, 2015-01-01 … 2024-12-31.
+Monthly climate reference for every project region, from ERA5 reanalysis (ECMWF / Copernicus) via the
+Open-Meteo historical-weather API: mean of daily 2 m mean temperature over the most recent 10 complete calendar years (not WMO 30-year normals).
 Writes src/countries/data/climate.json. Re-run: python -I scripts/data/fetch_climate.py
 
 The API is free but rate-limited (≈ 26 weighted calls per 10-year location; 5 000/hour), so requests
-are spaced; a full run takes ≈ 80 minutes. Already-fetched locations are kept (resumable).
+are spaced; a full run takes ≈ 80 minutes. Matching model/period locations are kept (resumable); each location keeps its own source and fetch date.
 """
-import json, os, sys, time, urllib.request, urllib.error, datetime
+import json, os, tempfile, time, urllib.request, urllib.error, datetime
 
-START, END = "2015-01-01", "2024-12-31"
+LAST_YEAR = datetime.date.today().year - 1
+START, END = f"{LAST_YEAR - 9}-01-01", f"{LAST_YEAR}-12-31"
+MODEL = "era5"
 OUT = "src/countries/data/climate.json"
 
 # country, id, English name, local names {locale: name}, lat, lon  — regional agricultural / industrial centres
 L = [
-    # Ukraine — oblasts under government control (oblast centre coordinates)
+    # Ukraine — representative oblast centres, not a complete administrative register
     ("UA", "kyiv", "Kyiv oblast", {"uk": "Київська область"}, 50.45, 30.52),
     ("UA", "lviv", "Lviv oblast", {"uk": "Львівська область"}, 49.84, 24.03),
     ("UA", "volyn", "Volyn oblast (Lutsk)", {"uk": "Волинська область"}, 50.75, 25.34),
@@ -289,18 +291,29 @@ L = [
     ("KZ", "turkistan", "Turkistan (Shymkent)", {"uk": "Туркестанська обл. (Шимкент)"}, 42.32, 69.59),
 ]
 
-DAYS = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+def write_data(data, path=OUT):
+    """A reader/build must see either the previous complete JSON or the next complete JSON."""
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=os.path.dirname(path), suffix=".tmp", delete=False) as f:
+            temporary = f.name
+            json.dump(data, f, ensure_ascii=False, indent=1)
+        os.replace(temporary, path)
+    finally:
+        if temporary and os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def fetch(lat, lon):
     url = (f"https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}"
-           f"&start_date={START}&end_date={END}&daily=temperature_2m_mean&timezone=auto")
+           f"&start_date={START}&end_date={END}&daily=temperature_2m_mean&models={MODEL}&timezone=GMT")
     for i in range(8):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "methalytics-data/1.0"}), timeout=120) as r:
                 return json.load(r)
         except urllib.error.HTTPError as e:
             if e.code == 429:
+                print(f"API limit: retrying in {90 * (i + 1)} seconds", flush=True)
                 time.sleep(90 * (i + 1))
                 continue
             raise
@@ -311,12 +324,11 @@ def fetch(lat, lon):
 
 def main():
     data = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {"source": "", "regions": {}}
-    data["source"] = f"ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature {START[:4]}–{END[:4]}"
-    data["fetchedOn"] = datetime.date.today().isoformat()
+    source = f"ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature {START[:4]}–{END[:4]} (recent 10-year reference, not a WMO 30-year normal)"
     for i, (cc, rid, en, loc, lat, lon) in enumerate(L):
         key = f"{cc}:{rid}"
         prev = data["regions"].get(key)
-        if prev and prev.get("lat") == lat and prev.get("lon") == lon and prev.get("monthlyTempC"):
+        if prev and prev.get("lat") == lat and prev.get("lon") == lon and prev.get("monthlyTempC") and prev.get("period") == [START, END] and prev.get("model") == MODEL:
             prev.update({"name": en, "names": loc})
             continue
         d = fetch(lat, lon)
@@ -327,18 +339,22 @@ def main():
             m = int(day[5:7]) - 1
             sums[m] += t
             counts[m] += 1
+        expected = (datetime.date.fromisoformat(END) - datetime.date.fromisoformat(START)).days + 1
+        if sum(counts) != expected or any(c == 0 for c in counts):
+            raise RuntimeError(f"Incomplete climate data for {key}: {sum(counts)}/{expected}")
         temps = [round(s / c, 1) for s, c in zip(sums, counts)]
         data["regions"][key] = {"country": cc, "id": rid, "name": en, "names": loc, "lat": lat, "lon": lon,
-                                "elevationM": d.get("elevation"), "monthlyTempC": temps, "days": sum(counts)}
-        with open(OUT, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=1)
+                                "elevationM": d.get("elevation"), "monthlyTempC": temps, "days": sum(counts),
+                                "period": [START, END], "model": MODEL, "fetchedOn": datetime.date.today().isoformat(), "source": source}
+        write_data(data)
         print(f"{i + 1}/{len(L)} {key} {temps}", flush=True)
         time.sleep(float(os.environ.get("SPACING", "20")))
     # keep only listed regions, in list order
     order = [f"{cc}:{rid}" for cc, rid, *_ in L]
     data["regions"] = {k: data["regions"][k] for k in order if k in data["regions"]}
-    with open(OUT, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+    data["source"] = source
+    data["fetchedOn"] = datetime.date.today().isoformat()
+    write_data(data)
     print("done", len(data["regions"]))
 
 

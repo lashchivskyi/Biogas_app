@@ -5,7 +5,7 @@ import { dataFile, exclusive, readJsonArray, writeJsonArray } from "./jsonFile";
 import type { PaymentQuote } from "./payments/quote";
 
 export type OrderStatus = "created" | "pending" | "paid" | "failed" | "expired" | "reversed" | "cancelled";
-export type ProviderId = "stripe" | "monobank" | "demo";
+export type ProviderId = "stripe" | "demo";
 
 export interface Order {
   id: string;

@@ -408,6 +408,9 @@ export interface ClimateRegion {
   lon: number;
   elevationM?: number;
   monthlyTempC: number[];
+  source?: string;
+  period?: [string, string];
+  fetchedOn?: string;
 }
 const C = climate as unknown as { source: string; fetchedOn: string; regions: Record<string, ClimateRegion> };
 export const CLIMATE_SOURCE = C.source;

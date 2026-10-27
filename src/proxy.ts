@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { COUNTRY_COOKIE, COUNTRY_LOCALE, DEFAULT_LOCALE, isLocale, LOCALE_COOKIE, LOCALES, type Locale } from "@/i18n/config";
 import { checkBasicAuth } from "@/server/adminAuth";
+import { countryFromHeaders } from "@/lib/visitor-location";
+import { readPreferenceCookie, type ProjectPreferences } from "@/lib/preferences";
 
 /** Country from common CDN / platform geo headers (Vercel, Cloudflare, CloudFront, Fastly, generic). */
 function geoCountry(req: NextRequest): string | null {
-  const h = req.headers;
-  const c = h.get("x-vercel-ip-country") ?? h.get("cf-ipcountry") ?? h.get("cloudfront-viewer-country") ?? h.get("fastly-geo-country") ?? h.get("x-country-code");
-  return c && /^[A-Z]{2}$/i.test(c) && c.toUpperCase() !== "XX" ? c.toUpperCase() : null;
+  return countryFromHeaders(req.headers) ?? null;
 }
 
 /** Accept-Language negotiation against supported locales (q-values honoured; base language match). */
@@ -31,8 +31,11 @@ export function negotiate(header: string | null): Locale | null {
   return null;
 }
 
-/** Cookie (explicit choice) → Accept-Language → geo country → English. */
+/** A newly detected IP country wins; within that country retain explicit language choices. */
 export function pickLocale(req: NextRequest): Locale {
+  const country = geoCountry(req);
+  const saved = readPreferenceCookie(req.headers.get("cookie") ?? "") as Partial<ProjectPreferences> | null;
+  if (country && country !== saved?.detectedCountry && COUNTRY_LOCALE[country]) return COUNTRY_LOCALE[country];
   const fromCookie = req.cookies.get(LOCALE_COOKIE)?.value;
   if (isLocale(fromCookie)) return fromCookie;
   const fromHeader = negotiate(req.headers.get("accept-language"));

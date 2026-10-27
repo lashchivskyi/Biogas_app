@@ -141,7 +141,6 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
       {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
-      <p className="mb-3 text-xs text-muted">{f(preferenceCopy(locale).display, { currency: F.currency, rate: new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(F.exchangeRate), date: display.date })}</p>
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">

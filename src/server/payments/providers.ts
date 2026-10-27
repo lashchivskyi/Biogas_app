@@ -1,4 +1,3 @@
-import { verify as cryptoVerify } from "node:crypto";
 import Stripe from "stripe";
 import type { Order, OrderStatus, ProviderId } from "../orders";
 
@@ -10,7 +9,6 @@ import type { Order, OrderStatus, ProviderId } from "../orders";
  *             Adaptive Pricing is disabled per session. Webhooks verified with the signing secret.
  *             NOTE: Stripe does not onboard Ukrainian legal entities — the merchant must be an entity in a
  *             Stripe-supported country (docs/payments.md).
- *  - monobank (optional, Ukraine): hosted page charging UAH; ECDSA-signed webhooks.
  *  - demo     local simulator for development and staging only.
  */
 export interface CreateResult {
@@ -97,82 +95,6 @@ export function verifyStripeEvent(rawBody: string, signature: string | null): St
   return stripe().webhooks.constructEvent(rawBody, signature, secret);
 }
 
-/* ------------------------------------------------------------------ monobank (UA) */
-
-const MONO_API = process.env.MONOBANK_API_URL ?? "https://api.monobank.ua";
-
-export function mapMonoStatus(s: string): OrderStatus {
-  switch (s) {
-    case "success":
-      return "paid";
-    case "failure":
-      return "failed";
-    case "reversed":
-      return "reversed";
-    case "expired":
-      return "expired";
-    default:
-      return "pending";
-  }
-}
-
-let monoPubKeyPem: string | null = null;
-async function monoPublicKey(force = false): Promise<string> {
-  if (process.env.MONOBANK_PUBKEY_BASE64) return Buffer.from(process.env.MONOBANK_PUBKEY_BASE64, "base64").toString("utf8");
-  if (monoPubKeyPem && !force) return monoPubKeyPem;
-  const res = await fetch(`${MONO_API}/api/merchant/pubkey`, { headers: { "X-Token": process.env.MONOBANK_TOKEN ?? "" }, cache: "no-store" });
-  if (!res.ok) throw new Error(`monobank pubkey HTTP ${res.status}`);
-  const { key } = (await res.json()) as { key: string };
-  monoPubKeyPem = Buffer.from(key, "base64").toString("utf8");
-  return monoPubKeyPem;
-}
-
-/** ECDSA-SHA256 over the raw request body; X-Sign is a base64 DER signature. */
-export function verifyMonoSignature(rawBody: string, xSign: string, publicKeyPem: string): boolean {
-  try {
-    return cryptoVerify("sha256", Buffer.from(rawBody, "utf8"), publicKeyPem, Buffer.from(xSign, "base64"));
-  } catch {
-    return false;
-  }
-}
-
-export async function verifyMonoWebhook(rawBody: string, xSign: string | null): Promise<boolean> {
-  if (!xSign) return false;
-  if (verifyMonoSignature(rawBody, xSign, await monoPublicKey())) return true;
-  return verifyMonoSignature(rawBody, xSign, await monoPublicKey(true)); // key rotation
-}
-
-export const monobank: PaymentProvider = {
-  id: "monobank",
-  chargeCurrency: "UAH",
-  async create(order, urls, product) {
-    const res = await fetch(`${MONO_API}/api/merchant/invoice/create`, {
-      method: "POST",
-      headers: { "X-Token": process.env.MONOBANK_TOKEN ?? "", "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: order.amountMinor,
-        ccy: 980,
-        merchantPaymInfo: { reference: order.id, destination: product.name, customerEmails: [order.customer.email] },
-        redirectUrl: urls.success,
-        webHookUrl: urls.webhook,
-        validity: 24 * 3600,
-        paymentType: "debit",
-      }),
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`monobank invoice/create HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
-    const data = (await res.json()) as { invoiceId: string; pageUrl: string };
-    return { redirectUrl: data.pageUrl, providerRef: data.invoiceId };
-  },
-  async fetchStatus(order) {
-    if (!order.providerRef) return null;
-    const res = await fetch(`${MONO_API}/api/merchant/invoice/status?invoiceId=${encodeURIComponent(order.providerRef)}`, { headers: { "X-Token": process.env.MONOBANK_TOKEN ?? "" }, cache: "no-store" });
-    if (!res.ok) return null;
-    const d = (await res.json()) as { status: string; amount?: number; modifiedDate?: string };
-    return { status: mapMonoStatus(d.status), amountMinor: d.amount, currency: "UAH", modifiedAt: d.modifiedDate };
-  },
-};
-
 /* ------------------------------------------------------------------ demo */
 
 export const demo: PaymentProvider = {
@@ -194,7 +116,6 @@ export type PaymentsMode = { online: boolean; provider: ProviderId | null; demo:
 export function paymentsMode(): PaymentsMode {
   const p = process.env.PAYMENT_PROVIDER ?? "stripe";
   if (p === "stripe" && process.env.STRIPE_SECRET_KEY) return { online: true, provider: "stripe", demo: false };
-  if (p === "monobank" && process.env.MONOBANK_TOKEN) return { online: true, provider: "monobank", demo: false };
   if (process.env.NODE_ENV !== "production" || process.env.PAYMENTS_DEMO === "1") return { online: true, provider: "demo", demo: true };
   return { online: false, provider: null, demo: false };
 }
@@ -205,5 +126,5 @@ export function activeProvider(): PaymentProvider | null {
 }
 
 export function providerById(id: ProviderId | null): PaymentProvider | null {
-  return id === "stripe" ? stripeProvider : id === "monobank" ? monobank : id === "demo" ? demo : null;
+  return id === "stripe" ? stripeProvider : id === "demo" ? demo : null;
 }

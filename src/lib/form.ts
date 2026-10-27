@@ -106,7 +106,7 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   const reformat = (value: string) => { const n = formNumber(value ?? "", f.numberLocale); return n === undefined ? value ?? "" : nf.format(n); };
   const changed = f.countryCode !== country.code;
   const next = { ...f, numberLocale: locale, countryCode: country.code,
-    regionId: country.regions.some((r) => r.id === regionId) ? regionId! : !changed && country.regions.some((r) => r.id === f.regionId) ? f.regionId : country.regions[0].id,
+    regionId: country.regions.some((r) => r.id === regionId) ? regionId! : "",
     lines: f.lines.map((line) => ({ ...line })),
   };
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm"] as const;
@@ -161,7 +161,7 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
   const kwh = num(f.elecKwhYear) ?? (num(f.elecBillMonthly) ? ((num(f.elecBillMonthly) as number) * 12) / (price ?? def.electricityPerKwh) : undefined);
   const gasPrice = num(f.gasPrice);
   const gasM3 = f.gasUsed ? num(f.gasM3Year) ?? (num(f.gasBillMonthly) ? ((num(f.gasBillMonthly) as number) * 12) / (gasPrice ?? def.gasPerM3) : undefined) : undefined;
-  const region = country.regions.some((r) => r.id === f.regionId) ? f.regionId : country.regions[0].id;
+  const region = country.regions.some((r) => r.id === f.regionId) ? f.regionId : "";
 
   return {
     countryCode: country.code,

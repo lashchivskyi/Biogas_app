@@ -10,3 +10,9 @@ export const PLAN_PRICES_EUR_CENTS: Record<PlanId, Record<PriceTier, number>> = 
 export const PLAN_IDS: PlanId[] = ["standard", "report"];
 
 export const priceFor = (plan: PlanId, tier: PriceTier) => PLAN_PRICES_EUR_CENTS[plan][tier];
+
+/** Same commercial price in cards, checkout previews and the signed Stripe quote. */
+export function convertedPlanPrice(eurCents: number, currency: string, rate: number): number {
+  const minor = Math.round(eurCents * rate);
+  return currency === "USD" ? Math.ceil(minor / 1000) * 1000 : minor;
+}

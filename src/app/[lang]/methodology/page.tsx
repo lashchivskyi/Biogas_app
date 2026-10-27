@@ -12,7 +12,7 @@ import { countryName, getDictionary, INTL_TAG, type Locale } from "@/i18n";
 import { COUNTRY_COOKIE } from "@/i18n/config";
 import { readPreferenceCookie, resolvePreferences } from "@/lib/preferences";
 import { alternates } from "@/i18n/seo";
-import { methodologyCopy } from "@/i18n/methodology";
+import { methodologyCopy, methodologyTermHelp } from "@/i18n/methodology";
 import "./methodology.css";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/methodology">): Promise<Metadata> {
@@ -58,6 +58,8 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
   const d = await getDictionary(locale);
   const M = d.method;
   const copy = methodologyCopy[locale];
+  const terms = methodologyTermHelp[locale];
+  const groupHelp = [copy.chain[1], terms[2], terms[0], terms[1], copy.registry.note, copy.chain[4]];
   const requested = typeof query.c === "string" ? query.c.toUpperCase() : "";
   const cookieStore = await cookies();
   const saved = readPreferenceCookie(cookieStore.toString());
@@ -98,7 +100,6 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
             </ul>
           </section>
         </div>
-        <p className="methodology-technicalNote">{copy.technicalNote}</p>
 
         <section id="country-conditions" className="methodology-section" aria-labelledby="country-conditions-title">
           <div className="methodology-sectionHeading">
@@ -152,8 +153,8 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
           return (
             <section key={title} id={`parameter-group-${groupIndex}`} className="methodology-section" aria-labelledby={`parameter-title-${groupIndex}`} data-country={groupIndex === 4 ? country.code : undefined} data-region={groupIndex === 4 ? region?.id : undefined}>
               <div className="methodology-sectionHeading">
-                <h2 id={`parameter-title-${groupIndex}`}>{title} <span className="methodology-count">{rows.length}</span></h2>
-                {groupIndex === 4 && <p className="methodology-registryScope">{countryName(country.code, locale)} · {regionName ?? copy.registry.national}</p>}
+                <h2 id={`parameter-title-${groupIndex}`}><HelpTooltip description={groupHelp[groupIndex]}>{title}</HelpTooltip> <span className="methodology-count">{rows.length}</span></h2>
+                {groupIndex === 4 && <p className="methodology-registryScope">{countryName(country.code, locale)}{regionName ? " · " + regionName : ""}</p>}
               </div>
               {groupIndex === 4 && <MethodologyFilters key={`${country.code}/${region?.id ?? ""}`} country={country.code} region={region?.id} copy={copy.registry} locale={locale} explicitSelection={COUNTRY_ORDER.includes(requested) || Boolean(saved && typeof saved === "object" && Object.hasOwn(COUNTRIES, (saved as { country?: string }).country ?? ""))} />}
               <div className="methodology-tableFrame" role="region" aria-labelledby={`parameter-title-${groupIndex}`} tabIndex={0}>

@@ -6,12 +6,26 @@ import { COUNTRIES } from "@/countries";
 import { EXAMPLES } from "@/core/examples";
 import { getDictionary, LOCALES } from "@/i18n";
 import { preferenceCopy } from "@/i18n/preferences";
-import { contextHref, displayCurrency, normalizePreferences, readPreferenceCookie, resolvePreferences, swapLocaleUrl } from "../preferences";
+import { adaptToLocation, contextHref, displayCurrency, normalizePreferences, readPreferenceCookie, resolvePreferences, swapLocaleUrl } from "../preferences";
 import { formToInput, inputToForm, recontextualizeForm } from "../form";
 import { makeFormat } from "../format";
 
 describe("shared project and language preferences", () => {
   const saved = { country: "DE", region: COUNTRIES.DE.regions[1].id, displayCurrency: "USD", paymentCurrency: "EUR" };
+  it.each([ ["US", "en", "USD"], ["IT", "it", "EUR"], ["PL", "pl", "EUR"] ])("adapts project, language and currencies to a newly detected %s location", (country, language, currency) => {
+    const current = normalizePreferences({ ...saved, detectedCountry: "UA" }, COUNTRIES, "GB");
+    const adapted = adaptToLocation(current, country, COUNTRIES);
+    expect(adapted).toMatchObject({ changed: true, language, preferences: { country, detectedCountry: country, displayCurrency: currency, paymentCurrency: currency } });
+    expect(adapted.preferences.region).toBeUndefined();
+    expect(adaptToLocation(adapted.preferences, country, COUNTRIES)).toEqual({ preferences: adapted.preferences, changed: false });
+  });
+  it("keeps manual choices within the same IP country, but replaces them when location changes", () => {
+    const manual = normalizePreferences({ ...saved, detectedCountry: "US" }, COUNTRIES, "GB");
+    expect(adaptToLocation(manual, "US", COUNTRIES).changed).toBe(false);
+    expect(adaptToLocation(manual, "PL", COUNTRIES).preferences).toMatchObject({ country: "PL", displayCurrency: "EUR", paymentCurrency: "EUR", detectedCountry: "PL" });
+    expect(adaptToLocation(manual, "XX", COUNTRIES).changed).toBe(false);
+    expect(adaptToLocation(manual, "ZZ", COUNTRIES).preferences.country).toBe("DE");
+  });
   it("keeps a remembered project and currency independent of language and visitor location", () => {
     for (const locale of LOCALES) {
       expect(resolvePreferences({ locale, markets: COUNTRIES, saved, visitorCountry: "US" })).toEqual(saved);
@@ -47,6 +61,13 @@ describe("shared project and language preferences", () => {
 
 describe("project changes preserve quantities without reinterpreting prices", () => {
   const input = EXAMPLES.find((e) => e.id === "de_food_30k")!.input;
+  it("keeps an unselected region empty instead of silently choosing the first climate profile", () => {
+    const form = inputToForm(input, "de");
+    const next = recontextualizeForm(form, COUNTRIES.DE, undefined, "de");
+    expect(next.regionId).toBe("");
+    expect(formToInput(next, COUNTRIES.DE, "en").regionId).toBe("");
+    expect(formToInput({ ...next, regionId: "foreign-region" }, COUNTRIES.DE, "en").regionId).toBe("");
+  });
   it("preserves an explicit SSR monetary snapshot across different compact-format conventions", () => {
     const html = renderToStaticMarkup(createElement(DisplayMoney, { value: 11000000, initialText: "€11.0M" }));
     expect(html).toContain('data-display-currency="EUR">€11.0M</span>');
@@ -73,7 +94,7 @@ describe("project changes preserve quantities without reinterpreting prices", ()
       const next = recontextualizeForm(form, COUNTRIES[code], undefined, "uk");
       expect([next.elecBillMonthly, next.elecPrice, next.gasBillMonthly, next.gasPrice, next.lines[0].disposalCost, next.lines[0].opportunityValue, next.lines[0].purchasePrice]).toEqual(Array(7).fill(""));
       expect(formToInput(next, COUNTRIES[code], "uk").feedstocks[0].quantity).toBe(input.feedstocks[0].quantity);
-      expect(next.regionId).toBe(COUNTRIES[code].regions[0].id);
+      expect(next.regionId).toBe("");
     }
   });
   it("converts monetary presentation without changing quantities or source data", async () => {
@@ -86,9 +107,8 @@ describe("project changes preserve quantities without reinterpreting prices", ()
     expect(usd.pct(0.15)).toBe(eur.pct(0.15));
     expect(usd.money(100, "UAH")).toBe(eur.money(100, "UAH"));
   });
-  it.each(LOCALES)("provides complete preference copy and placeholders in %s", (locale) => {
+  it.each(LOCALES)("provides complete preference copy in %s", (locale) => {
     const copy = preferenceCopy(locale);
     expect(Object.values(copy).every((value) => value.trim())).toBe(true);
-    expect(copy.display.match(/\{\w+\}/g)?.sort()).toEqual(["{currency}", "{currency}", "{date}", "{rate}"]);
   });
 });

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480">
+  <!-- Project-drawn European Union emblem for the EUR selector. -->
+  <path fill="#003399" d="M0 0h640v480H0z"/>
+  <defs><path id="star" fill="#ffcc00" d="M0-18 4.23-5.82 17.12-5.56 6.85 2.22 10.58 14.56 0 7.2-10.58 14.56-6.85 2.22-17.12-5.56-4.23-5.82z"/></defs>
+  <use href="#star" x="320" y="120"/><use href="#star" x="380" y="136.077"/>
+  <use href="#star" x="423.923" y="180"/><use href="#star" x="440" y="240"/>
+  <use href="#star" x="423.923" y="300"/><use href="#star" x="380" y="343.923"/>
+  <use href="#star" x="320" y="360"/><use href="#star" x="260" y="343.923"/>
+  <use href="#star" x="216.077" y="300"/><use href="#star" x="200" y="240"/>
+  <use href="#star" x="216.077" y="180"/><use href="#star" x="260" y="136.077"/>
+</svg>

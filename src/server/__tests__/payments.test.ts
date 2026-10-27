@@ -1,10 +1,9 @@
-import { generateKeyPairSync, sign } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { fxFor } from "@/countries/sources";
-import { PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
+import { convertedPlanPrice, PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
 import { EXAMPLES } from "@/core/examples";
 
 // isolate the JSON stores before the modules read their paths
@@ -33,25 +32,6 @@ afterAll(() => rmSync(dir, { recursive: true, force: true })); // Only this test
 
 const input = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
 const req = (plan: PlanId, exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, input: input(exampleId) });
-
-describe("monobank webhook signature", () => {
-  it("accepts a valid ECDSA-SHA256 signature over the raw body and rejects tampering", () => {
-    const { publicKey, privateKey } = generateKeyPairSync("ec", { namedCurve: "prime256v1" });
-    const pem = publicKey.export({ type: "spki", format: "pem" }).toString();
-    const body = JSON.stringify({ invoiceId: "inv1", status: "success", amount: 490000 });
-    const sig = sign("sha256", Buffer.from(body), privateKey).toString("base64");
-    expect(P.verifyMonoSignature(body, sig, pem)).toBe(true);
-    expect(P.verifyMonoSignature(body.replace("490000", "1"), sig, pem)).toBe(false);
-    expect(P.verifyMonoSignature(body, "garbage", pem)).toBe(false);
-  });
-
-  it("maps statuses", () => {
-    expect(P.mapMonoStatus("success")).toBe("paid");
-    expect(P.mapMonoStatus("processing")).toBe("pending");
-    expect(P.mapMonoStatus("failure")).toBe("failed");
-    expect(P.mapMonoStatus("reversed")).toBe("reversed");
-  });
-});
 
 describe("stripe", () => {
   it("passes the confirmed currency and subtotal without automatic FX and collects billing country", async () => {
@@ -86,12 +66,26 @@ describe("stripe", () => {
 });
 
 describe("checkout", () => {
+  it("uses the same commercial price rounded up to USD 10 for both plans in every country tier", () => {
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
+    expect(convertedPlanPrice(16000, "USD", 1.1193)).toBe(18000);
+    expect(convertedPlanPrice(19000, "USD", 1.1193)).toBe(22000);
+    for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_guelle", "pl_food_30k"]) {
+      const request = { ...req(plan, example), paymentCurrency: "USD" as const };
+      const quote = Q.createPaymentQuote(request);
+      expect(quote.amountMinor % 1000).toBe(0);
+      expect(quote.amountMinor).toBe(convertedPlanPrice(quote.priceEurCents, "USD", quote.rate));
+      expect(quote.amountMinor).toBeGreaterThanOrEqual(Math.round(quote.priceEurCents * quote.rate));
+      expect(quote.amountMinor - Math.round(quote.priceEurCents * quote.rate)).toBeLessThan(1000);
+      expect(convertedPlanPrice(quote.priceEurCents, "EUR", 1)).toBe(quote.priceEurCents);
+    }
+  });
   it("binds the exact dated USD quote to the plan, language and project before creating an order", async () => {
     vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
     const request = { ...req("report"), paymentCurrency: "USD" as const };
     const quote = Q.createPaymentQuote(request);
     expect(quote.currency).toBe("USD");
-    expect(quote.amountMinor).toBe(Math.round(PLAN_PRICES_EUR_CENTS.report.C * fxFor("USD")!.value));
+    expect(quote.amountMinor).toBe(convertedPlanPrice(PLAN_PRICES_EUR_CENTS.report.C, "USD", fxFor("USD")!.value));
     expect(quote.rateDate).toBe(fxFor("USD")!.date);
     expect(Q.verifyPaymentQuote(quote.token, request)).toMatchObject({ amountMinor: quote.amountMinor, currency: "USD" });
     expect(() => Q.verifyPaymentQuote(quote.token + "x", request)).toThrow(/Quote expired/);
@@ -109,17 +103,15 @@ describe("checkout", () => {
     vi.setSystemTime(new Date("2026-10-27T12:31:00Z"));
     expect(() => Q.verifyPaymentQuote(quote.token, request)).toThrow();
   });
-  it("falls back to EUR for stale conversion rates and refuses unavailable UAH quotations", () => {
+  it("falls back to EUR for stale conversion rates", () => {
     vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-11-20T00:00:00Z"));
     expect(Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" }).currency).toBe("EUR");
     expect(Q.availablePaymentCurrencies()).toEqual(["EUR"]);
-    vi.stubEnv("PAYMENT_PROVIDER", "monobank"); vi.stubEnv("MONOBANK_TOKEN", "test-no-network");
-    expect(() => Q.createPaymentQuote(req("report"))).toThrow(/FX unavailable/);
     vi.setSystemTime(new Date("2026-10-27T00:00:00Z"));
     const quote = Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" });
-    expect(quote.availableCurrencies).toEqual(["UAH"]);
-    expect(quote.currency).toBe("UAH");
-    expect(quote.amountMinor).toBe(Math.round(PLAN_PRICES_EUR_CENTS.report.C * fxFor("UAH")!.value));
+    expect(quote.availableCurrencies).toEqual(["EUR", "USD"]);
+    expect(quote.currency).toBe("USD");
+    expect(quote.amountMinor).toBe(convertedPlanPrice(PLAN_PRICES_EUR_CENTS.report.C, "USD", fxFor("USD")!.value));
   });
   it("does not mark a payment as paid without both the amount and currency", async () => {
     const { order } = await S.startCheckout(req("report"));

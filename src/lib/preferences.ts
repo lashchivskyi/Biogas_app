@@ -1,10 +1,10 @@
-import { isLocale, LOCALE_COUNTRY, type Locale } from "@/i18n/config";
+import { COUNTRY_LOCALE, isLocale, LOCALE_COUNTRY, type Locale } from "@/i18n/config";
 
 export const PREFERENCES_COOKIE = "mx_context";
 export const PREFERENCES_STORAGE = "mx.context.v1";
 export const DRAFT_STORAGE = "mx.form.v2";
 export type CurrencyPreference = "AUTO" | "EUR" | "USD";
-export type ProjectPreferences = { country: string; region?: string; displayCurrency: CurrencyPreference; paymentCurrency: CurrencyPreference };
+export type ProjectPreferences = { country: string; region?: string; displayCurrency: CurrencyPreference; paymentCurrency: CurrencyPreference; detectedCountry?: string };
 export type PreferenceMarkets = Record<string, { currency: string; regions: { id: string; name: string; names?: Record<string, string> }[] }>;
 export type CurrencyReference = { value: number; date: string };
 
@@ -13,7 +13,18 @@ export function normalizePreferences(raw: unknown, markets: PreferenceMarkets, f
   const country = typeof p.country === "string" && Object.hasOwn(markets, p.country) ? p.country : fallback;
   return { country, region: markets[country]?.regions.some((r) => r.id === p.region) ? p.region : undefined,
     displayCurrency: ["AUTO", "EUR", "USD"].includes(p.displayCurrency ?? "") ? p.displayCurrency! : "AUTO",
-    paymentCurrency: ["AUTO", "EUR", "USD"].includes(p.paymentCurrency ?? "") ? p.paymentCurrency! : "AUTO" };
+    paymentCurrency: ["AUTO", "EUR", "USD"].includes(p.paymentCurrency ?? "") ? p.paymentCurrency! : "AUTO",
+    ...(typeof p.detectedCountry === "string" && /^[A-Z]{2}$/.test(p.detectedCountry) ? { detectedCountry: p.detectedCountry } : {}) };
+}
+
+/** A newly detected IP country replaces earlier defaults and overrides once, without redirect loops. */
+export function adaptToLocation(current: ProjectPreferences, country: string, markets: PreferenceMarkets): { preferences: ProjectPreferences; language?: Locale; changed: boolean } {
+  if (!/^[A-Z]{2}$/.test(country) || ["XX", "T1"].includes(country) || current.detectedCountry === country) return { preferences: current, changed: false };
+  const currency = country === "US" ? "USD" : "EUR";
+  const supported = Object.hasOwn(markets, country);
+  return { preferences: { ...current, detectedCountry: country, country: supported ? country : current.country,
+    region: supported && country !== current.country ? undefined : current.region, displayCurrency: currency, paymentCurrency: currency },
+    language: COUNTRY_LOCALE[country], changed: true };
 }
 
 /** Explicit project URL → remembered project → draft → location guess. Language is a fallback only. */

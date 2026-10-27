@@ -5,8 +5,7 @@ type Ten = readonly [string, string, string, string, string, string, string, str
 
 /** General UI copy only. Parameter names, IDs, units, sources and engineering notes stay in English. */
 export interface MethodologyCopy {
-  registry: { title: string; country: string; region: string; national: string; apply: string; note: string };
-  technicalNote: string;
+  registry: { title: string; country: string; region: string; select: string; apply: string; note: string };
   chain: Six;
   limitations: Six;
   groups: Six;
@@ -21,8 +20,7 @@ export interface MethodologyCopy {
 
 export const methodologyCopy = {
   en: {
-    registry: {"title":"Country and region","country":"Country","region":"Region","national":"National reference","apply":"Show parameters","note":"Reference values for the selected market. Project values may differ with consumption and customer-supplied prices. Each parameter includes its source and confidence."},
-    technicalNote: "Technical parameter names, units, source titles and engineering notes are kept in English so you can check them against the original sources.",
+    registry: {"title":"Country and region","country":"Country","region":"Region","select":"Select…","apply":"Show parameters","note":"Reference values for the selected market. Project values may differ with consumption and customer-supplied prices. Each parameter includes its source and confidence."},
     chain: [
       "Feedstock: livestock numbers become collectable tonnes, then dry matter, volatile solids and methane yield. Supply varies by month.",
       "Digester: retention time and organic loading determine the volume. Dry matter and climate guide technology selection; heat demand is calculated monthly.",
@@ -66,8 +64,7 @@ export const methodologyCopy = {
     data: ["calibrated", "official statistics", "estimates"], injection: ["yes", "not yet"],
   },
   uk: {
-    registry: {"title":"Країна та регіон","country":"Країна","region":"Регіон","national":"Національний референс","apply":"Показати параметри","note":"Довідкові значення для вибраного ринку. У проєкті вони можуть відрізнятися залежно від споживання та введених вами цін. Для кожного параметра наведено джерело й рівень достовірності."},
-    technicalNote: "Технічні назви параметрів, одиниці вимірювання, назви джерел та інженерні примітки залишено англійською, щоб їх було легко звірити з першоджерелами.",
+    registry: {"title":"Країна та регіон","country":"Країна","region":"Регіон","select":"Вибрати…","apply":"Показати параметри","note":"Довідкові значення для вибраного ринку. У проєкті вони можуть відрізнятися залежно від споживання та введених вами цін. Для кожного параметра наведено джерело й рівень достовірності."},
     chain: [
       "Сировина: поголів’я переводимо в тонни, які реально можна зібрати, далі — у суху речовину, органічну частину та вихід метану. Враховуємо сезонність за місяцями.",
       "Реактор: об’єм визначаємо за часом утримання та органічним навантаженням. Технологію підбираємо за вмістом сухої речовини й кліматом, потребу в теплі рахуємо щомісяця.",
@@ -111,8 +108,7 @@ export const methodologyCopy = {
     data: ["відкалібровано", "офіційна статистика", "оцінки"], injection: ["так", "поки ні"],
   },
   pl: {
-    registry: {"title":"Kraj i region","country":"Kraj","region":"Region","national":"Wartości referencyjne dla kraju","apply":"Pokaż parametry","note":"Wartości referencyjne dla wybranego rynku. W projekcie mogą się różnić zależnie od zużycia i podanych przez Ciebie cen. Każdy parametr ma źródło i poziom wiarygodności."},
-    technicalNote: "Techniczne nazwy parametrów, jednostki, tytuły źródeł i uwagi inżynierskie pozostają po angielsku, aby ułatwić weryfikację w źródłach.",
+    registry: {"title":"Kraj i region","country":"Kraj","region":"Region","select":"Wybierz…","apply":"Pokaż parametry","note":"Wartości referencyjne dla wybranego rynku. W projekcie mogą się różnić zależnie od zużycia i podanych przez Ciebie cen. Każdy parametr ma źródło i poziom wiarygodności."},
     chain: ["Surowce: z liczby zwierząt wyliczamy ilość możliwą do zebrania, suchą masę, substancję organiczną i uzysk metanu, z uwzględnieniem sezonowości.", "Komora fermentacyjna: czas retencji i obciążenie organiczne wyznaczają objętość. Sucha masa i klimat decydują o technologii; zapotrzebowanie na ciepło liczymy co miesiąc.", "Energia: CHP, kocioł lub biometan. Najpierw ogrzewanie komory, potem wykorzystanie pozostałego ciepła zgodnie z rzeczywistym popytem.", "Ekonomika: CAPEX dostosowany do kraju, OPEX, przychody i oszczędności. NPV, IRR i DSCR dla 15 lat przy krajowej stopie dyskontowej.", "Scenariusze: ostrożny, bazowy i optymistyczny, osiem testów odporności oraz osobne obliczenia dla każdego programu wsparcia.", "Ocena: okres zwrotu, NPV scenariuszy, DSCR i jakość danych. Dotacje nie wpływają na wynik; nie sprowadzamy go do jednej punktacji."],
     limitations: ["Uzysk metanu opiera się na literaturze. Potrzebne jest badanie własnego surowca w laboratorium.", "Pierwszeństwo mają odpady i pozostałości; domyślnie nie uwzględniamy upraw energetycznych.", "Wsparcie pokazujemy osobno, ze statusem i źródłem. Nie wpływa na ocenę.", "Nie uwzględniamy podatków, VAT, kapitału obrotowego ani szoków walutowych poza ryzykiem w stopie dyskontowej.", "Korzystamy z oficjalnych statystyk, gdy są dostępne. Braki oznaczamy ESTIMATE i LOW. Twoje ceny mają pierwszeństwo.", "To wstępna ocena opłacalności. Projekt, bezpieczeństwo i decyzje inwestycyjne wymagają weryfikacji przez specjalistów."],
     groups: ["Fizyka i proces","CHP","CAPEX: szacunkowe koszty inwestycji","OPEX","Parametry rynkowe i finansowe","Scenariusze"], countries: "Warunki w poszczególnych krajach",
@@ -123,8 +119,7 @@ export const methodologyCopy = {
     data: ["skalibrowane", "oficjalne statystyki", "szacunki"], injection: ["tak", "jeszcze nie"],
   },
   de: {
-    registry: {"title":"Land und Region","country":"Land","region":"Region","national":"Nationale Referenzwerte","apply":"Parameter anzeigen","note":"Referenzwerte für den gewählten Markt. Die Projektwerte können je nach Verbrauch und selbst eingegebenen Preisen abweichen. Für jeden Parameter sind Quelle und Vertrauensniveau angegeben."},
-    technicalNote: "Technische Parameternamen, Einheiten, Quellentitel und ingenieurtechnische Hinweise bleiben auf Englisch, damit sie sich mit den Originalquellen abgleichen lassen.",
+    registry: {"title":"Land und Region","country":"Land","region":"Region","select":"Auswählen…","apply":"Parameter anzeigen","note":"Referenzwerte für den gewählten Markt. Die Projektwerte können je nach Verbrauch und selbst eingegebenen Preisen abweichen. Für jeden Parameter sind Quelle und Vertrauensniveau angegeben."},
     chain: ["Substrate: Aus dem Tierbestand berechnen wir die erfassbare Menge, Trockenmasse, organische Substanz und Methanausbeute unter Berücksichtigung der monatlichen Schwankungen.", "Fermenter: Verweilzeit und Raumbelastung bestimmen das Volumen. Trockenmasse und Klima bestimmen die Technik; der Wärmebedarf wird monatlich berechnet.", "Energie: CHP, Kessel oder Biomethan. Zuerst wird der Fermenter beheizt, dann die restliche Wärme mit dem tatsächlichen Bedarf abgeglichen.", "Wirtschaftlichkeit: länderspezifische CAPEX, OPEX, Erlöse und Einsparungen. NPV, IRR und DSCR über 15 Jahre mit dem jeweiligen Diskontsatz.", "Szenarien: konservativ, Basis und optimistisch, acht Belastungstests sowie eine eigene Berechnung je Förderprogramm.", "Bewertung: Amortisation, Szenario-NPV, DSCR und Datenqualität bestimmen das Ergebnis. Fördermittel bleiben außen vor; es gibt keine zusammengefasste Punktzahl."],
     limitations: ["Methanausbeuten sind Literaturwerte. Eine Laboranalyse Ihrer eigenen Substrate bleibt erforderlich.", "Abfälle und Reststoffe haben Vorrang; Energiepflanzen werden standardmäßig nicht berücksichtigt.", "Förderprogramme werden separat mit Status und Quelle dargestellt und beeinflussen die Bewertung nicht.", "Steuern, Umsatzsteuer, Betriebskapital und zusätzliche Wechselkursschocks über den Diskontsatz hinaus sind nicht enthalten.", "Marktdaten stammen nach Möglichkeit aus amtlichen Statistiken. Fehlende Reihen werden mit ESTIMATE und LOW gekennzeichnet. Ihre Preise haben Vorrang.", "Dies ist eine erste Machbarkeitsbewertung. Planung, Sicherheit und Investitionsentscheidungen erfordern eine fachliche Prüfung."],
     groups: ["Physik und Verfahren","CHP","CAPEX: technische Kostenschätzungen","OPEX","Markt- und Finanzparameter","Szenarien"], countries: "Rahmenbedingungen nach Land",
@@ -135,8 +130,7 @@ export const methodologyCopy = {
     data: ["kalibriert", "amtliche Statistik", "Schätzwerte"], injection: ["ja", "noch nicht"],
   },
   fr: {
-    registry: {"title":"Pays et région","country":"Pays","region":"Région","national":"Référence nationale","apply":"Afficher les paramètres","note":"Valeurs de référence pour le marché sélectionné. Les valeurs du projet peuvent varier selon la consommation et les prix renseignés. Chaque paramètre indique sa source et son niveau de fiabilité."},
-    technicalNote: "Les noms techniques des paramètres, les unités, les titres des sources et les notes d’ingénierie restent en anglais pour faciliter la vérification des documents d’origine.",
+    registry: {"title":"Pays et région","country":"Pays","region":"Région","select":"Choisir…","apply":"Afficher les paramètres","note":"Valeurs de référence pour le marché sélectionné. Les valeurs du projet peuvent varier selon la consommation et les prix renseignés. Chaque paramètre indique sa source et son niveau de fiabilité."},
     chain: ["Intrants : le cheptel est converti en tonnage récupérable, matière sèche, matière organique et potentiel méthane, avec une variation mensuelle des apports.", "Digesteur : le temps de séjour et la charge organique déterminent le volume. Le choix technique dépend de la matière sèche et du climat ; les besoins de chaleur sont calculés chaque mois.", "Énergie : CHP, chaudière ou biométhane. Le chauffage du digesteur est prioritaire ; la chaleur restante est rapprochée des besoins réels.", "Économie : CAPEX ajusté au pays, OPEX, recettes et économies. NPV, IRR et DSCR sur 15 ans au taux d’actualisation du pays.", "Scénarios : prudent, central et optimiste, huit tests de résistance et un calcul distinct pour chaque dispositif d’aide.", "Évaluation : temps de retour, NPV des scénarios, DSCR et qualité des données. Les aides sont exclues du verdict, sans note globale unique."],
     limitations: ["Les rendements méthane sont issus de la littérature. Une analyse en laboratoire de vos propres intrants reste nécessaire.", "Priorité aux déchets et résidus ; les cultures énergétiques sont exclues par défaut.", "Les aides sont présentées séparément avec leur statut et leur source, sans effet sur le verdict.", "Impôts, TVA, besoin en fonds de roulement et chocs de change au-delà du taux d’actualisation ne sont pas pris en compte.", "Les données de marché proviennent des statistiques officielles lorsqu’elles existent. Les lacunes sont signalées ESTIMATE et LOW. Vos prix sont prioritaires.", "Il s’agit d’une première étude de faisabilité. Conception, sécurité et investissement nécessitent l’avis de professionnels qualifiés."],
     groups: ["Physique et procédé","CHP","CAPEX : estimations des coûts d’investissement","OPEX","Paramètres de marché et financiers","Scénarios"], countries: "Conditions par pays",
@@ -147,8 +141,7 @@ export const methodologyCopy = {
     data: ["calibrées", "statistiques officielles", "estimations"], injection: ["oui", "pas encore"],
   },
   it: {
-    registry: {"title":"Paese e regione","country":"Paese","region":"Regione","national":"Riferimento nazionale","apply":"Mostra i parametri","note":"Valori di riferimento per il mercato selezionato. I valori del progetto possono variare in base ai consumi e ai prezzi inseriti. Ogni parametro riporta la fonte e il livello di affidabilità."},
-    technicalNote: "Nomi tecnici dei parametri, unità, titoli delle fonti e note ingegneristiche restano in inglese per agevolare il confronto con i documenti originali.",
+    registry: {"title":"Paese e regione","country":"Paese","region":"Regione","select":"Seleziona…","apply":"Mostra i parametri","note":"Valori di riferimento per il mercato selezionato. I valori del progetto possono variare in base ai consumi e ai prezzi inseriti. Ogni parametro riporta la fonte e il livello di affidabilità."},
     chain: ["Matrici: dal numero di capi ricaviamo le tonnellate raccoglibili, la sostanza secca, i solidi volatili e la resa in metano, tenendo conto della stagionalità mensile.", "Digestore: tempo di ritenzione e carico organico determinano il volume. Sostanza secca e clima guidano la scelta tecnologica; il fabbisogno termico è calcolato mese per mese.", "Energia: CHP, caldaia o biometano. Prima il riscaldamento del digestore, poi il confronto tra calore residuo e domanda effettiva.", "Economia: CAPEX adeguato al Paese, OPEX, ricavi e risparmi. NPV, IRR e DSCR su 15 anni al tasso di attualizzazione del Paese.", "Scenari: prudente, base e ottimistico, otto prove di tenuta e un calcolo separato per ogni incentivo.", "Valutazione: tempo di ritorno, NPV degli scenari, DSCR e qualità dei dati. Gli incentivi non incidono sul giudizio; non usiamo un unico punteggio."],
     limitations: ["Le rese in metano provengono dalla letteratura. Serve comunque un’analisi di laboratorio delle vostre matrici.", "Priorità a rifiuti e residui; le colture energetiche sono escluse per impostazione predefinita.", "Gli incentivi sono presentati a parte con stato e fonte, senza incidere sul giudizio.", "Sono esclusi imposte, IVA, capitale circolante e shock valutari oltre il rischio incluso nel tasso di attualizzazione.", "Usiamo statistiche ufficiali dove disponibili. I dati mancanti sono segnalati ESTIMATE e LOW. I vostri prezzi hanno la precedenza.", "È una valutazione preliminare di fattibilità. Progettazione, sicurezza e investimenti richiedono la verifica di professionisti qualificati."],
     groups: ["Fisica e processo","CHP","CAPEX: stime dei costi di investimento","OPEX","Parametri di mercato e finanziari","Scenari"], countries: "Condizioni per Paese",
@@ -159,8 +152,7 @@ export const methodologyCopy = {
     data: ["calibrati", "statistiche ufficiali", "stime"], injection: ["sì", "non ancora"],
   },
   es: {
-    registry: {"title":"País y región","country":"País","region":"Región","national":"Referencia nacional","apply":"Ver parámetros","note":"Valores de referencia para el mercado seleccionado. Los valores del proyecto pueden variar según el consumo y los precios que introduzcas. Cada parámetro incluye su fuente y nivel de fiabilidad."},
-    technicalNote: "Los nombres técnicos, las unidades, los títulos de las fuentes y las notas de ingeniería se mantienen en inglés para facilitar su consulta en los documentos originales.",
+    registry: {"title":"País y región","country":"País","region":"Región","select":"Seleccionar…","apply":"Ver parámetros","note":"Valores de referencia para el mercado seleccionado. Los valores del proyecto pueden variar según el consumo y los precios que introduzcas. Cada parámetro incluye su fuente y nivel de fiabilidad."},
     chain: ["Materias primas: convertimos el número de animales en toneladas recuperables, materia seca, sólidos volátiles y producción de metano, con variación mensual.", "Digestor: el tiempo de retención y la carga orgánica determinan el volumen. La materia seca y el clima orientan la tecnología; calculamos el calor necesario cada mes.", "Energía: CHP, caldera o biometano. Primero se calienta el digestor; después se ajusta el calor restante a la demanda real.", "Economía: CAPEX ajustado al país, OPEX, ingresos y ahorros. NPV, IRR y DSCR a 15 años con la tasa de descuento del país.", "Escenarios: conservador, base y optimista, ocho pruebas de resistencia y un cálculo independiente para cada ayuda.", "Evaluación: plazo de retorno, NPV de los escenarios, DSCR y calidad de los datos. Las ayudas quedan fuera del dictamen; no hay una única puntuación global."],
     limitations: ["Los rendimientos de metano proceden de bibliografía. Sigue siendo necesario analizar sus materias primas en un laboratorio.", "Priorizamos residuos y subproductos; los cultivos energéticos se excluyen por defecto.", "Las ayudas se muestran aparte, con estado y fuente, sin influir en el dictamen.", "No se incluyen impuestos, IVA, capital circulante ni perturbaciones cambiarias más allá del riesgo recogido en la tasa de descuento.", "Usamos estadísticas oficiales cuando existen. Las carencias se marcan ESTIMATE y LOW. Sus propios precios tienen prioridad.", "Es una evaluación preliminar de viabilidad. El diseño, la seguridad y la inversión requieren revisión profesional."],
     groups: ["Física y proceso","CHP","CAPEX: estimaciones de costes de inversión","OPEX","Parámetros de mercado y financieros","Escenarios"], countries: "Condiciones por país",
@@ -171,8 +163,7 @@ export const methodologyCopy = {
     data: ["calibrados", "estadísticas oficiales", "estimaciones"], injection: ["sí", "todavía no"],
   },
   pt: {
-    registry: {"title":"País e região","country":"País","region":"Região","national":"Referência nacional","apply":"Ver parâmetros","note":"Valores de referência para o mercado selecionado. Os valores do projeto podem variar conforme o consumo e os preços informados. Cada parâmetro apresenta a fonte e o nível de confiabilidade."},
-    technicalNote: "Os nomes técnicos, as unidades, os títulos das fontes e as notas de engenharia ficam em inglês para facilitar a conferência nos documentos originais.",
+    registry: {"title":"País e região","country":"País","region":"Região","select":"Selecionar…","apply":"Ver parâmetros","note":"Valores de referência para o mercado selecionado. Os valores do projeto podem variar conforme o consumo e os preços informados. Cada parâmetro apresenta a fonte e o nível de confiabilidade."},
     chain: ["Matérias-primas: convertemos o número de animais em toneladas coletáveis, matéria seca, sólidos voláteis e produção de metano, considerando a sazonalidade mensal.", "Digestor: tempo de retenção e carga orgânica definem o volume. Matéria seca e clima orientam a tecnologia; a demanda de calor é calculada mês a mês.", "Energia: CHP, caldeira ou biometano. Primeiro aquecemos o digestor; depois comparamos o calor restante com a demanda real.", "Economia: CAPEX ajustado ao país, OPEX, receitas e economias. NPV, IRR e DSCR em 15 anos, com a taxa de desconto do país.", "Cenários: conservador, base e otimista, oito testes de estresse e um cálculo separado para cada programa de incentivo.", "Avaliação: prazo de retorno, NPV dos cenários, DSCR e qualidade dos dados. Os incentivos não entram no parecer; não usamos uma pontuação única."],
     limitations: ["Os rendimentos de metano vêm da literatura. Ainda é necessário analisar suas matérias-primas em laboratório.", "Priorizamos resíduos e sobras; culturas energéticas ficam de fora por padrão.", "Os incentivos aparecem separadamente, com situação e fonte, sem alterar o parecer.", "Não incluímos tributos, IVA, capital de giro nem choques cambiais além do risco embutido na taxa de desconto.", "Usamos estatísticas oficiais quando disponíveis. Lacunas recebem ESTIMATE e LOW. Os preços informados por você têm prioridade.", "Esta é uma avaliação preliminar de viabilidade. Projeto, segurança e investimento exigem análise de profissionais habilitados."],
     groups: ["Física e processo","CHP","CAPEX: estimativas dos custos de investimento","OPEX","Parâmetros de mercado e financeiros","Cenários"], countries: "Condições por país",
@@ -183,8 +174,7 @@ export const methodologyCopy = {
     data: ["calibrados", "estatísticas oficiais", "estimativas"], injection: ["sim", "ainda não"],
   },
   nl: {
-    registry: {"title":"Land en regio","country":"Land","region":"Regio","national":"Landelijke referentiewaarden","apply":"Parameters tonen","note":"Referentiewaarden voor de gekozen markt. Projectwaarden kunnen afwijken door het verbruik en de prijzen die u zelf invoert. Bij elke parameter staan de bron en het betrouwbaarheidsniveau."},
-    technicalNote: "Technische parameternamen, eenheden, brontitels en technische notities blijven in het Engels, zodat u ze kunt terugvinden in de oorspronkelijke bronnen.",
+    registry: {"title":"Land en regio","country":"Land","region":"Regio","select":"Kiezen…","apply":"Parameters tonen","note":"Referentiewaarden voor de gekozen markt. Projectwaarden kunnen afwijken door het verbruik en de prijzen die u zelf invoert. Bij elke parameter staan de bron en het betrouwbaarheidsniveau."},
     chain: ["Grondstoffen: het aantal dieren wordt omgerekend naar inzamelbare tonnen, droge stof, organische stof en methaanopbrengst, met maandelijkse seizoensvariatie.", "Vergister: verblijftijd en organische belasting bepalen het volume. Droge stof en klimaat sturen de techniekkeuze; de warmtevraag wordt maandelijks berekend.", "Energie: CHP, ketel of biomethaan. Eerst verwarming van de vergister, daarna afstemming van de resterende warmte op de werkelijke vraag.", "Economie: landspecifieke CAPEX, OPEX, inkomsten en besparingen. NPV, IRR en DSCR over 15 jaar tegen de discontovoet van het land.", "Scenario’s: voorzichtig, basis en optimistisch, acht stresstests en een aparte berekening per steunregeling.", "Beoordeling: terugverdientijd, scenario-NPV, DSCR en datakwaliteit. Subsidies tellen niet mee in het oordeel; één totaalscore bepaalt het niet."],
     limitations: ["Methaanopbrengsten komen uit de literatuur. Laboratoriumonderzoek van uw eigen grondstoffen blijft nodig.", "Afval en reststromen krijgen voorrang; energiegewassen zijn standaard uitgesloten.", "Steunregelingen staan apart met status en bron en beïnvloeden het oordeel niet.", "Belastingen, btw, werkkapitaal en valutaschokken buiten het risico in de discontovoet zijn niet meegenomen.", "Waar beschikbaar gebruiken we officiële statistieken. Ontbrekende reeksen krijgen ESTIMATE en LOW. Uw eigen prijzen gaan voor.", "Dit is een eerste haalbaarheidsbeoordeling. Ontwerp, veiligheid en investeringen vragen om toetsing door deskundigen."],
     groups: ["Fysica en proces","CHP","CAPEX: technische kostenramingen","OPEX","Markt- en financiële parameters","Scenario’s"], countries: "Omstandigheden per land",
@@ -195,8 +185,7 @@ export const methodologyCopy = {
     data: ["gekalibreerd", "officiële statistieken", "schattingen"], injection: ["ja", "nog niet"],
   },
   cs: {
-    registry: {"title":"Země a region","country":"Země","region":"Region","national":"Celostátní referenční hodnoty","apply":"Zobrazit parametry","note":"Referenční hodnoty pro vybraný trh. Hodnoty projektu se mohou lišit podle spotřeby a vámi zadaných cen. Každý parametr uvádí zdroj a míru důvěryhodnosti."},
-    technicalNote: "Technické názvy parametrů, jednotky, názvy zdrojů a technické poznámky zůstávají v angličtině, aby je bylo možné ověřit v původních podkladech.",
+    registry: {"title":"Země a region","country":"Země","region":"Region","select":"Vybrat…","apply":"Zobrazit parametry","note":"Referenční hodnoty pro vybraný trh. Hodnoty projektu se mohou lišit podle spotřeby a vámi zadaných cen. Každý parametr uvádí zdroj a míru důvěryhodnosti."},
     chain: ["Vstupní suroviny: počet zvířat převádíme na využitelné tuny, sušinu, organickou hmotu a výtěžnost metanu. Zohledňujeme měsíční sezónnost.", "Fermentor: dobu zdržení a organické zatížení používáme k určení objemu. Sušina a klima určují technologii; potřebu tepla počítáme po měsících.", "Energie: CHP, kotel nebo biometan. Nejprve ohřev fermentoru, pak využití zbývajícího tepla podle skutečné poptávky.", "Ekonomika: CAPEX upravený pro danou zemi, OPEX, výnosy a úspory. NPV, IRR a DSCR za 15 let při diskontní sazbě země.", "Scénáře: konzervativní, základní a optimistický, osm zátěžových testů a samostatný výpočet pro každý program podpory.", "Hodnocení: návratnost, NPV scénářů, DSCR a kvalita dat. Dotace do závěru nevstupují; nerozhoduje jediné souhrnné skóre."],
     limitations: ["Výtěžnost metanu vychází z literatury. Laboratorní rozbor vašich surovin je stále nutný.", "Přednost mají odpady a zbytky; energetické plodiny standardně nezahrnujeme.", "Podpory uvádíme zvlášť se stavem a zdrojem, bez vlivu na závěr.", "Nezahrnujeme daně, DPH, pracovní kapitál ani měnové šoky nad rámec rizika v diskontní sazbě.", "Kde jsou dostupné, používáme oficiální statistiky. Chybějící řady označujeme ESTIMATE a LOW. Vaše ceny mají přednost.", "Jde o předběžné posouzení proveditelnosti. Projekt, bezpečnost i investice vyžadují odbornou kontrolu."],
     groups: ["Fyzika a proces","CHP","CAPEX: technické odhady investičních nákladů","OPEX","Tržní a finanční parametry","Scénáře"], countries: "Podmínky v jednotlivých zemích",
@@ -207,8 +196,7 @@ export const methodologyCopy = {
     data: ["kalibrovaná", "oficiální statistiky", "odhady"], injection: ["ano", "zatím ne"],
   },
   sk: {
-    registry: {"title":"Krajina a región","country":"Krajina","region":"Región","national":"Celoštátne referenčné hodnoty","apply":"Zobraziť parametre","note":"Referenčné hodnoty pre vybraný trh. Hodnoty projektu sa môžu líšiť podľa spotreby a vami zadaných cien. Každý parameter uvádza zdroj a mieru dôveryhodnosti."},
-    technicalNote: "Technické názvy parametrov, jednotky, názvy zdrojov a technické poznámky zostávajú v angličtine, aby sa dali overiť v pôvodných podkladoch.",
+    registry: {"title":"Krajina a región","country":"Krajina","region":"Región","select":"Vybrať…","apply":"Zobraziť parametre","note":"Referenčné hodnoty pre vybraný trh. Hodnoty projektu sa môžu líšiť podľa spotreby a vami zadaných cien. Každý parameter uvádza zdroj a mieru dôveryhodnosti."},
     chain: ["Suroviny: počet zvierat prepočítame na zberateľné tony, sušinu, organickú hmotu a výťažnosť metánu. Zohľadňujeme sezónnosť po mesiacoch.", "Fermentor: čas zdržania a organické zaťaženie určujú objem. Sušina a klíma určujú technológiu; potrebu tepla počítame mesačne.", "Energia: CHP, kotol alebo biometán. Najprv ohrev fermentora, potom využitie zvyšného tepla podľa skutočného dopytu.", "Ekonomika: CAPEX upravený pre krajinu, OPEX, príjmy a úspory. NPV, IRR a DSCR na 15 rokov pri diskontnej sadzbe krajiny.", "Scenáre: konzervatívny, základný a optimistický, osem záťažových testov a osobitný výpočet pre každú podporu.", "Hodnotenie: návratnosť, NPV scenárov, DSCR a kvalita údajov. Dotácie neovplyvňujú záver; nerozhoduje jediné súhrnné skóre."],
     limitations: ["Výťažnosť metánu vychádza z literatúry. Laboratórny rozbor vlastných surovín je stále potrebný.", "Prednosť majú odpady a zvyšky; energetické plodiny štandardne nezahŕňame.", "Podpory uvádzame osobitne so stavom a zdrojom, bez vplyvu na záver.", "Nezahŕňame dane, DPH, pracovný kapitál ani menové šoky nad rámec rizika v diskontnej sadzbe.", "Kde sú dostupné, používame oficiálne štatistiky. Chýbajúce údaje označujeme ESTIMATE a LOW. Vaše ceny majú prednosť.", "Ide o predbežné posúdenie realizovateľnosti. Projekt, bezpečnosť a investície vyžadujú odbornú kontrolu."],
     groups: ["Fyzika a proces","CHP","CAPEX: technické odhady investičných nákladov","OPEX","Trhové a finančné parametre","Scenáre"], countries: "Podmienky v jednotlivých krajinách",
@@ -219,8 +207,7 @@ export const methodologyCopy = {
     data: ["kalibrované", "oficiálne štatistiky", "odhady"], injection: ["áno", "zatiaľ nie"],
   },
   hu: {
-    registry: {"title":"Ország és régió","country":"Ország","region":"Régió","national":"Országos referenciaértékek","apply":"Paraméterek megjelenítése","note":"A kiválasztott piac referenciaértékei. A projekt értékei a fogyasztástól és a megadott áraktól függően eltérhetnek. Minden paraméternél szerepel a forrás és a megbízhatóság szintje."},
-    technicalNote: "A műszaki paraméternevek, mértékegységek, forráscímek és mérnöki megjegyzések angolul maradnak, hogy összevethetők legyenek az eredeti forrásokkal.",
+    registry: {"title":"Ország és régió","country":"Ország","region":"Régió","select":"Válasszon…","apply":"Paraméterek megjelenítése","note":"A kiválasztott piac referenciaértékei. A projekt értékei a fogyasztástól és a megadott áraktól függően eltérhetnek. Minden paraméternél szerepel a forrás és a megbízhatóság szintje."},
     chain: ["Alapanyag: az állatlétszámból begyűjthető mennyiséget, szárazanyagot, szerves anyagot és metánhozamot számítunk, havi szezonalitással.", "Fermentor: a tartózkodási idő és a szervesanyag-terhelés adja a térfogatot. A szárazanyag és az éghajlat határozza meg a technológiát; a hőigényt havonta számítjuk.", "Energia: CHP, kazán vagy biometán. Először a fermentor fűtését fedezzük, majd a maradék hőt a tényleges igényhez igazítjuk.", "Gazdaságosság: országhoz igazított CAPEX, OPEX, bevételek és megtakarítások. NPV, IRR és DSCR 15 évre, az ország diszkontrátájával.", "Forgatókönyvek: óvatos, alap és optimista változat, nyolc stresszteszt és támogatásonként külön számítás.", "Értékelés: megtérülés, forgatókönyvenkénti NPV, DSCR és adatminőség. A támogatások nem befolyásolják a minősítést; nincs egyetlen összesített pontszám."],
     limitations: ["A metánhozam szakirodalmi tartományokon alapul. A saját alapanyag laborvizsgálata továbbra is szükséges.", "Elsőbbséget kapnak a hulladékok és maradványok; az energianövényeket alapból kizárjuk.", "A támogatások külön jelennek meg, állapottal és forrással, a minősítés befolyásolása nélkül.", "Az adók, áfa, forgótőke és a diszkontrátán túli árfolyamsokkok nem szerepelnek a számításban.", "Ahol elérhetők, hivatalos statisztikákat használunk. A hiányzó adatokat ESTIMATE és LOW jelöli. Az Ön árai elsőbbséget élveznek.", "Ez előzetes megvalósíthatósági értékelés. A tervezéshez, biztonsághoz és beruházáshoz szakképzett felülvizsgálat szükséges."],
     groups: ["Fizika és technológiai folyamat","CHP","CAPEX: a beruházási költségek műszaki becslése","OPEX","Piaci és pénzügyi paraméterek","Forgatókönyvek"], countries: "Országonkénti feltételek",
@@ -231,8 +218,7 @@ export const methodologyCopy = {
     data: ["kalibrált", "hivatalos statisztika", "becslés"], injection: ["igen", "még nem"],
   },
   ro: {
-    registry: {"title":"Țară și regiune","country":"Țară","region":"Regiune","national":"Referință națională","apply":"Afișează parametrii","note":"Valori de referință pentru piața selectată. Valorile proiectului pot varia în funcție de consum și de prețurile introduse. Fiecare parametru indică sursa și nivelul de încredere."},
-    technicalNote: "Denumirile tehnice, unitățile, titlurile surselor și notele inginerești rămân în engleză pentru a putea fi verificate în documentele originale.",
+    registry: {"title":"Țară și regiune","country":"Țară","region":"Regiune","select":"Selectați…","apply":"Afișează parametrii","note":"Valori de referință pentru piața selectată. Valorile proiectului pot varia în funcție de consum și de prețurile introduse. Fiecare parametru indică sursa și nivelul de încredere."},
     chain: ["Materii prime: efectivul de animale este transformat în tone colectabile, substanță uscată, solide volatile și producție de metan, cu variații lunare.", "Digestor: timpul de retenție și încărcarea organică stabilesc volumul. Substanța uscată și clima determină tehnologia; necesarul de căldură se calculează lunar.", "Energie: CHP, cazan sau biometan. Mai întâi încălzirea digestorului, apoi corelarea căldurii rămase cu cererea reală.", "Economie: CAPEX ajustat pentru țară, OPEX, venituri și economii. NPV, IRR și DSCR pe 15 ani, la rata de actualizare a țării.", "Scenarii: prudent, de bază și optimist, opt teste de rezistență și un calcul separat pentru fiecare schemă de sprijin.", "Evaluare: recuperarea investiției, NPV pe scenarii, DSCR și calitatea datelor. Subvențiile nu influențează verdictul; nu folosim un singur punctaj global."],
     limitations: ["Randamentele de metan provin din literatura de specialitate. Analiza în laborator a propriilor materii prime rămâne necesară.", "Prioritate pentru deșeuri și reziduuri; culturile energetice sunt excluse implicit.", "Sprijinul este prezentat separat, cu statut și sursă, fără a influența verdictul.", "Nu sunt incluse taxele, TVA, capitalul de lucru și șocurile valutare dincolo de riscul inclus în rata de actualizare.", "Folosim statistici oficiale unde există. Lipsurile sunt marcate ESTIMATE și LOW. Prețurile introduse de dumneavoastră au prioritate.", "Aceasta este o evaluare preliminară. Proiectarea, siguranța și investițiile necesită verificare de specialitate."],
     groups: ["Fizică și proces","CHP","CAPEX: estimări tehnice ale costurilor de investiție","OPEX","Parametri de piață și financiari","Scenarii"], countries: "Condiții pe țări",
@@ -243,8 +229,7 @@ export const methodologyCopy = {
     data: ["calibrate", "statistici oficiale", "estimări"], injection: ["da", "nu încă"],
   },
   bg: {
-    registry: {"title":"Държава и регион","country":"Държава","region":"Регион","national":"Национални референтни стойности","apply":"Покажи параметрите","note":"Референтни стойности за избрания пазар. Стойностите за проекта може да се различават според потреблението и въведените от вас цени. Всеки параметър има източник и степен на надеждност."},
-    technicalNote: "Техническите имена на параметрите, единиците, заглавията на източниците и инженерните бележки остават на английски за лесна проверка в оригинала.",
+    registry: {"title":"Държава и регион","country":"Държава","region":"Регион","select":"Изберете…","apply":"Покажи параметрите","note":"Референтни стойности за избрания пазар. Стойностите за проекта може да се различават според потреблението и въведените от вас цени. Всеки параметър има източник и степен на надеждност."},
     chain: ["Суровини: броят животни се преобразува в събираеми тонове, сухо вещество, органично вещество и добив на метан с месечна сезонност.", "Реактор: времето на престой и органичното натоварване определят обема. Сухото вещество и климатът определят технологията; нуждата от топлина се изчислява месечно.", "Енергия: CHP, котел или биометан. Първо се отоплява реакторът, а останалата топлина се съпоставя с реалното потребление.", "Икономика: CAPEX според държавата, OPEX, приходи и спестявания. NPV, IRR и DSCR за 15 години при съответния дисконтов процент.", "Сценарии: консервативен, базов и оптимистичен, осем стрес теста и отделно изчисление за всяка схема за подпомагане.", "Оценка: възвръщаемост, NPV по сценарии, DSCR и качество на данните. Субсидиите не влияят на заключението; няма единна обобщена оценка."],
     limitations: ["Добивите на метан са по литературни данни. Необходим е лабораторен анализ на вашите суровини.", "Приоритет имат отпадъците и остатъците; енергийните култури са изключени по подразбиране.", "Подпомагането се показва отделно със статус и източник, без влияние върху заключението.", "Не са включени данъци, ДДС, оборотен капитал и валутни сътресения извън риска в дисконтовия процент.", "Използваме официална статистика, когато е налична. Липсващите данни са маркирани ESTIMATE и LOW. Вашите цени са с предимство.", "Това е предварителна оценка на осъществимостта. Проектирането, безопасността и инвестициите изискват експертна проверка."],
     groups: ["Физика и процес","CHP","CAPEX: инженерни оценки на инвестиционните разходи","OPEX","Пазарни и финансови параметри","Сценарии"], countries: "Условия по държави",
@@ -255,8 +240,7 @@ export const methodologyCopy = {
     data: ["калибрирани", "официална статистика", "оценки"], injection: ["да", "все още не"],
   },
   sr: {
-    registry: {"title":"Zemlja i region","country":"Zemlja","region":"Region","national":"Referentne vrednosti za zemlju","apply":"Prikaži parametre","note":"Referentne vrednosti za izabrano tržište. Vrednosti za projekat mogu se razlikovati u zavisnosti od potrošnje i cena koje unesete. Svaki parametar ima izvor i nivo pouzdanosti."},
-    technicalNote: "Tehnički nazivi parametara, jedinice, naslovi izvora i inženjerske napomene ostaju na engleskom radi provere u originalnim dokumentima.",
+    registry: {"title":"Zemlja i region","country":"Zemlja","region":"Region","select":"Izaberite…","apply":"Prikaži parametre","note":"Referentne vrednosti za izabrano tržište. Vrednosti za projekat mogu se razlikovati u zavisnosti od potrošnje i cena koje unesete. Svaki parametar ima izvor i nivo pouzdanosti."},
     chain: ["Sirovine: broj grla pretvaramo u količinu koja se može prikupiti, suvu materiju, organsku materiju i prinos metana, uz mesečnu sezonalnost.", "Digestor: vreme zadržavanja i organsko opterećenje određuju zapreminu. Suva materija i klima određuju tehnologiju; potrebu za toplotom računamo mesečno.", "Energija: CHP, kotao ili biometan. Prvo grejanje digestora, zatim usklađivanje preostale toplote sa stvarnom potražnjom.", "Ekonomika: CAPEX prilagođen zemlji, OPEX, prihodi i uštede. NPV, IRR i DSCR za 15 godina uz diskontnu stopu zemlje.", "Scenariji: konzervativni, osnovni i optimistični, osam stres testova i zaseban proračun za svaki program podrške.", "Ocena: povraćaj ulaganja, NPV scenarija, DSCR i kvalitet podataka. Subvencije ne utiču na zaključak; ne odlučuje jedan zbirni rezultat."],
     limitations: ["Prinos metana zasniva se na literaturi. Laboratorijska analiza vaših sirovina i dalje je potrebna.", "Prednost imaju otpad i ostaci; energetski usevi su podrazumevano isključeni.", "Podrška je prikazana zasebno, sa statusom i izvorom, bez uticaja na zaključak.", "Nisu uključeni porezi, PDV, obrtni kapital ni valutni šokovi izvan rizika u diskontnoj stopi.", "Koristimo zvaničnu statistiku gde je dostupna. Nedostajuće podatke označavamo ESTIMATE i LOW. Vaše cene imaju prednost.", "Ovo je preliminarna procena izvodljivosti. Projektovanje, bezbednost i ulaganje zahtevaju stručnu proveru."],
     groups: ["Fizika i proces","CHP","CAPEX: inženjerske procene investicionih troškova","OPEX","Tržišni i finansijski parametri","Scenariji"], countries: "Uslovi po zemljama",
@@ -267,8 +251,7 @@ export const methodologyCopy = {
     data: ["kalibrisani", "zvanična statistika", "procene"], injection: ["da", "još ne"],
   },
   el: {
-    registry: {"title":"Χώρα και περιφέρεια","country":"Χώρα","region":"Περιφέρεια","national":"Εθνικές τιμές αναφοράς","apply":"Προβολή παραμέτρων","note":"Τιμές αναφοράς για την επιλεγμένη αγορά. Οι τιμές του έργου ενδέχεται να διαφέρουν ανάλογα με την κατανάλωση και τις τιμές που εισάγετε. Κάθε παράμετρος συνοδεύεται από πηγή και βαθμό αξιοπιστίας."},
-    technicalNote: "Οι τεχνικές ονομασίες παραμέτρων, οι μονάδες, οι τίτλοι πηγών και οι τεχνικές σημειώσεις παραμένουν στα αγγλικά για εύκολη διασταύρωση με τα πρωτότυπα.",
+    registry: {"title":"Χώρα και περιφέρεια","country":"Χώρα","region":"Περιφέρεια","select":"Επιλέξτε…","apply":"Προβολή παραμέτρων","note":"Τιμές αναφοράς για την επιλεγμένη αγορά. Οι τιμές του έργου ενδέχεται να διαφέρουν ανάλογα με την κατανάλωση και τις τιμές που εισάγετε. Κάθε παράμετρος συνοδεύεται από πηγή και βαθμό αξιοπιστίας."},
     chain: ["Πρώτες ύλες: μετατρέπουμε τον αριθμό ζώων σε συλλέξιμους τόνους, ξηρά ουσία, πτητικά στερεά και απόδοση μεθανίου, με μηνιαία εποχικότητα.", "Χωνευτής: ο χρόνος παραμονής και το οργανικό φορτίο καθορίζουν τον όγκο. Η ξηρά ουσία και το κλίμα καθορίζουν την τεχνολογία· η ανάγκη θερμότητας υπολογίζεται μηνιαία.", "Ενέργεια: CHP, λέβητας ή βιομεθάνιο. Προηγείται η θέρμανση του χωνευτή και ακολουθεί η κάλυψη της πραγματικής ζήτησης με την υπόλοιπη θερμότητα.", "Οικονομικά: CAPEX προσαρμοσμένο στη χώρα, OPEX, έσοδα και εξοικονομήσεις. NPV, IRR και DSCR για 15 έτη με το προεξοφλητικό επιτόκιο της χώρας.", "Σενάρια: συντηρητικό, βασικό και αισιόδοξο, οκτώ δοκιμές αντοχής και ξεχωριστός υπολογισμός για κάθε ενίσχυση.", "Αξιολόγηση: χρόνος απόσβεσης, NPV σεναρίων, DSCR και ποιότητα δεδομένων. Οι επιδοτήσεις δεν επηρεάζουν το συμπέρασμα· δεν υπάρχει μία συνολική βαθμολογία."],
     limitations: ["Οι αποδόσεις μεθανίου προέρχονται από τη βιβλιογραφία. Απαιτείται εργαστηριακή ανάλυση των δικών σας πρώτων υλών.", "Προτεραιότητα έχουν απόβλητα και υπολείμματα· οι ενεργειακές καλλιέργειες εξαιρούνται από προεπιλογή.", "Οι ενισχύσεις παρουσιάζονται χωριστά με κατάσταση και πηγή, χωρίς επίδραση στο συμπέρασμα.", "Δεν περιλαμβάνονται φόροι, ΦΠΑ, κεφάλαιο κίνησης και συναλλαγματικές διαταραχές πέρα από τον κίνδυνο στο προεξοφλητικό επιτόκιο.", "Χρησιμοποιούμε επίσημες στατιστικές όπου υπάρχουν. Τα κενά σημειώνονται ESTIMATE και LOW. Οι δικές σας τιμές υπερισχύουν.", "Πρόκειται για προκαταρκτική αξιολόγηση σκοπιμότητας. Σχεδιασμός, ασφάλεια και επένδυση απαιτούν έλεγχο από ειδικούς."],
     groups: ["Φυσική και διεργασία","CHP","CAPEX: τεχνικές εκτιμήσεις επενδυτικού κόστους","OPEX","Παράμετροι αγοράς και χρηματοοικονομικά στοιχεία","Σενάρια"], countries: "Συνθήκες ανά χώρα",
@@ -279,8 +262,7 @@ export const methodologyCopy = {
     data: ["βαθμονομημένα", "επίσημες στατιστικές", "εκτιμήσεις"], injection: ["ναι", "όχι ακόμη"],
   },
   tr: {
-    registry: {"title":"Ülke ve bölge","country":"Ülke","region":"Bölge","national":"Ulusal referans değerler","apply":"Parametreleri göster","note":"Seçilen piyasa için referans değerler. Proje değerleri, tüketime ve girdiğiniz fiyatlara göre değişebilir. Her parametre için kaynak ve güven düzeyi belirtilir."},
-    technicalNote: "Teknik parametre adları, birimler, kaynak başlıkları ve mühendislik notları, özgün kaynaklarla karşılaştırılabilmesi için İngilizce bırakılmıştır.",
+    registry: {"title":"Ülke ve bölge","country":"Ülke","region":"Bölge","select":"Seçin…","apply":"Parametreleri göster","note":"Seçilen piyasa için referans değerler. Proje değerleri, tüketime ve girdiğiniz fiyatlara göre değişebilir. Her parametre için kaynak ve güven düzeyi belirtilir."},
     chain: ["Hammadde: hayvan sayısını toplanabilir tonaja, kuru maddeye, uçucu katılara ve metan verimine dönüştürüyor, aylık mevsimselliği dikkate alıyoruz.", "Çürütücü: bekletme süresi ve organik yük hacmi belirler. Kuru madde ve iklim teknoloji seçimini yönlendirir; ısı ihtiyacı aylık hesaplanır.", "Enerji: CHP, kazan veya biyometan. Önce çürütücünün ısıtılması karşılanır, kalan ısı gerçek taleple eşleştirilir.", "Ekonomi: ülkeye uyarlanmış CAPEX, OPEX, gelir ve tasarruflar. Ülke iskonto oranıyla 15 yıllık NPV, IRR ve DSCR.", "Senaryolar: temkinli, temel ve iyimser durumlar, sekiz stres testi ve her destek programı için ayrı hesaplama.", "Değerlendirme: geri ödeme süresi, senaryo NPV değerleri, DSCR ve veri kalitesi. Teşvikler sonuca katılmaz; tek bir toplam puan kullanılmaz."],
     limitations: ["Metan verimleri literatür aralıklarına dayanır. Kendi hammaddenizin laboratuvar analizi yine gereklidir.", "Atık ve kalıntılar önceliklidir; enerji bitkileri varsayılan olarak dahil edilmez.", "Destekler durum ve kaynaklarıyla ayrı gösterilir, değerlendirme sonucunu etkilemez.", "Vergiler, KDV, işletme sermayesi ve iskonto oranındaki riskin ötesindeki kur şokları dahil değildir.", "Mümkün olduğunda resmî istatistikler kullanılır. Eksikler ESTIMATE ve LOW ile işaretlenir. Sizin fiyatlarınız önceliklidir.", "Bu bir ön fizibilite değerlendirmesidir. Tasarım, güvenlik ve yatırım kararları uzman incelemesi gerektirir."],
     groups: ["Fizik ve proses","CHP","CAPEX: mühendislik maliyet tahminleri","OPEX","Piyasa ve finans parametreleri","Senaryolar"], countries: "Ülkelere göre koşullar",
@@ -291,8 +273,7 @@ export const methodologyCopy = {
     data: ["kalibre edilmiş", "resmî istatistikler", "tahminler"], injection: ["evet", "henüz değil"],
   },
   lt: {
-    registry: {"title":"Šalis ir regionas","country":"Šalis","region":"Regionas","national":"Nacionalinės atskaitos vertės","apply":"Rodyti parametrus","note":"Pasirinktos rinkos atskaitos vertės. Projekto vertės gali skirtis priklausomai nuo suvartojimo ir jūsų įvestų kainų. Kiekvienam parametrui nurodomas šaltinis ir patikimumo lygis."},
-    technicalNote: "Techniniai parametrų pavadinimai, vienetai, šaltinių pavadinimai ir inžinerinės pastabos palikti anglų kalba, kad būtų lengva palyginti su pirminiais šaltiniais.",
+    registry: {"title":"Šalis ir regionas","country":"Šalis","region":"Regionas","select":"Pasirinkti…","apply":"Rodyti parametrus","note":"Pasirinktos rinkos atskaitos vertės. Projekto vertės gali skirtis priklausomai nuo suvartojimo ir jūsų įvestų kainų. Kiekvienam parametrui nurodomas šaltinis ir patikimumo lygis."},
     chain: ["Žaliavos: gyvulių skaičių perskaičiuojame į surenkamas tonas, sausąją medžiagą, organinę medžiagą ir metano išeigą. Įvertiname mėnesinį sezoniškumą.", "Reaktorius: išlaikymo trukmė ir organinė apkrova lemia tūrį. Sausoji medžiaga ir klimatas lemia technologiją; šilumos poreikis skaičiuojamas kas mėnesį.", "Energija: CHP, katilas arba biometanas. Pirmiausia šildomas reaktorius, tada likusi šiluma derinama su tikruoju poreikiu.", "Ekonomika: šaliai pritaikytas CAPEX, OPEX, pajamos ir sutaupymai. NPV, IRR ir DSCR per 15 metų pagal šalies diskonto normą.", "Scenarijai: atsargusis, bazinis ir optimistinis, aštuoni atsparumo testai ir atskiras kiekvienos paramos programos skaičiavimas.", "Vertinimas: atsipirkimas, scenarijų NPV, DSCR ir duomenų kokybė. Subsidijos išvadai įtakos neturi; vieno bendro balo nenaudojame."],
     limitations: ["Metano išeiga remiasi literatūra. Jūsų žaliavų laboratorinis tyrimas vis tiek būtinas.", "Pirmenybė atliekoms ir likučiams; energetiniai augalai pagal numatytąsias nuostatas neįtraukti.", "Parama rodoma atskirai su būsena ir šaltiniu, nekeičiant išvados.", "Neįtraukti mokesčiai, PVM, apyvartinis kapitalas ir valiutos sukrėtimai, viršijantys diskonto normoje įvertintą riziką.", "Kur įmanoma, naudojama oficiali statistika. Trūkstami duomenys žymimi ESTIMATE ir LOW. Jūsų kainoms teikiama pirmenybė.", "Tai preliminarus įgyvendinamumo vertinimas. Projektavimą, saugą ir investicijas turi patikrinti specialistai."],
     groups: ["Fizika ir procesas","CHP","CAPEX: inžineriniai investicinių sąnaudų įverčiai","OPEX","Rinkos ir finansiniai parametrai","Scenarijai"], countries: "Sąlygos pagal šalį",
@@ -303,8 +284,7 @@ export const methodologyCopy = {
     data: ["kalibruoti", "oficiali statistika", "įverčiai"], injection: ["taip", "dar ne"],
   },
   lv: {
-    registry: {"title":"Valsts un reģions","country":"Valsts","region":"Reģions","national":"Valsts atsauces vērtības","apply":"Rādīt parametrus","note":"Atsauces vērtības izvēlētajam tirgum. Projekta vērtības var atšķirties atkarībā no patēriņa un jūsu ievadītajām cenām. Katram parametram norādīts avots un ticamības līmenis."},
-    technicalNote: "Parametru tehniskie nosaukumi, mērvienības, avotu nosaukumi un inženiertehniskās piezīmes saglabātas angliski, lai tās varētu salīdzināt ar oriģinālavotiem.",
+    registry: {"title":"Valsts un reģions","country":"Valsts","region":"Reģions","select":"Izvēlēties…","apply":"Rādīt parametrus","note":"Atsauces vērtības izvēlētajam tirgum. Projekta vērtības var atšķirties atkarībā no patēriņa un jūsu ievadītajām cenām. Katram parametram norādīts avots un ticamības līmenis."},
     chain: ["Izejvielas: dzīvnieku skaitu pārrēķinām savācamās tonnās, sausnā, organiskajā vielā un metāna iznākumā, ņemot vērā mēnešu sezonalitāti.", "Reaktors: uzturēšanās laiks un organiskā slodze nosaka tilpumu. Sausna un klimats nosaka tehnoloģiju; siltuma vajadzību aprēķinām pa mēnešiem.", "Enerģija: CHP, katls vai biometāns. Vispirms reaktora apsilde, pēc tam atlikušā siltuma pielāgošana faktiskajam pieprasījumam.", "Ekonomika: valstij pielāgots CAPEX, OPEX, ieņēmumi un ietaupījumi. NPV, IRR un DSCR 15 gadiem ar valsts diskonta likmi.", "Scenāriji: piesardzīgs, bāzes un optimistisks, astoņi noturības testi un atsevišķs aprēķins katrai atbalsta programmai.", "Vērtējums: atmaksāšanās, scenāriju NPV, DSCR un datu kvalitāte. Subsīdijas secinājumu neietekmē; viena kopvērtējuma punkta nav."],
     limitations: ["Metāna iznākums balstīts literatūrā. Jūsu izejvielu laboratoriska analīze joprojām ir vajadzīga.", "Priekšroka ir atkritumiem un atlikumiem; enerģētiskās kultūras pēc noklusējuma nav iekļautas.", "Atbalstu rāda atsevišķi ar statusu un avotu, neietekmējot secinājumu.", "Nav iekļauti nodokļi, PVN, apgrozāmais kapitāls un valūtas satricinājumi ārpus diskonta likmē ietvertā riska.", "Kur iespējams, izmantojam oficiālo statistiku. Trūkstošos datus apzīmējam ESTIMATE un LOW. Jūsu cenām ir priekšroka.", "Tas ir sākotnējs īstenojamības novērtējums. Projektēšana, drošība un ieguldījumi jāpārbauda speciālistiem."],
     groups: ["Fizika un process","CHP","CAPEX: ieguldījumu izmaksu inženiertehniskās aplēses","OPEX","Tirgus un finanšu parametri","Scenāriji"], countries: "Nosacījumi pa valstīm",
@@ -315,8 +295,7 @@ export const methodologyCopy = {
     data: ["kalibrēti", "oficiālā statistika", "aplēses"], injection: ["jā", "vēl ne"],
   },
   et: {
-    registry: {"title":"Riik ja piirkond","country":"Riik","region":"Piirkond","national":"Riiklikud võrdlusväärtused","apply":"Kuva parameetrid","note":"Valitud turu võrdlusväärtused. Projekti väärtused võivad sõltuvalt tarbimisest ja teie sisestatud hindadest erineda. Iga parameetri juures on allikas ja usaldusväärsuse tase."},
-    technicalNote: "Parameetrite tehnilised nimetused, ühikud, allikate pealkirjad ja tehnilised märkused jäävad inglise keelde, et neid saaks algallikatega võrrelda.",
+    registry: {"title":"Riik ja piirkond","country":"Riik","region":"Piirkond","select":"Vali…","apply":"Kuva parameetrid","note":"Valitud turu võrdlusväärtused. Projekti väärtused võivad sõltuvalt tarbimisest ja teie sisestatud hindadest erineda. Iga parameetri juures on allikas ja usaldusväärsuse tase."},
     chain: ["Tooraine: loomade arv teisendatakse kogutavateks tonnideks, kuivaineks, orgaaniliseks aineks ja metaanisaagiseks, arvestades kuupõhist hooajalisust.", "Kääriti: viibeaeg ja orgaaniline koormus määravad mahu. Kuivaine ja kliima suunavad tehnoloogia valikut; soojusvajadus arvutatakse kuude kaupa.", "Energia: CHP, katel või biometaan. Esmalt kääriti küte, seejärel ülejäänud soojuse sobitamine tegeliku nõudlusega.", "Majandus: riigile kohandatud CAPEX, OPEX, tulu ja sääst. NPV, IRR ja DSCR 15 aastaks riigi diskontomääraga.", "Stsenaariumid: ettevaatlik, baas- ja optimistlik variant, kaheksa koormustesti ning iga toetusmeetme eraldi arvutus.", "Hinnang: tasuvusaeg, stsenaariumide NPV, DSCR ja andmekvaliteet. Toetused järeldust ei mõjuta; üht koondhinnet ei kasutata."],
     limitations: ["Metaanisaagis põhineb kirjandusel. Oma tooraine laborianalüüs on endiselt vajalik.", "Eelistame jäätmeid ja jääke; energiakultuurid on vaikimisi välistatud.", "Toetused esitatakse eraldi koos staatuse ja allikaga, järeldust mõjutamata.", "Maksud, käibemaks, käibekapital ja diskontomääras arvestatud riski ületavad valuutašokid pole kaasatud.", "Võimaluse korral kasutame ametlikku statistikat. Puuduvad andmed on märgitud ESTIMATE ja LOW. Teie hinnad on ülimuslikud.", "See on esialgne teostatavushinnang. Projekteerimine, ohutus ja investeerimisotsused vajavad asjatundja kontrolli."],
     groups: ["Füüsika ja protsess","CHP","CAPEX: investeeringukulude tehnilised hinnangud","OPEX","Turu- ja finantsparameetrid","Stsenaariumid"], countries: "Tingimused riigiti",
@@ -327,8 +306,7 @@ export const methodologyCopy = {
     data: ["kalibreeritud", "ametlik statistika", "hinnangud"], injection: ["jah", "veel mitte"],
   },
   da: {
-    registry: {"title":"Land og region","country":"Land","region":"Region","national":"Nationale referenceværdier","apply":"Vis parametre","note":"Referenceværdier for det valgte marked. Projektets værdier kan afvige afhængigt af forbrug og de priser, du indtaster. Hver parameter har en kilde og et angivet tillidsniveau."},
-    technicalNote: "Tekniske parameternavne, enheder, kildetitler og tekniske noter er på engelsk, så de kan sammenholdes med de oprindelige kilder.",
+    registry: {"title":"Land og region","country":"Land","region":"Region","select":"Vælg…","apply":"Vis parametre","note":"Referenceværdier for det valgte marked. Projektets værdier kan afvige afhængigt af forbrug og de priser, du indtaster. Hver parameter har en kilde og et angivet tillidsniveau."},
     chain: ["Biomasse: antal dyr omregnes til mængder, der kan indsamles, tørstof, organisk stof og metanudbytte med månedlig sæsonvariation.", "Reaktor: opholdstid og organisk belastning bestemmer volumen. Tørstof og klima styrer teknologivalget; varmebehovet beregnes månedligt.", "Energi: CHP, kedel eller biometan. Først opvarmes reaktoren, derefter matches restvarmen med det faktiske behov.", "Økonomi: landtilpasset CAPEX, OPEX, indtægter og besparelser. NPV, IRR og DSCR over 15 år med landets diskonteringsrente.", "Scenarier: forsigtigt, basis og optimistisk, otte stresstest og en særskilt beregning for hver støtteordning.", "Vurdering: tilbagebetalingstid, scenariernes NPV, DSCR og datakvalitet. Tilskud indgår ikke i konklusionen; én samlet score afgør den ikke."],
     limitations: ["Metanudbytter stammer fra litteraturen. En laboratorieanalyse af din egen biomasse er stadig nødvendig.", "Affald og restprodukter prioriteres; energiafgrøder er som udgangspunkt udeladt.", "Støtte vises separat med status og kilde og påvirker ikke konklusionen.", "Skatter, moms, arbejdskapital og valutachok ud over risikoen i diskonteringsrenten er ikke medtaget.", "Vi bruger officielle statistikker, hvor de findes. Manglende data markeres ESTIMATE og LOW. Dine egne priser har forrang.", "Dette er en indledende vurdering. Projektering, sikkerhed og investering kræver faglig gennemgang."],
     groups: ["Fysik og proces","CHP","CAPEX: tekniske skøn over investeringsomkostninger","OPEX","Markeds- og finansielle parametre","Scenarier"], countries: "Forhold efter land",
@@ -339,8 +317,7 @@ export const methodologyCopy = {
     data: ["kalibreret", "officiel statistik", "skøn"], injection: ["ja", "endnu ikke"],
   },
   sv: {
-    registry: {"title":"Land och region","country":"Land","region":"Region","national":"Nationella referensvärden","apply":"Visa parametrar","note":"Referensvärden för vald marknad. Projektets värden kan skilja sig beroende på förbrukning och de priser du anger. Varje parameter har en källa och en tillförlitlighetsnivå."},
-    technicalNote: "Tekniska parameternamn, enheter, källtitlar och tekniska kommentarer behålls på engelska så att de kan jämföras med originalkällorna.",
+    registry: {"title":"Land och region","country":"Land","region":"Region","select":"Välj…","apply":"Visa parametrar","note":"Referensvärden för vald marknad. Projektets värden kan skilja sig beroende på förbrukning och de priser du anger. Varje parameter har en källa och en tillförlitlighetsnivå."},
     chain: ["Råvaror: djurantal räknas om till insamlingsbara ton, torrsubstans, organiskt material och metanutbyte med månadsvis säsongsvariation.", "Rötkammare: uppehållstid och organisk belastning bestämmer volymen. Torrsubstans och klimat styr teknikvalet; värmebehovet beräknas månadsvis.", "Energi: CHP, panna eller biometan. Först värms rötkammaren, sedan matchas återstående värme mot det verkliga behovet.", "Ekonomi: landsanpassad CAPEX, OPEX, intäkter och besparingar. NPV, IRR och DSCR över 15 år med landets kalkylränta.", "Scenarier: försiktigt, bas och optimistiskt, åtta stresstester och en separat beräkning för varje stödprogram.", "Bedömning: återbetalningstid, scenariernas NPV, DSCR och datakvalitet. Bidrag påverkar inte slutsatsen; inget samlat poängtal avgör den."],
     limitations: ["Metanutbyten bygger på litteraturen. Laboratorieanalys av dina egna råvaror behövs fortfarande.", "Avfall och restprodukter prioriteras; energigrödor ingår inte som standard.", "Stöd redovisas separat med status och källa utan att påverka slutsatsen.", "Skatter, moms, rörelsekapital och valutachocker utöver risken i kalkylräntan ingår inte.", "Vi använder officiell statistik där den finns. Luckor markeras ESTIMATE och LOW. Dina egna priser går före.", "Detta är en inledande genomförbarhetsbedömning. Projektering, säkerhet och investering kräver granskning av sakkunniga."],
     groups: ["Fysik och process","CHP","CAPEX: tekniska uppskattningar av investeringskostnader","OPEX","Marknads- och finansiella parametrar","Scenarier"], countries: "Förutsättningar per land",
@@ -351,8 +328,7 @@ export const methodologyCopy = {
     data: ["kalibrerade", "officiell statistik", "uppskattningar"], injection: ["ja", "inte ännu"],
   },
   fi: {
-    registry: {"title":"Maa ja alue","country":"Maa","region":"Alue","national":"Kansalliset viitearvot","apply":"Näytä parametrit","note":"Valitun markkinan viitearvot. Hankkeen arvot voivat poiketa kulutuksen ja itse syöttämiesi hintojen mukaan. Jokaiselle parametrille ilmoitetaan lähde ja luotettavuustaso."},
-    technicalNote: "Parametrien tekniset nimet, yksiköt, lähteiden nimet ja tekniset huomautukset säilyvät englanniksi, jotta niitä voi verrata alkuperäislähteisiin.",
+    registry: {"title":"Maa ja alue","country":"Maa","region":"Alue","select":"Valitse…","apply":"Näytä parametrit","note":"Valitun markkinan viitearvot. Hankkeen arvot voivat poiketa kulutuksen ja itse syöttämiesi hintojen mukaan. Jokaiselle parametrille ilmoitetaan lähde ja luotettavuustaso."},
     chain: ["Syötteet: eläinmäärä muunnetaan kerättävissä oleviksi tonneiksi, kuiva-aineeksi, orgaaniseksi aineeksi ja metaanintuotoksi. Kausivaihtelu huomioidaan kuukausittain.", "Reaktori: viipymäaika ja orgaaninen kuormitus määräävät tilavuuden. Kuiva-aine ja ilmasto ohjaavat tekniikan valintaa; lämmöntarve lasketaan kuukausittain.", "Energia: CHP, kattila tai biometaani. Ensin lämmitetään reaktori, sitten jäljelle jäävä lämpö sovitetaan todelliseen kysyntään.", "Talous: maakohtainen CAPEX, OPEX, tulot ja säästöt. NPV, IRR ja DSCR 15 vuodelle maan laskentakorolla.", "Skenaariot: varovainen, perus- ja optimistinen, kahdeksan rasitustestiä ja erillinen laskelma jokaiselle tukiohjelmalle.", "Arvio: takaisinmaksuaika, skenaarioiden NPV, DSCR ja tietojen laatu. Tuet eivät vaikuta johtopäätökseen; yksi kokonaispistemäärä ei ratkaise sitä."],
     limitations: ["Metaanintuotot perustuvat kirjallisuuteen. Omien syötteiden laboratorioanalyysi on silti tarpeen.", "Jätteet ja tähteet ovat etusijalla; energiakasvit eivät kuulu oletuslaskentaan.", "Tuet esitetään erikseen tilatietoineen ja lähteineen ilman vaikutusta johtopäätökseen.", "Verot, arvonlisävero, käyttöpääoma ja laskentakorossa huomioidun riskin ylittävät valuuttasokit eivät sisälly laskentaan.", "Käytämme virallisia tilastoja, jos niitä on saatavilla. Puuttuvat tiedot merkitään ESTIMATE ja LOW. Omat hintasi ovat ensisijaisia.", "Tämä on alustava toteutettavuusarvio. Suunnittelu, turvallisuus ja investointipäätökset edellyttävät asiantuntijan tarkastusta."],
     groups: ["Fysiikka ja prosessi","CHP","CAPEX: tekniset arviot investointikustannuksista","OPEX","Markkina- ja rahoitusparametrit","Skenaariot"], countries: "Maakohtaiset olosuhteet",
@@ -363,8 +339,7 @@ export const methodologyCopy = {
     data: ["kalibroidut", "viralliset tilastot", "arviot"], injection: ["kyllä", "ei vielä"],
   },
   vi: {
-    registry: {"title":"Quốc gia và khu vực","country":"Quốc gia","region":"Khu vực","national":"Giá trị tham chiếu toàn quốc","apply":"Xem thông số","note":"Giá trị tham chiếu cho thị trường đã chọn. Giá trị của dự án có thể khác tùy mức tiêu thụ và mức giá bạn nhập. Mỗi thông số đều có nguồn và mức độ tin cậy."},
-    technicalNote: "Tên thông số kỹ thuật, đơn vị, tên tài liệu nguồn và ghi chú kỹ thuật được giữ bằng tiếng Anh để tiện đối chiếu với bản gốc.",
+    registry: {"title":"Quốc gia và khu vực","country":"Quốc gia","region":"Khu vực","select":"Chọn…","apply":"Xem thông số","note":"Giá trị tham chiếu cho thị trường đã chọn. Giá trị của dự án có thể khác tùy mức tiêu thụ và mức giá bạn nhập. Mỗi thông số đều có nguồn và mức độ tin cậy."},
     chain: ["Nguyên liệu: từ số lượng vật nuôi, tính lượng có thể thu gom, chất khô, chất rắn bay hơi và sản lượng metan, có xét biến động theo tháng.", "Bể phân hủy: thời gian lưu và tải lượng hữu cơ quyết định thể tích. Hàm lượng chất khô và khí hậu định hướng công nghệ; nhu cầu nhiệt được tính hằng tháng.", "Năng lượng: CHP, lò hơi hoặc biometan. Ưu tiên sưởi bể phân hủy, sau đó đối chiếu lượng nhiệt còn lại với nhu cầu thực tế.", "Kinh tế: CAPEX điều chỉnh theo quốc gia, OPEX, doanh thu và chi phí tiết kiệm được. Tính NPV, IRR và DSCR trong 15 năm theo tỷ lệ chiết khấu của quốc gia.", "Kịch bản: thận trọng, cơ sở và lạc quan; tám phép thử sức chịu đựng và tính riêng từng chương trình hỗ trợ.", "Đánh giá: thời gian hoàn vốn, NPV từng kịch bản, DSCR và chất lượng dữ liệu. Trợ cấp không ảnh hưởng đến kết luận; không dùng một điểm tổng hợp duy nhất."],
     limitations: ["Suất sinh metan lấy từ tài liệu tham khảo. Vẫn cần phân tích mẫu nguyên liệu thực tế tại phòng thí nghiệm.", "Ưu tiên chất thải và phụ phẩm; mặc định không tính cây trồng năng lượng.", "Hỗ trợ được trình bày riêng kèm tình trạng và nguồn, không ảnh hưởng đến kết luận.", "Chưa tính thuế, VAT, vốn lưu động và cú sốc tỷ giá ngoài rủi ro đã phản ánh trong tỷ lệ chiết khấu.", "Dùng thống kê chính thức khi có. Dữ liệu thiếu được đánh dấu ESTIMATE và LOW. Giá bạn nhập luôn được ưu tiên.", "Đây là đánh giá khả thi sơ bộ. Thiết kế, an toàn và quyết định đầu tư cần chuyên gia có chuyên môn kiểm tra."],
     groups: ["Cơ sở vật lý và quy trình","CHP","CAPEX: ước tính chi phí đầu tư theo cơ sở kỹ thuật","OPEX","Thông số thị trường và tài chính","Kịch bản"], countries: "Điều kiện theo quốc gia",
@@ -375,8 +350,7 @@ export const methodologyCopy = {
     data: ["đã hiệu chỉnh", "thống kê chính thức", "ước tính"], injection: ["có", "chưa"],
   },
   th: {
-    registry: {"title":"ประเทศและภูมิภาค","country":"ประเทศ","region":"ภูมิภาค","national":"ค่าอ้างอิงระดับประเทศ","apply":"แสดงพารามิเตอร์","note":"ค่าอ้างอิงสำหรับตลาดที่เลือก ค่าของโครงการอาจแตกต่างตามปริมาณการใช้และราคาที่คุณกรอก แต่ละพารามิเตอร์แสดงแหล่งที่มาและระดับความน่าเชื่อถือ"},
-    technicalNote: "ชื่อพารามิเตอร์ทางเทคนิค หน่วย ชื่อเอกสารอ้างอิง และหมายเหตุทางวิศวกรรมคงไว้เป็นภาษาอังกฤษ เพื่อให้ตรวจสอบกับต้นฉบับได้สะดวก",
+    registry: {"title":"ประเทศและภูมิภาค","country":"ประเทศ","region":"ภูมิภาค","select":"เลือก…","apply":"แสดงพารามิเตอร์","note":"ค่าอ้างอิงสำหรับตลาดที่เลือก ค่าของโครงการอาจแตกต่างตามปริมาณการใช้และราคาที่คุณกรอก แต่ละพารามิเตอร์แสดงแหล่งที่มาและระดับความน่าเชื่อถือ"},
     chain: ["วัตถุดิบ: แปลงจำนวนสัตว์เป็นปริมาณที่เก็บรวบรวมได้ ของแข็งแห้ง ของแข็งระเหยง่าย และผลผลิตมีเทน โดยคำนึงถึงความผันแปรรายเดือน", "ถังย่อย: ระยะเวลากักเก็บและภาระสารอินทรีย์กำหนดปริมาตร ปริมาณของแข็งแห้งและภูมิอากาศช่วยเลือกเทคโนโลยี ส่วนความต้องการความร้อนคำนวณรายเดือน", "พลังงาน: CHP หม้อไอน้ำ หรือไบโอมีเทน ให้ความร้อนแก่ถังย่อยก่อน แล้วเทียบความร้อนที่เหลือกับความต้องการจริง", "เศรษฐศาสตร์: ปรับ CAPEX ตามประเทศ คำนวณ OPEX รายรับและค่าใช้จ่ายที่ประหยัดได้ ประเมิน NPV, IRR และ DSCR ตลอด 15 ปีด้วยอัตราคิดลดของประเทศ", "สถานการณ์: แบบระมัดระวัง ฐาน และมองบวก พร้อมทดสอบความทนทานแปดกรณี และคำนวณมาตรการสนับสนุนแต่ละโครงการแยกกัน", "การประเมิน: พิจารณาระยะคืนทุน NPV แต่ละสถานการณ์ DSCR และคุณภาพข้อมูล ไม่นำเงินอุดหนุนมาตัดสินผล และไม่ใช้คะแนนรวมเพียงค่าเดียว"],
     limitations: ["ผลผลิตมีเทนอ้างอิงช่วงค่าจากเอกสาร ยังต้องทดสอบวัตถุดิบของคุณในห้องปฏิบัติการ", "ให้ความสำคัญกับของเสียและวัสดุเหลือใช้ โดยค่าเริ่มต้นไม่รวมพืชพลังงาน", "แสดงมาตรการสนับสนุนแยกพร้อมสถานะและแหล่งที่มา โดยไม่กระทบผลประเมิน", "ไม่รวมภาษี VAT เงินทุนหมุนเวียน และความผันผวนรุนแรงของอัตราแลกเปลี่ยนนอกเหนือความเสี่ยงในอัตราคิดลด", "ใช้สถิติทางการเมื่อมี หากไม่มีจะระบุ ESTIMATE และ LOW ราคาที่คุณกรอกมีลำดับความสำคัญสูงกว่าเสมอ", "นี่คือการประเมินความเป็นไปได้เบื้องต้น การออกแบบ ความปลอดภัย และการลงทุนต้องผ่านการตรวจสอบจากผู้เชี่ยวชาญ"],
     groups: ["หลักฟิสิกส์และกระบวนการ","CHP","CAPEX: ประมาณการต้นทุนลงทุนทางวิศวกรรม","OPEX","พารามิเตอร์ตลาดและการเงิน","สถานการณ์"], countries: "เงื่อนไขรายประเทศ",
@@ -387,3 +361,132 @@ export const methodologyCopy = {
     data: ["ปรับเทียบแล้ว", "สถิติทางการ", "ค่าประมาณ"], injection: ["ได้", "ยังไม่ได้"],
   },
 } satisfies Record<Locale, MethodologyCopy>;
+
+/** Explanations shown on section headings; technical abbreviations stay international. */
+export const methodologyTermHelp: Record<Locale, readonly [string, string, string]> = {
+  "en": [
+    "CAPEX: the upfront cost of building and commissioning the plant, including equipment, construction and connections.",
+    "OPEX: recurring operating costs, including feedstock, transport, energy, staff and maintenance.",
+    "CHP: combined heat and power. Biogas powers an engine that produces electricity and usable heat."
+  ],
+  "uk": [
+    "CAPEX — початкові інвестиції в комплекс: обладнання, будівництво, підключення та введення в експлуатацію.",
+    "OPEX — поточні витрати на роботу комплексу: сировина, перевезення, енергія, персонал і технічне обслуговування.",
+    "CHP — одночасне виробництво електроенергії й тепла. Двигун працює на біогазі, а його тепло можна використовувати."
+  ],
+  "pl": [
+    "CAPEX — nakłady na budowę i uruchomienie instalacji: urządzenia, roboty budowlane i przyłącza.",
+    "OPEX — bieżące koszty eksploatacji: substraty, transport, energia, personel i serwis.",
+    "CHP — kogeneracja, czyli jednoczesne wytwarzanie energii elektrycznej i użytecznego ciepła z biogazu."
+  ],
+  "de": [
+    "CAPEX — Investitionskosten für Bau und Inbetriebnahme: Anlagen, Bauarbeiten und Anschlüsse.",
+    "OPEX — laufende Betriebskosten für Substrate, Transport, Energie, Personal und Wartung.",
+    "CHP — Kraft-Wärme-Kopplung: Ein mit Biogas betriebener Motor erzeugt gleichzeitig Strom und nutzbare Wärme."
+  ],
+  "fr": [
+    "CAPEX — investissement initial : équipements, construction, raccordements et mise en service.",
+    "OPEX — dépenses d’exploitation : matières entrantes, transport, énergie, personnel et maintenance.",
+    "CHP — cogénération : un moteur alimenté au biogaz produit à la fois de l’électricité et de la chaleur valorisable."
+  ],
+  "it": [
+    "CAPEX — investimento iniziale per impianti, costruzione, allacciamenti e messa in servizio.",
+    "OPEX — costi di esercizio: matrici in ingresso, trasporto, energia, personale e manutenzione.",
+    "CHP — cogenerazione: un motore alimentato a biogas produce contemporaneamente elettricità e calore utilizzabile."
+  ],
+  "es": [
+    "CAPEX — inversión inicial en equipos, construcción, conexiones y puesta en marcha.",
+    "OPEX — gastos de explotación: materias primas, transporte, energía, personal y mantenimiento.",
+    "CHP — cogeneración: un motor de biogás produce electricidad y calor aprovechable al mismo tiempo."
+  ],
+  "pt": [
+    "CAPEX — investimento inicial em equipamentos, construção, conexões e comissionamento.",
+    "OPEX — custos operacionais com substratos, transporte, energia, pessoal e manutenção.",
+    "CHP — cogeração: um motor a biogás produz eletricidade e calor aproveitável ao mesmo tempo."
+  ],
+  "nl": [
+    "CAPEX — investeringskosten voor apparatuur, bouw, aansluitingen en ingebruikname.",
+    "OPEX — terugkerende bedrijfskosten voor grondstoffen, vervoer, energie, personeel en onderhoud.",
+    "CHP — warmtekrachtkoppeling: een biogasmotor produceert tegelijkertijd elektriciteit en bruikbare warmte."
+  ],
+  "cs": [
+    "CAPEX — počáteční investice do zařízení, výstavby, přípojek a uvedení do provozu.",
+    "OPEX — provozní náklady na substráty, dopravu, energii, zaměstnance a údržbu.",
+    "CHP — kogenerace: motor na bioplyn současně vyrábí elektřinu a využitelné teplo."
+  ],
+  "sk": [
+    "CAPEX — počiatočné investície do zariadení, výstavby, prípojok a uvedenia do prevádzky.",
+    "OPEX — prevádzkové náklady na substráty, dopravu, energiu, personál a údržbu.",
+    "CHP — kogenerácia: motor na bioplyn súčasne vyrába elektrinu a využiteľné teplo."
+  ],
+  "hu": [
+    "CAPEX — a berendezések, az építés, a közműcsatlakozások és az üzembe helyezés beruházási költsége.",
+    "OPEX — a működés rendszeres költségei: alapanyag, szállítás, energia, személyzet és karbantartás.",
+    "CHP — kapcsolt energiatermelés: a biogázmotor egyszerre termel villamos energiát és hasznosítható hőt."
+  ],
+  "ro": [
+    "CAPEX — investiția inițială în echipamente, construcție, racordări și punerea în funcțiune.",
+    "OPEX — cheltuielile de exploatare: materii prime, transport, energie, personal și întreținere.",
+    "CHP — cogenerare: un motor alimentat cu biogaz produce simultan electricitate și căldură utilizabilă."
+  ],
+  "bg": [
+    "CAPEX — първоначални инвестиции в оборудване, строителство, присъединяване и въвеждане в експлоатация.",
+    "OPEX — текущи разходи за суровини, транспорт, енергия, персонал и поддръжка.",
+    "CHP — когенерация: двигател на биогаз произвежда едновременно електроенергия и използваема топлина."
+  ],
+  "sr": [
+    "CAPEX — početna ulaganja u opremu, izgradnju, priključke i puštanje u rad.",
+    "OPEX — tekući troškovi sirovina, prevoza, energije, osoblja i održavanja.",
+    "CHP — kogeneracija: motor na biogas istovremeno proizvodi električnu energiju i korisnu toplotu."
+  ],
+  "el": [
+    "CAPEX — αρχική επένδυση σε εξοπλισμό, κατασκευή, συνδέσεις και θέση σε λειτουργία.",
+    "OPEX — λειτουργικές δαπάνες για πρώτες ύλες, μεταφορές, ενέργεια, προσωπικό και συντήρηση.",
+    "CHP — συμπαραγωγή ηλεκτρισμού και θερμότητας: ένας κινητήρας βιοαερίου παράγει ταυτόχρονα ηλεκτρική ενέργεια και αξιοποιήσιμη θερμότητα."
+  ],
+  "tr": [
+    "CAPEX — ekipman, inşaat, bağlantılar ve devreye alma için gereken ilk yatırım.",
+    "OPEX — hammadde, nakliye, enerji, personel ve bakım için düzenli işletme giderleri.",
+    "CHP — kojenerasyon: biyogaz motoru aynı anda elektrik ve kullanılabilir ısı üretir."
+  ],
+  "lt": [
+    "CAPEX — pradinės investicijos į įrangą, statybą, prijungimą ir paleidimą.",
+    "OPEX — nuolatinės eksploatavimo išlaidos: žaliavos, transportas, energija, darbuotojai ir priežiūra.",
+    "CHP — kogeneracija: biodujų variklis vienu metu gamina elektrą ir panaudojamą šilumą."
+  ],
+  "lv": [
+    "CAPEX — sākotnējie ieguldījumi iekārtās, būvniecībā, pieslēgumos un nodošanā ekspluatācijā.",
+    "OPEX — regulārās izmaksas par izejvielām, transportu, enerģiju, darbiniekiem un apkopi.",
+    "CHP — koģenerācija: biogāzes dzinējs vienlaikus ražo elektroenerģiju un izmantojamu siltumu."
+  ],
+  "et": [
+    "CAPEX — alginvesteering seadmetesse, ehitusse, liitumistesse ja käikulaskmisse.",
+    "OPEX — jooksvad kulud toorainele, transpordile, energiale, personalile ja hooldusele.",
+    "CHP — koostootmine: biogaasimootor toodab korraga elektrit ja kasutatavat soojust."
+  ],
+  "da": [
+    "CAPEX — anlægsinvesteringen i udstyr, byggeri, tilslutninger og idriftsættelse.",
+    "OPEX — løbende driftsomkostninger til råvarer, transport, energi, personale og vedligeholdelse.",
+    "CHP — kraftvarme: en biogasmotor producerer både elektricitet og nyttig varme."
+  ],
+  "sv": [
+    "CAPEX — investeringskostnader för utrustning, byggnation, anslutningar och driftsättning.",
+    "OPEX — löpande driftskostnader för substrat, transporter, energi, personal och underhåll.",
+    "CHP — kraftvärme: en biogasmotor producerar el och användbar värme samtidigt."
+  ],
+  "fi": [
+    "CAPEX — alkuinvestointi laitteisiin, rakentamiseen, liittymiin ja käyttöönottoon.",
+    "OPEX — käytön jatkuvat kustannukset: syötteet, kuljetus, energia, henkilöstö ja kunnossapito.",
+    "CHP — sähkön ja lämmön yhteistuotanto: biokaasumoottori tuottaa sähköä ja hyödynnettävää lämpöä samanaikaisesti."
+  ],
+  "vi": [
+    "CAPEX — vốn đầu tư ban đầu cho thiết bị, xây dựng, đấu nối và đưa nhà máy vào vận hành.",
+    "OPEX — chi phí vận hành thường xuyên: nguyên liệu, vận chuyển, năng lượng, nhân sự và bảo trì.",
+    "CHP — đồng phát điện và nhiệt: động cơ chạy bằng khí sinh học đồng thời tạo ra điện và nhiệt có thể sử dụng."
+  ],
+  "th": [
+    "CAPEX — เงินลงทุนเริ่มต้นสำหรับอุปกรณ์ การก่อสร้าง การเชื่อมต่อระบบ และการเริ่มเดินเครื่อง",
+    "OPEX — ค่าใช้จ่ายในการดำเนินงาน เช่น วัตถุดิบ การขนส่ง พลังงาน บุคลากร และการบำรุงรักษา",
+    "CHP — การผลิตไฟฟ้าและความร้อนร่วมกัน โดยเครื่องยนต์ก๊าซชีวภาพผลิตทั้งไฟฟ้าและความร้อนที่นำไปใช้ได้"
+  ]
+};

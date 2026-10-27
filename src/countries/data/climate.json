@@ -1,5 +1,5 @@
 {
- "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2015–2024",
+ "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)",
  "regions": {
   "UA:kyiv": {
    "country": "UA",
@@ -13,19 +13,26 @@
    "elevationM": 169.0,
    "monthlyTempC": [
     -2.5,
-    -0.7,
-    3.2,
-    9.6,
-    15.2,
-    20.8,
-    21.5,
-    21.5,
-    16.3,
-    9.5,
-    3.2,
-    -0.1
+    -0.9,
+    3.7,
+    9.9,
+    14.9,
+    20.4,
+    21.2,
+    20.7,
+    15.7,
+    9.3,
+    3.1,
+    -0.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:lviv": {
    "country": "UA",
@@ -38,20 +45,27 @@
    "lon": 24.03,
    "elevationM": 286.0,
    "monthlyTempC": [
-    -1.4,
-    0.9,
-    3.7,
-    9.0,
+    -0.8,
+    1.0,
+    4.5,
+    9.7,
     13.9,
     19.0,
-    20.0,
-    20.3,
-    15.4,
-    9.8,
+    19.9,
+    19.8,
+    15.3,
+    9.9,
     4.2,
-    0.8
+    1.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:volyn": {
    "country": "UA",
@@ -64,20 +78,27 @@
    "lon": 25.34,
    "elevationM": 191.0,
    "monthlyTempC": [
-    -1.5,
-    0.6,
-    3.6,
-    9.1,
-    14.3,
+    -1.1,
+    0.5,
+    4.2,
+    9.7,
+    14.2,
     19.4,
-    20.3,
-    20.6,
-    15.5,
+    20.2,
+    20.1,
+    15.3,
     9.7,
     4.1,
     0.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:rivne": {
    "country": "UA",
@@ -90,20 +111,27 @@
    "lon": 26.25,
    "elevationM": 191.0,
    "monthlyTempC": [
-    -1.7,
-    0.2,
-    3.5,
-    9.1,
+    -1.2,
+    0.4,
+    4.2,
+    9.8,
     14.3,
     19.6,
     20.4,
-    20.7,
-    15.7,
-    9.6,
-    3.9,
-    0.6
+    20.3,
+    15.5,
+    9.7,
+    4.0,
+    0.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:zakarpattia": {
    "country": "UA",
@@ -116,20 +144,27 @@
    "lon": 22.29,
    "elevationM": 122.0,
    "monthlyTempC": [
-    -0.8,
-    2.2,
-    5.3,
-    10.6,
-    15.5,
-    20.3,
-    21.6,
-    22.0,
-    17.0,
-    11.0,
-    5.4,
-    1.4
+    0.3,
+    3.2,
+    6.6,
+    11.7,
+    16.1,
+    21.4,
+    22.4,
+    22.6,
+    17.5,
+    11.5,
+    6.1,
+    2.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:ivano-frankivsk": {
    "country": "UA",
@@ -142,20 +177,27 @@
    "lon": 24.71,
    "elevationM": 264.0,
    "monthlyTempC": [
-    -1.1,
-    1.1,
-    3.7,
-    9.3,
-    14.3,
-    19.1,
-    20.3,
-    20.6,
-    15.8,
-    9.8,
-    4.1,
-    1.0
+    -0.5,
+    1.3,
+    4.8,
+    10.2,
+    14.5,
+    19.6,
+    20.7,
+    20.7,
+    16.0,
+    10.1,
+    4.3,
+    1.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:ternopil": {
    "country": "UA",
@@ -168,20 +210,27 @@
    "lon": 25.59,
    "elevationM": 322.0,
    "monthlyTempC": [
-    -1.8,
-    0.2,
-    3.2,
-    9.0,
-    14.2,
+    -1.3,
+    0.4,
+    4.2,
+    9.7,
+    14.1,
     19.4,
     20.3,
-    20.8,
-    15.7,
-    9.4,
-    3.6,
-    0.2
+    20.3,
+    15.5,
+    9.5,
+    3.7,
+    0.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:chernivtsi": {
    "country": "UA",
@@ -194,20 +243,27 @@
    "lon": 25.94,
    "elevationM": 235.0,
    "monthlyTempC": [
-    -1.4,
-    0.9,
-    4.1,
-    10.0,
-    15.2,
-    20.1,
-    21.4,
+    -0.6,
+    1.3,
+    5.3,
+    10.9,
+    15.3,
+    20.5,
     21.7,
-    16.7,
-    10.2,
-    4.3,
-    0.7
+    21.7,
+    16.9,
+    10.7,
+    4.6,
+    1.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:khmelnytskyi": {
    "country": "UA",
@@ -220,20 +276,27 @@
    "lon": 26.99,
    "elevationM": 296.0,
    "monthlyTempC": [
-    -2.2,
-    -0.0,
-    3.1,
-    9.0,
-    14.3,
-    19.4,
-    20.3,
-    20.7,
-    15.7,
+    -1.9,
+    -0.1,
+    3.9,
+    9.6,
+    14.0,
+    19.3,
+    20.2,
+    20.2,
+    15.4,
     9.3,
     3.5,
     0.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:vinnytsia": {
    "country": "UA",
@@ -246,20 +309,27 @@
    "lon": 28.47,
    "elevationM": 257.0,
    "monthlyTempC": [
-    -2.2,
+    -1.9,
     0.0,
-    3.5,
-    9.4,
+    4.3,
+    10.1,
     14.5,
     19.9,
+    21.0,
     20.9,
-    21.1,
-    16.1,
+    15.9,
     9.6,
-    3.5,
-    0.2
+    3.6,
+    0.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:zhytomyr": {
    "country": "UA",
@@ -272,20 +342,27 @@
    "lon": 28.66,
    "elevationM": 224.0,
    "monthlyTempC": [
-    -2.3,
-    -0.4,
-    3.2,
+    -2.2,
+    -0.6,
+    3.8,
+    9.7,
+    14.2,
+    19.7,
+    20.5,
+    20.3,
+    15.4,
     9.2,
-    14.5,
-    20.0,
-    20.8,
-    21.0,
-    15.9,
-    9.4,
-    3.3,
-    0.1
+    3.2,
+    -0.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:chernihiv": {
    "country": "UA",
@@ -298,20 +375,27 @@
    "lon": 31.29,
    "elevationM": 133.0,
    "monthlyTempC": [
-    -3.5,
+    -3.2,
     -1.5,
-    2.7,
-    9.2,
-    14.9,
+    3.3,
+    9.6,
+    14.6,
+    20.0,
+    20.8,
     20.3,
-    21.0,
-    20.9,
-    15.6,
-    8.9,
+    15.1,
+    8.8,
     2.6,
     -0.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:sumy": {
    "country": "UA",
@@ -324,20 +408,27 @@
    "lon": 34.8,
    "elevationM": 143.0,
    "monthlyTempC": [
-    -4.2,
-    -2.6,
-    2.1,
-    9.3,
+    -3.8,
+    -2.5,
+    2.8,
+    9.9,
     14.8,
-    20.1,
-    21.1,
+    19.8,
     21.2,
-    15.7,
+    20.8,
+    15.2,
     8.8,
     2.3,
-    -1.1
+    -1.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:poltava": {
    "country": "UA",
@@ -350,20 +441,27 @@
    "lon": 34.55,
    "elevationM": 170.0,
    "monthlyTempC": [
-    -3.3,
-    -1.6,
+    -3.1,
+    -1.9,
+    3.3,
+    10.3,
+    15.3,
+    20.7,
+    22.1,
+    21.9,
+    16.1,
+    9.5,
     2.9,
-    9.9,
-    15.4,
-    21.0,
-    22.3,
-    22.5,
-    16.8,
-    9.7,
-    3.0,
-    -0.2
+    -0.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:cherkasy": {
    "country": "UA",
@@ -376,20 +474,27 @@
    "lon": 32.06,
    "elevationM": 111.0,
    "monthlyTempC": [
-    -2.2,
-    -0.4,
-    3.5,
-    10.2,
-    16.0,
-    21.3,
+    -2.0,
+    -0.5,
+    4.2,
+    10.8,
+    15.8,
+    21.2,
     22.4,
-    22.6,
-    17.2,
-    10.4,
-    4.0,
-    0.6
+    22.2,
+    16.7,
+    10.2,
+    3.9,
+    0.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:kirovohrad": {
    "country": "UA",
@@ -402,20 +507,27 @@
    "lon": 32.26,
    "elevationM": 113.0,
    "monthlyTempC": [
-    -2.2,
+    -1.9,
     -0.1,
-    3.7,
-    10.3,
-    15.9,
-    21.3,
-    22.7,
+    4.5,
+    10.9,
+    16.0,
+    21.5,
+    23.0,
     22.9,
-    17.5,
-    10.4,
-    4.0,
-    0.7
+    17.3,
+    10.6,
+    4.1,
+    0.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:kharkiv": {
    "country": "UA",
@@ -428,20 +540,27 @@
    "lon": 36.23,
    "elevationM": 121.0,
    "monthlyTempC": [
-    -3.8,
+    -3.3,
     -2.0,
-    2.5,
-    9.9,
-    15.3,
-    21.0,
+    3.2,
+    10.6,
+    15.4,
+    20.7,
     22.4,
-    22.5,
-    16.7,
-    9.4,
-    2.6,
+    22.0,
+    16.1,
+    9.5,
+    2.8,
     -0.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:dnipro": {
    "country": "UA",
@@ -454,20 +573,27 @@
    "lon": 35.05,
    "elevationM": 70.0,
    "monthlyTempC": [
-    -2.3,
-    -0.3,
-    3.8,
-    10.7,
-    16.3,
-    22.0,
-    23.5,
-    23.6,
-    18.0,
-    10.8,
+    -2.0,
+    -0.6,
     4.3,
-    0.9
+    11.2,
+    16.2,
+    21.6,
+    23.5,
+    23.4,
+    17.4,
+    10.7,
+    4.2,
+    0.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:zaporizhzhia": {
    "country": "UA",
@@ -480,20 +606,27 @@
    "lon": 35.14,
    "elevationM": 88.0,
    "monthlyTempC": [
-    -1.5,
-    0.5,
-    4.3,
-    11.1,
-    16.6,
-    22.2,
-    24.0,
-    24.3,
-    18.6,
-    11.4,
-    4.9,
-    1.5
+    -0.7,
+    0.3,
+    4.5,
+    10.7,
+    15.9,
+    21.5,
+    23.8,
+    23.9,
+    18.1,
+    11.5,
+    5.2,
+    1.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:mykolaiv": {
    "country": "UA",
@@ -506,20 +639,27 @@
    "lon": 31.99,
    "elevationM": 3.0,
    "monthlyTempC": [
-    -0.7,
-    1.8,
-    5.1,
-    11.1,
-    16.9,
+    -0.2,
+    1.6,
+    5.6,
+    11.5,
+    16.7,
     22.4,
-    24.5,
-    24.6,
-    19.1,
-    12.2,
-    5.8,
+    24.8,
+    24.8,
+    18.9,
+    12.3,
+    5.9,
     2.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:odesa": {
    "country": "UA",
@@ -533,19 +673,26 @@
    "elevationM": 63.0,
    "monthlyTempC": [
     0.3,
-    2.6,
-    5.1,
-    10.5,
+    2.1,
+    5.5,
+    10.8,
     16.2,
-    21.9,
-    24.2,
-    24.4,
-    19.4,
-    13.0,
-    7.2,
-    3.4
+    22.2,
+    24.6,
+    24.5,
+    19.0,
+    12.6,
+    6.8,
+    3.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "UA:kherson": {
    "country": "UA",
@@ -558,20 +705,27 @@
    "lon": 32.62,
    "elevationM": 54.0,
    "monthlyTempC": [
-    -0.1,
-    2.0,
-    5.3,
-    11.3,
-    16.9,
-    22.4,
+    -0.3,
+    1.3,
+    5.4,
+    11.2,
+    16.3,
+    22.2,
     24.7,
-    24.9,
-    19.4,
-    12.4,
-    6.3,
-    3.0
+    24.6,
+    18.6,
+    12.0,
+    5.8,
+    2.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:wielkopolskie": {
    "country": "PL",
@@ -584,20 +738,27 @@
    "lon": 16.93,
    "elevationM": 69.0,
    "monthlyTempC": [
-    0.8,
+    1.0,
     2.3,
-    4.8,
-    9.1,
-    14.2,
-    19.2,
-    20.0,
-    20.6,
-    15.9,
-    10.6,
-    5.4,
-    2.6
+    5.0,
+    9.4,
+    14.0,
+    19.1,
+    19.6,
+    19.7,
+    15.5,
+    10.4,
+    5.0,
+    2.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:mazowieckie": {
    "country": "PL",
@@ -610,20 +771,27 @@
    "lon": 21.01,
    "elevationM": 113.0,
    "monthlyTempC": [
-    -0.3,
-    1.5,
-    4.2,
-    9.1,
-    14.4,
-    19.5,
-    20.3,
-    20.4,
-    15.6,
-    10.1,
-    4.8,
-    1.8
+    -0.2,
+    1.3,
+    4.4,
+    9.3,
+    14.1,
+    19.3,
+    19.9,
+    19.7,
+    15.2,
+    9.7,
+    4.4,
+    1.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:podlaskie": {
    "country": "PL",
@@ -636,20 +804,27 @@
    "lon": 23.16,
    "elevationM": 144.0,
    "monthlyTempC": [
-    -1.8,
-    0.2,
-    3.2,
-    8.1,
-    13.6,
-    18.7,
-    19.4,
-    19.7,
-    14.8,
-    9.0,
-    3.8,
-    0.7
+    -1.5,
+    0.0,
+    3.4,
+    8.5,
+    13.4,
+    18.5,
+    19.2,
+    19.0,
+    14.4,
+    8.7,
+    3.5,
+    0.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:lodzkie": {
    "country": "PL",
@@ -662,20 +837,27 @@
    "lon": 19.46,
    "elevationM": 215.0,
    "monthlyTempC": [
-    -0.6,
+    -0.3,
     1.3,
-    4.0,
-    8.6,
-    13.7,
-    18.8,
-    19.8,
-    20.1,
-    15.3,
-    9.9,
-    4.6,
-    1.6
+    4.3,
+    9.0,
+    13.4,
+    18.7,
+    19.4,
+    19.3,
+    14.9,
+    9.7,
+    4.3,
+    1.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:kujawsko-pomorskie": {
    "country": "PL",
@@ -688,20 +870,27 @@
    "lon": 18.01,
    "elevationM": 37.0,
    "monthlyTempC": [
-    0.4,
-    1.7,
-    4.3,
-    8.7,
-    14.0,
-    18.9,
+    0.9,
+    2.0,
+    4.8,
+    9.2,
+    13.8,
+    18.8,
     19.4,
-    20.0,
-    15.6,
-    10.2,
-    5.1,
+    19.4,
+    15.4,
+    10.3,
+    5.0,
     2.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:lubelskie": {
    "country": "PL",
@@ -714,20 +903,27 @@
    "lon": 22.57,
    "elevationM": 178.0,
    "monthlyTempC": [
-    -1.1,
-    1.2,
-    3.8,
-    8.9,
-    13.9,
-    19.0,
+    -0.6,
+    1.3,
+    4.5,
+    9.5,
+    14.0,
+    19.2,
     20.0,
-    20.2,
-    15.3,
+    19.8,
+    15.2,
     9.8,
     4.4,
-    1.2
+    1.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:podkarpackie": {
    "country": "PL",
@@ -740,20 +936,27 @@
    "lon": 22.0,
    "elevationM": 207.0,
    "monthlyTempC": [
-    -0.9,
-    1.5,
-    4.3,
-    9.3,
-    14.0,
-    19.1,
-    20.3,
+    -0.1,
+    2.1,
+    5.4,
+    10.2,
+    14.4,
+    19.7,
+    20.6,
     20.4,
-    15.6,
-    10.4,
-    4.9,
-    1.3
+    15.8,
+    10.7,
+    5.3,
+    1.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:dolnoslaskie": {
    "country": "PL",
@@ -766,20 +969,27 @@
    "lon": 17.03,
    "elevationM": 132.0,
    "monthlyTempC": [
-    1.0,
-    2.7,
-    5.3,
-    9.5,
-    14.4,
-    19.5,
-    20.4,
-    20.7,
-    16.1,
-    11.1,
+    1.3,
+    2.9,
     5.7,
-    2.8
+    9.9,
+    14.1,
+    19.3,
+    19.9,
+    19.9,
+    15.7,
+    11.0,
+    5.5,
+    2.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "PL:pomorskie": {
    "country": "PL",
@@ -792,20 +1002,27 @@
    "lon": 18.65,
    "elevationM": 15.0,
    "monthlyTempC": [
-    0.9,
-    1.8,
-    4.0,
-    7.7,
-    12.8,
-    17.5,
-    18.7,
-    19.4,
-    15.6,
-    10.5,
-    5.7,
-    2.7
+    0.8,
+    1.5,
+    4.2,
+    8.3,
+    13.0,
+    17.8,
+    18.8,
+    18.9,
+    15.2,
+    10.2,
+    5.1,
+    2.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:praha": {
    "country": "CZ",
@@ -818,20 +1035,27 @@
    "lon": 14.44,
    "elevationM": 251.0,
    "monthlyTempC": [
-    0.9,
-    2.6,
-    5.3,
-    9.6,
-    14.4,
-    19.6,
-    21.0,
-    20.8,
+    1.3,
+    3.1,
+    5.9,
+    10.0,
+    14.3,
+    19.5,
+    20.4,
+    20.4,
     16.0,
-    10.9,
+    11.0,
     5.2,
-    2.6
+    2.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:vysocina": {
    "country": "CZ",
@@ -844,20 +1068,27 @@
    "lon": 15.59,
    "elevationM": 518.0,
    "monthlyTempC": [
-    -1.3,
-    0.8,
-    3.5,
-    7.5,
-    12.1,
-    17.1,
+    -0.8,
+    1.3,
+    4.4,
+    8.4,
+    12.6,
+    17.8,
     18.6,
-    18.7,
-    14.0,
-    9.2,
+    18.6,
+    14.3,
+    9.4,
     3.7,
-    0.7
+    0.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:jihomoravsky": {
    "country": "CZ",
@@ -870,20 +1101,27 @@
    "lon": 16.61,
    "elevationM": 217.0,
    "monthlyTempC": [
-    -0.0,
-    2.5,
-    5.3,
-    9.9,
-    14.6,
-    19.9,
-    21.5,
-    21.4,
-    16.2,
-    10.8,
-    5.2,
-    1.5
+    0.6,
+    3.1,
+    6.3,
+    10.5,
+    14.8,
+    20.1,
+    21.1,
+    21.1,
+    16.5,
+    11.2,
+    5.5,
+    2.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:jihocesky": {
    "country": "CZ",
@@ -896,20 +1134,27 @@
    "lon": 14.47,
    "elevationM": 382.0,
    "monthlyTempC": [
-    0.1,
-    2.1,
-    4.7,
-    8.7,
-    13.0,
-    18.1,
-    19.6,
-    19.5,
-    14.9,
-    10.3,
-    4.6,
-    1.8
+    0.9,
+    3.0,
+    5.8,
+    9.9,
+    13.9,
+    19.2,
+    20.0,
+    19.8,
+    15.5,
+    10.6,
+    4.8,
+    2.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:olomoucky": {
    "country": "CZ",
@@ -922,20 +1167,27 @@
    "lon": 17.25,
    "elevationM": 220.0,
    "monthlyTempC": [
-    -0.1,
-    2.2,
-    5.1,
-    9.6,
-    14.4,
-    19.5,
-    21.0,
-    21.2,
+    0.5,
+    2.8,
+    5.9,
+    10.2,
+    14.5,
+    19.8,
+    20.9,
+    20.8,
     16.2,
-    10.7,
-    5.2,
-    1.6
+    10.9,
+    5.3,
+    1.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CZ:plzensky": {
    "country": "CZ",
@@ -948,20 +1200,27 @@
    "lon": 13.37,
    "elevationM": 335.0,
    "monthlyTempC": [
-    0.5,
-    2.2,
-    4.8,
-    8.9,
-    13.7,
-    18.8,
-    20.2,
-    20.1,
+    0.9,
+    2.6,
+    5.4,
+    9.4,
+    13.8,
+    19.0,
+    19.9,
+    19.7,
     15.2,
-    10.2,
-    4.5,
+    10.3,
+    4.4,
     2.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SK:nitra": {
    "country": "SK",
@@ -974,20 +1233,27 @@
    "lon": 18.09,
    "elevationM": 142.0,
    "monthlyTempC": [
-    0.0,
-    3.2,
-    6.0,
-    10.7,
-    15.4,
-    20.7,
-    22.4,
-    22.1,
-    17.0,
-    11.6,
-    5.8,
-    1.7
+    0.7,
+    4.1,
+    7.3,
+    11.9,
+    16.2,
+    21.8,
+    23.0,
+    22.7,
+    17.7,
+    12.1,
+    6.3,
+    2.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SK:bratislava": {
    "country": "SK",
@@ -1000,20 +1266,27 @@
    "lon": 17.11,
    "elevationM": 159.0,
    "monthlyTempC": [
-    0.9,
-    3.6,
-    6.5,
-    11.0,
-    15.6,
-    20.9,
-    22.8,
-    22.4,
-    17.2,
-    11.9,
-    6.2,
-    2.3
+    1.3,
+    4.1,
+    7.3,
+    11.6,
+    15.7,
+    21.3,
+    22.5,
+    22.2,
+    17.3,
+    12.0,
+    6.1,
+    2.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SK:zilina": {
    "country": "SK",
@@ -1026,20 +1299,27 @@
    "lon": 18.74,
    "elevationM": 357.0,
    "monthlyTempC": [
-    -1.2,
-    1.4,
-    4.3,
-    8.6,
-    13.3,
-    18.3,
-    19.5,
-    19.7,
-    15.0,
-    9.9,
-    4.7,
-    0.9
+    -0.3,
+    2.6,
+    5.5,
+    9.6,
+    13.7,
+    19.0,
+    19.8,
+    19.8,
+    15.5,
+    10.2,
+    5.1,
+    1.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SK:banska-bystrica": {
    "country": "SK",
@@ -1052,20 +1332,27 @@
    "lon": 19.15,
    "elevationM": 382.0,
    "monthlyTempC": [
-    -1.0,
-    1.4,
-    4.4,
-    8.9,
-    13.7,
-    18.8,
-    20.1,
-    20.3,
-    15.3,
+    -0.5,
+    2.2,
+    5.6,
     9.7,
-    4.5,
-    0.7
+    13.7,
+    19.1,
+    19.8,
+    19.9,
+    15.3,
+    9.9,
+    4.9,
+    1.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SK:kosice": {
    "country": "SK",
@@ -1078,20 +1365,27 @@
    "lon": 21.26,
    "elevationM": 214.0,
    "monthlyTempC": [
-    -1.3,
-    1.7,
-    4.9,
-    10.1,
-    15.0,
-    20.2,
-    21.6,
-    21.8,
-    16.5,
-    10.2,
-    4.5,
-    0.6
+    -0.4,
+    2.6,
+    6.1,
+    11.0,
+    15.1,
+    20.5,
+    21.3,
+    21.2,
+    16.4,
+    10.6,
+    5.2,
+    1.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:alfold": {
    "country": "HU",
@@ -1104,20 +1398,27 @@
    "lon": 19.69,
    "elevationM": 126.0,
    "monthlyTempC": [
-    0.8,
+    0.7,
     4.0,
-    6.9,
-    11.9,
-    16.7,
-    21.8,
-    23.6,
-    23.5,
-    18.0,
+    7.4,
     12.2,
-    6.4,
+    16.5,
+    22.0,
+    23.2,
+    23.0,
+    18.0,
+    12.1,
+    6.3,
     2.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:pest": {
    "country": "HU",
@@ -1130,20 +1431,27 @@
    "lon": 19.04,
    "elevationM": 114.0,
    "monthlyTempC": [
-    0.6,
-    3.7,
-    6.7,
-    11.6,
+    0.9,
+    4.0,
+    7.3,
+    12.1,
     16.3,
-    21.5,
-    23.4,
-    23.2,
-    17.7,
+    21.8,
+    23.0,
+    22.8,
+    17.8,
     11.9,
-    6.0,
-    2.0
+    6.1,
+    2.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:hajdu-bihar": {
    "country": "HU",
@@ -1156,20 +1464,27 @@
    "lon": 21.63,
    "elevationM": 127.0,
    "monthlyTempC": [
-    0.3,
-    3.4,
-    6.6,
-    11.8,
-    16.6,
-    21.6,
-    23.3,
-    23.5,
-    18.2,
-    12.1,
-    6.0,
-    2.2
+    0.5,
+    3.7,
+    7.4,
+    12.4,
+    16.7,
+    22.0,
+    23.2,
+    23.2,
+    18.1,
+    12.0,
+    6.3,
+    2.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:gyor": {
    "country": "HU",
@@ -1182,20 +1497,27 @@
    "lon": 17.63,
    "elevationM": 105.0,
    "monthlyTempC": [
-    1.3,
-    4.1,
-    6.9,
-    11.6,
-    16.1,
-    21.3,
-    23.2,
-    22.7,
-    17.7,
-    12.4,
-    6.7,
-    2.8
+    1.6,
+    4.5,
+    7.7,
+    12.3,
+    16.4,
+    22.0,
+    23.3,
+    22.8,
+    17.9,
+    12.5,
+    6.6,
+    3.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:csongrad": {
    "country": "HU",
@@ -1210,18 +1532,25 @@
    "monthlyTempC": [
     1.2,
     4.4,
-    7.3,
-    12.3,
-    17.2,
-    22.1,
-    24.1,
-    24.0,
+    7.8,
+    12.5,
+    16.9,
+    22.4,
+    23.9,
+    23.7,
     18.6,
-    12.8,
-    7.0,
+    12.6,
+    6.8,
     2.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "HU:baranya": {
    "country": "HU",
@@ -1234,20 +1563,27 @@
    "lon": 18.23,
    "elevationM": 130.0,
    "monthlyTempC": [
-    1.1,
-    4.2,
-    7.0,
-    11.6,
-    16.1,
-    21.1,
-    22.9,
-    22.8,
-    17.7,
+    1.5,
+    4.7,
+    8.0,
+    12.4,
+    16.6,
+    21.9,
+    23.2,
+    23.1,
+    18.0,
     12.5,
     6.8,
-    2.8
+    3.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:baragan": {
    "country": "RO",
@@ -1260,20 +1596,27 @@
    "lon": 27.33,
    "elevationM": 22.0,
    "monthlyTempC": [
-    1.2,
-    4.4,
-    7.2,
-    12.6,
-    17.4,
-    22.3,
-    24.9,
+    1.7,
+    4.2,
+    7.9,
+    12.7,
+    17.3,
+    22.9,
+    25.2,
     25.1,
-    20.1,
-    13.7,
+    20.2,
+    13.8,
     8.3,
     3.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:transilvania": {
    "country": "RO",
@@ -1286,20 +1629,27 @@
    "lon": 23.59,
    "elevationM": 348.0,
    "monthlyTempC": [
-    -0.8,
-    2.3,
-    5.0,
-    10.1,
-    14.9,
-    19.6,
-    21.2,
-    21.5,
-    16.4,
-    10.5,
-    5.0,
-    1.1
+    -0.1,
+    2.8,
+    6.2,
+    11.0,
+    15.0,
+    20.0,
+    21.1,
+    21.3,
+    16.5,
+    10.7,
+    5.7,
+    1.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:timis": {
    "country": "RO",
@@ -1312,20 +1662,27 @@
    "lon": 21.23,
    "elevationM": 95.0,
    "monthlyTempC": [
-    1.1,
-    4.4,
-    7.3,
-    12.3,
-    17.2,
-    22.0,
-    24.2,
-    24.3,
-    18.8,
-    12.9,
-    7.2,
-    3.2
+    1.4,
+    4.7,
+    8.1,
+    12.8,
+    17.0,
+    22.2,
+    23.7,
+    23.7,
+    18.7,
+    12.8,
+    7.4,
+    3.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:iasi": {
    "country": "RO",
@@ -1338,20 +1695,27 @@
    "lon": 27.59,
    "elevationM": 63.0,
    "monthlyTempC": [
-    -0.8,
-    2.0,
-    5.2,
-    10.9,
-    16.1,
-    21.1,
-    22.8,
-    22.9,
-    17.9,
-    11.5,
-    5.6,
-    1.9
+    0.1,
+    2.4,
+    6.6,
+    12.0,
+    16.6,
+    22.0,
+    23.5,
+    23.5,
+    18.4,
+    12.0,
+    6.2,
+    2.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:dolj": {
    "country": "RO",
@@ -1364,20 +1728,27 @@
    "lon": 23.8,
    "elevationM": 106.0,
    "monthlyTempC": [
-    0.3,
-    3.8,
-    7.0,
-    12.6,
-    17.5,
-    22.6,
-    25.2,
-    25.3,
-    20.0,
-    13.1,
-    7.2,
-    2.8
+    1.1,
+    4.6,
+    8.5,
+    13.8,
+    18.0,
+    23.6,
+    26.0,
+    26.1,
+    20.7,
+    13.6,
+    7.6,
+    3.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:brasov": {
    "country": "RO",
@@ -1390,20 +1761,27 @@
    "lon": 25.61,
    "elevationM": 569.0,
    "monthlyTempC": [
-    -2.1,
-    0.7,
-    3.6,
-    8.5,
-    13.2,
-    17.9,
-    19.6,
-    19.9,
-    15.1,
-    9.4,
-    4.4,
-    0.5
+    -1.2,
+    1.8,
+    5.3,
+    9.9,
+    14.0,
+    19.2,
+    20.4,
+    20.6,
+    15.8,
+    10.0,
+    5.5,
+    1.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RO:bucuresti": {
    "country": "RO",
@@ -1416,20 +1794,27 @@
    "lon": 26.1,
    "elevationM": 83.0,
    "monthlyTempC": [
-    -0.2,
+    0.5,
     3.4,
-    6.6,
-    12.1,
+    7.5,
+    12.6,
     17.1,
-    22.1,
-    24.6,
+    22.7,
     24.8,
-    19.6,
+    25.0,
+    19.8,
     13.0,
     7.2,
-    2.6
+    2.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MD:chisinau": {
    "country": "MD",
@@ -1443,20 +1828,27 @@
    "lon": 28.86,
    "elevationM": 48.0,
    "monthlyTempC": [
-    -0.8,
-    2.2,
-    5.3,
-    11.1,
-    16.4,
-    21.8,
-    23.5,
-    23.7,
-    18.4,
-    11.7,
-    5.6,
-    1.9
+    0.1,
+    2.4,
+    6.4,
+    11.8,
+    16.5,
+    22.1,
+    23.9,
+    23.9,
+    18.6,
+    12.1,
+    6.0,
+    2.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MD:balti": {
    "country": "MD",
@@ -1470,20 +1862,27 @@
    "lon": 27.93,
    "elevationM": 118.0,
    "monthlyTempC": [
-    -1.2,
-    1.6,
-    4.9,
-    10.8,
-    16.2,
-    21.3,
+    -0.5,
+    1.7,
+    5.8,
+    11.5,
+    16.1,
+    21.5,
     22.9,
-    23.1,
+    22.9,
     17.8,
-    11.0,
-    5.1,
-    1.3
+    11.4,
+    5.4,
+    1.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MD:cahul": {
    "country": "MD",
@@ -1497,20 +1896,27 @@
    "lon": 28.19,
    "elevationM": 40.0,
    "monthlyTempC": [
-    -0.3,
-    2.9,
-    6.0,
-    11.6,
-    16.9,
-    22.1,
-    24.1,
-    24.1,
-    19.0,
-    12.5,
-    6.6,
-    2.5
+    0.7,
+    3.2,
+    7.1,
+    12.2,
+    17.2,
+    22.7,
+    24.6,
+    24.6,
+    19.2,
+    12.7,
+    6.8,
+    2.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:danube": {
    "country": "BG",
@@ -1523,20 +1929,27 @@
    "lon": 24.62,
    "elevationM": 97.0,
    "monthlyTempC": [
-    1.1,
-    4.7,
-    7.4,
-    12.7,
-    17.4,
-    21.9,
-    24.9,
+    1.5,
+    4.9,
+    8.6,
+    13.5,
+    17.7,
+    23.0,
+    25.3,
     25.1,
-    20.2,
-    13.6,
-    7.9,
+    20.4,
+    13.8,
+    8.0,
     3.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:plovdiv": {
    "country": "BG",
@@ -1549,20 +1962,27 @@
    "lon": 24.75,
    "elevationM": 167.0,
    "monthlyTempC": [
-    2.7,
-    5.6,
-    8.1,
-    13.0,
-    17.8,
-    22.7,
-    25.8,
-    25.8,
-    20.9,
-    14.7,
-    9.0,
-    4.6
+    2.9,
+    5.8,
+    9.2,
+    13.8,
+    18.2,
+    23.8,
+    26.4,
+    26.2,
+    21.2,
+    14.6,
+    9.2,
+    5.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:sofia": {
    "country": "BG",
@@ -1575,20 +1995,27 @@
    "lon": 23.32,
    "elevationM": 548.0,
    "monthlyTempC": [
-    0.1,
-    3.3,
-    5.8,
-    10.8,
-    15.3,
-    19.7,
+    0.9,
+    4.3,
+    7.4,
+    11.6,
+    15.5,
+    20.4,
     22.5,
-    22.5,
-    18.0,
-    12.2,
-    6.7,
-    2.4
+    22.2,
+    17.9,
+    12.3,
+    7.3,
+    3.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:dobrich": {
    "country": "BG",
@@ -1601,20 +2028,27 @@
    "lon": 27.83,
    "elevationM": 220.0,
    "monthlyTempC": [
-    1.5,
+    2.1,
     4.2,
-    6.2,
-    11.0,
+    7.1,
+    11.1,
     15.7,
-    20.7,
-    23.1,
-    23.4,
-    19.0,
-    13.2,
-    8.3,
-    4.1
+    21.1,
+    23.5,
+    23.7,
+    19.2,
+    13.4,
+    8.4,
+    4.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:stara-zagora": {
    "country": "BG",
@@ -1627,20 +2061,27 @@
    "lon": 25.64,
    "elevationM": 202.0,
    "monthlyTempC": [
-    1.8,
-    4.7,
-    7.2,
-    12.1,
-    16.9,
-    21.7,
-    24.7,
-    24.9,
-    20.2,
-    13.7,
-    8.5,
-    3.8
+    3.0,
+    5.6,
+    8.8,
+    13.1,
+    17.4,
+    22.7,
+    25.3,
+    25.3,
+    20.8,
+    14.6,
+    9.4,
+    5.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BG:ruse": {
    "country": "BG",
@@ -1653,20 +2094,27 @@
    "lon": 25.97,
    "elevationM": 45.0,
    "monthlyTempC": [
-    1.0,
-    4.3,
-    7.4,
-    12.7,
-    17.5,
-    22.3,
-    25.1,
-    25.2,
-    20.3,
-    13.8,
-    8.2,
-    3.5
+    2.0,
+    4.8,
+    8.6,
+    13.3,
+    17.6,
+    23.2,
+    25.6,
+    25.7,
+    20.9,
+    14.2,
+    8.7,
+    4.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RS:vojvodina": {
    "country": "RS",
@@ -1679,20 +2127,27 @@
    "lon": 19.83,
    "elevationM": 78.0,
    "monthlyTempC": [
-    1.8,
-    5.2,
-    8.0,
-    12.7,
-    17.4,
-    22.3,
-    24.3,
-    24.3,
-    19.2,
+    1.9,
+    5.3,
+    8.6,
+    13.3,
+    17.5,
+    22.9,
+    24.4,
+    24.2,
+    19.3,
     13.6,
-    8.0,
-    3.8
+    7.9,
+    3.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RS:belgrade": {
    "country": "RS",
@@ -1705,20 +2160,27 @@
    "lon": 20.45,
    "elevationM": 145.0,
    "monthlyTempC": [
-    1.4,
-    5.0,
-    7.8,
-    12.7,
+    1.7,
+    5.3,
+    8.8,
+    13.3,
     17.4,
-    22.1,
-    24.1,
-    24.1,
-    19.2,
+    22.8,
+    24.3,
+    24.3,
+    19.4,
     13.6,
-    8.1,
-    3.7
+    8.2,
+    3.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RS:macva": {
    "country": "RS",
@@ -1731,20 +2193,27 @@
    "lon": 19.69,
    "elevationM": 80.0,
    "monthlyTempC": [
-    1.5,
-    5.1,
-    8.0,
-    12.7,
-    17.4,
-    22.2,
-    24.3,
-    24.2,
-    19.2,
-    13.6,
-    8.1,
-    3.7
+    2.0,
+    5.6,
+    9.1,
+    13.7,
+    17.9,
+    23.3,
+    24.9,
+    24.6,
+    19.7,
+    13.9,
+    8.4,
+    4.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RS:sumadija": {
    "country": "RS",
@@ -1757,20 +2226,27 @@
    "lon": 20.92,
    "elevationM": 175.0,
    "monthlyTempC": [
-    1.2,
-    5.0,
-    7.4,
-    12.2,
-    16.8,
-    21.5,
+    1.6,
+    5.3,
+    8.6,
+    13.0,
+    17.1,
+    22.2,
     23.9,
-    23.7,
-    18.7,
-    13.4,
-    7.8,
-    3.7
+    23.6,
+    19.0,
+    13.2,
+    8.0,
+    3.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "RS:nis": {
    "country": "RS",
@@ -1783,20 +2259,27 @@
    "lon": 21.9,
    "elevationM": 196.0,
    "monthlyTempC": [
-    0.4,
-    4.3,
-    6.8,
-    11.7,
-    16.4,
-    21.0,
-    23.5,
-    23.2,
-    18.5,
-    12.8,
-    7.3,
-    3.2
+    2.1,
+    5.9,
+    9.2,
+    13.5,
+    17.5,
+    22.9,
+    24.7,
+    24.2,
+    19.6,
+    13.7,
+    8.7,
+    4.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:thessaly": {
    "country": "GR",
@@ -1809,20 +2292,27 @@
    "lon": 22.42,
    "elevationM": 85.0,
    "monthlyTempC": [
-    4.5,
-    7.2,
-    10.1,
-    14.8,
-    19.9,
-    25.4,
-    28.4,
+    7.5,
+    9.8,
+    12.0,
+    15.7,
+    20.3,
+    25.8,
+    28.3,
     27.6,
-    22.5,
-    16.7,
-    11.9,
-    6.7
+    23.2,
+    18.0,
+    13.6,
+    9.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:central-macedonia": {
    "country": "GR",
@@ -1835,20 +2325,27 @@
    "lon": 22.94,
    "elevationM": 32.0,
    "monthlyTempC": [
-    5.4,
-    8.2,
-    10.5,
-    14.6,
-    19.5,
-    24.6,
-    27.3,
-    27.1,
-    22.5,
-    17.1,
-    12.4,
-    7.7
+    6.4,
+    9.4,
+    12.1,
+    16.0,
+    20.4,
+    25.6,
+    28.1,
+    27.8,
+    23.4,
+    17.7,
+    13.1,
+    8.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:serres": {
    "country": "GR",
@@ -1861,20 +2358,27 @@
    "lon": 23.55,
    "elevationM": 52.0,
    "monthlyTempC": [
-    5.2,
-    7.9,
-    10.2,
-    14.6,
-    19.3,
-    24.3,
-    27.3,
-    27.2,
-    22.5,
-    16.8,
-    11.7,
-    7.3
+    6.2,
+    9.0,
+    11.8,
+    15.9,
+    20.2,
+    25.6,
+    28.6,
+    28.3,
+    23.7,
+    17.6,
+    12.6,
+    8.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:western-greece": {
    "country": "GR",
@@ -1887,20 +2391,27 @@
    "lon": 21.73,
    "elevationM": 0.0,
    "monthlyTempC": [
-    10.2,
-    11.1,
-    12.4,
-    15.8,
-    19.8,
-    24.8,
-    28.3,
-    28.4,
-    24.2,
+    10.8,
+    11.7,
+    13.3,
+    16.4,
+    20.3,
+    25.6,
+    28.7,
+    28.6,
+    24.5,
     20.0,
-    15.9,
-    12.0
+    16.2,
+    12.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:attica": {
    "country": "GR",
@@ -1913,20 +2424,27 @@
    "lon": 23.73,
    "elevationM": 99.0,
    "monthlyTempC": [
-    8.6,
     10.0,
-    11.7,
-    15.8,
-    20.3,
-    25.2,
-    28.4,
-    27.9,
-    23.9,
-    18.9,
-    14.7,
-    10.7
+    11.2,
+    13.3,
+    16.7,
+    21.0,
+    26.4,
+    29.3,
+    28.6,
+    24.6,
+    19.7,
+    15.9,
+    12.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:epirus": {
    "country": "GR",
@@ -1939,20 +2457,27 @@
    "lon": 20.85,
    "elevationM": 509.0,
    "monthlyTempC": [
-    4.0,
-    6.0,
-    8.0,
-    12.2,
-    16.4,
-    21.1,
-    24.5,
-    24.0,
-    19.5,
-    14.6,
-    10.3,
-    6.0
+    5.4,
+    7.6,
+    9.6,
+    13.2,
+    17.0,
+    22.3,
+    25.4,
+    24.8,
+    20.2,
+    15.4,
+    11.2,
+    7.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GR:crete": {
    "country": "GR",
@@ -1965,20 +2490,27 @@
    "lon": 25.13,
    "elevationM": 17.0,
    "monthlyTempC": [
-    11.8,
-    12.4,
-    13.6,
-    16.8,
-    20.4,
-    24.6,
-    27.0,
-    26.9,
-    24.4,
-    20.6,
-    17.3,
-    13.6
+    13.0,
+    13.5,
+    15.0,
+    18.2,
+    22.2,
+    26.2,
+    28.2,
+    27.9,
+    25.3,
+    21.5,
+    18.3,
+    14.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:konya": {
    "country": "TR",
@@ -1991,20 +2523,27 @@
    "lon": 32.48,
    "elevationM": 1024.0,
    "monthlyTempC": [
-    0.8,
-    3.2,
-    6.8,
-    12.5,
-    16.9,
-    21.2,
-    25.0,
-    25.5,
-    20.9,
-    14.7,
-    8.3,
-    3.3
+    2.8,
+    4.8,
+    8.6,
+    13.9,
+    18.0,
+    22.3,
+    26.0,
+    26.2,
+    21.5,
+    15.6,
+    9.7,
+    5.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:ankara": {
    "country": "TR",
@@ -2017,20 +2556,27 @@
    "lon": 32.86,
    "elevationM": 870.0,
    "monthlyTempC": [
-    0.8,
-    3.7,
-    6.6,
-    11.9,
-    16.3,
-    20.4,
-    24.2,
-    25.1,
-    20.8,
-    14.4,
-    8.0,
-    3.2
+    2.4,
+    4.8,
+    7.9,
+    12.9,
+    17.0,
+    21.7,
+    25.3,
+    26.0,
+    20.9,
+    14.5,
+    8.4,
+    4.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:afyon": {
    "country": "TR",
@@ -2043,20 +2589,27 @@
    "lon": 30.54,
    "elevationM": 1017.0,
    "monthlyTempC": [
-    -0.1,
-    2.5,
-    5.4,
-    10.7,
-    15.0,
-    18.9,
-    22.9,
-    23.2,
-    19.2,
-    13.0,
-    7.1,
-    2.3
+    2.0,
+    4.3,
+    7.3,
+    12.4,
+    16.4,
+    20.7,
+    24.4,
+    24.5,
+    19.9,
+    13.9,
+    8.3,
+    4.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:aegean": {
    "country": "TR",
@@ -2069,20 +2622,27 @@
    "lon": 27.14,
    "elevationM": 13.0,
    "monthlyTempC": [
-    8.4,
-    10.1,
-    11.9,
-    16.3,
-    21.1,
-    25.9,
-    29.5,
-    29.4,
-    25.2,
-    19.6,
-    14.8,
-    10.2
+    9.3,
+    10.9,
+    13.1,
+    17.2,
+    21.6,
+    26.8,
+    29.9,
+    29.6,
+    25.4,
+    19.8,
+    15.2,
+    10.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:balikesir": {
    "country": "TR",
@@ -2095,20 +2655,27 @@
    "lon": 27.88,
    "elevationM": 148.0,
    "monthlyTempC": [
-    5.6,
-    7.4,
-    9.2,
-    13.6,
-    18.3,
-    22.8,
-    25.6,
-    25.8,
+    7.0,
+    8.4,
+    10.5,
+    14.3,
+    18.7,
+    23.5,
+    26.0,
+    25.9,
     22.1,
-    16.8,
-    12.2,
-    7.7
+    16.9,
+    12.9,
+    8.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:bursa": {
    "country": "TR",
@@ -2121,20 +2688,27 @@
    "lon": 29.06,
    "elevationM": 186.0,
    "monthlyTempC": [
-    5.0,
-    7.2,
-    8.9,
-    13.4,
-    17.6,
+    6.7,
+    8.1,
+    10.3,
+    14.1,
+    18.3,
+    23.0,
+    25.4,
+    25.7,
     22.0,
-    24.7,
-    25.1,
-    21.5,
-    16.1,
-    11.9,
-    7.7
+    16.9,
+    12.9,
+    9.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:thrace": {
    "country": "TR",
@@ -2147,20 +2721,27 @@
    "lon": 27.51,
    "elevationM": 80.0,
    "monthlyTempC": [
-    5.0,
-    6.8,
-    8.3,
-    12.3,
+    6.6,
+    7.6,
+    9.4,
+    12.9,
+    17.4,
+    22.9,
+    25.6,
+    25.8,
+    22.0,
     17.0,
-    22.2,
-    25.0,
-    25.3,
-    21.4,
-    16.0,
-    11.9,
-    7.5
+    13.1,
+    8.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:adana": {
    "country": "TR",
@@ -2173,20 +2754,27 @@
    "lon": 35.32,
    "elevationM": 29.0,
    "monthlyTempC": [
-    9.2,
-    10.8,
-    13.4,
-    17.7,
-    21.8,
-    25.7,
-    29.1,
-    29.6,
-    27.0,
-    22.5,
-    16.1,
-    11.3
+    10.1,
+    11.7,
+    14.9,
+    19.1,
+    22.9,
+    27.1,
+    30.1,
+    30.3,
+    27.7,
+    23.0,
+    16.8,
+    12.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:samsun": {
    "country": "TR",
@@ -2199,20 +2787,27 @@
    "lon": 36.33,
    "elevationM": 23.0,
    "monthlyTempC": [
-    7.1,
-    8.0,
-    9.0,
-    12.4,
-    16.1,
-    21.1,
-    23.7,
-    24.6,
-    21.3,
-    16.8,
-    12.7,
-    9.5
+    8.1,
+    8.6,
+    10.3,
+    13.4,
+    17.1,
+    22.0,
+    24.4,
+    25.1,
+    21.6,
+    17.4,
+    13.5,
+    10.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:erzurum": {
    "country": "TR",
@@ -2225,20 +2820,27 @@
    "lon": 41.27,
    "elevationM": 1924.0,
    "monthlyTempC": [
-    -5.9,
-    -4.2,
-    -0.2,
-    5.6,
-    10.0,
-    15.6,
-    19.0,
-    20.3,
-    15.7,
-    8.8,
-    2.0,
-    -3.5
+    -5.3,
+    -3.8,
+    1.4,
+    7.5,
+    11.7,
+    16.7,
+    20.0,
+    21.2,
+    16.2,
+    9.9,
+    3.3,
+    -2.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TR:sanliurfa": {
    "country": "TR",
@@ -2251,20 +2853,27 @@
    "lon": 38.79,
    "elevationM": 525.0,
    "monthlyTempC": [
-    5.4,
-    7.4,
-    11.1,
-    16.8,
-    22.3,
-    28.8,
-    32.6,
-    32.4,
-    28.0,
-    21.1,
+    6.7,
+    8.6,
     12.6,
-    7.6
+    17.9,
+    23.1,
+    29.6,
+    33.5,
+    33.3,
+    28.4,
+    21.6,
+    13.6,
+    8.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LT:kaunas": {
    "country": "LT",
@@ -2277,20 +2886,27 @@
    "lon": 23.89,
    "elevationM": 30.0,
    "monthlyTempC": [
-    -1.9,
+    -1.5,
     -0.2,
-    2.7,
-    7.6,
-    13.1,
-    18.3,
+    3.0,
+    8.1,
+    13.2,
+    18.2,
     19.1,
-    19.1,
-    14.7,
-    8.8,
-    4.1,
-    0.6
+    18.7,
+    14.5,
+    8.7,
+    3.8,
+    0.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LT:vilnius": {
    "country": "LT",
@@ -2303,20 +2919,27 @@
    "lon": 25.28,
    "elevationM": 95.0,
    "monthlyTempC": [
-    -3.0,
-    -1.1,
-    2.1,
-    7.1,
-    12.8,
-    18.0,
-    18.5,
-    18.7,
-    14.0,
+    -2.3,
+    -0.9,
+    2.7,
     7.9,
-    3.1,
-    -0.4
+    13.0,
+    18.1,
+    18.9,
+    18.5,
+    14.0,
+    8.2,
+    3.2,
+    -0.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LT:siauliai": {
    "country": "LT",
@@ -2329,20 +2952,27 @@
    "lon": 23.32,
    "elevationM": 128.0,
    "monthlyTempC": [
-    -2.5,
-    -0.9,
-    1.9,
-    6.6,
-    12.3,
-    17.3,
-    18.0,
-    18.0,
-    13.7,
-    7.9,
-    3.3,
-    -0.2
+    -2.1,
+    -1.0,
+    2.0,
+    6.8,
+    12.0,
+    16.8,
+    17.8,
+    17.4,
+    13.4,
+    7.8,
+    3.1,
+    -0.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LT:panevezys": {
    "country": "LT",
@@ -2355,20 +2985,27 @@
    "lon": 24.36,
    "elevationM": 61.0,
    "monthlyTempC": [
-    -2.3,
-    -0.5,
-    2.4,
-    7.3,
-    12.8,
-    17.9,
-    18.6,
-    18.6,
-    14.2,
+    -1.9,
+    -0.7,
+    2.5,
+    7.6,
+    12.7,
+    17.7,
+    18.7,
+    18.1,
+    14.0,
     8.2,
-    3.6,
+    3.4,
     0.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LT:klaipeda": {
    "country": "LT",
@@ -2382,19 +3019,26 @@
    "elevationM": 9.0,
    "monthlyTempC": [
     0.1,
-    1.0,
-    2.8,
-    7.0,
-    12.5,
-    17.2,
-    18.5,
-    18.9,
-    15.1,
-    9.9,
-    5.5,
-    2.4
+    0.6,
+    3.0,
+    7.4,
+    12.6,
+    17.4,
+    18.6,
+    18.4,
+    14.7,
+    9.5,
+    4.9,
+    1.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LV:zemgale": {
    "country": "LV",
@@ -2407,20 +3051,27 @@
    "lon": 23.72,
    "elevationM": 8.0,
    "monthlyTempC": [
-    -2.0,
-    -0.5,
-    2.2,
-    6.8,
-    12.5,
-    17.5,
-    18.4,
-    18.2,
+    -1.6,
+    -0.7,
+    2.4,
+    7.1,
+    12.4,
+    17.4,
+    18.6,
+    18.0,
     14.1,
-    8.2,
+    8.4,
     3.7,
-    0.3
+    0.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LV:riga": {
    "country": "LV",
@@ -2433,20 +3084,27 @@
    "lon": 24.11,
    "elevationM": 18.0,
    "monthlyTempC": [
-    -2.1,
+    -1.3,
     -0.7,
-    1.9,
-    6.6,
-    12.4,
-    17.5,
-    18.5,
-    18.3,
-    14.1,
-    8.2,
-    3.6,
-    0.3
+    2.0,
+    6.4,
+    11.8,
+    17.1,
+    18.7,
+    18.2,
+    14.4,
+    8.8,
+    4.1,
+    0.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LV:vidzeme": {
    "country": "LV",
@@ -2459,20 +3117,27 @@
    "lon": 25.43,
    "elevationM": 43.0,
    "monthlyTempC": [
-    -3.1,
+    -2.6,
     -1.9,
-    1.0,
-    6.0,
+    1.4,
+    6.5,
     11.8,
-    16.9,
-    17.8,
-    17.5,
+    16.8,
+    18.1,
+    17.3,
     13.2,
-    7.2,
+    7.4,
     2.8,
-    -0.6
+    -0.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LV:latgale": {
    "country": "LV",
@@ -2485,20 +3150,27 @@
    "lon": 27.33,
    "elevationM": 155.0,
    "monthlyTempC": [
-    -4.0,
-    -2.6,
-    0.8,
-    6.1,
+    -3.5,
+    -2.4,
+    1.4,
+    6.8,
     12.0,
+    17.1,
+    18.1,
     17.2,
-    17.9,
-    17.7,
-    13.0,
-    6.7,
-    2.1,
-    -1.3
+    12.8,
+    6.8,
+    2.0,
+    -1.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "LV:kurzeme": {
    "country": "LV",
@@ -2511,20 +3183,27 @@
    "lon": 21.01,
    "elevationM": 5.0,
    "monthlyTempC": [
-    0.0,
-    0.8,
-    2.5,
-    6.5,
-    11.9,
-    16.6,
+    0.6,
+    0.9,
+    2.7,
+    6.3,
+    11.2,
+    16.1,
+    18.1,
     18.2,
-    18.5,
-    14.8,
-    9.6,
-    5.3,
-    2.1
+    14.9,
+    9.9,
+    5.5,
+    2.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "EE:tartu": {
    "country": "EE",
@@ -2537,20 +3216,27 @@
    "lon": 26.72,
    "elevationM": 48.0,
    "monthlyTempC": [
-    -3.6,
-    -2.3,
-    0.4,
-    5.4,
-    11.6,
-    16.9,
-    17.9,
-    17.4,
+    -3.4,
+    -2.4,
+    0.8,
+    5.8,
+    11.7,
+    16.8,
+    18.3,
+    17.1,
     12.9,
-    6.7,
+    6.9,
     2.3,
     -1.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "EE:harju": {
    "country": "EE",
@@ -2563,20 +3249,27 @@
    "lon": 24.75,
    "elevationM": 11.0,
    "monthlyTempC": [
-    -2.7,
-    -1.7,
-    0.4,
-    4.6,
-    10.8,
-    16.1,
-    17.6,
-    17.2,
-    13.0,
-    7.2,
-    2.9,
-    -0.4
+    -2.1,
+    -1.6,
+    0.8,
+    4.8,
+    10.5,
+    15.8,
+    18.0,
+    17.3,
+    13.3,
+    7.8,
+    3.6,
+    0.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "EE:parnu": {
    "country": "EE",
@@ -2590,19 +3283,26 @@
    "elevationM": 4.0,
    "monthlyTempC": [
     -2.4,
-    -1.5,
-    0.6,
-    5.4,
-    11.7,
-    16.7,
-    18.1,
-    17.7,
-    13.5,
-    7.6,
-    3.3,
-    0.0
+    -1.7,
+    1.1,
+    6.0,
+    11.8,
+    16.8,
+    18.2,
+    17.2,
+    13.1,
+    7.4,
+    3.0,
+    -0.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "EE:viljandi": {
    "country": "EE",
@@ -2615,20 +3315,27 @@
    "lon": 25.59,
    "elevationM": 69.0,
    "monthlyTempC": [
-    -3.5,
-    -2.4,
-    0.1,
-    5.1,
-    11.3,
+    -3.1,
+    -2.3,
+    0.7,
+    5.8,
+    11.5,
     16.4,
-    17.5,
-    16.9,
-    12.6,
-    6.6,
-    2.2,
-    -1.2
+    17.8,
+    16.8,
+    12.8,
+    6.9,
+    2.4,
+    -0.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "EE:laane-viru": {
    "country": "EE",
@@ -2641,20 +3348,27 @@
    "lon": 26.36,
    "elevationM": 78.0,
    "monthlyTempC": [
-    -3.8,
-    -2.6,
-    -0.3,
-    4.3,
-    10.7,
+    -3.7,
+    -2.8,
+    0.2,
+    4.9,
+    10.9,
     16.0,
-    17.3,
-    16.8,
+    17.7,
+    16.5,
     12.4,
-    6.3,
+    6.5,
     2.0,
-    -1.5
+    -1.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DK:jutland": {
    "country": "DK",
@@ -2668,19 +3382,26 @@
    "elevationM": 58.0,
    "monthlyTempC": [
     2.3,
-    2.7,
+    2.6,
     3.9,
-    6.9,
-    11.5,
-    15.1,
-    16.0,
-    16.5,
-    14.0,
-    10.1,
-    5.9,
-    3.9
+    7.1,
+    11.6,
+    15.2,
+    16.2,
+    16.2,
+    13.9,
+    9.9,
+    5.6,
+    3.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DK:south-jutland": {
    "country": "DK",
@@ -2693,20 +3414,27 @@
    "lon": 9.42,
    "elevationM": 4.0,
    "monthlyTempC": [
-    2.7,
-    3.2,
-    4.5,
-    7.4,
-    12.1,
-    16.0,
-    17.0,
+    2.9,
+    3.3,
+    4.9,
+    7.9,
+    12.4,
+    16.3,
+    17.3,
     17.5,
-    14.8,
+    14.9,
     10.9,
-    6.4,
-    4.3
+    6.3,
+    4.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DK:north-jutland": {
    "country": "DK",
@@ -2719,20 +3447,27 @@
    "lon": 9.92,
    "elevationM": 6.0,
    "monthlyTempC": [
-    2.1,
+    2.2,
     2.6,
-    3.8,
-    7.1,
-    11.8,
-    15.7,
+    4.0,
+    7.4,
+    12.0,
+    15.8,
+    17.0,
     16.6,
-    16.7,
-    14.3,
-    10.1,
-    6.1,
+    14.2,
+    10.0,
+    5.8,
     3.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DK:funen": {
    "country": "DK",
@@ -2745,20 +3480,27 @@
    "lon": 10.39,
    "elevationM": 18.0,
    "monthlyTempC": [
-    2.5,
-    3.0,
-    4.3,
-    7.3,
-    12.0,
-    16.1,
-    17.1,
+    2.6,
+    3.1,
+    4.5,
+    7.8,
+    12.6,
+    16.6,
     17.5,
+    17.6,
     14.8,
-    10.8,
-    6.5,
-    4.2
+    10.6,
+    6.1,
+    4.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DK:zealand": {
    "country": "DK",
@@ -2771,20 +3513,27 @@
    "lon": 12.08,
    "elevationM": 45.0,
    "monthlyTempC": [
-    1.9,
+    2.0,
     2.4,
-    3.8,
-    7.1,
-    12.0,
+    3.9,
+    7.3,
+    12.2,
     16.4,
     17.3,
-    17.6,
-    14.6,
-    10.3,
-    6.0,
+    17.2,
+    14.5,
+    10.2,
+    5.7,
     3.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:skane": {
    "country": "SE",
@@ -2797,20 +3546,27 @@
    "lon": 14.16,
    "elevationM": 6.0,
    "monthlyTempC": [
-    1.5,
+    1.8,
     2.1,
-    3.6,
+    3.7,
     6.8,
-    11.7,
-    16.4,
-    17.6,
-    17.6,
-    14.5,
+    11.5,
+    16.2,
+    17.5,
+    17.3,
+    14.6,
     10.1,
     5.8,
-    3.2
+    3.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:halland": {
    "country": "SE",
@@ -2823,20 +3579,27 @@
    "lon": 12.86,
    "elevationM": 0.0,
    "monthlyTempC": [
-    1.4,
-    1.7,
-    3.2,
-    6.8,
-    12.2,
-    16.2,
-    17.2,
-    17.2,
-    14.4,
-    9.9,
-    5.7,
-    2.9
+    1.5,
+    1.8,
+    3.6,
+    7.5,
+    12.8,
+    16.8,
+    17.6,
+    17.0,
+    14.3,
+    9.7,
+    5.4,
+    3.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:vastra-gotaland": {
    "country": "SE",
@@ -2849,20 +3612,27 @@
    "lon": 13.44,
    "elevationM": 118.0,
    "monthlyTempC": [
-    -0.5,
     -0.2,
-    1.9,
-    5.7,
-    11.4,
+    0.1,
+    2.2,
+    5.8,
+    11.3,
     15.9,
-    16.6,
-    16.1,
-    12.9,
-    7.9,
-    3.6,
-    0.9
+    17.0,
+    16.0,
+    13.1,
+    8.2,
+    3.9,
+    1.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:ostergotland": {
    "country": "SE",
@@ -2876,19 +3646,26 @@
    "elevationM": 61.0,
    "monthlyTempC": [
     -0.6,
-    -0.0,
-    2.1,
-    5.7,
-    11.8,
-    16.7,
-    17.6,
-    17.0,
-    13.3,
-    8.2,
-    3.8,
-    1.0
+    -0.1,
+    2.3,
+    6.0,
+    11.9,
+    16.8,
+    17.8,
+    16.6,
+    13.1,
+    8.1,
+    3.6,
+    1.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:uppsala": {
    "country": "SE",
@@ -2901,20 +3678,27 @@
    "lon": 17.64,
    "elevationM": 14.0,
    "monthlyTempC": [
-    -1.9,
+    -1.7,
     -1.1,
-    1.1,
-    4.8,
-    11.0,
-    16.3,
-    17.5,
-    16.8,
+    1.5,
+    5.2,
+    11.2,
+    16.5,
+    17.7,
+    16.6,
     12.7,
-    7.2,
-    2.7,
-    -0.4
+    7.4,
+    2.8,
+    -0.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "SE:jamtland": {
    "country": "SE",
@@ -2927,20 +3711,27 @@
    "lon": 14.64,
    "elevationM": 320.0,
    "monthlyTempC": [
-    -5.8,
-    -5.0,
-    -2.6,
-    0.9,
-    7.6,
-    12.9,
-    14.2,
-    13.4,
-    9.4,
-    3.6,
+    -5.9,
+    -4.8,
+    -1.8,
+    2.3,
+    8.5,
+    13.6,
+    15.3,
+    13.6,
+    9.9,
+    4.1,
     -1.4,
-    -4.2
+    -4.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:ostrobothnia": {
    "country": "FI",
@@ -2954,20 +3745,27 @@
    "lon": 22.84,
    "elevationM": 48.0,
    "monthlyTempC": [
-    -5.2,
-    -4.1,
-    -1.7,
-    2.9,
-    9.7,
-    15.2,
-    16.8,
-    15.8,
-    11.1,
+    -5.3,
+    -4.3,
+    -1.2,
+    3.8,
+    10.2,
+    15.5,
+    17.3,
+    15.4,
+    10.8,
     4.7,
-    0.6,
-    -2.6
+    0.3,
+    -2.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:uusimaa": {
    "country": "FI",
@@ -2981,20 +3779,27 @@
    "lon": 24.94,
    "elevationM": 7.0,
    "monthlyTempC": [
-    -3.3,
-    -2.6,
-    -0.7,
-    3.8,
-    10.1,
-    15.6,
-    17.5,
-    17.0,
-    12.9,
-    7.0,
-    2.9,
-    -0.5
+    -3.5,
+    -2.8,
+    -0.2,
+    4.5,
+    11.1,
+    16.4,
+    18.2,
+    16.9,
+    12.6,
+    6.9,
+    2.6,
+    -0.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:varsinais-suomi": {
    "country": "FI",
@@ -3009,19 +3814,26 @@
    "elevationM": 13.0,
    "monthlyTempC": [
     -3.1,
-    -2.4,
-    -0.4,
-    4.1,
-    10.7,
-    16.0,
-    17.6,
-    16.8,
-    12.5,
-    6.7,
+    -2.6,
+    0.1,
+    4.6,
+    10.8,
+    16.1,
+    17.9,
+    16.6,
+    12.3,
+    6.8,
     2.7,
-    -0.6
+    -0.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:pirkanmaa": {
    "country": "FI",
@@ -3034,20 +3846,27 @@
    "lon": 23.76,
    "elevationM": 102.0,
    "monthlyTempC": [
-    -4.7,
-    -3.7,
-    -1.5,
-    3.1,
-    10.3,
-    15.8,
-    17.4,
-    16.4,
-    11.8,
+    -5.0,
+    -4.1,
+    -1.2,
+    3.5,
+    10.5,
+    15.7,
+    17.5,
+    15.9,
+    11.4,
     5.7,
-    1.5,
-    -1.8
+    1.4,
+    -2.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:north-savo": {
    "country": "FI",
@@ -3060,20 +3879,27 @@
    "lon": 27.68,
    "elevationM": 99.0,
    "monthlyTempC": [
-    -6.7,
-    -5.3,
-    -2.7,
-    1.5,
-    9.0,
-    15.2,
-    17.4,
-    16.3,
-    11.4,
-    5.0,
-    0.5,
-    -3.2
+    -7.6,
+    -6.4,
+    -2.8,
+    2.1,
+    9.5,
+    15.5,
+    17.7,
+    15.7,
+    10.7,
+    4.6,
+    -0.3,
+    -4.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FI:oulu": {
    "country": "FI",
@@ -3086,20 +3912,27 @@
    "lon": 25.47,
    "elevationM": 15.0,
    "monthlyTempC": [
-    -7.6,
-    -6.3,
+    -8.3,
+    -7.0,
     -3.5,
-    0.7,
-    7.8,
-    14.1,
-    16.8,
-    15.3,
-    10.6,
+    1.3,
+    8.4,
+    14.5,
+    17.3,
+    14.9,
+    10.3,
     3.8,
-    -0.7,
-    -4.1
+    -1.5,
+    -4.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:niedersachsen": {
    "country": "DE",
@@ -3112,20 +3945,27 @@
    "lon": 8.29,
    "elevationM": 39.0,
    "monthlyTempC": [
-    3.1,
-    4.0,
-    6.0,
-    9.0,
-    13.5,
-    17.5,
-    18.4,
-    18.9,
-    15.5,
+    3.2,
+    4.3,
+    6.3,
+    9.5,
+    13.8,
+    17.9,
+    18.5,
+    18.7,
+    15.4,
     11.5,
-    6.6,
-    4.8
+    6.5,
+    4.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:nrw": {
    "country": "DE",
@@ -3138,20 +3978,27 @@
    "lon": 7.63,
    "elevationM": 69.0,
    "monthlyTempC": [
-    3.2,
-    4.2,
-    6.2,
-    9.3,
-    13.9,
-    18.1,
-    19.0,
-    19.2,
-    15.6,
-    11.7,
+    3.4,
+    4.6,
     6.7,
-    4.9
+    9.8,
+    14.3,
+    18.5,
+    19.0,
+    19.1,
+    15.7,
+    11.8,
+    6.6,
+    4.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:schleswig-holstein": {
    "country": "DE",
@@ -3164,20 +4011,27 @@
    "lon": 9.66,
    "elevationM": 10.0,
    "monthlyTempC": [
-    2.8,
-    3.4,
-    4.9,
-    7.8,
-    12.5,
-    16.5,
-    17.4,
-    17.9,
+    2.9,
+    3.5,
+    5.2,
+    8.2,
+    12.7,
+    16.7,
+    17.5,
+    17.7,
     15.0,
     11.0,
-    6.4,
-    4.3
+    6.2,
+    4.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:mecklenburg": {
    "country": "DE",
@@ -3190,20 +4044,27 @@
    "lon": 13.26,
    "elevationM": 26.0,
    "monthlyTempC": [
-    1.7,
-    2.6,
-    4.6,
-    8.1,
-    13.3,
-    17.8,
+    2.0,
+    2.9,
+    5.1,
+    8.7,
+    13.4,
+    18.0,
     18.6,
-    19.3,
-    15.4,
+    18.8,
+    15.3,
     10.8,
-    5.8,
-    3.4
+    5.6,
+    3.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:brandenburg": {
    "country": "DE",
@@ -3217,19 +4078,26 @@
    "elevationM": 37.0,
    "monthlyTempC": [
     2.1,
-    3.2,
-    5.5,
-    9.4,
+    3.3,
+    5.7,
+    9.8,
     14.5,
-    19.2,
+    19.5,
+    19.8,
     19.9,
-    20.5,
-    16.3,
-    11.4,
-    6.1,
-    3.8
+    16.0,
+    11.2,
+    5.7,
+    3.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:sachsen": {
    "country": "DE",
@@ -3242,20 +4110,27 @@
    "lon": 12.37,
    "elevationM": 111.0,
    "monthlyTempC": [
-    2.1,
-    3.3,
-    5.5,
-    9.3,
+    2.5,
+    3.8,
+    6.0,
+    9.8,
     14.3,
-    19.2,
-    20.4,
-    20.7,
+    19.5,
+    20.2,
+    20.2,
     16.3,
-    11.5,
+    11.7,
     6.0,
     3.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:thueringen": {
    "country": "DE",
@@ -3268,20 +4143,27 @@
    "lon": 11.03,
    "elevationM": 195.0,
    "monthlyTempC": [
-    2.0,
-    3.1,
-    5.3,
-    9.0,
-    13.6,
-    18.4,
-    19.8,
-    20.0,
+    2.2,
+    3.3,
+    5.6,
+    9.3,
+    13.7,
+    18.8,
+    19.6,
+    19.7,
     15.6,
     11.1,
-    5.8,
-    3.7
+    5.5,
+    3.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:bayern": {
    "country": "DE",
@@ -3294,20 +4176,27 @@
    "lon": 12.15,
    "elevationM": 390.0,
    "monthlyTempC": [
-    0.6,
-    2.6,
-    5.5,
-    9.3,
-    13.6,
-    18.6,
-    20.1,
-    20.0,
-    15.2,
-    10.6,
-    4.8,
-    2.1
+    1.5,
+    3.8,
+    6.6,
+    10.5,
+    14.5,
+    19.7,
+    20.5,
+    20.3,
+    15.9,
+    11.2,
+    5.2,
+    2.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "DE:baden-wuerttemberg": {
    "country": "DE",
@@ -3320,20 +4209,27 @@
    "lon": 9.99,
    "elevationM": 485.0,
    "monthlyTempC": [
-    0.6,
-    2.3,
-    5.0,
-    8.5,
-    12.8,
-    17.7,
-    19.3,
-    19.1,
-    14.6,
-    10.2,
-    4.5,
-    1.9
+    1.2,
+    3.3,
+    5.7,
+    9.2,
+    13.2,
+    18.2,
+    19.2,
+    19.0,
+    14.8,
+    10.4,
+    4.6,
+    2.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:oberoesterreich": {
    "country": "AT",
@@ -3346,20 +4242,27 @@
    "lon": 14.29,
    "elevationM": 250.0,
    "monthlyTempC": [
-    1.0,
-    3.3,
-    6.0,
-    10.2,
-    14.6,
-    20.0,
+    2.0,
+    4.5,
+    7.2,
+    11.2,
+    15.3,
+    20.8,
+    21.6,
     21.4,
-    21.2,
-    16.4,
-    11.4,
-    5.6,
-    2.4
+    16.8,
+    11.9,
+    5.8,
+    3.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:niederoesterreich": {
    "country": "AT",
@@ -3372,20 +4275,27 @@
    "lon": 15.63,
    "elevationM": 273.0,
    "monthlyTempC": [
-    0.5,
-    3.0,
+    1.5,
+    4.0,
+    6.6,
+    10.7,
+    14.5,
+    20.1,
+    21.3,
+    21.0,
+    16.4,
+    11.3,
     5.5,
-    9.6,
-    13.9,
-    19.2,
-    20.7,
-    20.5,
-    15.7,
-    10.9,
-    5.2,
-    2.1
+    2.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:steiermark": {
    "country": "AT",
@@ -3398,20 +4308,27 @@
    "lon": 15.44,
    "elevationM": 363.0,
    "monthlyTempC": [
-    -0.0,
-    2.6,
-    5.5,
-    9.8,
-    14.0,
-    19.2,
-    20.8,
+    0.8,
+    3.8,
+    6.8,
+    11.1,
+    15.0,
     20.5,
-    15.7,
-    11.0,
-    5.0,
-    0.9
+    21.6,
+    21.1,
+    16.5,
+    11.4,
+    5.5,
+    1.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:burgenland": {
    "country": "AT",
@@ -3424,20 +4341,27 @@
    "lon": 16.52,
    "elevationM": 242.0,
    "monthlyTempC": [
-    1.1,
-    3.8,
-    6.4,
-    10.8,
-    15.2,
-    20.6,
-    22.6,
+    1.6,
+    4.4,
+    7.3,
+    11.4,
+    15.3,
+    21.0,
     22.1,
+    21.8,
     17.0,
-    11.9,
-    6.2,
-    2.5
+    12.1,
+    6.1,
+    2.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:kaernten": {
    "country": "AT",
@@ -3450,20 +4374,27 @@
    "lon": 14.31,
    "elevationM": 448.0,
    "monthlyTempC": [
-    -0.9,
-    1.5,
-    5.1,
-    9.5,
-    13.7,
-    19.0,
-    20.9,
-    20.4,
-    15.5,
-    10.9,
-    4.9,
-    0.5
+    1.3,
+    3.7,
+    7.1,
+    11.4,
+    15.2,
+    20.7,
+    21.8,
+    21.5,
+    17.0,
+    12.4,
+    6.6,
+    2.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AT:tirol": {
    "country": "AT",
@@ -3476,20 +4407,27 @@
    "lon": 11.39,
    "elevationM": 590.0,
    "monthlyTempC": [
-    0.6,
-    3.0,
-    5.9,
-    9.3,
-    13.5,
-    18.6,
-    20.1,
-    19.8,
-    15.6,
-    11.7,
-    6.0,
-    2.5
+    1.5,
+    4.1,
+    6.5,
+    10.0,
+    13.8,
+    19.3,
+    20.0,
+    20.0,
+    16.1,
+    12.3,
+    6.4,
+    3.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:lombardia": {
    "country": "IT",
@@ -3502,20 +4440,27 @@
    "lon": 10.02,
    "elevationM": 50.0,
    "monthlyTempC": [
-    3.0,
-    6.0,
-    9.4,
-    13.6,
-    17.7,
-    23.2,
+    4.3,
+    7.2,
+    10.4,
+    14.5,
+    18.6,
+    24.3,
     26.1,
-    25.4,
-    20.3,
-    15.0,
-    8.7,
-    4.0
+    25.7,
+    20.9,
+    15.6,
+    9.5,
+    5.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:emilia": {
    "country": "IT",
@@ -3528,20 +4473,27 @@
    "lon": 10.93,
    "elevationM": 36.0,
    "monthlyTempC": [
-    3.5,
-    6.0,
-    9.3,
-    13.4,
-    17.8,
-    23.5,
-    26.6,
-    25.8,
-    20.6,
-    15.3,
-    9.2,
-    4.5
+    4.0,
+    7.1,
+    10.4,
+    14.3,
+    18.6,
+    24.5,
+    26.7,
+    26.2,
+    21.2,
+    15.8,
+    9.6,
+    5.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:veneto": {
    "country": "IT",
@@ -3554,20 +4506,27 @@
    "lon": 10.99,
    "elevationM": 69.0,
    "monthlyTempC": [
-    3.5,
-    6.3,
-    9.5,
-    13.6,
-    17.7,
-    23.0,
-    25.8,
-    25.2,
-    20.1,
-    15.1,
-    8.9,
-    4.6
+    5.3,
+    7.6,
+    10.6,
+    14.5,
+    18.4,
+    24.0,
+    25.9,
+    25.6,
+    21.0,
+    16.0,
+    10.2,
+    6.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:piemonte": {
    "country": "IT",
@@ -3580,20 +4539,27 @@
    "lon": 7.55,
    "elevationM": 544.0,
    "monthlyTempC": [
-    2.5,
     4.2,
-    7.0,
-    11.1,
-    14.8,
-    19.9,
-    22.8,
-    22.1,
-    17.5,
-    12.6,
-    6.8,
-    2.9
+    6.3,
+    8.5,
+    11.9,
+    15.5,
+    20.6,
+    22.7,
+    22.2,
+    17.9,
+    13.6,
+    8.0,
+    4.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:lazio": {
    "country": "IT",
@@ -3607,19 +4573,26 @@
    "elevationM": 21.0,
    "monthlyTempC": [
     9.2,
-    10.3,
-    11.9,
-    14.6,
-    18.6,
-    23.5,
+    10.6,
+    12.2,
+    15.0,
+    18.8,
+    24.2,
     26.9,
     26.7,
-    22.7,
-    18.5,
-    14.3,
-    10.6
+    22.6,
+    18.4,
+    14.0,
+    10.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:campania": {
    "country": "IT",
@@ -3632,20 +4605,27 @@
    "lon": 14.33,
    "elevationM": 64.0,
    "monthlyTempC": [
-    7.5,
-    8.9,
-    10.5,
-    13.6,
-    17.5,
-    22.6,
+    9.5,
+    10.7,
+    11.8,
+    14.5,
+    18.1,
+    23.3,
     26.0,
-    25.8,
-    21.5,
-    17.2,
-    12.9,
-    9.0
+    26.1,
+    22.4,
+    18.5,
+    14.4,
+    11.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:puglia": {
    "country": "IT",
@@ -3658,20 +4638,27 @@
    "lon": 15.54,
    "elevationM": 82.0,
    "monthlyTempC": [
-    7.9,
-    9.4,
-    10.9,
-    14.6,
-    19.4,
-    25.1,
-    28.4,
-    27.4,
-    22.6,
-    17.9,
-    13.2,
-    9.3
+    8.7,
+    10.2,
+    11.9,
+    15.5,
+    19.9,
+    26.2,
+    28.5,
+    27.7,
+    23.1,
+    18.3,
+    13.6,
+    10.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:sicilia": {
    "country": "IT",
@@ -3684,20 +4671,27 @@
    "lon": 15.09,
    "elevationM": 3.0,
    "monthlyTempC": [
-    11.0,
     11.7,
-    13.2,
-    15.8,
-    19.7,
-    24.8,
-    28.1,
-    28.0,
-    24.5,
-    20.5,
-    16.4,
-    12.6
+    12.6,
+    14.1,
+    16.9,
+    21.0,
+    26.4,
+    29.6,
+    29.1,
+    25.7,
+    21.4,
+    17.1,
+    13.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IT:sardegna": {
    "country": "IT",
@@ -3710,20 +4704,27 @@
    "lon": 8.59,
    "elevationM": 11.0,
    "monthlyTempC": [
-    10.2,
-    10.7,
-    12.2,
-    14.8,
-    18.3,
+    11.6,
+    12.0,
+    13.2,
+    15.4,
+    18.5,
+    23.3,
+    25.9,
+    26.0,
     23.4,
-    26.5,
-    26.2,
-    23.0,
-    19.1,
-    14.7,
-    11.5
+    20.0,
+    15.8,
+    12.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:bretagne": {
    "country": "FR",
@@ -3736,20 +4737,27 @@
    "lon": -2.96,
    "elevationM": 80.0,
    "monthlyTempC": [
-    6.2,
-    6.8,
-    8.1,
-    10.2,
-    13.3,
-    16.5,
-    18.3,
-    18.1,
-    16.0,
-    12.9,
-    9.4,
-    7.8
+    6.3,
+    7.4,
+    8.7,
+    10.8,
+    13.9,
+    17.1,
+    18.6,
+    18.4,
+    16.2,
+    13.0,
+    9.3,
+    7.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:normandie": {
    "country": "FR",
@@ -3762,20 +4770,27 @@
    "lon": -0.37,
    "elevationM": 10.0,
    "monthlyTempC": [
-    5.8,
-    6.7,
-    8.2,
-    10.1,
-    13.3,
+    6.1,
+    7.2,
+    8.9,
+    11.0,
+    14.3,
+    17.8,
+    19.4,
+    19.1,
     16.7,
-    18.7,
-    18.7,
-    16.4,
-    13.2,
+    13.3,
     9.3,
-    7.4
+    7.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:pays-de-la-loire": {
    "country": "FR",
@@ -3789,19 +4804,26 @@
    "elevationM": 48.0,
    "monthlyTempC": [
     5.9,
-    6.9,
-    8.8,
-    11.4,
-    14.9,
-    18.9,
-    20.7,
-    20.6,
-    17.5,
-    13.7,
-    9.2,
-    7.3
+    7.2,
+    9.1,
+    11.7,
+    15.3,
+    19.2,
+    20.8,
+    20.5,
+    17.4,
+    13.6,
+    9.0,
+    7.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:hauts-de-france": {
    "country": "FR",
@@ -3814,20 +4836,27 @@
    "lon": 2.78,
    "elevationM": 79.0,
    "monthlyTempC": [
-    4.1,
-    5.4,
-    7.2,
-    9.5,
-    13.3,
-    17.2,
+    4.3,
+    5.8,
+    7.7,
+    10.1,
+    13.7,
+    17.4,
     18.8,
-    18.9,
+    18.8,
     16.0,
     12.4,
-    7.9,
-    5.9
+    7.7,
+    5.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:grand-est": {
    "country": "FR",
@@ -3840,20 +4869,27 @@
    "lon": 4.36,
    "elevationM": 85.0,
    "monthlyTempC": [
-    3.9,
-    5.5,
-    7.5,
-    10.4,
-    14.4,
-    18.8,
-    20.5,
+    4.2,
+    5.9,
+    8.0,
+    10.9,
+    14.9,
+    19.3,
     20.6,
-    16.8,
+    20.5,
+    16.9,
     12.7,
-    7.7,
-    5.6
+    7.6,
+    5.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:centre": {
    "country": "FR",
@@ -3866,20 +4902,27 @@
    "lon": 1.91,
    "elevationM": 117.0,
    "monthlyTempC": [
-    4.6,
-    5.9,
-    8.2,
-    11.0,
-    14.5,
-    18.8,
-    20.8,
-    20.6,
+    4.8,
+    6.2,
+    8.5,
+    11.2,
+    14.8,
+    19.2,
+    20.9,
+    20.5,
     17.1,
-    13.2,
-    8.3,
-    6.2
+    13.1,
+    8.0,
+    6.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:auvergne-rhone-alpes": {
    "country": "FR",
@@ -3892,20 +4935,27 @@
    "lon": 4.84,
    "elevationM": 161.0,
    "monthlyTempC": [
-    3.8,
-    5.6,
-    8.4,
-    11.8,
-    15.6,
-    20.7,
-    23.1,
-    22.6,
-    18.3,
-    13.6,
-    8.0,
-    5.1
+    5.3,
+    7.3,
+    9.8,
+    12.9,
+    16.6,
+    21.8,
+    23.5,
+    23.4,
+    18.9,
+    14.5,
+    8.9,
+    6.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:nouvelle-aquitaine": {
    "country": "FR",
@@ -3918,20 +4968,27 @@
    "lon": -0.58,
    "elevationM": 22.0,
    "monthlyTempC": [
-    6.6,
-    8.0,
-    10.2,
-    12.9,
-    16.1,
-    20.0,
-    22.0,
-    22.1,
-    19.1,
-    15.3,
-    10.5,
+    6.9,
+    8.8,
+    10.8,
+    13.4,
+    16.8,
+    20.6,
+    22.4,
+    22.4,
+    19.3,
+    15.4,
+    10.3,
     8.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "FR:occitanie": {
    "country": "FR",
@@ -3944,20 +5001,27 @@
    "lon": 1.44,
    "elevationM": 156.0,
    "monthlyTempC": [
-    5.5,
-    7.5,
-    9.8,
-    12.5,
+    6.5,
+    8.8,
+    10.7,
+    13.2,
+    16.7,
+    21.3,
+    23.6,
+    23.9,
+    19.9,
     16.0,
-    20.7,
-    23.3,
-    23.2,
-    19.5,
-    15.4,
-    10.1,
-    7.6
+    10.4,
+    8.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:cataluna": {
    "country": "ES",
@@ -3970,20 +5034,27 @@
    "lon": 0.62,
    "elevationM": 174.0,
    "monthlyTempC": [
-    5.4,
-    8.2,
-    11.6,
-    14.6,
-    19.2,
-    24.1,
-    27.5,
-    26.8,
-    21.7,
-    17.1,
-    10.7,
-    6.9
+    7.9,
+    10.5,
+    12.9,
+    15.8,
+    20.1,
+    25.3,
+    27.9,
+    27.7,
+    23.0,
+    18.5,
+    12.3,
+    8.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:aragon": {
    "country": "ES",
@@ -3996,20 +5067,27 @@
    "lon": -0.88,
    "elevationM": 224.0,
    "monthlyTempC": [
-    7.1,
-    9.1,
-    11.7,
-    14.5,
-    19.1,
-    23.8,
-    26.8,
-    26.3,
-    21.5,
-    17.3,
-    11.5,
-    8.3
+    7.8,
+    10.2,
+    12.6,
+    15.5,
+    19.9,
+    24.9,
+    27.3,
+    27.1,
+    22.2,
+    17.7,
+    11.8,
+    8.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:castilla": {
    "country": "ES",
@@ -4022,20 +5100,27 @@
    "lon": -4.72,
    "elevationM": 702.0,
    "monthlyTempC": [
-    3.9,
-    6.0,
-    8.4,
-    11.4,
-    15.8,
-    20.2,
-    24.1,
+    5.1,
+    7.2,
+    9.0,
+    11.9,
+    15.9,
+    20.7,
+    23.8,
     23.7,
-    18.6,
-    14.3,
-    8.3,
-    5.5
+    18.9,
+    14.8,
+    8.9,
+    6.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:galicia": {
    "country": "ES",
@@ -4048,20 +5133,27 @@
    "lon": -7.56,
    "elevationM": 457.0,
    "monthlyTempC": [
-    6.1,
-    7.1,
-    8.1,
-    10.4,
-    13.3,
-    16.0,
-    18.6,
-    18.8,
-    16.3,
-    13.7,
-    9.6,
-    7.7
+    7.3,
+    8.4,
+    9.2,
+    11.4,
+    14.1,
+    16.8,
+    19.0,
+    19.3,
+    16.9,
+    14.4,
+    10.2,
+    8.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:castilla-la-mancha": {
    "country": "ES",
@@ -4074,20 +5166,27 @@
    "lon": -1.86,
    "elevationM": 688.0,
    "monthlyTempC": [
-    5.4,
-    7.6,
-    10.0,
-    12.9,
-    17.8,
-    22.7,
-    27.2,
-    26.1,
-    20.6,
-    16.2,
-    10.2,
-    7.1
+    7.0,
+    9.0,
+    10.9,
+    13.9,
+    18.5,
+    23.8,
+    27.6,
+    26.9,
+    21.7,
+    17.2,
+    11.0,
+    8.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:andalucia": {
    "country": "ES",
@@ -4100,20 +5199,27 @@
    "lon": -4.78,
    "elevationM": 118.0,
    "monthlyTempC": [
-    9.1,
-    11.3,
-    13.6,
-    16.4,
-    21.3,
-    25.9,
-    30.1,
-    29.7,
-    24.7,
-    20.0,
-    13.6,
-    10.7
+    10.8,
+    13.0,
+    14.8,
+    17.9,
+    22.5,
+    27.3,
+    31.0,
+    31.0,
+    26.1,
+    21.5,
+    14.8,
+    11.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:murcia": {
    "country": "ES",
@@ -4126,20 +5232,27 @@
    "lon": -1.13,
    "elevationM": 53.0,
    "monthlyTempC": [
-    10.6,
-    12.1,
-    14.1,
-    16.2,
-    20.1,
-    24.3,
-    27.7,
-    27.5,
-    23.7,
-    19.7,
-    14.8,
-    12.0
+    11.7,
+    13.5,
+    15.4,
+    17.8,
+    21.7,
+    26.2,
+    29.1,
+    28.9,
+    25.2,
+    20.9,
+    15.7,
+    12.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:extremadura": {
    "country": "ES",
@@ -4152,20 +5265,27 @@
    "lon": -6.97,
    "elevationM": 191.0,
    "monthlyTempC": [
-    8.3,
-    10.5,
-    12.6,
-    15.5,
-    20.0,
-    23.8,
-    27.3,
-    27.2,
-    23.2,
-    18.8,
-    13.0,
-    10.1
+    9.5,
+    11.5,
+    13.1,
+    16.1,
+    20.1,
+    24.1,
+    27.5,
+    27.7,
+    23.5,
+    19.5,
+    13.4,
+    10.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "ES:valencia": {
    "country": "ES",
@@ -4178,20 +5298,27 @@
    "lon": -0.38,
    "elevationM": 20.0,
    "monthlyTempC": [
-    10.9,
-    11.9,
-    13.7,
-    15.4,
-    19.3,
-    23.3,
-    26.3,
-    26.4,
-    23.2,
-    19.5,
-    15.1,
-    12.2
+    12.0,
+    13.0,
+    14.8,
+    17.0,
+    20.7,
+    25.0,
+    27.7,
+    27.7,
+    24.5,
+    20.6,
+    15.8,
+    12.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:brabant": {
    "country": "NL",
@@ -4204,20 +5331,27 @@
    "lon": 5.3,
    "elevationM": 11.0,
    "monthlyTempC": [
-    4.1,
-    5.0,
-    6.8,
-    9.5,
-    13.8,
-    17.7,
-    18.6,
-    18.9,
-    15.8,
-    12.1,
-    7.5,
-    5.7
+    4.2,
+    5.3,
+    7.2,
+    10.0,
+    14.1,
+    18.0,
+    18.7,
+    18.7,
+    15.7,
+    12.2,
+    7.3,
+    5.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:gelderland": {
    "country": "NL",
@@ -4230,20 +5364,27 @@
    "lon": 5.58,
    "elevationM": 11.0,
    "monthlyTempC": [
-    3.8,
-    4.7,
-    6.4,
-    9.2,
-    13.6,
-    17.4,
-    18.3,
-    18.7,
+    4.1,
+    5.0,
+    6.8,
+    9.6,
+    13.9,
+    17.7,
+    18.5,
+    18.5,
     15.5,
-    11.8,
-    7.2,
+    11.9,
+    7.1,
     5.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:overijssel": {
    "country": "NL",
@@ -4256,20 +5397,27 @@
    "lon": 6.08,
    "elevationM": 4.0,
    "monthlyTempC": [
-    3.9,
-    4.6,
-    6.3,
-    9.0,
-    13.4,
-    17.1,
-    18.2,
-    18.5,
-    15.5,
+    4.0,
+    4.8,
+    6.6,
+    9.5,
+    13.8,
+    17.5,
+    18.3,
+    18.3,
+    15.3,
     11.8,
-    7.3,
-    5.5
+    7.0,
+    5.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:friesland": {
    "country": "NL",
@@ -4282,20 +5430,27 @@
    "lon": 5.8,
    "elevationM": 5.0,
    "monthlyTempC": [
-    4.1,
+    4.3,
     4.7,
-    6.1,
-    8.5,
-    12.7,
-    16.1,
-    17.6,
-    18.0,
-    15.4,
-    11.8,
+    6.2,
+    8.8,
+    12.9,
+    16.4,
+    17.7,
+    18.1,
+    15.6,
+    12.0,
     7.5,
-    5.7
+    5.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:groningen": {
    "country": "NL",
@@ -4309,19 +5464,26 @@
    "elevationM": 7.0,
    "monthlyTempC": [
     3.7,
-    4.4,
-    6.0,
-    8.5,
-    12.7,
-    16.3,
+    4.5,
+    6.2,
+    8.8,
+    13.0,
+    16.5,
     17.6,
-    18.0,
-    15.2,
+    17.8,
+    15.1,
     11.6,
-    7.1,
-    5.4
+    6.9,
+    5.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "NL:limburg": {
    "country": "NL",
@@ -4334,20 +5496,27 @@
    "lon": 6.17,
    "elevationM": 23.0,
    "monthlyTempC": [
-    3.7,
-    4.9,
-    6.9,
-    9.7,
-    14.1,
-    18.3,
-    19.3,
-    19.4,
-    16.1,
-    12.2,
+    4.1,
+    5.5,
+    7.6,
+    10.4,
+    14.7,
+    18.9,
+    19.5,
+    19.6,
+    16.2,
+    12.4,
     7.4,
     5.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:midlands": {
    "country": "GB",
@@ -4358,20 +5527,27 @@
    "lon": -2.75,
    "elevationM": 68.0,
    "monthlyTempC": [
-    4.6,
-    5.3,
-    6.3,
-    8.2,
-    11.8,
-    14.8,
-    16.5,
-    16.2,
-    14.0,
-    11.0,
-    7.4,
-    6.2
+    5.1,
+    6.1,
+    7.2,
+    9.0,
+    12.7,
+    15.6,
+    17.1,
+    16.8,
+    14.4,
+    11.4,
+    7.8,
+    6.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:east-anglia": {
    "country": "GB",
@@ -4382,20 +5558,27 @@
    "lon": 1.3,
    "elevationM": 12.0,
    "monthlyTempC": [
-    4.7,
-    5.8,
-    6.8,
-    8.4,
-    12.1,
-    15.5,
-    17.5,
-    17.7,
-    15.3,
-    12.1,
-    8.2,
+    5.2,
+    6.1,
+    7.2,
+    8.8,
+    12.3,
+    15.7,
+    17.6,
+    17.8,
+    15.6,
+    12.3,
+    8.5,
     6.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:south-west": {
    "country": "GB",
@@ -4406,20 +5589,27 @@
    "lon": -3.53,
    "elevationM": 33.0,
    "monthlyTempC": [
-    5.7,
-    6.4,
-    7.3,
+    6.2,
+    7.0,
+    7.9,
+    9.8,
+    13.1,
+    16.0,
+    17.5,
+    17.2,
+    15.1,
+    12.4,
     9.1,
-    12.3,
-    15.4,
-    17.1,
-    16.8,
-    14.8,
-    12.0,
-    8.8,
-    7.6
+    7.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:south-east": {
    "country": "GB",
@@ -4430,20 +5620,27 @@
    "lon": 0.87,
    "elevationM": 61.0,
    "monthlyTempC": [
-    4.8,
-    5.8,
-    7.1,
-    8.9,
-    12.5,
-    15.8,
-    17.8,
-    17.7,
-    15.4,
+    4.9,
+    6.2,
+    7.6,
+    9.6,
+    13.1,
+    16.6,
+    18.5,
+    18.2,
+    15.7,
     12.3,
-    8.3,
-    6.8
+    8.2,
+    6.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:yorkshire": {
    "country": "GB",
@@ -4454,20 +5651,27 @@
    "lon": -1.08,
    "elevationM": 19.0,
    "monthlyTempC": [
-    4.3,
-    5.3,
-    6.5,
-    8.1,
-    11.8,
-    14.8,
-    16.7,
-    16.5,
-    14.1,
-    11.0,
-    7.3,
+    4.5,
+    5.7,
+    7.0,
+    8.6,
+    12.3,
+    15.3,
+    17.1,
+    16.8,
+    14.3,
+    11.1,
+    7.4,
     5.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:north-west": {
    "country": "GB",
@@ -4478,20 +5682,27 @@
    "lon": -2.7,
    "elevationM": 42.0,
    "monthlyTempC": [
-    4.8,
-    5.5,
-    6.5,
-    8.4,
-    11.9,
-    14.8,
-    16.1,
-    15.9,
-    14.0,
-    11.1,
-    7.6,
-    6.2
+    5.4,
+    6.1,
+    7.1,
+    9.0,
+    12.5,
+    15.2,
+    16.4,
+    16.3,
+    14.4,
+    11.5,
+    8.0,
+    6.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:wales": {
    "country": "GB",
@@ -4502,20 +5713,27 @@
    "lon": -4.31,
    "elevationM": 31.0,
    "monthlyTempC": [
-    5.3,
-    5.9,
-    6.7,
-    8.7,
-    11.8,
-    14.7,
-    16.0,
-    15.8,
-    14.1,
-    11.4,
-    8.3,
-    7.1
+    6.6,
+    7.0,
+    7.7,
+    9.6,
+    12.7,
+    15.3,
+    16.8,
+    16.8,
+    15.1,
+    12.6,
+    9.5,
+    8.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:scotland": {
    "country": "GB",
@@ -4526,20 +5744,27 @@
    "lon": -3.94,
    "elevationM": 41.0,
    "monthlyTempC": [
-    3.2,
-    3.9,
-    5.0,
-    6.9,
-    10.6,
+    4.7,
+    5.5,
+    6.5,
+    8.4,
+    12.0,
+    14.5,
+    15.8,
+    15.4,
     13.3,
-    14.6,
-    14.2,
-    12.2,
-    9.3,
-    5.6,
-    4.3
+    10.5,
+    6.9,
+    5.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "GB:northern-ireland": {
    "country": "GB",
@@ -4550,20 +5775,27 @@
    "lon": -6.65,
    "elevationM": 45.0,
    "monthlyTempC": [
-    4.9,
-    5.5,
+    5.6,
     6.2,
-    7.9,
-    11.3,
-    14.0,
-    15.1,
-    14.9,
-    13.0,
-    10.5,
-    7.2,
-    6.0
+    7.1,
+    8.8,
+    12.2,
+    14.6,
+    15.8,
+    15.5,
+    13.5,
+    10.9,
+    7.7,
+    6.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:wisconsin": {
    "country": "US",
@@ -4574,20 +5806,27 @@
    "lon": -88.02,
    "elevationM": 180.0,
    "monthlyTempC": [
-    -6.4,
-    -5.9,
-    0.6,
-    6.3,
-    14.1,
-    20.0,
+    -5.6,
+    -4.7,
+    1.5,
+    6.9,
+    14.2,
+    20.2,
     22.6,
-    21.4,
-    18.1,
-    10.6,
+    21.2,
+    17.6,
+    10.7,
     3.3,
-    -2.7
+    -2.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:minnesota": {
    "country": "US",
@@ -4598,20 +5837,27 @@
    "lon": -94.16,
    "elevationM": 319.0,
    "monthlyTempC": [
-    -9.5,
-    -8.7,
-    -0.5,
-    5.5,
-    14.2,
-    20.8,
-    22.6,
-    20.9,
-    17.6,
-    8.9,
-    0.9,
-    -5.9
+    -9.2,
+    -8.0,
+    0.2,
+    6.2,
+    15.1,
+    21.3,
+    22.9,
+    21.1,
+    17.5,
+    9.2,
+    1.0,
+    -6.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:michigan": {
    "country": "US",
@@ -4622,20 +5868,27 @@
    "lon": -84.56,
    "elevationM": 261.0,
    "monthlyTempC": [
-    -3.7,
-    -3.0,
-    2.4,
-    8.0,
-    15.2,
-    20.6,
-    22.7,
-    21.7,
-    18.6,
+    -3.3,
+    -1.8,
+    3.4,
+    8.7,
+    15.6,
+    21.2,
+    23.2,
+    21.8,
+    18.3,
     11.7,
-    4.6,
-    0.1
+    4.5,
+    -0.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:new-york": {
    "country": "US",
@@ -4646,20 +5899,27 @@
    "lon": -76.15,
    "elevationM": 124.0,
    "monthlyTempC": [
-    -3.4,
     -2.5,
-    1.4,
-    7.7,
-    14.8,
-    19.4,
-    22.5,
-    21.4,
-    18.2,
-    11.9,
-    5.1,
-    0.4
+    -1.1,
+    3.0,
+    8.7,
+    15.4,
+    20.3,
+    23.3,
+    21.9,
+    18.1,
+    12.3,
+    5.2,
+    0.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:pennsylvania": {
    "country": "US",
@@ -4670,20 +5930,27 @@
    "lon": -76.31,
    "elevationM": 106.0,
    "monthlyTempC": [
-    0.7,
-    2.1,
-    5.7,
-    11.6,
-    17.2,
-    22.0,
-    25.0,
-    23.9,
-    20.5,
-    14.4,
-    7.6,
-    3.5
+    1.5,
+    3.6,
+    7.4,
+    12.8,
+    17.9,
+    23.0,
+    25.9,
+    24.3,
+    20.9,
+    14.9,
+    8.0,
+    3.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:iowa": {
    "country": "US",
@@ -4694,20 +5961,27 @@
    "lon": -96.18,
    "elevationM": 438.0,
    "monthlyTempC": [
-    -6.8,
-    -5.5,
-    2.4,
-    8.3,
-    15.5,
-    22.2,
-    23.3,
-    21.9,
-    19.4,
-    10.7,
-    3.0,
-    -3.2
+    -6.6,
+    -5.3,
+    2.7,
+    8.5,
+    15.8,
+    22.6,
+    23.6,
+    22.1,
+    19.1,
+    10.5,
+    2.7,
+    -3.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:north-carolina": {
    "country": "US",
@@ -4718,20 +5992,27 @@
    "lon": -78.32,
    "elevationM": 49.0,
    "monthlyTempC": [
-    7.1,
-    9.5,
-    12.7,
-    17.1,
-    21.5,
-    25.2,
-    27.0,
-    26.1,
-    23.6,
-    18.3,
-    12.5,
-    9.4
+    7.0,
+    10.3,
+    13.2,
+    17.7,
+    21.8,
+    25.1,
+    27.1,
+    26.0,
+    23.4,
+    18.1,
+    12.1,
+    8.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:texas": {
    "country": "US",
@@ -4742,20 +6023,27 @@
    "lon": -101.83,
    "elevationM": 1119.0,
    "monthlyTempC": [
-    3.4,
-    5.5,
-    10.7,
-    14.6,
-    19.4,
-    25.1,
-    27.5,
-    26.4,
-    22.9,
-    15.8,
-    9.3,
-    5.3
+    2.7,
+    4.7,
+    10.2,
+    14.1,
+    19.1,
+    24.5,
+    26.7,
+    25.6,
+    22.0,
+    15.3,
+    8.9,
+    4.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:idaho": {
    "country": "US",
@@ -4766,20 +6054,27 @@
    "lon": -114.46,
    "elevationM": 1140.0,
    "monthlyTempC": [
-    -1.5,
-    1.2,
-    5.3,
-    9.5,
-    14.7,
-    21.2,
-    26.8,
-    25.2,
-    19.1,
+    0.2,
+    2.3,
+    6.7,
     11.1,
-    3.3,
-    -1.2
+    15.9,
+    21.7,
+    27.2,
+    25.3,
+    19.7,
+    11.6,
+    5.3,
+    1.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:washington": {
    "country": "US",
@@ -4790,20 +6085,27 @@
    "lon": -120.51,
    "elevationM": 326.0,
    "monthlyTempC": [
-    -0.2,
-    1.6,
-    5.7,
-    10.4,
-    16.9,
-    21.2,
-    25.6,
+    0.9,
+    2.5,
+    6.9,
+    11.7,
+    17.6,
+    21.6,
+    25.7,
     24.9,
-    18.8,
-    11.3,
-    4.0,
-    -0.3
+    19.4,
+    11.6,
+    5.2,
+    1.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "US:california": {
    "country": "US",
@@ -4814,20 +6116,27 @@
    "lon": -119.35,
    "elevationM": 84.0,
    "monthlyTempC": [
-    9.0,
-    10.6,
-    13.2,
-    17.5,
+    10.7,
+    11.9,
+    13.9,
+    17.8,
     22.0,
-    28.0,
-    31.6,
-    30.4,
-    26.5,
-    20.2,
-    12.6,
-    8.5
+    27.5,
+    31.3,
+    30.7,
+    27.1,
+    20.8,
+    14.3,
+    10.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:ontario": {
    "country": "CA",
@@ -4840,20 +6149,27 @@
    "lon": -80.25,
    "elevationM": 322.0,
    "monthlyTempC": [
-    -5.2,
-    -4.8,
-    0.0,
-    5.9,
-    13.7,
-    18.6,
-    21.3,
-    20.4,
-    17.2,
-    10.3,
-    3.4,
-    -1.2
+    -4.9,
+    -3.8,
+    0.7,
+    6.2,
+    13.6,
+    18.8,
+    21.5,
+    20.3,
+    16.7,
+    10.2,
+    3.1,
+    -1.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:quebec": {
    "country": "CA",
@@ -4866,20 +6182,27 @@
    "lon": -72.96,
    "elevationM": 36.0,
    "monthlyTempC": [
-    -8.7,
-    -7.9,
-    -2.0,
-    5.6,
-    13.8,
-    18.5,
-    21.5,
-    20.5,
-    16.6,
-    10.0,
-    2.2,
-    -3.7
+    -8.0,
+    -6.9,
+    -1.3,
+    6.1,
+    14.0,
+    18.9,
+    21.6,
+    20.1,
+    15.8,
+    9.8,
+    1.7,
+    -4.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:alberta": {
    "country": "CA",
@@ -4890,20 +6213,27 @@
    "lon": -112.84,
    "elevationM": 903.0,
    "monthlyTempC": [
-    -4.1,
-    -5.2,
-    -0.0,
-    5.6,
-    11.9,
-    16.8,
-    20.2,
-    19.4,
-    14.0,
+    -4.3,
+    -6.7,
+    -0.5,
+    5.8,
+    12.5,
+    16.5,
+    19.6,
+    18.8,
+    14.1,
     6.6,
-    0.3,
+    0.8,
     -4.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:british-columbia": {
    "country": "CA",
@@ -4916,20 +6246,27 @@
    "lon": -122.31,
    "elevationM": 66.0,
    "monthlyTempC": [
-    3.0,
-    3.0,
-    5.7,
-    8.5,
-    13.0,
-    15.7,
-    18.6,
-    18.7,
-    14.9,
-    10.1,
-    5.5,
-    2.2
+    4.3,
+    4.0,
+    7.0,
+    10.0,
+    14.0,
+    16.3,
+    19.1,
+    19.4,
+    16.1,
+    10.9,
+    7.0,
+    3.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:saskatchewan": {
    "country": "CA",
@@ -4940,20 +6277,27 @@
    "lon": -106.67,
    "elevationM": 486.0,
    "monthlyTempC": [
-    -12.2,
-    -13.8,
-    -5.7,
-    3.2,
-    12.1,
-    17.2,
-    19.7,
-    18.3,
-    13.4,
-    4.7,
-    -4.0,
-    -10.8
+    -13.3,
+    -14.7,
+    -6.8,
+    3.0,
+    12.5,
+    16.7,
+    18.9,
+    17.7,
+    13.0,
+    4.2,
+    -4.7,
+    -12.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "CA:manitoba": {
    "country": "CA",
@@ -4964,20 +6308,27 @@
    "lon": -97.14,
    "elevationM": 235.0,
    "monthlyTempC": [
-    -13.2,
     -13.9,
-    -5.0,
+    -14.1,
+    -5.3,
     3.1,
-    12.4,
-    18.7,
-    21.1,
-    19.9,
-    15.4,
-    6.4,
-    -2.1,
-    -10.0
+    13.0,
+    18.5,
+    20.4,
+    19.0,
+    14.5,
+    6.1,
+    -2.7,
+    -11.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:jalisco": {
    "country": "MX",
@@ -4991,19 +6342,26 @@
    "elevationM": 1793.0,
    "monthlyTempC": [
     15.6,
-    17.2,
+    17.7,
+    20.3,
+    22.3,
+    23.9,
+    22.8,
+    20.5,
+    20.4,
+    20.4,
     19.5,
-    21.8,
-    23.1,
-    21.9,
-    19.6,
-    19.6,
-    19.4,
-    18.8,
     17.7,
     15.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:guanajuato": {
    "country": "MX",
@@ -5016,20 +6374,27 @@
    "lon": -101.68,
    "elevationM": 1804.0,
    "monthlyTempC": [
-    15.5,
-    17.4,
-    20.1,
-    22.4,
-    23.6,
-    22.2,
-    20.2,
-    20.2,
-    19.7,
-    19.1,
-    17.8,
-    15.8
+    16.1,
+    18.5,
+    21.4,
+    23.4,
+    25.0,
+    23.5,
+    21.3,
+    21.3,
+    21.1,
+    20.4,
+    18.5,
+    16.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:la-laguna": {
    "country": "MX",
@@ -5042,20 +6407,27 @@
    "lon": -103.41,
    "elevationM": 1122.0,
    "monthlyTempC": [
-    14.6,
-    18.0,
-    21.1,
-    24.8,
-    28.1,
-    29.2,
-    28.6,
-    28.4,
-    25.7,
-    22.8,
-    18.8,
-    15.8
+    16.1,
+    20.0,
+    23.1,
+    26.4,
+    29.5,
+    30.3,
+    29.3,
+    29.1,
+    26.9,
+    24.2,
+    20.2,
+    17.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:chihuahua": {
    "country": "MX",
@@ -5068,20 +6440,27 @@
    "lon": -105.47,
    "elevationM": 1174.0,
    "monthlyTempC": [
-    11.7,
-    15.1,
-    18.8,
-    22.8,
-    26.8,
-    29.9,
+    12.5,
+    16.3,
+    20.2,
+    24.2,
+    28.0,
+    31.1,
+    29.5,
     28.8,
-    28.1,
-    25.2,
-    21.7,
-    16.7,
-    12.8
+    26.3,
+    23.0,
+    17.5,
+    13.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:sonora": {
    "country": "MX",
@@ -5094,20 +6473,27 @@
    "lon": -110.96,
    "elevationM": 201.0,
    "monthlyTempC": [
-    16.0,
-    17.7,
-    20.6,
-    24.2,
-    26.6,
-    31.7,
+    16.1,
+    18.2,
+    20.8,
+    24.6,
+    27.3,
+    32.2,
+    33.3,
     32.7,
-    32.3,
-    30.2,
-    27.0,
-    21.2,
-    16.7
+    30.7,
+    27.3,
+    21.5,
+    17.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:nuevo-leon": {
    "country": "MX",
@@ -5120,20 +6506,27 @@
    "lon": -100.32,
    "elevationM": 542.0,
    "monthlyTempC": [
-    13.9,
-    16.5,
-    19.7,
-    22.6,
-    25.3,
-    27.1,
-    27.8,
-    28.3,
-    25.6,
-    22.0,
-    17.9,
-    15.7
+    14.3,
+    17.2,
+    20.7,
+    23.3,
+    26.3,
+    28.0,
+    28.2,
+    28.8,
+    26.3,
+    22.7,
+    18.6,
+    16.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:veracruz": {
    "country": "MX",
@@ -5146,20 +6539,27 @@
    "lon": -96.93,
    "elevationM": 828.0,
    "monthlyTempC": [
-    16.8,
-    17.8,
-    20.0,
-    22.1,
-    23.4,
-    22.3,
+    18.7,
+    19.8,
     21.7,
-    21.7,
-    21.5,
-    20.5,
-    19.0,
-    17.6
+    23.1,
+    24.5,
+    24.4,
+    23.9,
+    24.2,
+    24.2,
+    23.0,
+    20.9,
+    19.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "MX:yucatan": {
    "country": "MX",
@@ -5172,20 +6572,27 @@
    "lon": -89.62,
    "elevationM": 11.0,
    "monthlyTempC": [
-    23.0,
-    24.1,
-    26.3,
-    28.2,
-    29.1,
-    28.0,
+    23.4,
+    24.8,
+    26.7,
     28.4,
-    28.0,
-    27.6,
-    26.5,
-    25.0,
-    24.0
+    29.6,
+    28.6,
+    28.6,
+    28.2,
+    27.9,
+    26.9,
+    25.3,
+    24.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:cordoba": {
    "country": "AR",
@@ -5198,20 +6605,27 @@
    "lon": -63.24,
    "elevationM": 203.0,
    "monthlyTempC": [
-    24.9,
-    23.5,
-    21.7,
-    18.3,
+    24.8,
+    23.7,
+    21.6,
+    18.0,
     14.0,
-    11.3,
-    10.5,
-    12.9,
-    15.6,
-    18.2,
+    10.7,
+    10.3,
+    12.6,
+    15.7,
+    18.5,
     21.9,
-    24.0
+    24.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:buenos-aires": {
    "country": "AR",
@@ -5224,20 +6638,27 @@
    "lon": -60.57,
    "elevationM": 68.0,
    "monthlyTempC": [
-    24.6,
-    23.4,
-    21.3,
-    17.9,
-    13.6,
-    11.1,
-    10.2,
-    12.3,
-    14.6,
-    17.3,
+    24.5,
+    23.3,
     21.1,
-    23.5
+    17.5,
+    13.3,
+    10.5,
+    10.0,
+    11.9,
+    14.6,
+    17.4,
+    20.9,
+    23.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:santa-fe": {
    "country": "AR",
@@ -5250,20 +6671,27 @@
    "lon": -61.49,
    "elevationM": 103.0,
    "monthlyTempC": [
-    25.6,
-    24.3,
-    22.4,
-    19.1,
-    14.8,
-    12.5,
+    25.5,
+    24.5,
+    22.3,
+    18.7,
+    14.7,
     11.9,
-    14.1,
-    16.8,
+    11.6,
+    13.7,
+    16.6,
     19.3,
-    22.5,
-    24.5
+    22.2,
+    24.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:entre-rios": {
    "country": "AR",
@@ -5276,20 +6704,27 @@
    "lon": -60.53,
    "elevationM": 68.0,
    "monthlyTempC": [
-    25.8,
-    24.7,
-    22.7,
-    19.5,
-    15.2,
-    13.0,
-    12.2,
-    14.1,
-    16.4,
-    19.0,
-    22.3,
-    24.5
+    25.7,
+    24.8,
+    22.6,
+    18.9,
+    14.9,
+    12.1,
+    11.8,
+    13.5,
+    16.2,
+    18.9,
+    22.1,
+    24.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:tucuman": {
    "country": "AR",
@@ -5302,20 +6737,27 @@
    "lon": -65.22,
    "elevationM": 465.0,
    "monthlyTempC": [
-    25.1,
-    24.0,
-    22.3,
-    19.4,
-    15.2,
-    12.6,
-    12.3,
-    15.0,
-    18.2,
-    20.9,
-    23.0,
-    24.6
+    25.7,
+    24.8,
+    23.1,
+    20.0,
+    16.1,
+    13.4,
+    13.4,
+    15.9,
+    19.1,
+    21.5,
+    23.7,
+    25.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "AR:mendoza": {
    "country": "AR",
@@ -5328,20 +6770,27 @@
    "lon": -68.84,
    "elevationM": 758.0,
    "monthlyTempC": [
-    25.2,
-    23.6,
-    21.1,
-    16.6,
-    11.7,
-    8.6,
-    8.2,
-    11.2,
-    14.6,
-    17.4,
-    21.6,
-    24.2
+    26.2,
+    24.8,
+    21.5,
+    16.8,
+    11.9,
+    8.5,
+    8.3,
+    11.5,
+    15.2,
+    18.5,
+    22.5,
+    25.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:santa-catarina": {
    "country": "BR",
@@ -5355,19 +6804,26 @@
    "elevationM": 650.0,
    "monthlyTempC": [
     23.2,
-    22.5,
-    21.6,
-    19.3,
-    16.0,
-    14.6,
-    14.6,
-    16.0,
-    18.5,
-    19.7,
-    20.9,
-    22.5
+    22.8,
+    21.9,
+    19.4,
+    16.1,
+    14.4,
+    14.4,
+    15.6,
+    18.6,
+    19.5,
+    21.0,
+    22.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:parana": {
    "country": "BR",
@@ -5380,20 +6836,27 @@
    "lon": -53.46,
    "elevationM": 774.0,
    "monthlyTempC": [
-    23.3,
     22.8,
-    22.3,
-    20.4,
-    17.3,
-    16.0,
-    16.0,
-    17.6,
+    22.6,
+    22.1,
+    19.9,
+    16.8,
+    15.5,
+    15.6,
+    17.0,
+    20.1,
     20.5,
-    21.3,
-    21.9,
-    23.0
+    21.5,
+    22.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:rio-grande-do-sul": {
    "country": "BR",
@@ -5407,19 +6870,26 @@
    "elevationM": 660.0,
    "monthlyTempC": [
     22.7,
-    21.8,
-    20.8,
-    18.6,
-    15.0,
+    22.1,
+    21.1,
+    18.7,
+    15.1,
     13.4,
-    13.2,
+    13.4,
     14.6,
-    16.8,
-    18.2,
-    19.9,
-    21.8
+    17.0,
+    18.3,
+    20.2,
+    22.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:sao-paulo": {
    "country": "BR",
@@ -5432,20 +6902,27 @@
    "lon": -47.81,
    "elevationM": 552.0,
    "monthlyTempC": [
-    24.7,
-    24.5,
-    24.4,
-    23.1,
-    20.6,
-    19.6,
-    19.9,
-    21.7,
-    25.1,
+    25.4,
+    25.4,
+    25.4,
+    23.9,
+    21.2,
+    20.1,
+    20.0,
+    21.8,
     25.3,
-    24.5,
-    24.6
+    25.5,
+    24.9,
+    25.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:minas-gerais": {
    "country": "BR",
@@ -5459,19 +6936,26 @@
    "elevationM": 766.0,
    "monthlyTempC": [
     24.0,
-    23.7,
-    23.8,
-    23.0,
-    20.9,
-    20.2,
-    20.7,
-    22.6,
-    25.8,
-    25.5,
-    24.1,
-    24.0
+    24.0,
+    24.3,
+    23.2,
+    21.1,
+    20.4,
+    20.6,
+    22.3,
+    25.6,
+    25.1,
+    24.0,
+    24.1
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:goias": {
    "country": "BR",
@@ -5484,20 +6968,27 @@
    "lon": -50.92,
    "elevationM": 734.0,
    "monthlyTempC": [
-    24.1,
-    24.0,
-    23.9,
-    23.4,
-    21.6,
-    20.8,
-    21.1,
-    23.3,
-    26.4,
-    26.0,
-    24.6,
-    24.4
+    24.2,
+    24.2,
+    24.3,
+    23.6,
+    21.7,
+    21.0,
+    20.9,
+    23.1,
+    26.3,
+    25.7,
+    24.4,
+    24.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:mato-grosso": {
    "country": "BR",
@@ -5511,19 +7002,26 @@
    "elevationM": 375.0,
    "monthlyTempC": [
     25.1,
-    25.1,
-    25.1,
-    25.3,
-    25.2,
+    25.4,
+    25.6,
+    25.9,
+    25.5,
     24.9,
-    24.9,
-    26.8,
-    27.9,
-    27.0,
-    25.7,
-    25.4
+    24.7,
+    26.7,
+    28.1,
+    27.2,
+    25.9,
+    25.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "BR:pernambuco": {
    "country": "BR",
@@ -5536,20 +7034,27 @@
    "lon": -34.88,
    "elevationM": 3.0,
    "monthlyTempC": [
-    26.8,
+    27.6,
+    27.8,
+    27.6,
     27.1,
-    26.9,
-    26.7,
-    26.0,
-    25.1,
-    24.4,
-    24.5,
-    25.0,
-    25.9,
-    26.7,
-    26.8
+    26.3,
+    25.2,
+    24.6,
+    24.7,
+    25.4,
+    26.5,
+    27.2,
+    27.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:punjab": {
    "country": "IN",
@@ -5560,20 +7065,27 @@
    "lon": 75.86,
    "elevationM": 250.0,
    "monthlyTempC": [
-    11.1,
-    14.8,
-    19.7,
-    26.2,
+    11.6,
+    15.8,
+    20.9,
+    27.4,
+    30.9,
+    32.4,
     30.4,
-    31.9,
-    29.4,
-    28.7,
-    27.9,
-    24.5,
-    18.6,
-    13.1
+    29.8,
+    28.9,
+    24.9,
+    18.4,
+    13.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:haryana": {
    "country": "IN",
@@ -5584,20 +7096,27 @@
    "lon": 76.99,
    "elevationM": 250.0,
    "monthlyTempC": [
-    11.9,
-    15.7,
-    20.9,
-    27.5,
-    30.8,
-    31.9,
-    29.2,
-    28.5,
-    27.8,
-    24.6,
-    19.3,
-    13.8
+    12.6,
+    16.8,
+    22.2,
+    28.7,
+    31.4,
+    32.3,
+    30.1,
+    29.7,
+    28.8,
+    25.1,
+    19.2,
+    14.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:uttar-pradesh": {
    "country": "IN",
@@ -5608,20 +7127,27 @@
    "lon": 77.71,
    "elevationM": 227.0,
    "monthlyTempC": [
-    12.6,
-    16.5,
-    21.7,
-    28.1,
-    30.7,
-    32.0,
-    29.1,
-    28.5,
-    27.8,
-    24.6,
-    19.6,
-    14.4
+    13.1,
+    17.4,
+    22.8,
+    29.0,
+    31.2,
+    32.1,
+    30.0,
+    29.6,
+    28.9,
+    25.0,
+    19.2,
+    14.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:rajasthan": {
    "country": "IN",
@@ -5632,20 +7158,27 @@
    "lon": 75.79,
    "elevationM": 430.0,
    "monthlyTempC": [
-    14.3,
+    14.0,
     18.7,
-    23.9,
-    30.0,
+    24.3,
+    30.6,
     33.2,
-    32.9,
-    29.2,
-    27.5,
-    27.7,
-    26.2,
-    21.1,
-    15.9
+    33.0,
+    29.6,
+    28.2,
+    28.2,
+    25.9,
+    20.2,
+    15.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:gujarat": {
    "country": "IN",
@@ -5656,20 +7189,27 @@
    "lon": 72.95,
    "elevationM": 41.0,
    "monthlyTempC": [
-    20.6,
-    23.9,
-    28.1,
+    20.7,
+    23.7,
+    28.0,
+    31.9,
+    33.5,
     32.1,
-    33.6,
-    31.6,
-    28.3,
-    27.5,
-    27.7,
-    27.9,
-    25.3,
-    21.9
+    29.2,
+    28.5,
+    28.8,
+    28.4,
+    24.9,
+    21.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:madhya-pradesh": {
    "country": "IN",
@@ -5680,20 +7220,27 @@
    "lon": 75.86,
    "elevationM": 552.0,
    "monthlyTempC": [
-    17.9,
-    21.4,
-    25.7,
-    30.6,
-    32.8,
-    29.6,
-    25.6,
-    24.7,
-    25.0,
-    25.1,
-    22.6,
-    19.2
+    18.1,
+    21.7,
+    26.6,
+    31.5,
+    33.0,
+    29.8,
+    26.2,
+    25.3,
+    25.8,
+    25.5,
+    22.2,
+    19.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:maharashtra": {
    "country": "IN",
@@ -5704,20 +7251,27 @@
    "lon": 73.86,
    "elevationM": 562.0,
    "monthlyTempC": [
-    21.4,
-    23.9,
-    26.5,
-    29.1,
-    28.8,
-    25.7,
-    23.9,
-    23.7,
-    23.8,
-    24.3,
-    23.4,
-    22.1
+    21.8,
+    24.0,
+    26.6,
+    29.0,
+    28.7,
+    26.4,
+    24.7,
+    24.5,
+    24.7,
+    25.2,
+    23.3,
+    22.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:karnataka": {
    "country": "IN",
@@ -5728,20 +7282,27 @@
    "lon": 77.59,
    "elevationM": 914.0,
    "monthlyTempC": [
-    21.0,
-    22.9,
-    25.7,
-    27.2,
-    25.8,
-    23.6,
-    22.8,
-    22.8,
-    22.7,
-    22.6,
-    21.8,
-    20.9
+    21.5,
+    23.4,
+    26.1,
+    27.5,
+    26.1,
+    24.4,
+    23.4,
+    23.5,
+    23.5,
+    23.4,
+    22.4,
+    21.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:andhra-pradesh": {
    "country": "IN",
@@ -5752,20 +7313,27 @@
    "lon": 80.65,
    "elevationM": 121.0,
    "monthlyTempC": [
-    24.0,
-    25.8,
-    28.5,
-    30.8,
-    32.2,
-    30.6,
-    28.3,
-    28.1,
-    27.4,
-    26.9,
-    25.6,
-    24.0
+    24.6,
+    26.4,
+    28.9,
+    31.3,
+    32.3,
+    31.3,
+    28.9,
+    28.9,
+    28.4,
+    27.8,
+    26.3,
+    24.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:tamil-nadu": {
    "country": "IN",
@@ -5776,20 +7344,27 @@
    "lon": 76.96,
    "elevationM": 429.0,
    "monthlyTempC": [
-    24.3,
-    26.2,
-    28.5,
-    29.3,
-    27.8,
+    24.6,
+    26.4,
+    28.8,
+    30.1,
+    28.4,
+    26.5,
     25.6,
-    24.8,
-    24.9,
-    25.1,
-    25.1,
-    24.5,
-    23.9
+    25.7,
+    26.0,
+    26.1,
+    25.5,
+    24.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "IN:west-bengal": {
    "country": "IN",
@@ -5801,19 +7376,26 @@
    "elevationM": 12.0,
    "monthlyTempC": [
     18.8,
-    22.5,
-    26.6,
-    29.7,
-    30.0,
-    29.7,
-    28.5,
-    28.2,
+    22.9,
+    27.2,
+    30.1,
+    30.3,
+    30.4,
+    29.5,
+    29.3,
+    29.2,
     28.0,
-    26.9,
-    23.7,
-    20.0
+    23.9,
+    19.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:central": {
    "country": "TH",
@@ -5826,20 +7408,27 @@
    "lon": 100.12,
    "elevationM": 11.0,
    "monthlyTempC": [
-    26.5,
-    27.9,
-    30.0,
+    26.9,
+    28.4,
+    30.6,
+    31.7,
     31.1,
-    30.4,
-    29.6,
-    28.9,
-    28.8,
-    27.9,
-    27.3,
-    27.5,
-    26.6
+    30.6,
+    29.8,
+    29.8,
+    29.1,
+    28.6,
+    28.2,
+    26.9
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:west": {
    "country": "TH",
@@ -5852,20 +7441,27 @@
    "lon": 99.82,
    "elevationM": 4.0,
    "monthlyTempC": [
-    25.8,
-    27.2,
-    29.1,
-    30.3,
+    26.4,
+    27.8,
+    29.8,
+    31.0,
+    30.8,
     29.9,
-    29.1,
-    28.5,
-    28.3,
-    27.6,
-    26.9,
-    26.6,
-    25.8
+    29.4,
+    29.3,
+    28.9,
+    28.2,
+    27.5,
+    26.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:east": {
    "country": "TH",
@@ -5878,20 +7474,27 @@
    "lon": 100.98,
    "elevationM": 6.0,
    "monthlyTempC": [
-    26.7,
-    27.3,
-    28.6,
+    27.5,
+    28.3,
     29.5,
-    29.5,
-    29.1,
-    28.5,
+    30.2,
+    30.1,
+    30.0,
+    29.4,
+    29.4,
+    28.7,
     28.4,
-    27.7,
-    27.1,
-    27.2,
-    26.6
+    28.2,
+    27.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:northeast": {
    "country": "TH",
@@ -5904,20 +7507,27 @@
    "lon": 102.84,
    "elevationM": 161.0,
    "monthlyTempC": [
-    23.8,
-    25.2,
-    28.6,
-    30.3,
-    29.6,
+    24.2,
+    26.0,
     29.2,
+    31.0,
+    30.1,
+    29.9,
+    29.1,
+    28.8,
     28.2,
-    27.8,
-    26.9,
+    27.5,
     26.2,
-    25.6,
-    23.6
+    24.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:north": {
    "country": "TH",
@@ -5930,20 +7540,27 @@
    "lon": 98.98,
    "elevationM": 315.0,
    "monthlyTempC": [
-    21.9,
-    24.0,
-    27.6,
-    29.3,
+    22.7,
+    25.0,
+    28.6,
+    30.7,
+    30.7,
+    29.6,
     28.9,
-    27.3,
-    26.5,
-    26.1,
-    26.1,
-    25.5,
-    24.4,
-    22.5
+    28.2,
+    28.0,
+    27.2,
+    25.2,
+    22.8
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "TH:south": {
    "country": "TH",
@@ -5956,20 +7573,27 @@
    "lon": 99.33,
    "elevationM": 7.0,
    "monthlyTempC": [
-    25.6,
-    26.4,
-    28.1,
-    28.5,
-    28.0,
-    27.3,
-    27.0,
     26.9,
-    26.3,
-    25.9,
-    25.7,
-    25.4
+    27.5,
+    28.7,
+    29.3,
+    28.9,
+    28.3,
+    28.1,
+    28.2,
+    27.5,
+    27.2,
+    27.0,
+    26.7
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:mekong": {
    "country": "VN",
@@ -5982,20 +7606,27 @@
    "lon": 105.79,
    "elevationM": 0.0,
    "monthlyTempC": [
-    25.9,
-    26.7,
-    28.1,
-    29.0,
-    28.5,
-    27.3,
-    26.8,
+    26.4,
     26.9,
-    26.6,
-    26.5,
-    26.6,
-    26.0
+    28.1,
+    29.2,
+    29.0,
+    28.2,
+    27.7,
+    27.8,
+    27.5,
+    27.5,
+    27.4,
+    26.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:southeast": {
    "country": "VN",
@@ -6008,20 +7639,27 @@
    "lon": 106.82,
    "elevationM": 9.0,
    "monthlyTempC": [
-    26.4,
-    27.1,
+    27.4,
+    27.9,
+    28.9,
+    29.8,
+    29.5,
     28.3,
-    29.0,
-    28.7,
+    27.8,
+    27.9,
+    27.6,
     27.5,
-    26.9,
-    27.0,
-    26.7,
-    26.5,
-    26.6,
-    26.3
+    27.5,
+    27.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:central-highlands": {
    "country": "VN",
@@ -6034,20 +7672,27 @@
    "lon": 108.04,
    "elevationM": 469.0,
    "monthlyTempC": [
-    22.3,
-    23.5,
-    26.1,
-    27.4,
+    23.3,
+    24.4,
     26.8,
-    25.5,
-    24.8,
+    28.3,
+    27.8,
+    26.6,
+    25.9,
+    25.9,
+    25.6,
+    25.4,
     24.9,
-    24.5,
-    24.2,
-    24.0,
-    22.5
+    23.4
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:south-central-coast": {
    "country": "VN",
@@ -6060,20 +7705,27 @@
    "lon": 109.22,
    "elevationM": 52.0,
    "monthlyTempC": [
-    22.6,
-    22.9,
-    24.9,
-    26.9,
-    28.7,
-    29.7,
-    29.2,
-    29.5,
-    27.8,
-    26.1,
-    25.0,
-    23.4
+    23.6,
+    23.8,
+    25.4,
+    27.1,
+    28.8,
+    29.6,
+    29.3,
+    29.6,
+    28.6,
+    27.0,
+    25.9,
+    24.3
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:north-central": {
    "country": "VN",
@@ -6086,20 +7738,27 @@
    "lon": 105.68,
    "elevationM": 7.0,
    "monthlyTempC": [
-    18.5,
-    19.4,
+    19.1,
+    19.8,
     22.7,
-    25.8,
-    28.8,
-    31.0,
-    30.1,
-    29.5,
-    27.7,
-    25.0,
-    22.8,
-    19.0
+    26.2,
+    29.2,
+    31.5,
+    30.8,
+    30.2,
+    28.9,
+    26.2,
+    23.6,
+    20.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "VN:red-river": {
    "country": "VN",
@@ -6112,20 +7771,27 @@
    "lon": 105.85,
    "elevationM": 24.0,
    "monthlyTempC": [
-    17.3,
-    18.5,
-    21.9,
-    24.9,
-    27.9,
-    29.7,
-    29.2,
-    28.5,
-    27.4,
-    24.8,
-    22.3,
-    17.7
+    17.8,
+    18.7,
+    22.0,
+    25.2,
+    28.3,
+    30.4,
+    30.0,
+    29.3,
+    28.4,
+    25.6,
+    22.7,
+    18.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:north": {
    "country": "KZ",
@@ -6138,20 +7804,27 @@
    "lon": 63.63,
    "elevationM": 164.0,
    "monthlyTempC": [
-    -13.9,
-    -11.2,
-    -4.8,
-    6.5,
-    14.3,
-    19.0,
-    21.6,
-    19.6,
-    12.5,
-    4.6,
-    -4.7,
-    -11.2
+    -14.1,
+    -11.9,
+    -5.1,
+    7.4,
+    14.6,
+    18.6,
+    21.2,
+    19.4,
+    12.2,
+    4.5,
+    -4.6,
+    -12.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:akmola": {
    "country": "KZ",
@@ -6164,20 +7837,27 @@
    "lon": 71.45,
    "elevationM": 359.0,
    "monthlyTempC": [
-    -13.5,
-    -11.2,
-    -4.9,
-    6.3,
-    14.3,
-    19.2,
-    21.2,
-    19.2,
-    12.3,
-    4.4,
-    -5.6,
-    -10.8
+    -14.2,
+    -12.2,
+    -5.4,
+    7.2,
+    14.6,
+    19.1,
+    21.1,
+    18.7,
+    11.9,
+    3.8,
+    -5.8,
+    -12.0
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:pavlodar": {
    "country": "KZ",
@@ -6190,20 +7870,27 @@
    "lon": 76.95,
    "elevationM": 136.0,
    "monthlyTempC": [
-    -14.6,
-    -12.0,
-    -4.4,
-    7.0,
-    15.0,
-    20.6,
-    22.2,
-    20.0,
-    13.3,
-    5.1,
-    -5.3,
-    -11.0
+    -15.3,
+    -12.9,
+    -4.7,
+    7.7,
+    15.1,
+    20.4,
+    21.9,
+    19.4,
+    12.6,
+    4.0,
+    -5.5,
+    -12.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:east": {
    "country": "KZ",
@@ -6216,20 +7903,27 @@
    "lon": 82.61,
    "elevationM": 290.0,
    "monthlyTempC": [
-    -12.4,
-    -9.9,
-    -3.2,
-    7.3,
-    14.1,
-    20.0,
-    21.6,
-    19.9,
-    13.1,
-    5.8,
-    -4.5,
-    -9.9
+    -12.9,
+    -11.2,
+    -2.9,
+    8.8,
+    15.3,
+    20.8,
+    22.2,
+    20.1,
+    13.4,
+    5.5,
+    -4.3,
+    -10.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:aktobe": {
    "country": "KZ",
@@ -6242,20 +7936,27 @@
    "lon": 57.17,
    "elevationM": 216.0,
    "monthlyTempC": [
-    -11.4,
-    -9.3,
-    -3.7,
-    7.9,
-    15.7,
-    21.4,
-    23.8,
-    22.5,
-    14.9,
-    6.4,
-    -2.2,
-    -8.7
+    -11.0,
+    -9.4,
+    -3.1,
+    9.2,
+    16.2,
+    21.0,
+    23.7,
+    22.2,
+    14.4,
+    6.6,
+    -1.8,
+    -9.2
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:south": {
    "country": "KZ",
@@ -6268,20 +7969,27 @@
    "lon": 76.89,
    "elevationM": 810.0,
    "monthlyTempC": [
-    -4.1,
-    -1.4,
-    5.4,
-    11.9,
-    16.8,
-    21.6,
-    25.1,
-    23.2,
-    17.6,
-    10.1,
-    2.1,
-    -2.6
+    -3.4,
+    -0.7,
+    6.4,
+    12.5,
+    17.3,
+    21.5,
+    24.1,
+    22.3,
+    17.7,
+    10.3,
+    2.9,
+    -1.6
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   },
   "KZ:turkistan": {
    "country": "KZ",
@@ -6294,21 +8002,28 @@
    "lon": 69.59,
    "elevationM": 529.0,
    "monthlyTempC": [
-    0.6,
+    0.4,
     3.1,
-    8.7,
-    14.6,
-    20.3,
-    25.6,
-    28.8,
-    26.3,
+    9.3,
+    15.2,
     20.6,
-    12.7,
-    5.7,
-    1.1
+    25.4,
+    28.2,
+    25.7,
+    20.3,
+    12.6,
+    5.3,
+    0.5
    ],
-   "days": 3653
+   "days": 3653,
+   "period": [
+    "2016-01-01",
+    "2025-12-31"
+   ],
+   "model": "era5",
+   "fetchedOn": "2026-10-27",
+   "source": "ERA5 reanalysis (Copernicus/ECMWF) via Open-Meteo historical API; monthly mean of daily mean 2 m temperature 2016–2025 (recent 10-year reference, not a WMO 30-year normal)"
   }
  },
- "fetchedOn": "2026-10-25"
+ "fetchedOn": "2026-10-27"
 }

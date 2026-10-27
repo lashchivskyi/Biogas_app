@@ -78,7 +78,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const { ready: contextReady, country: projectCountry, region: projectRegion, setLocation } = preferences;
   const [formReady, setFormReady] = useState(false);
   const initialized = useRef(false);
-  const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", COUNTRIES.GB.regions[0].id, locale));
+  const [form, setForm] = useState<FormState>(() => initialForm("dairy_farm", "GB", "", locale));
   const [restored, setRestored] = useState(false);
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -92,14 +92,13 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   useEffect(() => {
     if (!contextReady) return;
     const adapter = COUNTRIES[projectCountry];
-    if (!projectRegion) setLocation(adapter.code, adapter.regions[0].id);
     if (!initialized.current) {
       initialized.current = true;
       const q = new URLSearchParams(window.location.search);
       const plan = q.get("plan");
       // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate the browser draft after deterministic SSR
       if (PLAN_IDS.includes(plan as PlanId)) setPreferredPlan(plan as PlanId);
-      let next = initialForm("dairy_farm", adapter.code, projectRegion ?? adapter.regions[0].id, locale);
+      let next = initialForm("dairy_farm", adapter.code, projectRegion ?? "", locale);
       let hasDraft = false;
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -112,7 +111,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       } catch { /* Draft storage is optional. */ }
       const business = q.get("b");
       if (business && Object.hasOwn(BUSINESS_TYPES, business)) {
-        if (!hasDraft || next.businessType !== business) next = initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? adapter.regions[0].id, locale);
+        if (!hasDraft || next.businessType !== business) next = initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? "", locale);
         setStep(1);
       }
       setForm(next);
@@ -142,10 +141,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
   const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
-  const assessment = useMemo(() => (submitted ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, input, country, assessmentDate]);
+  const assessment = useMemo(() => (submitted && form.regionId ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form.regionId, input, country, assessmentDate]);
 
   function next() {
     setError("");
+    if (step === 0 && !form.regionId) { setError(C.regionLabel + ": " + C.choose); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null && invalidStep <= step) {
       setError(numberError[locale]);
@@ -162,6 +162,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function calculate() {
     setError("");
+    if (!form.regionId) { setError(C.regionLabel + ": " + C.choose); setStep(0); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null) {
       setError(numberError[locale]);
@@ -198,7 +199,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       /* ignore */
     }
     const g = preferences.country;
-    setForm(initialForm("dairy_farm", g, preferences.region ?? COUNTRIES[g].regions[0].id, locale));
+    setForm(initialForm("dairy_farm", g, preferences.region ?? "", locale));
     setSubmitted(false);
     setRestored(false);
     setStep(0);
@@ -211,6 +212,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     track("whatif_applied");
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
+
+  if (!formReady) return <div className="card min-h-64 animate-pulse p-8" role="status" aria-label={preferenceCopy(locale).detecting}><div className="h-6 w-2/3 rounded bg-surface2" /><div className="mt-6 h-12 rounded bg-surface2" /></div>;
 
   return (
     <div>
@@ -259,10 +262,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               <p className="hint !mt-1">{C.q2hint}</p>
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
                 <Field label={C.countryLabel} htmlFor="c-country" hint={preferenceCopy(locale).reset}>
-                  <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { preferences.setLocation(c, COUNTRIES[c].regions[0].id); track("country_changed", { country: c }); }} />
+                  <CountrySelect id="c-country" value={form.countryCode} locale={locale} search={d.country.search} empty={d.country.empty} onChange={(c) => { preferences.setLocation(c); track("country_changed", { country: c }); }} />
                 </Field>
                 <Field label={C.regionLabel} htmlFor="c-region">
                   <select id="c-region" className="field" value={form.regionId} onChange={(e) => preferences.setLocation(form.countryCode, e.target.value)}>
+                    <option value="">{C.choose}</option>
                     {country.regions.map((r) => <option key={r.id} value={r.id}>{regionLabel(r, locale)}</option>)}
                   </select>
                 </Field>

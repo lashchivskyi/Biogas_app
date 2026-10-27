@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { ProjectInput } from "@/core";
-import { PLAN_IDS, priceFor } from "@/config/plans";
+import { convertedPlanPrice, PLAN_IDS, priceFor } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
 import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
@@ -43,9 +43,11 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
   }, [locale]);
 
   const tier = COUNTRIES[country]?.priceTier ?? "A";
-  const money = (cents: number) => `${preferences.currency === "USD" ? "≈ " : ""}${new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: preferences.currency, maximumFractionDigits: preferences.currency === "USD" ? 2 : 0 }).format(Math.round(cents * (preferences.currency === "USD" ? preferences.usd.value : 1)) / 100)}`;
+  const money = (cents: number) => `${preferences.currency === "USD" ? "≈ " : ""}${new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: preferences.currency, maximumFractionDigits: 0 }).format(convertedPlanPrice(cents, preferences.currency, preferences.currency === "USD" ? preferences.usd.value : 1) / 100)}`;
   const base = `/${locale}`;
   const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) ? input : null;
+
+  if (!preferences.ready) return <div className="mx-auto h-64 max-w-4xl animate-pulse rounded-2xl bg-surface2" role="status" aria-label={preferenceCopy(locale).detecting} />;
 
   return (
     <div>
@@ -90,7 +92,6 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
         })}
       </div>
       <p className="mt-4 text-center text-xs text-muted">{P.regional}</p>
-      <p className="mt-2 text-center text-xs text-muted">{fmt(preferenceCopy(locale).display, { currency: preferences.currency, rate: new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(preferences.currency === "USD" ? preferences.usd.value : 1), date: preferences.usd.date })}</p>
     </div>
   );
 }

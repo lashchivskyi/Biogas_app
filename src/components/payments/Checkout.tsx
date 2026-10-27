@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import type { ProjectInput } from "@/core";
-import { PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
+import { convertedPlanPrice, PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
 import { fmt, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
@@ -12,6 +12,8 @@ import { usePreferences } from "../LocaleProvider";
 import { preferenceCopy } from "@/i18n/preferences";
 import type { PublicPaymentQuote } from "@/server/payments/quote";
 import type { CurrencyPreference } from "@/lib/preferences";
+import { CountryFlag, CURRENCY_FLAGS } from "../CountryFlag";
+import { FlagSelect } from "../FlagSelect";
 
 export type CheckoutDict = Pick<Dict, "checkout" | "pricing">;
 
@@ -43,8 +45,8 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   const tier = input ? (COUNTRIES[input.countryCode]?.priceTier ?? "A") : "A";
   const quoteCurrency = quote?.currency ?? preferences.currency;
   const rate = quote?.rate ?? (preferences.currency === "USD" ? preferences.usd.value : 1);
-  const formatPrice = (minor: number) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: quoteCurrency, maximumFractionDigits: 2 }).format(minor / 100);
-  const price = (p: PlanId) => formatPrice(Math.round(priceFor(p, tier) * rate));
+  const formatPrice = (minor: number) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: quoteCurrency, maximumFractionDigits: 0 }).format(minor / 100);
+  const price = (p: PlanId) => formatPrice(convertedPlanPrice(priceFor(p, tier), quoteCurrency, rate));
 
   useEffect(() => {
     if (!isOpen || !input) return;
@@ -128,7 +130,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
               </fieldset>
               <div className="rounded-xl border border-line bg-surface2 p-3">
                 <label className="label" htmlFor={`${id}-currency`}>{copy.payment}</label>
-                {quote && quote.availableCurrencies.length > 1 ? <select id={`${id}-currency`} className="field" value={preferences.paymentCurrency === "AUTO" ? "AUTO" : quote.currency} onChange={(e) => preferences.setPaymentCurrency(e.target.value as CurrencyPreference)} disabled={state === "sending"}><option value="AUTO">{copy.automatic} ({quote.availableCurrencies.includes(preferences.currency) ? preferences.currency : "EUR"})</option>{quote.availableCurrencies.map((currency) => <option key={currency} value={currency}>{currency}</option>)}</select> : <p id={`${id}-currency`} className="num font-semibold">{quote?.currency ?? "—"}</p>}
+                {quote && quote.availableCurrencies.length > 1 ? <FlagSelect id={`${id}-currency`} value={quote.currency} onChange={(currency) => preferences.setPaymentCurrency(currency as CurrencyPreference)} disabled={state === "sending"} options={quote.availableCurrencies.map((currency) => ({ value: currency, label: currency, flag: CURRENCY_FLAGS[currency] }))} /> : <p id={`${id}-currency`} className="num flex items-center gap-2 font-semibold">{quote && CURRENCY_FLAGS[quote.currency] && <CountryFlag code={CURRENCY_FLAGS[quote.currency]} />}{quote?.currency ?? "—"}</p>}
                 {quote && <p className="num mt-2 text-xs text-muted">EUR → {quote.currency}: {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(quote.rate)} · {quote.rateDate}</p>}
                 <p className="mt-2 text-xs text-muted">{copy.billing}</p>
                 <p className="mt-2 text-xs text-muted">{copy.tax}</p>

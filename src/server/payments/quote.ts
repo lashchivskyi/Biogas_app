@@ -1,5 +1,5 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { priceFor, type PlanId } from "@/config/plans";
+import { convertedPlanPrice, priceFor, type PlanId } from "@/config/plans";
 import { getCountry } from "@/countries";
 import { fxFor } from "@/countries/sources";
 import type { ProjectInput } from "@/core";
@@ -10,13 +10,13 @@ export class CheckoutError extends Error {
 }
 type QuoteInput = { plan: PlanId; lang: string; input: ProjectInput; paymentCurrency?: "EUR" | "USD" };
 export type PaymentQuote = {
-  currency: "EUR" | "USD" | "UAH"; amountMinor: number; priceEurCents: number;
+  currency: "EUR" | "USD"; amountMinor: number; priceEurCents: number;
   rate: number; rateDate: string; issuedAt: string; expiresAt: string;
 };
 type SignedQuote = PaymentQuote & { provider: string; binding: string };
 export type PublicPaymentQuote = PaymentQuote & { token: string; availableCurrencies: string[] };
 const signatureKey = () => {
-  const configured = process.env.CHECKOUT_QUOTE_SECRET ?? process.env.STRIPE_SECRET_KEY ?? process.env.MONOBANK_TOKEN;
+  const configured = process.env.CHECKOUT_QUOTE_SECRET ?? process.env.STRIPE_SECRET_KEY;
   if (configured) return configured;
   const scope = globalThis as typeof globalThis & { __mxQuoteSecret?: string };
   return scope.__mxQuoteSecret ??= randomBytes(32).toString("hex"); // Development/demo only; shared by local route bundles.
@@ -31,7 +31,6 @@ const fresh = (rate: ReturnType<typeof fxFor>) => {
 export function availablePaymentCurrencies(): string[] {
   const provider = activeProvider();
   if (!provider) return [];
-  if (provider.id === "monobank") return fresh(fxFor("UAH")) ? ["UAH"] : [];
   const usd = fxFor("USD");
   return fresh(usd) ? ["EUR", "USD"] : ["EUR"];
 }
@@ -42,12 +41,12 @@ export function createPaymentQuote(input: QuoteInput): PublicPaymentQuote {
   if (!provider) throw new CheckoutError("Online payment is not available", 503);
   const availableCurrencies = availablePaymentCurrencies();
   if (!availableCurrencies.length) throw new CheckoutError("Current payment FX unavailable", 503);
-  const currency = (provider.id === "monobank" ? "UAH" : availableCurrencies.includes(input.paymentCurrency ?? "EUR") ? input.paymentCurrency ?? "EUR" : "EUR") as PaymentQuote["currency"];
+  const currency = (availableCurrencies.includes(input.paymentCurrency ?? "EUR") ? input.paymentCurrency ?? "EUR" : "EUR") as PaymentQuote["currency"];
   const rate = currency === "EUR" ? { value: 1, date: new Date().toISOString().slice(0, 10) } : fxFor(currency)!;
   if (!(rate?.value > 0)) throw new CheckoutError("Currency quotation unavailable", 503);
   const priceEurCents = priceFor(input.plan, getCountry(input.input.countryCode).priceTier);
   const issuedAt = new Date().toISOString();
-  const quote: SignedQuote = { currency, amountMinor: Math.round(priceEurCents * rate.value), priceEurCents,
+  const quote: SignedQuote = { currency, amountMinor: convertedPlanPrice(priceEurCents, currency, rate.value), priceEurCents,
     rate: rate.value, rateDate: rate.date, issuedAt, expiresAt: new Date(Date.now() + 30 * 60000).toISOString(), provider: provider.id, binding: binding(input) };
   const encoded = Buffer.from(JSON.stringify(quote)).toString("base64url");
   return { currency, amountMinor: quote.amountMinor, priceEurCents, rate: quote.rate, rateDate: quote.rateDate, issuedAt, expiresAt: quote.expiresAt, token: `${encoded}.${sign(encoded)}`, availableCurrencies };
