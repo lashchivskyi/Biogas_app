@@ -21,7 +21,7 @@ export default async function CalculatorPage({ params }: PageProps<"/[lang]/calc
     const tone = v === "STRONG_CANDIDATE" ? "good" : v === "POSSIBLE_WITH_CONDITIONS" ? "mid" : "weak";
     return { id: e.id, title: exampleTitle(e, d, locale), verdict: d.labels.verdict[v], tone, countryCode: e.input.countryCode };
   });
-  const dict = { calc: d.calc, labels: d.labels, result: d.result, flow: d.flow, charts: d.charts, common: d.common, checkout: d.checkout, pricing: d.pricing, country: d.country };
+  const dict = { calc: d.calc, labels: d.labels, result: d.result, flow: d.flow, charts: d.charts, common: d.common, checkout: d.checkout, pricing: d.pricing, country: d.country, audience: d.audience };
   return (
     <main>
       <PageHero eyebrow={d.calc.eyebrow} title={d.calc.title} lead={d.calc.lead} />

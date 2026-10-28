@@ -56,6 +56,9 @@ export const inputSchema = z.object({
   labAnalysisAvailable: z.boolean().optional(),
   assumedSupportEurPerKwh: optNum(1).optional(),
 }).superRefine((input, ctx) => {
+  if (BUSINESS_TYPES[input.businessType].scope === "outside_model") {
+    ctx.addIssue({ code: "custom", path: ["businessType"], message: "This sector requires a separate technical model; paid screening is unavailable" });
+  }
   if (input.city ? input.city.countryCode !== input.countryCode || input.regionId !== cityRegionId(input.city) : !COUNTRIES[input.countryCode].regions.some((region) => region.id === input.regionId)) {
     ctx.addIssue({ code: "custom", path: ["regionId"], message: "Region does not belong to the selected country" });
   }

@@ -3,7 +3,9 @@ import Link from "next/link";
 import { Icon } from "@/components/brand/Icon";
 import { PageHero } from "@/components/PageHero";
 import { localizedHub } from "@/content/localized";
-import { SEGMENTS } from "@/content/segments";
+import { BUSINESS_GROUPS, BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
+import { businessCopy } from "@/i18n/businesses";
+import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 
@@ -25,6 +27,7 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
   const d = await getDictionary(locale);
   const h = localizedHub(locale, d);
   const base = `/${locale}`;
+  const B = businessCopy(locale);
   return (
     <main>
       <PageHero crumbs={[{ name: d.brand.descriptor, href: base }, { name: h.title, href: `${base}/biogas` }]} eyebrow={d.hub.eyebrow} title={h.title} lead={h.description}>
@@ -51,17 +54,21 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
           ))}
           <section id="segments" className="scroll-mt-24 pt-10">
             <h2 className="font-display text-2xl font-semibold">{d.hub.sectors}</h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {SEGMENTS.map((s) => (
-                <Link key={s.slug} href={`${base}/biogas/${s.slug}`} className="card group p-5 transition hover:border-brand">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold">{d.fit.segments[s.id].label}</span>
-                    <Icon name="arrow" size={18} className="text-muted transition group-hover:translate-x-1 group-hover:text-brand" />
-                  </div>
-                  <p className="mt-1.5 text-sm text-ink2">{d.fit.segments[s.id].insight}</p>
-                </Link>
-              ))}
-            </div>
+            {BUSINESS_GROUPS.map((group) => <section key={group.id} className="mt-8">
+              <h3 className="text-lg font-bold">{d.audience.items[group.copyIndex].title}</h3>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {BUSINESS_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => {
+                  const business = BUSINESS_TYPES[id];
+                  return <article key={id} id={`business-${id}`} className="card scroll-mt-24 p-5">
+                    <h4 className="font-bold">{business.guideSlug ? <Link href={businessHref(id, base)} className="hover:text-brand">{d.labels.business[id].label}</Link> : d.labels.business[id].label}</h4>
+                    <p className="mt-2 text-sm text-ink2">{d.labels.business[id].hint}</p>
+                    {business.scope !== "screening" && <p className="mt-3 text-xs font-semibold">{business.scope === "outside_model" ? B.outside : B.specialist}</p>}
+                    {business.scope === "outside_model" ? <p className="mt-2 text-sm text-muted">{B.scopeNote}</p> : <Link href={`${base}/calculator?b=${id}`} className="mt-3 inline-block text-sm font-semibold text-brand hover:underline">{d.fit.cta}</Link>}
+                    <details className="mt-3 text-sm"><summary className="cursor-pointer text-muted">{B.market}</summary><BusinessMarketContext business={id} /></details>
+                  </article>;
+                })}
+              </div>
+            </section>)}
           </section>
         </article>
       </div>

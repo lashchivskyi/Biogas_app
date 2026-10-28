@@ -18,6 +18,7 @@ import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
 import type { Assessment, RouteId, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
 import { decideVerdict } from "./verdict";
+import { BUSINESS_TYPES } from "./businesses";
 
 export const ROUTES: RouteId[] = ["chp", "boiler", "biomethane"];
 
@@ -55,6 +56,7 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
 }
 
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
+  if (BUSINESS_TYPES[input.businessType].scope === "outside_model") throw new Error("This business requires a separate technical model");
   if (input.countryCode !== country.code) throw new Error("Project country does not match the country adapter");
   projectRegion(input, country);
   const asOfDate = opts.asOfDate ?? DATA_REVIEW_AS_OF;

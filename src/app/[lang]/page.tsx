@@ -11,6 +11,7 @@ import { Reveal } from "@/components/Reveal";
 import { Emblem } from "@/components/three/Emblem";
 import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
+import { BUSINESS_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
@@ -34,20 +35,25 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     const ex = EXAMPLES.find((e) => e.id === id)!;
     return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode, example: ex };
   };
-  const segments: SegmentCard[] = SEGMENTS.map((s) => {
-    const { a, country, example } = run(s.exampleId);
-    const r = a.ranges;
-    const txt = d.fit.segments[s.id];
+  const segments: SegmentCard[] = BUSINESS_IDS.map((id) => {
+    const definition = BUSINESS_TYPES[id];
+    const guide = SEGMENTS.find((s) => s.businessType === id && s.id !== "small");
+    const exampleId = guide?.exampleId ?? EXAMPLES.find((e) => e.input.businessType === id)?.id;
+    const result = definition.scope !== "outside_model" && exampleId ? run(exampleId) : undefined;
+    const r = result?.a.ranges;
     return {
-      id: s.id, slug: s.slug, label: txt.label, businessType: s.businessType, tone: s.tone, tendency: d.fit.tones[s.tone], insight: txt.insight, conditions: [...txt.conditions],
-      example: {
-        title: `${exampleTitle(example, d, locale)} · ${countryName(country, locale)}`,
-        verdict: d.labels.verdict[a.verdict.id],
+      id, label: d.labels.business[id].label, businessType: id,
+      group: d.audience.items[BUSINESS_GROUPS.find((g) => g.id === definition.audience)!.copyIndex].title,
+      insight: d.labels.business[id].hint,
+      conditions: guide ? [...d.fit.segments[guide.id].conditions] : [...d.result.robust.steps.slice(1, 4)],
+      example: result && r ? {
+        title: `${exampleTitle(result.example, d, locale)} · ${countryName(result.country, locale)}`,
+        verdict: d.labels.verdict[result.a.verdict.id],
         payback: F.years(r.paybackYears[1]),
         capex: <DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${F.eur(r.capexEur[2])} – ${F.eur(r.capexEur[0])}`} />,
         kw: `${F.range(r.kwEl[0], r.kwEl[2])} ${d.labels.units.kwe}`,
         biogas: `${F.range(r.biogasM3[0], r.biogasM3[2], (x) => F.compact(x))} m³`,
-      },
+      } : undefined,
     };
   });
   const sample = run("slaughter_5000").a;
@@ -65,15 +71,18 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             <h2 className="font-display mt-3 max-w-3xl text-3xl font-semibold leading-tight sm:text-[44px]">{d.audience.title}</h2>
           </Reveal>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {d.audience.items.map((it, i) => (
+            {BUSINESS_GROUPS.map((group, i) => {
+              const it = d.audience.items[group.copyIndex];
+              return (
               <Reveal key={it.title} delay={i * 70} className="h-full">
                 <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-                  <Icon name={AUDIENCE_ICONS[i]} size={26} className="text-signal" />
+                  <Icon name={AUDIENCE_ICONS[group.copyIndex]} size={26} className="text-signal" />
                   <div className="mt-4 text-lg font-bold">{it.title}</div>
-                  <p className="mt-1.5 text-white/70">{it.text}</p>
+                  <p className="mt-1.5 text-white/70">{BUSINESS_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).slice(0, 4).map((id) => d.labels.business[id].label).join(" · ")}</p>
                 </div>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

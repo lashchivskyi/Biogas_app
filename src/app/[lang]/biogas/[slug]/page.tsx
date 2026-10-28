@@ -14,6 +14,9 @@ import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
 import { exampleTitle } from "@/lib/examples";
+import { BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
+import { businessCopy } from "@/i18n/businesses";
+import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 
 export function generateStaticParams() {
   return SEGMENTS.map((s) => ({ slug: s.slug }));
@@ -48,17 +51,17 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   const f = makeFormat(locale, d.labels.units);
   const base = `/${locale}`;
   const calcHref = `${base}/calculator?b=${s.businessType}`;
-  const toneCls = s.tone === "good" ? "bg-signal/15 text-signal ring-signal/40" : s.tone === "mid" ? "bg-amber-400/15 text-amber-300 ring-amber-300/40" : "bg-white/10 text-white/75 ring-white/25";
+  const B = businessCopy(locale);
 
   return (
     <main>
       <PageHero
-        crumbs={[{ name: d.brand.descriptor, href: base }, { name: d.hub.sectors, href: `${base}/biogas` }, { name: seg.label, href: `${base}/biogas/${s.slug}` }]}
+        crumbs={[{ name: d.brand.descriptor, href: base }, { name: d.hub.sectors, href: `${base}/biogas` }, { name: s.id === "small" ? seg.label : d.labels.business[s.businessType].label, href: `${base}/biogas/${s.slug}` }]}
         title={seo.h1}
         lead={seo.intro[0]}
       >
         <div className="mt-7 flex flex-wrap items-center gap-3">
-          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ring-1 ${toneCls}`}>{d.fit.tones[s.tone]}</span>
+          {BUSINESS_TYPES[s.businessType].scope === "specialist" && <span className="text-sm text-white/75">{B.specialist}</span>}
           <Link href={calcHref} className="btn btn-signal">{d.fit.cta} <Icon name="arrow" size={18} /></Link>
         </div>
       </PageHero>
@@ -96,6 +99,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
         </article>
 
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <BusinessMarketContext business={s.businessType} />
           <div className="card p-6">
             <div className="eyebrow text-brand">{d.fit.modelCase}</div>
             <div className="mt-1 text-sm text-muted">{exampleTitle(ex, d, locale)} · {countryName(ex.input.countryCode, locale)}</div>
@@ -122,8 +126,8 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
         <div className="container-x">
           <h2 className="font-display text-2xl font-semibold">{H.others}</h2>
           <div className="mt-5 flex flex-wrap gap-2">
-            {SEGMENTS.filter((x) => x.slug !== s.slug).map((x) => (
-              <Link key={x.slug} href={`${base}/biogas/${x.slug}`} className="chip hover:border-brand">{d.fit.segments[x.id].label}</Link>
+            {BUSINESS_IDS.filter((id) => id !== s.businessType).map((id) => (
+              <Link key={id} href={businessHref(id, base)} className="chip hover:border-brand">{d.labels.business[id].label}</Link>
             ))}
           </div>
         </div>

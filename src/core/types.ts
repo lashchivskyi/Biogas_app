@@ -1,3 +1,5 @@
+import type { BusinessTypeId } from "./businesses";
+export type { BusinessTypeId } from "./businesses";
 import type { CityClimate } from "./location";
 
 /**
@@ -51,30 +53,6 @@ export interface Provenance {
 
 export type ScenarioId = "conservative" | "base" | "optimistic";
 export type RouteId = "chp" | "boiler" | "biomethane";
-
-export type BusinessTypeId =
-  | "dairy_farm"
-  | "cattle_farm"
-  | "pig_farm"
-  | "poultry_farm"
-  | "dairy_processor"
-  | "brewery"
-  | "slaughterhouse"
-  | "fruit_veg_processor"
-  | "food_business"
-  | "other_industry"
-  | "wastewater_organic"
-  | "biogas_developer"
-  | "municipal_biowaste"
-  | "sugar_ethanol"
-  | "palm_oil_mill"
-  | "sugar_beet_factory"
-  | "potato_processor"
-  | "olive_oil_mill"
-  | "wastewater_treatment"
-  | "distillery"
-  | "crop_farm"
-  | "fish_processor";
 
 export type AnimalKind =
   | "dairy_cow"

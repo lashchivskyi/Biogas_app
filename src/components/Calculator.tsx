@@ -24,10 +24,13 @@ import { CitySelect } from "./CitySelect";
 import { locationCopy } from "@/i18n/location";
 import { calculatorHelp } from "@/i18n/calculator-help";
 import { HelpTooltip } from "./HelpTooltip";
+import { BUSINESS_GROUPS, BUSINESS_IDS } from "@/core/businesses";
+import { businessCopy } from "@/i18n/businesses";
+import { BusinessMarketContext } from "./BusinessMarketContext";
 
 const STORAGE_KEY = "mx.form.v2";
 
-export type CalculatorDict = Pick<Dict, "calc" | "labels" | "result" | "flow" | "charts" | "common" | "checkout" | "pricing" | "country">;
+export type CalculatorDict = Pick<Dict, "calc" | "labels" | "result" | "flow" | "charts" | "common" | "checkout" | "pricing" | "country" | "audience">;
 
 export interface ExampleSummary {
   id: string;
@@ -82,6 +85,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: 
 export function Calculator({ locale, d, examples, demo, samplesHref }: { locale: Locale; d: CalculatorDict; examples: ExampleSummary[]; demo: boolean; samplesHref: string }) {
   const C = d.calc;
   const L = d.labels;
+  const H = businessCopy(locale);
   const lang = coreLang(locale);
   const preferences = usePreferences();
   const { ready: contextReady, country: projectCountry, region: projectRegion, city: projectCity } = preferences;
@@ -121,7 +125,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       const business = q.get("b");
       if (business && Object.hasOwn(BUSINESS_TYPES, business)) {
         if (!hasDraft || next.businessType !== business) next = { ...initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? "", locale), city: projectCity };
-        setStep(1);
+        setStep(BUSINESS_TYPES[business as BusinessTypeId].scope === "outside_model" ? 0 : 1);
       }
       setForm(next);
       setFormReady(true);
@@ -150,10 +154,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
   const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
-  const assessment = useMemo(() => (submitted && form.regionId ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form.regionId, input, country, assessmentDate]);
+  const assessment = useMemo(() => (submitted && form.regionId && BUSINESS_TYPES[form.businessType].scope !== "outside_model" ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form.regionId, form.businessType, input, country, assessmentDate]);
 
   function next() {
     setError("");
+    if (BUSINESS_TYPES[form.businessType].scope === "outside_model") { setError(H.scopeNote); setStep(0); return; }
     if (step === 0 && !form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null && invalidStep <= step) {
@@ -171,6 +176,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function calculate() {
     setError("");
+    if (BUSINESS_TYPES[form.businessType].scope === "outside_model") { setError(H.scopeNote); setStep(0); return; }
     if (!form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); setStep(0); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null) {
@@ -187,7 +193,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     const asOfDate = new Date().toISOString().slice(0, 10);
     setAssessmentDate(asOfDate);
     const a = assess(input, country, { asOfDate });
-    track("calculator_submit", { verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
+    track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: BUSINESS_TYPES[form.businessType].role, verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
@@ -253,18 +259,28 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       </ol>
 
       <div className="card p-5 shadow-[0_20px_60px_-35px_rgba(11,23,18,0.35)] md:p-8">
+        {step > 0 && BUSINESS_TYPES[form.businessType].scope === "specialist" && <p className="mb-5 rounded-xl bg-surface2 p-4 text-sm">{H.specialist}. {d.result.robust.accuracy}</p>}
         {step === 0 && (
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-bold">{C.q1}</h2>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {(Object.keys(BUSINESS_TYPES) as BusinessTypeId[]).map((b) => (
-                  <button key={b} type="button" onClick={() => setForm((f) => ({ ...f, businessType: b, lines: linesForBusiness(b) }))} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
-                    <div className="font-semibold">{L.business[b].label}</div>
-                    <div className="text-xs text-muted">{L.business[b].hint}</div>
-                  </button>
-                ))}
-              </div>
+              {BUSINESS_GROUPS.map((group) => (
+                <fieldset key={group.id} className="mt-5">
+                  <legend className="text-sm font-semibold text-ink2">{d.audience.items[group.copyIndex].title}</legend>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {BUSINESS_IDS.filter((b) => BUSINESS_TYPES[b].audience === group.id).map((b) => (
+                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
+                        <div className="font-semibold">{L.business[b].label}</div>
+                        <div className="text-xs text-muted">{L.business[b].hint}</div>
+                        {BUSINESS_TYPES[b].scope !== "screening" && <div className="mt-2 text-xs font-semibold text-ink2">{BUSINESS_TYPES[b].scope === "outside_model" ? H.outside : H.specialist}</div>}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              ))}
+              {BUSINESS_TYPES[form.businessType].scope === "outside_model" && <p className="mt-4 rounded-xl bg-surface2 p-4 text-sm" role="status">{H.scopeNote}</p>}
+              {BUSINESS_TYPES[form.businessType].scope === "specialist" && <p className="mt-4 text-sm text-muted">{H.specialist}. {d.result.robust.accuracy}</p>}
+              <BusinessMarketContext business={form.businessType} country={form.countryCode} region={form.regionId} />
             </div>
             <div>
               <h2 className="text-xl font-bold">{C.q2}</h2>

@@ -7,7 +7,7 @@ import "../globals.css";
 import { Logo } from "@/components/brand/Logo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SITE } from "@/config/site";
-import { SEGMENTS } from "@/content/segments";
+import { BUSINESS_GROUPS, BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { getDictionary, INTL_TAG, isLocale, LOCALES, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 import { LANGUAGE_OPTIONS } from "@/i18n/language-options";
@@ -63,8 +63,13 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
               <div className="font-semibold text-white">{f.sectors}</div>
               <ul className="mt-3 space-y-2">
                 <li><Link className="hover:text-white" href={`${base}/biogas`}>{f.hub}</Link></li>
-                {SEGMENTS.map((s) => (
-                  <li key={s.slug}><Link className="hover:text-white" href={`${base}/biogas/${s.slug}`}>{d.fit.segments[s.id as keyof typeof d.fit.segments].label}</Link></li>
+                {BUSINESS_GROUPS.map((group) => (
+                  <li key={group.id}><details>
+                    <summary className="cursor-pointer font-semibold hover:text-white">{d.audience.items[group.copyIndex].title}</summary>
+                    <ul className="mt-2 space-y-2 pl-3">
+                      {BUSINESS_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => <li key={id}><Link className="hover:text-white" href={businessHref(id, base)}>{d.labels.business[id].label}</Link></li>)}
+                    </ul>
+                  </details></li>
                 ))}
               </ul>
             </nav>

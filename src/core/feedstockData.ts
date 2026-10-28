@@ -1,5 +1,5 @@
 import type { CoreLang } from "./i18n";
-import type { AnimalKind, BusinessTypeId, Confidence, FeedstockTypeId, HandlingId } from "./types";
+import type { AnimalKind, Confidence, FeedstockTypeId, HandlingId } from "./types";
 
 /**
  * Feedstock catalogue. Yields are given per kg of volatile solids (VS) so that the model
@@ -90,43 +90,7 @@ export const ANIMALS: Record<AnimalKind, AnimalType> = {
   broiler: { id: "broiler", name: { en: "broilers (places)", uk: "бройлери (птахомісць)" }, feedstock: "poultry_broiler_litter", tonnesPerHeadYear: 0.011, rangeLow: 0.008, rangeHigh: 0.014, collectYearRound: 0.97, collectSeasonal: 0.97, confidence: "LOW" },
 };
 
-export interface BusinessType {
-  id: BusinessTypeId;
-  /** Suggested starting lines in the questionnaire. */
-  suggested: Array<{ animal?: AnimalKind; type?: FeedstockTypeId; quantity: number }>;
-  /** Audience the business belongs to (home page segmentation). */
-  audience: "farm" | "food" | "developer" | "municipal";
-}
-
-export const BUSINESS_TYPES: Record<BusinessTypeId, BusinessType> = {
-  // Farms
-  dairy_farm: { id: "dairy_farm", suggested: [{ animal: "dairy_cow", quantity: 400 }, { animal: "cattle_other", quantity: 200 }], audience: "farm" },
-  cattle_farm: { id: "cattle_farm", suggested: [{ animal: "cattle_other", quantity: 300 }], audience: "farm" },
-  pig_farm: { id: "pig_farm", suggested: [{ animal: "pig_finisher", quantity: 3000 }], audience: "farm" },
-  poultry_farm: { id: "poultry_farm", suggested: [{ animal: "layer_hen", quantity: 150000 }], audience: "farm" },
-  // Residues first: straw is suggested; energy crops (maize silage) are added explicitly and flagged.
-  crop_farm: { id: "crop_farm", suggested: [{ type: "crop_straw", quantity: 2000 }], audience: "farm" },
-  // Food & beverage industry
-  dairy_processor: { id: "dairy_processor", suggested: [{ type: "dairy_whey", quantity: 6000 }], audience: "food" },
-  slaughterhouse: { id: "slaughterhouse", suggested: [{ type: "slaughter_residues", quantity: 2000 }], audience: "food" },
-  fish_processor: { id: "fish_processor", suggested: [{ type: "fish_waste", quantity: 3000 }], audience: "food" },
-  fruit_veg_processor: { id: "fruit_veg_processor", suggested: [{ type: "fruit_veg_residues", quantity: 1500 }], audience: "food" },
-  potato_processor: { id: "potato_processor", suggested: [{ type: "potato_processing", quantity: 25000 }], audience: "food" },
-  sugar_beet_factory: { id: "sugar_beet_factory", suggested: [{ type: "sugar_beet_pulp_pressed", quantity: 80000 }], audience: "food" },
-  sugar_ethanol: { id: "sugar_ethanol", suggested: [{ type: "vinasse", quantity: 300000 }, { type: "press_mud", quantity: 30000 }], audience: "food" },
-  brewery: { id: "brewery", suggested: [{ type: "brewery_spent_grain", quantity: 1500 }], audience: "food" },
-  distillery: { id: "distillery", suggested: [{ type: "grain_stillage", quantity: 120000 }], audience: "food" },
-  olive_oil_mill: { id: "olive_oil_mill", suggested: [{ type: "olive_pomace", quantity: 15000 }], audience: "food" },
-  palm_oil_mill: { id: "palm_oil_mill", suggested: [{ type: "pome", quantity: 200000 }], audience: "food" },
-  other_industry: { id: "other_industry", suggested: [{ type: "food_waste", quantity: 500 }], audience: "food" },
-  // Waste, water and trade: restaurants are suppliers to a regional plant, not plant owners.
-  food_business: { id: "food_business", suggested: [{ type: "food_waste", quantity: 8000 }], audience: "municipal" },
-  municipal_biowaste: { id: "municipal_biowaste", suggested: [{ type: "municipal_biowaste", quantity: 25000 }], audience: "municipal" },
-  wastewater_treatment: { id: "wastewater_treatment", suggested: [{ type: "sewage_sludge", quantity: 60000 }], audience: "municipal" },
-  wastewater_organic: { id: "wastewater_organic", suggested: [{ type: "dairy_fat_sludge", quantity: 800 }], audience: "municipal" },
-  // Developers
-  biogas_developer: { id: "biogas_developer", suggested: [{ animal: "dairy_cow", quantity: 3000 }, { type: "food_waste", quantity: 10000 }], audience: "developer" },
-};
+export { BUSINESS_TYPES, type BusinessType } from "./businesses";
 
 export const HANDLING_IDS: HandlingId[] = ["field_spreading", "lagoon", "paid_disposal", "sold_as_feed", "landfill", "other"];
 

@@ -23,12 +23,13 @@ export function localizedHub(locale: Locale, d: Dict): HubContent {
 }
 
 export function localizedSegment(s: Segment, locale: Locale, d: Dict): SegmentSeo {
-  if (locale === "en" || locale === "uk") return s.seo[locale];
+  const label = s.id === "small" ? d.fit.segments.small.label : d.labels.business[s.businessType].label;
+  if (locale === "en" || locale === "uk") return { ...s.seo[locale], h1: s.id === "small" ? s.seo[locale].h1 : label };
   const segment = d.fit.segments[s.id];
   return {
-    title: `${segment.label} — ${d.brand.descriptor}`,
+    title: `${label} — ${d.brand.descriptor}`,
     description: segment.insight,
-    h1: segment.label,
+    h1: label,
     intro: [segment.insight],
     drivers: d.principles.items.slice(0, 4).map((p) => [p.title, p.text]),
     faq: d.faq.items.slice(0, 3).map((p) => [p.q, p.a]),

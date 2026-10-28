@@ -92,7 +92,7 @@ describe.each(LOCALES)("localised surfaces %s", (locale) => {
       const content = localizedSegment(sector, locale, d);
       expect(content.h1.trim()).toBeTruthy();
       if (locale !== "en" && locale !== "uk") {
-        expect(content.h1).toBe(d.fit.segments[sector.id].label);
+        expect(content.h1).toBe(sector.id === "small" ? d.fit.segments.small.label : d.labels.business[sector.businessType].label);
         expect(content.intro).toContain(d.fit.segments[sector.id].insight);
       }
     }
