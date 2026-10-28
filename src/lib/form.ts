@@ -1,3 +1,5 @@
+import { canonicalBusiness, defaultProcess } from "@/core/businesses";
+import { processSchema, type ProcessInput, type ProcessKind } from "@/core/processes";
 import { BUSINESS_TYPES, FEEDSTOCKS } from "@/core/feedstockData";
 import type { CountryAdapter } from "@/core/country";
 import type { AnimalKind, BusinessTypeId, FeedstockLineInput, FeedstockTypeId, HandlingId, HeatNeed, Housing, ProjectInput } from "@/core/types";
@@ -32,6 +34,9 @@ export interface FormState {
   regionId: string;
   city?: CityClimate;
   businessType: BusinessTypeId;
+  processKind?: "ad" | ProcessKind;
+  processFields?: Record<string, string>;
+  projectRole?: ProjectInput["projectRole"];
   lines: FormLine[];
   elecBillMonthly: string;
   elecKwhYear: string;
@@ -57,9 +62,10 @@ const formNumber = (s: string, locale?: Locale) => locale
 /** Do not silently omit an invalid stream or price when calculating the remaining inputs. */
 export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
   const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
-  if (f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
+  if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis")).some(([,v]) => invalid(v))) return 1;
+  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
   if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear].some(invalid)) return 2;
-  if ([f.landHa, f.existingStorageM3, f.gasGridKm].some(invalid)) return 3;
+  if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", f.gasGridKm].some(invalid)) return 3;
   return null;
 }
 
@@ -92,7 +98,7 @@ export function linesForBusiness(b: BusinessTypeId): FormLine[] {
 export function initialForm(businessType: BusinessTypeId, countryCode: string, regionId: string, locale: Locale = "en"): FormState {
   return {
     numberLocale: locale,
-    countryCode, regionId, businessType,
+    countryCode, regionId, businessType: canonicalBusiness(businessType), processKind: defaultProcess(businessType), processFields: {}, projectRole: BUSINESS_TYPES[businessType].role,
     lines: linesForBusiness(businessType),
     elecBillMonthly: "", elecKwhYear: "", elecPrice: "",
     gasUsed: false, gasBillMonthly: "", gasM3Year: "", gasPrice: "",
@@ -108,8 +114,9 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   const reformat = (value: string) => { const n = formNumber(value ?? "", f.numberLocale); return n === undefined ? value ?? "" : nf.format(n); };
   const changed = f.countryCode !== country.code;
   const city = validCity(projectCity, country.code) && regionId === cityRegionId(projectCity) ? projectCity : undefined;
-  const next = { ...f, numberLocale: locale, countryCode: country.code,
+  const next = { ...f, businessType: canonicalBusiness(f.businessType), processKind: f.processKind ?? defaultProcess(f.businessType), numberLocale: locale, countryCode: country.code,
     regionId: city ? cityRegionId(city) : country.regions.some((r) => r.id === regionId) ? regionId! : "", city,
+    processFields: Object.fromEntries(Object.entries(f.processFields ?? {}).map(([k,v]) => [k, changed && (k.includes("Local") || k.startsWith("basis")) ? "" : k.startsWith("basis") ? v : reformat(v)])),
     lines: f.lines.map((line) => ({ ...line })),
   };
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm"] as const;
@@ -173,7 +180,9 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
     ...(city ? { city } : {}),
     businessType: f.businessType,
     lang,
-    feedstocks,
+    feedstocks: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? feedstocks : [],
+    ...((f.processKind ?? defaultProcess(f.businessType)) !== "ad" ? { process: processFromForm(f) as ProcessInput } : {}),
+    projectRole: f.projectRole ?? BUSINESS_TYPES[f.businessType].role,
     energy: {
       electricityKwhYear: kwh,
       electricityPriceLocalPerKwh: price,
@@ -184,8 +193,8 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
       hasGridConnection: f.hasGrid,
     },
     site: {
-      landHa: num(f.landHa),
-      existingStorageM3: num(f.existingStorageM3),
+      landHa: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? num(f.landHa) : undefined,
+      existingStorageM3: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? num(f.existingStorageM3) : undefined,
       gasGridKm: num(f.gasGridKm),
       neighboursWithin300m: f.neighbours,
       nearProtectedOrWaterArea: f.protectedArea,
@@ -218,10 +227,13 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
   });
   return {
     numberLocale: locale,
+    processKind: i.process?.kind ?? "ad",
+    processFields: i.process ? Object.fromEntries(Object.entries(i.process).filter(([k]) => k !== "kind").map(([k,v]) => [k,typeof v === "string" ? v : s(v as number)])) : {},
+    projectRole: i.projectRole ?? BUSINESS_TYPES[i.businessType].role,
     countryCode: i.countryCode,
     regionId: i.regionId,
     ...(i.city ? { city: i.city } : {}),
-    businessType: i.businessType,
+    businessType: canonicalBusiness(i.businessType),
     lines,
     elecBillMonthly: "",
     elecKwhYear: s(i.energy.electricityKwhYear),
@@ -239,4 +251,13 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
     neighbours: !!i.site.neighboursWithin300m,
     protectedArea: !!i.site.nearProtectedOrWaterArea,
   };
+}
+
+export function processFromForm(f: FormState) {
+  return { kind: f.processKind ?? defaultProcess(f.businessType), ...Object.fromEntries(Object.entries(f.processFields ?? {}).map(([k,v]) => [k, k.startsWith("basis") ? v.trim() || undefined : formNumber(v, f.numberLocale)])) };
+}
+export function processIssues(f: FormState): string[] {
+  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad") return [];
+  const result = processSchema.safeParse(processFromForm(f));
+  return result.success ? [] : [...new Set(result.error.issues.map(i => String(i.path[0])))];
 }

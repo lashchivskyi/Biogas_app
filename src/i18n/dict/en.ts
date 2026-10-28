@@ -254,6 +254,7 @@ const en = {
     housing: { year_round: "Housed all year", seasonal: "Grazing in summer" },
     handling: { field_spreading: "Spread on our own fields", lagoon: "Stored in a lagoon / tank", paid_disposal: "We pay for collection / disposal", sold_as_feed: "We sell it (e.g. as feed)", landfill: "Sent to landfill", other: "Other / don't know" },
     business: {
+      central_biogas_plant: { label: "Centralised biogas plants and cooperatives", hint: "Shared processing of manure and organic residues from several suppliers" },
       dairy_farm: { label: "Dairy farm", hint: "Cows, young stock, slurry" },
       cattle_farm: { label: "Beef / mixed cattle", hint: "Finishing, grazing, mixed farm" },
       pig_farm: { label: "Pig farm", hint: "Finishers and/or sows" },
@@ -277,12 +278,12 @@ const en = {
       crop_farm: { label: "Arable / crop farm", hint: "Straw, intermediate crops, silage (energy crops flagged)" },
       fish_processor: { label: "Fish processing", hint: "Heads, trimmings and offal; check existing fishmeal and feed contracts" },
 
-      other_livestock: { label: "Other livestock: sheep, goats, horses", hint: "Collected manure; species-specific properties and bedding need a separate assessment" },
+      other_livestock: { label: "Other livestock: sheep, goats, horses", hint: "Collected manure: laboratory DM, VS and BMP; include bedding" },
       food_manufacturer: { label: "Food manufacturing and bakeries", hint: "Segregated production rejects; exclude saleable food and feed" },
-      starch_processor: { label: "Starch mills: cassava, maize and cereals", hint: "High-COD process water; a wastewater-specific design is required" },
+      starch_processor: { label: "Starch mills: cassava, maize and cereals", hint: "Industrial wastewater · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Pulp and paper mills", hint: "Biodegradable process effluent; exclude black liquor and woody solids" },
-      aquaculture: { label: "Aquaculture and fish farms", hint: "Collected sludge; salinity and water dilution need a separate assessment" },
-      landfill_operator: { label: "Landfill operators", hint: "Captured landfill gas; requires a gas-recovery model, not a feedstock digester" },
+      aquaculture: { label: "Aquaculture and fish farms", hint: "Collected fish-farm sludge: laboratory DM, VS and BMP; test salinity" },
+      landfill_operator: { label: "Waste landfill owners and operators", hint: "Gas from a closed landfill / Existing biogas supply → CHP / Upgrading" },
       energy_offtaker: { label: "Gas buyers and energy utilities", hint: "Biomethane offtake and supply contracts; no feedstock plant is assumed" },
     },
     feedstock: {

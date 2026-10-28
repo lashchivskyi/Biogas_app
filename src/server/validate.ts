@@ -1,3 +1,5 @@
+import { processSchema } from "@/core/processes";
+import { modelsForBusiness } from "@/core/businesses";
 import { z } from "zod";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS, type HandlingId } from "@/core";
 import { COUNTRIES } from "@/countries";
@@ -35,7 +37,9 @@ export const inputSchema = z.object({
   city: z.custom<CityClimate>((c) => !!c && typeof c === "object" && verifyCity(c, (c as CityClimate).countryCode), "Invalid or altered city climate; select the city again").optional(),
   lang: z.enum(["en", "uk"]).optional(),
   businessType: z.enum(key(BUSINESS_TYPES)),
-  feedstocks: z.array(lineSchema).min(1).max(16),
+  process: processSchema.optional(),
+  projectRole: z.enum(["feedstock_owner", "waste_operator", "developer", "offtaker"]).optional(),
+  feedstocks: z.array(lineSchema).max(16),
   energy: z.object({
     electricityKwhYear: optNum(1e10),
     electricityPriceLocalPerKwh: optNum(1000),
@@ -56,8 +60,8 @@ export const inputSchema = z.object({
   labAnalysisAvailable: z.boolean().optional(),
   assumedSupportEurPerKwh: optNum(1).optional(),
 }).superRefine((input, ctx) => {
-  if (BUSINESS_TYPES[input.businessType].scope === "outside_model") {
-    ctx.addIssue({ code: "custom", path: ["businessType"], message: "This sector requires a separate technical model; paid screening is unavailable" });
+  if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad") || (input.process ? input.feedstocks.length > 0 : input.feedstocks.length === 0)) {
+    ctx.addIssue({ code: "custom", path: ["process"], message: "Supply one complete input basis appropriate to the selected process" });
   }
   if (input.city ? input.city.countryCode !== input.countryCode || input.regionId !== cityRegionId(input.city) : !COUNTRIES[input.countryCode].regions.some((region) => region.id === input.regionId)) {
     ctx.addIssue({ code: "custom", path: ["regionId"], message: "Region does not belong to the selected country" });

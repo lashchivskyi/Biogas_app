@@ -252,6 +252,7 @@ const cs: Translation = {
     housing: { year_round: "Celoroční ustájení", seasonal: "V létě na pastvě" },
     handling: { field_spreading: "Aplikujeme na vlastní pole", lagoon: "Skladujeme v laguně / jímce", paid_disposal: "Platíme za odvoz / likvidaci", sold_as_feed: "Prodáváme (např. jako krmivo)", landfill: "Na skládku", other: "Jiné / nevím" },
     business: {
+      central_biogas_plant: { label: "Centrální bioplynové stanice a družstva", hint: "Společné zpracování statkových hnojiv a organických zbytků od více dodavatelů" },
       dairy_farm: { label: "Chov dojnic", hint: "Krávy, mladý dobytek, kejda" },
       cattle_farm: { label: "Masný / smíšený chov skotu", hint: "Výkrm, pastva, smíšená farma" },
       pig_farm: { label: "Chov prasat", hint: "Výkrm a/nebo prasnice" },
@@ -275,12 +276,12 @@ const cs: Translation = {
       crop_farm: { label: "Rostlinná výroba", hint: "Sláma, meziplodiny, siláž (energetické plodiny s upozorněním)" },
       fish_processor: { label: "Zpracování ryb", hint: "Hlavy, odřezky a vnitřnosti; ověřte smlouvy na krmivo a rybí moučku" },
 
-      other_livestock: { label: "Další chovy: ovce, kozy, koně", hint: "Shromážděný hnůj; vlastnosti podle druhu zvířat a podestýlku je třeba posoudit zvlášť" },
+      other_livestock: { label: "Další chovy: ovce, kozy, koně", hint: "Shromážděný hnůj: laboratorní stanovení sušiny, organické sušiny a BMP včetně podestýlky" },
       food_manufacturer: { label: "Potravinářské závody a pekárny", hint: "Oddělené výrobní zbytky; bez prodejných potravin a krmiv" },
-      starch_processor: { label: "Škrobárny: maniok, kukuřice a obiloviny", hint: "Provozní vody s vysokým COD; nutný samostatný návrh čištění" },
+      starch_processor: { label: "Škrobárny: maniok, kukuřice a obiloviny", hint: "Průmyslové odpadní vody · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Celulózky a papírny", hint: "Biologicky rozložitelné odpadní vody; bez černého louhu a dřeva" },
-      aquaculture: { label: "Akvakultura a rybí farmy", hint: "Zachycený kal; salinitu a ředění je nutné posoudit zvlášť" },
-      landfill_operator: { label: "Provozovatelé skládek", hint: "Zachycený skládkový plyn; vyžaduje model jímání plynu, ne fermentoru" },
+      aquaculture: { label: "Akvakultura a rybí farmy", hint: "Shromážděný kal z chovu ryb: rozbor sušiny a BMP; ověření salinity" },
+      landfill_operator: { label: "Vlastníci a provozovatelé skládek", hint: "Plyn z uzavřené skládky / Stávající tok bioplynu → CHP / Upgrading" },
       energy_offtaker: { label: "Odběratelé plynu a energetické společnosti", hint: "Odběr biometanu a dodavatelské smlouvy; vlastní substráty se nepředpokládají" },
     },
     feedstock: {

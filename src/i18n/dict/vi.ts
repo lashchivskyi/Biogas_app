@@ -252,6 +252,7 @@ const vi: Translation = {
     housing: { year_round: "Nuôi nhốt quanh năm", seasonal: "Chăn thả vào mùa hè" },
     handling: { field_spreading: "Bón ra ruộng của mình", lagoon: "Chứa trong hồ / bể", paid_disposal: "Trả tiền thu gom / xử lý", sold_as_feed: "Bán đi (vd: làm thức ăn chăn nuôi)", landfill: "Đưa đi bãi chôn lấp", other: "Khác / không rõ" },
     business: {
+      central_biogas_plant: { label: "Nhà máy khí sinh học tập trung và hợp tác xã", hint: "Xử lý chung phân chuồng và phụ phẩm hữu cơ từ nhiều nhà cung cấp" },
       dairy_farm: { label: "Trại bò sữa", hint: "Bò sữa, bê, phân lỏng" },
       cattle_farm: { label: "Bò thịt / chăn nuôi hỗn hợp", hint: "Vỗ béo, chăn thả, trang trại hỗn hợp" },
       pig_farm: { label: "Trại heo", hint: "Heo thịt và/hoặc heo nái" },
@@ -275,12 +276,12 @@ const vi: Translation = {
       crop_farm: { label: "Trang trại trồng trọt", hint: "Rơm rạ, cây trồng xen vụ, ủ chua (cây năng lượng được đánh dấu)" },
       fish_processor: { label: "Chế biến thủy sản", hint: "Đầu, thịt vụn và nội tạng; kiểm tra hợp đồng cung cấp thức ăn chăn nuôi và bột cá" },
 
-      other_livestock: { label: "Chăn nuôi khác: cừu, dê, ngựa", hint: "Phân đã thu gom; cần đánh giá riêng đặc tính theo loài vật nuôi và chất độn chuồng" },
+      other_livestock: { label: "Chăn nuôi khác: cừu, dê, ngựa", hint: "Phân thu gom: phân tích chất khô, chất rắn bay hơi và BMP, tính cả chất độn chuồng" },
       food_manufacturer: { label: "Nhà máy thực phẩm và cơ sở sản xuất bánh", hint: "Phế phẩm sản xuất đã phân loại; loại trừ thực phẩm và thức ăn chăn nuôi còn bán được" },
-      starch_processor: { label: "Nhà máy tinh bột", hint: "Nước thải công nghệ có COD cao; cần thiết kế xử lý riêng" },
+      starch_processor: { label: "Nhà máy tinh bột", hint: "Nước thải công nghiệp · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Nhà máy bột giấy và giấy", hint: "Nước thải phân hủy sinh học; không gồm dịch đen và gỗ" },
-      aquaculture: { label: "Cơ sở nuôi trồng thủy sản", hint: "Bùn thu gom; độ mặn và mức pha loãng cần đánh giá riêng" },
-      landfill_operator: { label: "Đơn vị vận hành bãi chôn lấp", hint: "Khí bãi chôn lấp được thu gom; cần mô hình thu hồi khí, không phải bể phân hủy" },
+      aquaculture: { label: "Cơ sở nuôi trồng thủy sản", hint: "Bùn thu gom từ trại cá: phân tích chất rắn và BMP; kiểm tra độ mặn" },
+      landfill_operator: { label: "Chủ sở hữu và đơn vị vận hành bãi chôn lấp", hint: "Khí từ bãi chôn lấp đã đóng cửa / Nguồn khí sinh học hiện có → CHP / Upgrading" },
       energy_offtaker: { label: "Bên mua khí và doanh nghiệp năng lượng", hint: "Mua khí metan sinh học và hợp đồng cung cấp; không giả định có nguyên liệu riêng" },
     },
     feedstock: {

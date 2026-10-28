@@ -8,6 +8,7 @@ import type { DigestateAssessment, FeedstockSummary } from "./types";
  * before digestion, so only the better N availability counts; imported waste brings new nutrients.
  */
 export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): DigestateAssessment {
+  if (ctx.input.process) return { basis: ctx.input.process.kind === "residue" ? "process_residuals" : "not_applicable", tonnesYear: ctx.input.process.kind === "residue" ? digestateTonnes(feed,ctx.params) : 0, nKgYear: ctx.input.process.kind === "residue" ? feed.nKgYear : 0, landRequiredHa: 0, landAvailableHa: null, adequacy: "UNKNOWN", excessShare: 0, fertiliserValueEurYear: 0, handlingCostEurYear: 0, netValueEurYear: 0, storageMonthsRequired: 0, advice: [], status: "NEUTRAL" }; // Disposal costs live in the process module; no fertiliser credit or land-spreading claim.
   const p = ctx.params;
   const nLimit = p.get("eng.nitrates_limit_kg_n_ha");
   const retention = p.get("eng.digestate_n_retention");

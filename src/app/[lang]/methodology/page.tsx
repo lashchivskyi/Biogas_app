@@ -13,6 +13,7 @@ import { COUNTRY_COOKIE } from "@/i18n/config";
 import { readPreferenceCookie, resolvePreferences } from "@/lib/preferences";
 import { alternates } from "@/i18n/seo";
 import { methodologyCopy, methodologyTermHelp } from "@/i18n/methodology";
+import { processCopy } from "@/i18n/processes";
 import "./methodology.css";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/methodology">): Promise<Metadata> {
@@ -100,6 +101,18 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
             </ul>
           </section>
         </div>
+
+        <section className="methodology-section" aria-labelledby="inlet-models">
+          <h2 id="inlet-models" className="methodology-panelTitle">{d.result.detailsTitle}</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            {Object.entries(processCopy(locale).models).map(([kind, label]) => <div key={kind} className="card p-4">
+              <h3 className="font-semibold">{label}</h3>
+              <p className="mt-2 break-words font-mono text-sm">{{ residue: "FM × DM × VS × BMP × η → CH₄", wastewater: "Q × COD × η → COD(X) + 4 × m(CH₄)", landfill: "Σ Mᵢ × L₀ × exp(−k × ageᵢ) × (1 − exp(−k)) × η → CH₄", gas: "Q × 24 × d × availability × CH₄% → CHP / Boiler / Upgrading" }[kind]}</p>
+            </div>)}
+          </div>
+          <p className="mt-4 text-sm text-muted">{processCopy(locale).inputHint} {processCopy(locale).costHint}</p>
+          <p className="mt-2 text-sm"><a className="underline" href="https://www.epa.gov/system/files/documents/2021-07/pdh_chapter2.pdf">EPA LMOP · 2021</a> · <a className="underline" href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_6_Ch06_Wastewater.pdf">IPCC · 2019</a> · <a className="underline" href="https://www.ieabioenergy.com/blog/publications/implementation-of-anaerobic-digestion-facilities-in-the-food-and-beverage-industry/">IEA Bioenergy · 2025</a></p>
+        </section>
 
         <section id="country-conditions" className="methodology-section" aria-labelledby="country-conditions-title">
           <div className="methodology-sectionHeading">

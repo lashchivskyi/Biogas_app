@@ -19,9 +19,10 @@ export function chooseDigestion(feed: FeedstockSummary, ctx: RunContext): Kind {
   const p = ctx.params;
   const dm = feed.dryMatterPct;
   const warm = meanTemp(ctx.region.monthlyTempC) >= 20;
-  const dilute = dm < 4 && feed.manureShareVs < 0.5;
-  if (warm && dm < 8) return "covered_lagoon";
-  if (dilute) return "high_rate";
+  // An analysed solids stream has no demonstrated soluble COD / granular sludge basis.
+  if (!ctx.input.process && warm && dm < 8) return "covered_lagoon";
+  // Dilution alone is not evidence of soluble COD or suitability for a high-rate reactor.
+  // UASB/EGSB sizing is available through the explicit COD process model.
   if (dm >= p.get("eng.dry_digestion_dm_pct")) return "high_solids";
   if (dm >= p.get("eng.wet_solids_feeding_dm_pct")) return "wet_with_solids_feeding";
   return "wet";
@@ -140,6 +141,10 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
     qMax = Math.max(qMax, feed.monthlyTonnes[i] / DAYS_IN_MONTH[i]);
     vsMax = Math.max(vsMax, feed.monthlyVsTonnes[i] / DAYS_IN_MONTH[i]);
   }
+  if (ctx.input.process?.kind === "residue") {
+    qMax = feed.tonnesYear / ctx.input.process.operatingDays * 1000 / ctx.input.process.densityKgM3;
+    vsMax = feed.vsTonnesYear / ctx.input.process.operatingDays;
+  }
   const byHrt = qMax * hrt; // t/d × d = t ≈ m³ (density ≈ 1)
   const byOlr = (vsMax * 1000) / olr;
   const working = Math.max(byHrt, byOlr);
@@ -189,7 +194,7 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   return {
     workingVolumeM3: working,
     totalVolumeM3: total,
-    hrtDays: hrt,
+    hrtDays: qMax > 0 ? working / qMax : hrt,
     olrKgVsM3Day: working > 0 ? (vsMax * 1000) / working : 0,
     monthlyHeatDemandKwh: heat,
     heatDemandKwhYear: heat.reduce((a, b) => a + b, 0),

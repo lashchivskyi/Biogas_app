@@ -14,7 +14,7 @@ import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
 import { exampleTitle } from "@/lib/examples";
-import { BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
+import { SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
 import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 
@@ -126,7 +126,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
         <div className="container-x">
           <h2 className="font-display text-2xl font-semibold">{H.others}</h2>
           <div className="mt-5 flex flex-wrap gap-2">
-            {BUSINESS_IDS.filter((id) => id !== s.businessType).map((id) => (
+            {SECTOR_IDS.filter((id) => id !== s.businessType).map((id) => (
               <Link key={id} href={businessHref(id, base)} className="chip hover:border-brand">{d.labels.business[id].label}</Link>
             ))}
           </div>

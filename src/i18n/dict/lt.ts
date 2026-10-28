@@ -252,6 +252,7 @@ const lt: Translation = {
     housing: { year_round: "Tvartuose ištisus metus", seasonal: "Vasarą ganyklose" },
     handling: { field_spreading: "Skleidžiame savo laukuose", lagoon: "Laikome lagūnoje / rezervuare", paid_disposal: "Mokame už išvežimą / tvarkymą", sold_as_feed: "Parduodame (pvz., pašarams)", landfill: "Vežame į sąvartyną", other: "Kita / nežinau" },
     business: {
+      central_biogas_plant: { label: "Centralizuotos biodujų jėgainės ir kooperatyvai", hint: "Bendras kelių tiekėjų mėšlo ir organinių liekanų perdirbimas" },
       dairy_farm: { label: "Pieno ūkis", hint: "Karvės, prieauglis, srutos" },
       cattle_farm: { label: "Mėsinių / mišrių galvijų ūkis", hint: "Penėjimas, ganymas, mišrus ūkis" },
       pig_farm: { label: "Kiaulių ūkis", hint: "Penimos kiaulės ir (arba) paršavedės" },
@@ -275,12 +276,12 @@ const lt: Translation = {
       crop_farm: { label: "Augalininkystės ūkis", hint: "Šiaudai, tarpiniai pasėliai, silosas (energetiniai augalai pažymimi)" },
       fish_processor: { label: "Žuvų perdirbimas", hint: "Galvos, atraižos ir vidaus organai; patikrinkite pašarų ir žuvų miltų sutartis" },
 
-      other_livestock: { label: "Kiti ūkiai: avys, ožkos, arkliai", hint: "Surinktas mėšlas; savybes pagal gyvūnų rūšį ir kraiką reikia vertinti atskirai" },
+      other_livestock: { label: "Kiti ūkiai: avys, ožkos, arkliai", hint: "Surinktas mėšlas: sausųjų ir organinių medžiagų bei BMP tyrimai, įskaitant kraiką" },
       food_manufacturer: { label: "Maisto gamybos įmonės ir kepyklos", hint: "Atskirti gamybos likučiai; neįtraukiamas parduodamas maistas ir pašarai" },
-      starch_processor: { label: "Krakmolo gamyklos", hint: "Didelio COD technologinės nuotekos; būtinas atskiras valymo projektas" },
+      starch_processor: { label: "Krakmolo gamyklos", hint: "Pramoninės nuotekos · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Celiuliozės ir popieriaus gamyklos", hint: "Biologiškai skaidžios nuotekos; be juodojo šarmo ir medienos" },
-      aquaculture: { label: "Akvakultūra ir žuvininkystės ūkiai", hint: "Surinktas dumblas; druskingumas ir praskiedimas vertinami atskirai" },
-      landfill_operator: { label: "Sąvartynų operatoriai", hint: "Surinktos sąvartyno dujos; reikia dujų surinkimo, ne fermentavimo modelio" },
+      aquaculture: { label: "Akvakultūra ir žuvininkystės ūkiai", hint: "Surinktas žuvininkystės dumblas: sausųjų medžiagų ir BMP tyrimai; druskingumo patikra" },
+      landfill_operator: { label: "Sąvartynų savininkai ir operatoriai", hint: "Uždaryto sąvartyno dujos / Esamas biodujų srautas → CHP / Upgrading" },
       energy_offtaker: { label: "Dujų pirkėjai ir energetikos įmonės", hint: "Biometano pirkimas ir tiekimo sutartys; nuosava žaliava nėra numatyta" },
     },
     feedstock: {

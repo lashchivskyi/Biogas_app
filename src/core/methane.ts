@@ -16,7 +16,7 @@ export function methaneCheck(
   const gwp = p.get("eng.gwp_ch4");
   const rho = p.get("eng.ch4_density_kg_m3");
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
-  const purity = p.get("eng.biomethane_ch4_purity");
+  const purity = base.energy.biomethaneCh4Share ?? p.get("eng.biomethane_ch4_purity");
   const efGrid = p.get("econ.grid_ef_t_mwh");
   const efGas = p.get("eng.gas_emission_factor_t_mwh");
   const good = p.get("eng.methane_loss_good");

@@ -73,13 +73,7 @@ CHP service включає allowance на overhaul; ще один такий res
 - інкрементальна цінність дигестату з урахуванням retention і землі.
 
 За замовчуванням база не покладається на incentives. Водночас legacy-поле
-`assumedSupportEurPerKwh` приймається API й додає підтримку до виручки навіть
-базового розрахунку; `supportIncluded` позначає її в результаті. Тому твердження
-«вердикт ніколи не враховує субсидій» для всіх дозволених input зараз хибне.
-Цю розбіжність потрібно вирішити окремою зміною моделі/API з регресією.
-`supportCases` окремо показують
-умовні гранти/тарифи; програма в CountryAdapter не підтверджує eligibility,
-дозвіл, строк commissioning або укладений контракт.
+`assumedSupportEurPerKwh` залишається читабельним legacy-полем, але не додається до базової виручки та супроводжується попередженням. Каталожні AD-проєкти можуть мати окремі country support cases; для нових процесних моделей право на стимули не припускається і такі сценарії не обчислюються без процесно-специфічної перевірки.
 
 ## Cash flow, NPV, IRR і DSCR
 
@@ -133,3 +127,15 @@ breakeven показує потрібну зміну CAPEX/ціни. Корел�
 контрольний розрахунок і тести, не лише два виклики тієї самої функції.
 Для зміни ринку порівнювати використані тарифи, класи, date/FX та наслідок
 для CAPEX/OPEX/NPV; для точності потрібні незалежні as-built кейси.
+
+## Економіка окремих процесів
+
+Для process-вводу встановлений upstream CAPEX та annual non-energy OPEX є явними бюджетами користувача в місцевій валюті. Вони переводяться в EUR один раз, без повторного country CAPEX multiplier. Бюджет має включати приймання/pretreatment, обладнання основного процесу, логістику/закупівлю/альтернативну вартість сировини, зберігання, необхідне доочищення й upstream labour/service. Ціни не підставляються з історичних впроваджень. Енергія, утилізація залишків, закуплений газ і downstream conversion/service додаються окремо; той самий personnel/service scope не можна включати в обидва бюджети.
+
+CHP/boiler та базові газові системи залишаються component-based estimates з країновими параметрами й LOW там, де бракує калібрування. Для LFG/наявного газу upgrading CAPEX, recovery, energy use й product purity задані користувачем для повного train під його gas analysis (H₂S/siloxanes/H₂O/CO₂/N₂/O₂). Це не автоматичне підтвердження досягнення газових специфікацій. Поточні unit maintenance, staffing та grid/CNG параметри — окремі припущення, що потребують оферт.
+
+COD-модель додає лише явно зазначені уникнені платежі за очищення; не приписує дохід за очищення, яке ще потрібно виконувати. Residue/WW sludge disposal рахується на фактичну модельну масу; добривна виручка без nutrient/offtake basis не нараховується. Потік existing-gas купується за введеною ціною raw Nm³; CAPEX нового метантенка не додається.
+
+Для FOD і existing-gas з annual decline кожен рік повторно проходить energy balance з тим самим встановленим CHP rating і початковим CAPEX. Використане тепло/електрика обмежуються попитом; купівля газу змінюється з потоком, фіксовані витрати не зникають. Повний annual operating forecast входить у NPV/IRR/DSCR; газ не вважається сталим 15 років. Country biomethane price нормалізується за product CH₄ purity, щоб зміна об’ємної чистоти не змінювала ціну одиниці енергії.
+
+Scenario uncertainty задає paired supply/yield/cost cases; додаткові OAT bounds охоплюють k/L₀/collection, COD/removal/avoided treatment, gas price/decline та process OPEX/residuals. Це engineering bounds, не статистична похибка. Simple payback є CAPEX / початковий steady EBITDA; для спадаючого газу обов’язково дивитися cumulative cash flow і dynamicPaybackYears (недисконтований перший перетин нуля), NPV та DSCR. Податки, оборотний капітал, financing during construction, equity IRR та lender CFADS не додані; ці результати залишаються pre-tax project screening.

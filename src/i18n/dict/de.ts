@@ -252,6 +252,7 @@ const de: Translation = {
     housing: { year_round: "Ganzjährige Stallhaltung", seasonal: "Sommerweide" },
     handling: { field_spreading: "Ausbringung auf eigenen Flächen", lagoon: "Lagerung in Lagune / Behälter", paid_disposal: "Wir zahlen für Abholung / Entsorgung", sold_as_feed: "Wir verkaufen es (z. B. als Futter)", landfill: "Deponie", other: "Sonstiges / weiß nicht" },
     business: {
+      central_biogas_plant: { label: "Zentrale Biogasanlagen und Genossenschaften", hint: "Gemeinsame Verwertung von Wirtschaftsdüngern und organischen Reststoffen mehrerer Lieferanten" },
       dairy_farm: { label: "Milchviehbetrieb", hint: "Kühe, Jungvieh, Gülle" },
       cattle_farm: { label: "Rindermast / Gemischtbetrieb", hint: "Mast, Weide, Gemischtbetrieb" },
       pig_farm: { label: "Schweinebetrieb", hint: "Mastschweine und/oder Sauen" },
@@ -275,12 +276,12 @@ const de: Translation = {
       crop_farm: { label: "Ackerbaubetrieb", hint: "Stroh, Zwischenfrüchte, Silage (Energiepflanzen mit Hinweis)" },
       fish_processor: { label: "Fischverarbeitung", hint: "Köpfe, Abschnitte und Innereien; bestehende Futter- und Fischmehlverträge prüfen" },
 
-      other_livestock: { label: "Weitere Tierhaltung: Schafe, Ziegen, Pferde", hint: "Gesammelter Mist; tierartspezifische Eigenschaften und Einstreu gesondert bewerten" },
+      other_livestock: { label: "Weitere Tierhaltung: Schafe, Ziegen, Pferde", hint: "Gesammelter Mist: Laborwerte für TS, oTS und BMP einschließlich Einstreu" },
       food_manufacturer: { label: "Lebensmittelhersteller und Bäckereien", hint: "Getrennte Produktionsreste; verkäufliche Lebensmittel und Futtermittel ausschließen" },
-      starch_processor: { label: "Stärkefabriken: Maniok, Mais und Getreide", hint: "Prozessabwasser mit hoher COD-Fracht; separate Abwasserplanung erforderlich" },
+      starch_processor: { label: "Stärkefabriken: Maniok, Mais und Getreide", hint: "Industrieabwasser · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Zellstoff- und Papierfabriken", hint: "Biologisch abbaubares Prozessabwasser; keine Schwarzlauge oder Holzfeststoffe" },
-      aquaculture: { label: "Aquakultur und Fischzucht", hint: "Erfasster Schlamm; Salzgehalt und Verdünnung separat bewerten" },
-      landfill_operator: { label: "Deponiebetreiber", hint: "Erfasstes Deponiegas; Gasfassungsmodell statt Substratvergärung erforderlich" },
+      aquaculture: { label: "Aquakultur und Fischzucht", hint: "Gesammelter Fischzuchtschlamm: TS, oTS und BMP im Labor bestimmen; Salzgehalt prüfen" },
+      landfill_operator: { label: "Eigentümer und Betreiber von Abfalldeponien", hint: "Gas aus einer stillgelegten Deponie / Vorhandener Biogasstrom → CHP / Upgrading" },
       energy_offtaker: { label: "Gasabnehmer und Energieversorger", hint: "Biomethanabnahme und Lieferverträge; keine eigene Substratversorgung unterstellt" },
     },
     feedstock: {

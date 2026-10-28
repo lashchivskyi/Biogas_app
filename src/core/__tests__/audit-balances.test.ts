@@ -22,13 +22,17 @@ describe("engineering and financial reconciliation", () => {
         const params = buildParams(getCountry(input.countryCode));
         const storageMonths = params.get("eng.storage_months");
         const months = r.design.tech.digestion === "high_rate" || r.design.tech.digestion === "covered_lagoon" ? Math.min(storageMonths, 1) : storageMonths;
-        expect(feed.tonnesYear - dryBiogasMassKg(feed, params) / 1000, `${id}: dry-gas mass balance`)
+        if (!r.process) expect(feed.tonnesYear - dryBiogasMassKg(feed, params) / 1000, `${id}: dry-gas mass balance`)
           .toBeCloseTo(r.design.storageVolumeM3 * 12 / months, 4);
+        else if (r.process.kind === "wastewater" || r.process.kind === "residue") {
+          const m = r.process.metrics;
+          expect(m.massIn.value, `${id}: inlet = gas + residual + effluent`).toBeCloseTo(m.gasMass.value + m.residual.value + (m.effluent?.value ?? 0),4);
+        }
         expect(sum(energy.monthly.gasKwh), `${id}: methane LHV`).toBeCloseTo(energy.gasEnergyKwh, 6);
         expect(energy.ch4LeakedM3 + energy.ch4ToChpM3 + energy.ch4ToBoilerM3 + energy.ch4ToUpgraderM3 + energy.ch4FlaredM3, `${id}: CH4 allocation`)
           .toBeCloseTo(energy.ch4ProducedM3, 4);
         if (route === "biomethane") expect(energy.ch4ToUpgraderM3 - energy.upgradingSlipM3, `${id}: biomethane CH4`)
-          .toBeCloseTo(energy.biomethaneNm3 * buildParams(getCountry(input.countryCode)).get("eng.biomethane_ch4_purity"), 4);
+          .toBeCloseTo(energy.biomethaneNm3 * (energy.biomethaneCh4Share ?? params.get("eng.biomethane_ch4_purity")), 4);
         expect(sum(energy.monthly.elNetKwh), `${id}: monthly net power`).toBeCloseTo(energy.elNetKwh, 6);
         expect(energy.elGrossKwh - energy.elParasiticKwh, `${id}: electricity balance`).toBeCloseTo(energy.elNetKwh - energy.elPurchasedKwh, 6);
         expect(energy.elSelfConsumedKwh + energy.elExportedKwh, `${id}: power allocation`).toBeLessThanOrEqual(energy.elNetKwh + 1e-6);

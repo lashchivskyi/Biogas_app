@@ -252,6 +252,7 @@ const fi: Translation = {
     housing: { year_round: "Sisällä ympäri vuoden", seasonal: "Kesällä laitumella" },
     handling: { field_spreading: "Levitämme omille pelloille", lagoon: "Varastoimme altaassa / säiliössä", paid_disposal: "Maksamme noudosta / käsittelystä", sold_as_feed: "Myymme sen (esim. rehuksi)", landfill: "Menee kaatopaikalle", other: "Muu / en tiedä" },
     business: {
+      central_biogas_plant: { label: "Keskitetyt biokaasulaitokset ja osuuskunnat", hint: "Useiden toimittajien lannan ja orgaanisten jäännösten yhteiskäsittely" },
       dairy_farm: { label: "Maitotila", hint: "Lehmät, nuorkarja, liete" },
       cattle_farm: { label: "Lihakarja / sekatila", hint: "Kasvatus, laidunnus, sekatila" },
       pig_farm: { label: "Sikatila", hint: "Lihasiat ja/tai emakot" },
@@ -275,12 +276,12 @@ const fi: Translation = {
       crop_farm: { label: "Kasvinviljelytila", hint: "Olki, välikasvit, säilörehu (energiakasvit merkitään)" },
       fish_processor: { label: "Kalanjalostus", hint: "Päät, leikkuujätteet ja sisälmykset; tarkista rehu- ja kalajauhosopimukset" },
 
-      other_livestock: { label: "Muu kotieläintalous: lampaat, vuohet, hevoset", hint: "Kerätty lanta; eläinlajikohtaiset ominaisuudet ja kuivikkeet arvioitava erikseen" },
+      other_livestock: { label: "Muu kotieläintalous: lampaat, vuohet, hevoset", hint: "Kerätty lanta: kuiva-aineen, orgaanisen aineen ja BMP:n laboratorioanalyysi kuivikkeineen" },
       food_manufacturer: { label: "Elintarviketehtaat ja leipomot", hint: "Erotellut tuotantojäämät; myyntikelpoinen ruoka ja rehu rajataan pois" },
-      starch_processor: { label: "Tärkkelystehtaat", hint: "Suuren COD-pitoisuuden prosessivesi; tarvitaan erillinen puhdistussuunnitelma" },
+      starch_processor: { label: "Tärkkelystehtaat", hint: "Teollisuuden jätevesi · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Sellu- ja paperitehtaat", hint: "Biohajoava jätevesi; ei mustalipeää tai puujätettä" },
-      aquaculture: { label: "Vesiviljely ja kalanviljelylaitokset", hint: "Kerätty liete; suolapitoisuus ja laimennus arvioidaan erikseen" },
-      landfill_operator: { label: "Kaatopaikkojen pitäjät", hint: "Talteen otettu kaatopaikkakaasu; tarvitaan kaasunkeräysmalli, ei mädättämömallia" },
+      aquaculture: { label: "Vesiviljely ja kalanviljelylaitokset", hint: "Kerätty kalankasvatusliete: kuiva-aine- ja BMP-analyysi; suolapitoisuuden tarkistus" },
+      landfill_operator: { label: "Kaatopaikkojen omistajat ja pitäjät", hint: "Suljetun kaatopaikan kaasu / Olemassa oleva biokaasuvirta → CHP / Upgrading" },
       energy_offtaker: { label: "Kaasun ostajat ja energiayhtiöt", hint: "Biometaanin osto ja toimitussopimukset; omaa syötettä ei oleteta" },
     },
     feedstock: {

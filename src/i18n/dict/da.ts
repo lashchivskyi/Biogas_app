@@ -252,6 +252,7 @@ const da: Translation = {
     housing: { year_round: "På stald hele året", seasonal: "På græs om sommeren" },
     handling: { field_spreading: "Udbringes på egne marker", lagoon: "Opbevares i lagune / beholder", paid_disposal: "Vi betaler for afhentning / bortskaffelse", sold_as_feed: "Vi sælger det (f.eks. som foder)", landfill: "Går til deponi", other: "Andet / ved ikke" },
     business: {
+      central_biogas_plant: { label: "Biogasfællesanlæg og andelsselskaber", hint: "Fælles behandling af husdyrgødning og organiske restprodukter fra flere leverandører" },
       dairy_farm: { label: "Malkekvægsbedrift", hint: "Køer, opdræt, gylle" },
       cattle_farm: { label: "Kødkvæg / blandet bedrift", hint: "Opfedning, afgræsning, blandet bedrift" },
       pig_farm: { label: "Svinebedrift", hint: "Slagtesvin og/eller søer" },
@@ -275,12 +276,12 @@ const da: Translation = {
       crop_farm: { label: "Planteavlsbedrift", hint: "Halm, efterafgrøder, ensilage (energiafgrøder markeret)" },
       fish_processor: { label: "Fiskeforarbejdning", hint: "Hoveder, afskær og indvolde; kontrollér aftaler om foder og fiskemel" },
 
-      other_livestock: { label: "Andet husdyrhold: får, geder, heste", hint: "Opsamlet gødning; artsspecifikke egenskaber og strøelse vurderes særskilt" },
+      other_livestock: { label: "Andet husdyrhold: får, geder, heste", hint: "Indsamlet husdyrgødning: laboratorieanalyse af tørstof, organisk stof og BMP inklusive strøelse" },
       food_manufacturer: { label: "Fødevareproducenter og bagerier", hint: "Sorterede produktionsrester; salgbare fødevarer og foder holdes udenfor" },
-      starch_processor: { label: "Stivelsesfabrikker", hint: "Procesvand med høj COD; kræver særskilt renseanlægsdesign" },
+      starch_processor: { label: "Stivelsesfabrikker", hint: "Industrispildevand · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Papirmasse- og papirfabrikker", hint: "Biologisk nedbrydeligt spildevand; ingen sortlud eller trærester" },
-      aquaculture: { label: "Akvakultur og dambrug", hint: "Opsamlet slam; saltholdighed og fortynding vurderes særskilt" },
-      landfill_operator: { label: "Deponioperatører", hint: "Opsamlet deponigas; kræver en gasopsamlingsmodel, ikke en rådnetank" },
+      aquaculture: { label: "Akvakultur og dambrug", hint: "Indsamlet slam fra fiskeopdræt: tørstof- og BMP-analyse; kontrollér saltholdighed" },
+      landfill_operator: { label: "Ejere og operatører af affaldsdeponier", hint: "Gas fra et lukket deponi / Eksisterende biogasstrøm → CHP / Upgrading" },
       energy_offtaker: { label: "Gasaftagere og energiselskaber", hint: "Biometanaftag og leveringsaftaler; ingen egen biomasse forudsat" },
     },
     feedstock: {

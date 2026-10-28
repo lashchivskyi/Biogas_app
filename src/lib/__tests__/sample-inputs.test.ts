@@ -57,7 +57,8 @@ describe("detailed sample inputs", () => {
       for (const lang of ["en", "uk"] as const) {
         const notes = SAMPLE_CASES[e.id].notes[lang];
         expect(notes.context.length, e.id).toBeGreaterThan(80);
-        expect(notes.operations.length, e.id).toBeGreaterThanOrEqual(2);
+        // Process operating figures are rendered from the input by sampleNotes (covered in every locale above).
+        if (!e.input.process) expect(notes.operations.length, e.id).toBeGreaterThanOrEqual(2);
         expect(notes.verify.length, e.id).toBeGreaterThan(80);
       }
     }

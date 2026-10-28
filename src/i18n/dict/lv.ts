@@ -252,6 +252,7 @@ const lv: Translation = {
     housing: { year_round: "Kūtī visu gadu", seasonal: "Vasarā ganībās" },
     handling: { field_spreading: "Iestrādājam savos laukos", lagoon: "Glabājam lagūnā / krātuvē", paid_disposal: "Maksājam par izvešanu / utilizāciju", sold_as_feed: "Pārdodam (piem., lopbarībai)", landfill: "Vedam uz poligonu", other: "Cits / nezinu" },
     business: {
+      central_biogas_plant: { label: "Centralizētas biogāzes ražotnes un kooperatīvi", hint: "Vairāku piegādātāju kūtsmēslu un organisko atlieku kopīga pārstrāde" },
       dairy_farm: { label: "Piena ferma", hint: "Govis, jaunlopi, šķidrmēsli" },
       cattle_farm: { label: "Gaļas / jaukta liellopu saimniecība", hint: "Nobarošana, ganības, jaukta saimniecība" },
       pig_farm: { label: "Cūku ferma", hint: "Nobarojamās cūkas un/vai sivēnmātes" },
@@ -275,12 +276,12 @@ const lv: Translation = {
       crop_farm: { label: "Augkopības saimniecība", hint: "Salmi, starpkultūras, skābbarība (enerģētiskie kultūraugi atzīmēti)" },
       fish_processor: { label: "Zivju pārstrāde", hint: "Galvas, atgriezumi un iekšas; pārbaudiet lopbarības un zivju miltu līgumus" },
 
-      other_livestock: { label: "Citas saimniecības: aitas, kazas, zirgi", hint: "Savāktie kūtsmēsli; īpašības atkarībā no dzīvnieku sugas un pakaišiem jāvērtē atsevišķi" },
+      other_livestock: { label: "Citas saimniecības: aitas, kazas, zirgi", hint: "Savāktie kūtsmēsli: sausnas, organiskās vielas un BMP analīzes, ieskaitot pakaišus" },
       food_manufacturer: { label: "Pārtikas ražotnes un maiznīcas", hint: "Atdalīti ražošanas atlikumi; bez pārdodamas pārtikas un lopbarības" },
-      starch_processor: { label: "Cietes ražotnes", hint: "Procesa notekūdeņi ar augstu COD; vajadzīgs atsevišķs attīrīšanas projekts" },
+      starch_processor: { label: "Cietes ražotnes", hint: "Rūpnieciskie notekūdeņi · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Celulozes un papīra rūpnīcas", hint: "Bioloģiski noārdāmi notekūdeņi; bez melnā šķīduma un koksnes" },
-      aquaculture: { label: "Akvakultūra un zivju audzētavas", hint: "Savāktas dūņas; sāļums un atšķaidījums jāvērtē atsevišķi" },
-      landfill_operator: { label: "Poligonu apsaimniekotāji", hint: "Savākta poligona gāze; vajadzīgs gāzes savākšanas, nevis fermentācijas modelis" },
+      aquaculture: { label: "Akvakultūra un zivju audzētavas", hint: "Savāktās zivju audzētavas dūņas: sausnas un BMP analīzes; sāļuma pārbaude" },
+      landfill_operator: { label: "Atkritumu poligonu īpašnieki un apsaimniekotāji", hint: "Slēgta poligona gāze / Esoša biogāzes plūsma → CHP / Upgrading" },
       energy_offtaker: { label: "Gāzes pircēji un enerģētikas uzņēmumi", hint: "Biometāna iegāde un piegādes līgumi; nav pieņēmuma par savām izejvielām" },
     },
     feedstock: {

@@ -41,7 +41,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   // ---------------- Feedstock fit ----------------
   const scale = interp(base.kwElEquivalent, [[0, 0], [25, 20], [50, 45], [100, 65], [200, 80], [400, 92], [800, 100]]);
   const density = interp(feed.energyDensityKwhPerTonne, [[0, 0], [100, 20], [200, 45], [400, 65], [800, 85], [1500, 100]]);
-  const monthsWithFeed = feed.monthlyTonnes.filter((t) => t > 0).length;
+  const monthsWithFeed = (input.process ? feed.monthlyCh4M3 : feed.monthlyTonnes).filter((t) => t > 0).length;
   const consistency = (monthsWithFeed / 12) * 100;
   const worstLogistics = Math.max(0, ...logistics.perLine.map((l) => l.transportShareOfEnergyValue));
   const logisticsScore = worstLogistics >= 0.5 ? 20 : worstLogistics >= 0.25 ? 55 : 100;
@@ -54,7 +54,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
     feedPenalty += 5;
     feedNotes.push(T("Feedstock has an alternative use; its price is not given", "Сировина має альтернативне використання, ціна не вказана"));
   }
-  const feedValue = clamp(0.4 * scale + 0.2 * density + 0.2 * consistency + 0.2 * logisticsScore - feedPenalty);
+  const feedValue = input.process ? clamp(0.6 * scale + 0.4 * consistency) : clamp(0.4 * scale + 0.2 * density + 0.2 * consistency + 0.2 * logisticsScore - feedPenalty);
   const feedExpl = [
     T(`Energy equivalent ≈ ${r0(base.kwElEquivalent)} kWe (scale score ${r0(scale)}/100)`, `Енергетичний еквівалент ≈ ${r0(base.kwElEquivalent)} кВт ел. (оцінка масштабу ${r0(scale)}/100)`),
     T(`Feedstock energy ≈ ${r0(feed.energyDensityKwhPerTonne)} kWh of methane per tonne (score ${r0(density)}/100)`, `Енергія сировини ≈ ${r0(feed.energyDensityKwhPerTonne)} кВт·год метану на тонну (оцінка ${r0(density)}/100)`),
@@ -62,6 +62,8 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
     ...(worstLogistics >= 0.25 ? [T(`Logistics take up to ${r0(worstLogistics * 100)} % of the feedstock's energy value`, `Логістика сировини забирає до ${r0(worstLogistics * 100)} % її енергетичної вартості`)] : []),
     ...feedNotes,
   ];
+
+  if (input.process) feedExpl.splice(1, 1, T("Process-specific inlet basis; no generic feedstock energy-density score.", "Окрема база вхідного потоку; загальну оцінку енергетичної щільності сировини не застосовано."));
 
   // ---------------- Energy fit ----------------
   let energyValue: number;

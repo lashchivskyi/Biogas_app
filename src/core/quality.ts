@@ -36,7 +36,7 @@ export function assessQuality(
     score -= 12;
     reasons.push(T("Most feedstock has low-confidence parameters", "Більшість сировини має параметри низької довіри"));
   }
-  if (!measuredFeedstock) {
+  if (!measuredFeedstock && !input.process) {
     score -= 15;
     reasons.push(T("Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing", "Немає повного набору лабораторних DM, VS і BMP для кожної сировини — пропущені значення взято з каталогу"));
     gap("lab", T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
@@ -65,7 +65,7 @@ export function assessQuality(
     score -= 4;
     reasons.push(T("Gas is used but a heat need is not confirmed", "Є споживання газу, але потреба в теплі не підтверджена"));
   }
-  if (input.site.landHa === undefined) {
+  if (!input.process && input.site.landHa === undefined) {
     score -= 8;
     gap("land", T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
   }
@@ -86,6 +86,10 @@ export function assessQuality(
   }
   if (input.feedstocks.some((f) => f.animal && ANIMALS[f.animal] && f.housing === "seasonal")) {
     reasons.push(T("Seasonal grazing reduces collectable manure — the collected share is estimated", "Сезонне випасання зменшує зібраний гній — частку зібраного оцінено"));
+  }
+  if (input.process) {
+    score = Math.min(score, 65);
+    reasons.push(T("Process inputs and project budgets require document verification; ranges are assumptions, not validated accuracy.", "Параметри процесу й бюджети потребують звірки з документами; діапазони є припущеннями, а не підтвердженою точністю."));
   }
   score = Math.max(0, Math.min(100, score));
   const level: Confidence = score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Icon } from "@/components/brand/Icon";
 import { PageHero } from "@/components/PageHero";
 import { localizedHub } from "@/content/localized";
-import { BUSINESS_GROUPS, BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
+import { BUSINESS_GROUPS, SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
 import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 import { getDictionary, type Locale } from "@/i18n";
@@ -57,7 +57,7 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
             {BUSINESS_GROUPS.map((group) => <section key={group.id} className="mt-8">
               <h3 className="text-lg font-bold">{d.audience.items[group.copyIndex].title}</h3>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {BUSINESS_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => {
+                {SECTOR_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => {
                   const business = BUSINESS_TYPES[id];
                   return <article key={id} id={`business-${id}`} className="card scroll-mt-24 p-5">
                     <h4 className="font-bold">{business.guideSlug ? <Link href={businessHref(id, base)} className="hover:text-brand">{d.labels.business[id].label}</Link> : d.labels.business[id].label}</h4>

@@ -29,6 +29,8 @@ export function irr(flows: number[]): number | null {
 }
 
 export interface CashFlowInput {
+  /** Year-specific operating values before inflation/ramp; fixed equipment, changing gas supply. */
+  annualOperating?: { revenue: number; opex: number }[];
   capexEur: number;
   /** Year-1-basis amounts (EUR) */
   energyRevenue: number; // escalates with energy prices
@@ -47,14 +49,15 @@ export interface CashFlowInput {
 }
 
 export function buildFinancials(i: CashFlowInput): FinancialResult {
+  if (i.annualOperating && (i.annualOperating.length !== i.horizon || i.annualOperating.some(y => !Number.isFinite(y.revenue) || !Number.isFinite(y.opex)))) throw new Error("Annual operating forecast must cover the full financial horizon with finite values");
   const flows: number[] = [-i.capexEur];
   const ebitda: number[] = [];
   for (let t = 1; t <= i.horizon; t++) {
     const eEsc = Math.pow(1 + i.energyEsc, t - 1);
     const oEsc = Math.pow(1 + i.opexEsc, t - 1);
     const ramp = t === 1 ? i.rampYear1 : 1;
-    const rev = (i.energyRevenue * eEsc + i.otherRevenue * oEsc + (i.fixedRevenue ?? 0)) * ramp;
-    const opex = i.opexEur * oEsc;
+    const rev = i.annualOperating ? i.annualOperating[t - 1].revenue * eEsc * ramp : (i.energyRevenue * eEsc + i.otherRevenue * oEsc + (i.fixedRevenue ?? 0)) * ramp;
+    const opex = (i.annualOperating?.[t - 1].opex ?? i.opexEur) * oEsc;
     const e = rev - opex;
     ebitda.push(e);
     flows.push(e);

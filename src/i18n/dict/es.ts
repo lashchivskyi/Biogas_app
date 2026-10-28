@@ -252,6 +252,7 @@ const es: Translation = {
     housing: { year_round: "Estabulación todo el año", seasonal: "Pastoreo en verano" },
     handling: { field_spreading: "Lo aplicamos en nuestras tierras", lagoon: "Almacenado en balsa / depósito", paid_disposal: "Pagamos por la recogida / gestión", sold_as_feed: "Lo vendemos (p. ej. como pienso)", landfill: "A vertedero", other: "Otro / no sé" },
     business: {
+      central_biogas_plant: { label: "Plantas centralizadas de biogás y cooperativas", hint: "Tratamiento conjunto de estiércoles y residuos orgánicos de varios proveedores" },
       dairy_farm: { label: "Granja lechera", hint: "Vacas, recría, purín" },
       cattle_farm: { label: "Vacuno de carne / mixto", hint: "Cebo, pastoreo, explotación mixta" },
       pig_farm: { label: "Granja porcina", hint: "Cebo y/o cerdas" },
@@ -275,12 +276,12 @@ const es: Translation = {
       crop_farm: { label: "Explotación agrícola de cultivos", hint: "Paja, cultivos intermedios, ensilado (cultivos energéticos señalados)" },
       fish_processor: { label: "Procesado de pescado", hint: "Cabezas, recortes y vísceras; revisar contratos de piensos y harina de pescado" },
 
-      other_livestock: { label: "Otras explotaciones: ovino, caprino y equino", hint: "Estiércol recogido; evaluar por separado sus propiedades según la especie y la cama" },
+      other_livestock: { label: "Otras explotaciones: ovino, caprino y equino", hint: "Estiércol recogido: análisis de sólidos totales, volátiles y BMP, incluida la cama" },
       food_manufacturer: { label: "Industria alimentaria y panificadoras", hint: "Rechazos de producción separados; excluir alimentos y piensos comercializables" },
-      starch_processor: { label: "Fábricas de almidón: yuca, maíz y cereales", hint: "Aguas de proceso con COD elevado; requieren un diseño de tratamiento específico" },
+      starch_processor: { label: "Fábricas de almidón: yuca, maíz y cereales", hint: "Aguas residuales industriales · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Fábricas de pasta y papel", hint: "Efluentes biodegradables; excluir licor negro y residuos leñosos" },
-      aquaculture: { label: "Acuicultura y piscifactorías", hint: "Lodos recogidos; evaluar por separado salinidad y dilución" },
-      landfill_operator: { label: "Operadores de vertederos", hint: "Gas de vertedero captado; requiere un modelo de captación, no de digestión" },
+      aquaculture: { label: "Acuicultura y piscifactorías", hint: "Lodos de piscifactoría recogidos: análisis de sólidos y BMP; comprobar la salinidad" },
+      landfill_operator: { label: "Propietarios y gestores de vertederos", hint: "Gas de un vertedero clausurado / Caudal de biogás existente → CHP / Upgrading" },
       energy_offtaker: { label: "Compradores de gas y empresas energéticas", hint: "Compra de biometano y contratos de suministro; sin suponer sustratos propios" },
     },
     feedstock: {

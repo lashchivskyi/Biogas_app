@@ -252,6 +252,7 @@ const hu: Translation = {
     housing: { year_round: "Egész éves istállózás", seasonal: "Nyáron legelőn" },
     handling: { field_spreading: "Saját földre juttatjuk ki", lagoon: "Lagúnában / tárolóban tároljuk", paid_disposal: "Fizetünk az elszállításért / ártalmatlanításért", sold_as_feed: "Eladjuk (pl. takarmánynak)", landfill: "Lerakóba kerül", other: "Egyéb / nem tudom" },
     business: {
+      central_biogas_plant: { label: "Központi biogázüzemek és szövetkezetek", hint: "Több beszállító trágyájának és szerves maradékanyagainak közös feldolgozása" },
       dairy_farm: { label: "Tejelő tehenészet", hint: "Tehenek, növendékek, hígtrágya" },
       cattle_farm: { label: "Húsmarha / vegyes állattartás", hint: "Hízlalás, legelő, vegyes gazdaság" },
       pig_farm: { label: "Sertéstelep", hint: "Hízók és/vagy kocák" },
@@ -275,12 +276,12 @@ const hu: Translation = {
       crop_farm: { label: "Szántóföldi gazdaság", hint: "Szalma, másodvetés, szilázs (energianövények jelölve)" },
       fish_processor: { label: "Halfeldolgozás", hint: "Fejek, nyesedékek és belsőségek; ellenőrizze a takarmány- és hallisztszerződéseket" },
 
-      other_livestock: { label: "Egyéb állattartás: juh, kecske, ló", hint: "Összegyűjtött trágya; az állatfaj jellemzőit és az almot külön kell értékelni" },
+      other_livestock: { label: "Egyéb állattartás: juh, kecske, ló", hint: "Begyűjtött trágya: szárazanyag-, szervesanyag- és BMP-vizsgálat az alommal együtt" },
       food_manufacturer: { label: "Élelmiszerüzemek és pékségek", hint: "Elkülönített gyártási maradékok; az értékesíthető élelmiszer és takarmány kizárva" },
-      starch_processor: { label: "Keményítőgyárak: manióka, kukorica és gabona", hint: "Magas COD-tartalmú technológiai víz; külön szennyvízkezelési terv szükséges" },
+      starch_processor: { label: "Keményítőgyárak: manióka, kukorica és gabona", hint: "Ipari szennyvíz · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Cellulóz- és papírgyárak", hint: "Biológiailag bontható szennyvíz; feketelúg és faanyag nélkül" },
-      aquaculture: { label: "Akvakultúra és halgazdaságok", hint: "Összegyűjtött iszap; a sótartalom és hígítás külön értékelendő" },
-      landfill_operator: { label: "Hulladéklerakók üzemeltetői", hint: "Összegyűjtött depóniagáz; gázkinyerési modell kell, nem fermentor" },
+      aquaculture: { label: "Akvakultúra és halgazdaságok", hint: "Begyűjtött halgazdasági iszap: szárazanyag- és BMP-vizsgálat; sótartalom ellenőrzése" },
+      landfill_operator: { label: "Hulladéklerakók tulajdonosai és üzemeltetői", hint: "Lezárt hulladéklerakó gáza / Meglévő biogázáram → CHP / Upgrading" },
       energy_offtaker: { label: "Gázvásárlók és energiaszolgáltatók", hint: "Biometán-átvétel és szállítási szerződések; saját alapanyag nem feltételezett" },
     },
     feedstock: {

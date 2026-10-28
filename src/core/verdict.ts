@@ -21,7 +21,7 @@ export function decideVerdict(args: {
   const reasons: string[] = [];
   const whatWouldChange: string[] = [];
 
-  if (base.feed.tonnesYear <= 0) {
+  if (base.feed.tonnesYear <= 0 && !(base.process && base.energy.ch4ProducedM3 > 0)) {
     return { id: "INSUFFICIENT_DATA", reasons: [T("No feedstock stream entered.", "Не вказано жодного потоку сировини.")], whatWouldChange: [T("Add herd size or waste quantity.", "Додайте поголів'я або обсяг відходів.")] };
   }
   if (confidence.score < 35) {

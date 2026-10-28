@@ -14,7 +14,7 @@ export function WhatIf({ input, base, country, locale, d, onApply }: { input: Pr
   const F = makeFormat(locale, d.labels.units, { currency: preferences.currency, rate: preferences.currency === "USD" ? preferences.usd.value : 1 });
   const fx = base.fx;
   const asOfDate = base.dataAudit?.asOfDate;
-  const rows = useMemo(() => LEVERS.map((l) => { const next = l.apply(input, fx); return { lever: l, next, a: assess(next, country, { asOfDate }) }; }), [input, country, fx, asOfDate]);
+  const rows = useMemo(() => LEVERS.filter(l => !input.process || l.id === "heat").map((l) => { const next = l.apply(input, fx); return { lever: l, next, a: assess(next, country, { asOfDate }) }; }), [input, country, fx, asOfDate]);
   const basePb = base.scenarios.base.fin.simplePaybackYears;
   return (
     <section className="no-print mt-10" aria-labelledby="whatif-h">

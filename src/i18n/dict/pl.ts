@@ -252,6 +252,7 @@ const pl: Translation = {
     housing: { year_round: "Chów alkierzowy cały rok", seasonal: "Latem na pastwisku" },
     handling: { field_spreading: "Rozlewamy na własnych polach", lagoon: "Magazynujemy w lagunie / zbiorniku", paid_disposal: "Płacimy za odbiór / utylizację", sold_as_feed: "Sprzedajemy (np. na paszę)", landfill: "Na składowisko", other: "Inne / nie wiem" },
     business: {
+      central_biogas_plant: { label: "Centralne biogazownie i spółdzielnie", hint: "Wspólne przetwarzanie nawozów naturalnych i pozostałości organicznych od wielu dostawców" },
       dairy_farm: { label: "Ferma bydła mlecznego", hint: "Krowy, młodzież, gnojowica" },
       cattle_farm: { label: "Bydło mięsne / mieszane", hint: "Opas, pastwisko, gospodarstwo mieszane" },
       pig_farm: { label: "Ferma trzody", hint: "Tuczniki i/lub lochy" },
@@ -275,12 +276,12 @@ const pl: Translation = {
       crop_farm: { label: "Gospodarstwo roślinne", hint: "Słoma, międzyplony, kiszonka (uprawy energetyczne z ostrzeżeniem)" },
       fish_processor: { label: "Przetwórstwo ryb", hint: "Głowy, ścinki i wnętrzności; sprawdź umowy na pasze i mączkę rybną" },
 
-      other_livestock: { label: "Pozostały chów: owce, kozy, konie", hint: "Zebrany obornik; właściwości dla danego gatunku i ściółka wymagają odrębnej oceny" },
+      other_livestock: { label: "Pozostały chów: owce, kozy, konie", hint: "Zebrany obornik: badania DM, VS i BMP z uwzględnieniem ściółki" },
       food_manufacturer: { label: "Zakłady spożywcze i piekarnie", hint: "Oddzielone odpady produkcyjne; bez zbywalnej żywności i pasz" },
-      starch_processor: { label: "Zakłady skrobiowe: maniok, kukurydza i zboża", hint: "Ścieki o wysokim COD; wymagają odrębnego projektu oczyszczania" },
+      starch_processor: { label: "Zakłady skrobiowe: maniok, kukurydza i zboża", hint: "Ścieki przemysłowe · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Zakłady celulozowo-papiernicze", hint: "Biodegradowalne ścieki procesowe; bez ługu czarnego i drewna" },
-      aquaculture: { label: "Akwakultura i gospodarstwa rybackie", hint: "Zbierany osad; zasolenie i rozcieńczenie wymagają osobnej oceny" },
-      landfill_operator: { label: "Operatorzy składowisk", hint: "Ujmowany gaz składowiskowy; potrzebny model odzysku gazu, nie fermentora" },
+      aquaculture: { label: "Akwakultura i gospodarstwa rybackie", hint: "Zebrany osad z hodowli ryb: badania DM, VS i BMP; kontrola zasolenia" },
+      landfill_operator: { label: "Właściciele i zarządcy składowisk odpadów", hint: "Gaz z zamkniętego składowiska / Istniejący strumień biogazu → CHP / Upgrading" },
       energy_offtaker: { label: "Odbiorcy gazu i przedsiębiorstwa energetyczne", hint: "Zakup biometanu i umowy dostaw; bez założenia własnych substratów" },
     },
     feedstock: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BUSINESS_GROUPS, BUSINESS_IDS, BUSINESS_TYPES, businessHref } from "../businesses";
+import { BUSINESS_GROUPS, BUSINESS_IDS, SECTOR_IDS, modelsForBusiness, BUSINESS_TYPES, businessHref } from "../businesses";
 import { ANIMALS, FEEDSTOCKS } from "../feedstockData";
 import { assess } from "../assess";
 import { EXAMPLES } from "../examples";
@@ -13,14 +13,16 @@ import { inputSchema } from "@/server/validate";
 
 describe("canonical business contract", () => {
   it("preserves historical IDs and separates roles, size and feedstock requirements", () => {
-    expect(BUSINESS_IDS).toHaveLength(29);
+    expect(BUSINESS_IDS).toHaveLength(30);
+    expect(SECTOR_IDS).toHaveLength(27);
+    expect(BUSINESS_GROUPS).toHaveLength(3);
     for (const example of EXAMPLES) expect(BUSINESS_IDS).toContain(example.input.businessType);
     expect(BUSINESS_TYPES.cattle_farm.audience).toBe("farm");
     expect(BUSINESS_TYPES.energy_offtaker.role).toBe("offtaker");
     expect(BUSINESS_TYPES.biogas_developer.role).toBe("developer");
     expect(BUSINESS_TYPES.other_industry.suggested).toEqual([]);
     for (const business of Object.values(BUSINESS_TYPES)) {
-      expect(BUSINESS_GROUPS.some((g) => g.id === business.audience)).toBe(true);
+      if (SECTOR_IDS.includes(business.id)) expect(BUSINESS_GROUPS.some((g) => g.id === business.audience)).toBe(true);
       for (const line of business.suggested) {
         expect(Boolean(line.animal) !== Boolean(line.type)).toBe(true);
         expect(line.quantity).toBeGreaterThan(0);
@@ -34,13 +36,12 @@ describe("canonical business contract", () => {
 
   it("does not sell or calculate AD reports for gas capture, buyers or unsupported effluent models", () => {
     const example = EXAMPLES[0].input;
-    for (const id of BUSINESS_IDS.filter((key) => BUSINESS_TYPES[key].scope === "outside_model")) {
-      expect(BUSINESS_TYPES[id].suggested).toEqual([]);
+    for (const id of BUSINESS_IDS.filter((key) => !modelsForBusiness(key).includes("ad"))) {
       const input = { ...example, businessType: id };
       const validation = inputSchema.safeParse(input);
       expect(validation.success).toBe(false);
-      if (!validation.success) expect(validation.error.issues.some((issue) => issue.path[0] === "businessType")).toBe(true);
-      expect(() => assess(input, COUNTRIES[input.countryCode])).toThrow("separate technical model");
+      if (!validation.success) expect(validation.error.issues.some((issue) => issue.path[0] === "process")).toBe(true);
+      expect(() => assess(input, COUNTRIES[input.countryCode])).toThrow("appropriate process");
     }
     expect(inputSchema.safeParse({ ...example, businessType: "food_manufacturer" }).success).toBe(true);
     for (const sample of EXAMPLES) expect(inputSchema.safeParse(sample.input).success, sample.id).toBe(true);
@@ -51,7 +52,7 @@ describe("canonical business contract", () => {
     for (const id of BUSINESS_IDS) {
       const business = BUSINESS_TYPES[id];
       if (business.guideSlug) expect(SEGMENTS.some((s) => s.slug === business.guideSlug && s.businessType === id), id).toBe(true);
-      else expect(businessHref(id, "/uk")).toBe(`/uk/biogas#business-${id}`);
+      else expect(businessHref(id, "/uk")).toBe(SECTOR_IDS.includes(id) ? `/uk/biogas#business-${id}` : `/uk/calculator?b=${id}`);
     }
   });
 

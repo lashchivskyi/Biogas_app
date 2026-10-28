@@ -1,3 +1,4 @@
+import { processCopy } from "@/i18n/processes";
 import { assess, type Assessment, type VerdictId } from "@/core";
 import { EXAMPLES, type ExampleCase } from "@/core/examples";
 import { getCountry } from "@/countries";
@@ -6,6 +7,7 @@ import { INTL_TAG, type Dict, type Locale } from "@/i18n";
 export function exampleTitle(e: ExampleCase, d: Pick<Dict, "examples" | "labels">, locale: Locale = "en") {
   const known = d.examples[e.id as keyof typeof d.examples];
   if (known) return known;
+  if (e.input.process) return `${d.labels.business[e.input.businessType].label} · ${processCopy(locale).models[e.input.process.kind]}`;
   const n = new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 1 }).format;
   return [d.labels.business[e.input.businessType].label, ...e.input.feedstocks.map((f) => f.animal
     ? `${d.labels.animal[f.animal].label}: ${n(f.quantity)}`

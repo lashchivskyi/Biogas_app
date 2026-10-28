@@ -252,6 +252,7 @@ const nl: Translation = {
     housing: { year_round: "Jaarrond opgestald", seasonal: "Weidegang in de zomer" },
     handling: { field_spreading: "Uitrijden op eigen grond", lagoon: "Opgeslagen in bassin / silo", paid_disposal: "We betalen voor afvoer / verwerking", sold_as_feed: "We verkopen het (bijv. als veevoer)", landfill: "Naar de stort", other: "Anders / weet niet" },
     business: {
+      central_biogas_plant: { label: "Centrale biogasinstallaties en coöperaties", hint: "Gezamenlijke verwerking van mest en organische reststromen van meerdere leveranciers" },
       dairy_farm: { label: "Melkveebedrijf", hint: "Koeien, jongvee, drijfmest" },
       cattle_farm: { label: "Vleesvee / gemengd bedrijf", hint: "Afmesten, weidegang, gemengd" },
       pig_farm: { label: "Varkensbedrijf", hint: "Vleesvarkens en/of zeugen" },
@@ -275,12 +276,12 @@ const nl: Translation = {
       crop_farm: { label: "Akkerbouwbedrijf", hint: "Stro, tussengewassen, kuilvoer (energiegewassen gemarkeerd)" },
       fish_processor: { label: "Visverwerking", hint: "Koppen, snijresten en ingewanden; controleer bestaande voer- en vismeelcontracten" },
 
-      other_livestock: { label: "Overige veehouderij: schapen, geiten, paarden", hint: "Verzamelde mest; eigenschappen per diersoort en strooisel afzonderlijk beoordelen" },
+      other_livestock: { label: "Overige veehouderij: schapen, geiten, paarden", hint: "Verzamelde mest: laboratoriumwaarden voor droge stof, organische stof en BMP, inclusief strooisel" },
       food_manufacturer: { label: "Voedingsmiddelenfabrieken en bakkerijen", hint: "Gescheiden productie-uitval; geen verkoopbare voeding of diervoeders" },
-      starch_processor: { label: "Zetmeelfabrieken: cassave, mais en granen", hint: "Proceswater met hoge COD; apart afvalwaterontwerp vereist" },
+      starch_processor: { label: "Zetmeelfabrieken: cassave, mais en granen", hint: "Industrieel afvalwater · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Pulp- en papierfabrieken", hint: "Biologisch afbreekbaar proceswater; geen zwarte loog of houtresten" },
-      aquaculture: { label: "Aquacultuur en viskwekerijen", hint: "Verzameld slib; zoutgehalte en verdunning apart beoordelen" },
-      landfill_operator: { label: "Stortplaatsexploitanten", hint: "Opgevangen stortgas; vraagt een gaswinningsmodel, geen substraatvergister" },
+      aquaculture: { label: "Aquacultuur en viskwekerijen", hint: "Verzameld viskweekslib: analyse van droge stof, organische stof en BMP; controleer het zoutgehalte" },
+      landfill_operator: { label: "Eigenaren en beheerders van stortplaatsen", hint: "Gas van een gesloten stortplaats / Bestaande biogasstroom → CHP / Upgrading" },
       energy_offtaker: { label: "Gasafnemers en energiebedrijven", hint: "Biomethaanafname en leveringscontracten; geen eigen grondstoffen verondersteld" },
     },
     feedstock: {

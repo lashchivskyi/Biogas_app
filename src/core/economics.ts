@@ -1,3 +1,4 @@
+import { prepareProcess } from "./processes";
 import { biomethaneOfftake, buildCapex, peakMonthlyHeatKw } from "./capex";
 import { HOURS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
@@ -18,20 +19,22 @@ export function classifyPlant(kwEl: number): PlantClass {
   return "industrial";
 }
 
-export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResult {
+export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear = 0, installed?: { gross: CapexBreakdown; kw: number }): ScenarioResult {
   const p = ctx.params;
   const T = ctx.t;
   const { scenario, mods, input } = ctx;
   const sup = ctx.support;
-  const feed = analyseFeedstock(ctx);
-  const design = designDigester(feed, ctx);
+  const prepared = input.process ? prepareProcess(ctx, operatingYear) : undefined;
+  const process = prepared?.process;
+  const feed = prepared?.feed ?? analyseFeedstock(ctx);
+  const design = prepared?.design ?? designDigester(feed, ctx);
   const demand = customerDemand(ctx);
-  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx);
+  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx, false, installed?.kw);
   const energy = route === "biomethane" && biomethaneOfftake(ctx, energyBeforeOfftake).mode === "cng"
-    ? runEnergy(route, feed, design, demand, ctx, true)
+    ? runEnergy(route, feed, design, demand, ctx, true, installed?.kw)
     : energyBeforeOfftake;
   const peakKw = peakMonthlyHeatKw(design, HOURS_IN_MONTH);
-  const gross = buildCapex(route, feed, design, energy, ctx, peakKw);
+  const gross = installed?.gross ?? buildCapex(route, feed, design, energy, ctx, peakKw, process);
   const dig = assessDigestate(feed, ctx);
 
   const kwEq = route === "chp" ? energy.chpKwEl : (energy.gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
@@ -39,7 +42,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   const selfShare = demand.electricityPriceKnown ? p.get("eng.invoice_variable_share") : p.get("econ.self_consumption_variable_share");
   const exportPrice = p.get("econ.electricity_spot_eur_kwh") * p.get("econ.export_haircut") * scenario.energyPriceMult * mods.energyPrice;
   const bmKey = scenario.biomethanePriceKey;
-  const marketBm = p.get(`econ.biomethane_price_${bmKey}_eur_nm3`) * mods.energyPrice;
+  // Preserve the registry energy price when a custom treatment train has a different product purity.
+  const marketBm = p.get(`econ.biomethane_price_${bmKey}_eur_nm3`) * mods.energyPrice * (energy.biomethaneCh4Share ?? p.get("eng.biomethane_ch4_purity")) / p.get("eng.biomethane_ch4_purity");
   const bmPrice = sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? sup.biomethaneEurNm3 : marketBm;
   const opexMult = scenario.opexMult * mods.opex;
   const maintMult = mods.maintenance;
@@ -67,7 +71,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   const heatEur = energy.heatUsefulKwh * demand.heatValueEurKwh;
   const bmEur = energy.biomethaneNm3 * bmPrice;
   const disposalEur = feed.lines.reduce((a, l) => a + l.disposalSavingEurYear, 0);
-  const supportEur = (input.assumedSupportEurPerKwh ?? 0) * energy.elNetKwh;
+  const supportEur = 0; // Uncontracted legacy subsidies must not change the base verdict.
 
   rev("el_self", T("Electricity savings (self-consumption)", "Економія на електроенергії (власне споживання)"), selfEur);
   rev("el_export", T("Surplus electricity sold", "Продаж надлишків електроенергії"), exportEur);
@@ -76,6 +80,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   rev("biomethane", sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? T(`Biomethane under ${sup.name}`, `Біометан за ${sup.name}`) : T("Biomethane sales", "Продаж біометану"), bmEur);
   rev("disposal", T("Avoided waste-disposal cost", "Економія на утилізації відходів"), disposalEur);
   rev("digestate", T("Digestate fertiliser value (incremental)", "Добривна цінність дигестату (інкрементальна)"), dig.fertiliserValueEurYear);
+  if (process) rev("treatment", T("Avoided treatment charges (contract basis)", "Уникнені витрати очищення (за договором)"), process.avoidedTreatmentEurYear);
   rev("support", T("Assumed support (NOT guaranteed)", "Припущена підтримка (НЕ гарантована)"), supportEur);
 
   // ---------- opex ----------
@@ -88,7 +93,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp").reduce((a, l) => a + l.eur, 0);
-  const otherCapex = gross.totalEur - upgradingCapex - chpCapex;
+  const otherCapex = gross.totalEur - upgradingCapex - chpCapex - (process?.capexEur ?? 0);
   ox("maintenance", T("Plant maintenance", "Обслуговування обладнання"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
   ox("upgrading_maintenance", T("Upgrading unit maintenance", "Обслуговування установки очищення"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
   ox("insurance", T("Insurance", "Страхування"), gross.totalEur * p.get("eng.opex.insurance_share"));
@@ -105,6 +110,11 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   if (route === "biomethane" && biomethaneOfftake(ctx, energy).mode === "cng") ox("cng_haul", T("Bio-CNG road haulage to the offtaker", "Перевезення bio-CNG до покупця"), biomethaneOfftake(ctx, energy).haulEurYear * opexMult);
   if (route === "biomethane") ox("certification", T("Biomethane certification, trading, balancing", "Сертифікація, торгівля, балансування біометану"), energy.biomethaneNm3 * p.get("eng.opex.certification_eur_nm3") * opexMult);
 
+  if (process) {
+    ox("process_operation", T("Upstream process operation (budget)", "Експлуатація технологічної частини (бюджет)"), process.opexEurYear);
+    ox("residual_disposal", T("Residuals treatment and disposal", "Очищення й утилізація залишків"), process.residualTonnesYear * input.process!.residualCostLocalT / ctx.fx * opexMult);
+    ox("gas_supply", T("Purchased biogas", "Закупівля біогазу"), process.gasPurchaseEurYear);
+  }
   const revenueEur = revenue.reduce((a, l) => a + l.eur, 0);
   const opexEur = opex.reduce((a, l) => a + l.eur, 0);
   const opexRev: OpexAndRevenue = { opex, opexEur, revenue, revenueEur, ebitdaEur: revenueEur - opexEur };
@@ -122,10 +132,16 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
 
   // ---------- cash flow ----------
   const energyRevenue = selfEur + exportEur + heatEur + bmEur + supportEur;
-  const otherRevenue = disposalEur + dig.fertiliserValueEurYear;
+  const otherRevenue = disposalEur + dig.fertiliserValueEurYear + (process?.avoidedTreatmentEurYear ?? 0);
   const horizon = Math.round(p.get("econ.horizon_years"));
   const debtShare = input.finance?.debtShare ?? p.get("econ.debt_share");
+  const annualOperating = !installed && process && (process.kind === "landfill" || process.kind === "gas")
+    ? Array.from({ length: horizon }, (_, y) => {
+      const op = y === 0 ? opexRev : runScenarioRoute(ctx, route, y, { gross, kw: energy.chpKwEl }).opexRev;
+      return { revenue: op.revenueEur, opex: op.opexEur };
+    }) : undefined;
   const fin = buildFinancials({
+    annualOperating,
     capexEur: capex.totalEur,
     energyRevenue,
     otherRevenue,
@@ -142,6 +158,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId): ScenarioResul
   });
 
   return {
+    process,
     scenario: scenario.id,
     route,
     feed,

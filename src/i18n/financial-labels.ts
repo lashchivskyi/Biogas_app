@@ -1,4 +1,5 @@
 import type { Dict, Locale } from ".";
+import { processFieldLabels } from "./processes";
 
 const keys = ["storage_cover", "storage_new", "feed", "gas_system", "heat_network", "backup_boiler", "electrical", "piping", "civil", "engineering", "contingency", "labour", "chp_service", "maintenance", "insurance", "monitoring", "feedstock", "opportunity", "transport", "digestate_handling", "el_purchased", "heat_external", "cng_haul", "certification", "el_self", "el_export", "disposal", "digestate", "rejects"] as const;
 const rows: Record<Locale, string> = {
@@ -75,7 +76,10 @@ const equipment: Record<Locale, readonly [string, string, string]> = {
 
 export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result"> & Partial<Pick<Dict, "flow">>): Record<string, string> {
   const values = rows[locale].split("|");
+  const process = processFieldLabels(locale);
   return {
+    process: `CAPEX · ${d.result.dTech}`, process_operation: process.processOpexLocalYear,
+    residual_disposal: process.residualCostLocalT, gas_supply: process.gasPriceLocalNm3, treatment: process.avoidedTreatmentLocalM3,
     ...Object.fromEntries(keys.map((k, i) => [k, values[i]])),
     digester: d.flow?.digester ?? d.result.dTech, chp: d.labels.route.chp, boiler: d.labels.route.boiler,
     pasteurisation: `${equipment[locale][0]} (70 °C / 1 h)`, upgrading: "Upgrading", cng: "Bio-CNG (250 bar)",
@@ -87,7 +91,7 @@ export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result
 export function sensitivityLabels(locale: Locale, d: Pick<Dict, "labels" | "result">): Record<string, string> {
   const money = financialLabels(locale, d);
   return {
-    yield: "CH₄ −20 %", capex: "CAPEX +20 %", maintenance: `${money.maintenance} +30 %`,
+    yield: "CH₄ −20 %", capex: "CAPEX +20 %", maintenance: `${money.maintenance} +30 %`, process_opex: "OPEX +30 %",
     energy_price: `${extra[locale][0]} −20 %`, heat_use: `${d.result.heatUseful} −50 %`,
     feedstock: `${d.result.feedstock} −20 %`, transport: `${money.transport} +50 %`, downtime: `${extra[locale][1]} +10 pp`,
   };

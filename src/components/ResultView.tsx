@@ -1,3 +1,4 @@
+import { ProcessReport } from "./ProcessReport";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
@@ -118,6 +119,7 @@ export interface ResultViewProps {
 }
 
 export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
+  if (raw.input.process) return <ProcessReport a={raw} d={d} locale={locale} currency={currency} display={display} access={access} unlockSlot={unlockSlot} afterSlot={afterSlot} methodologyHref={methodologyHref} />;
   const stressLabels = sensitivityLabels(locale, d);
   const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
   const a = {

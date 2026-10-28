@@ -252,6 +252,7 @@ const fr: Translation = {
     housing: { year_round: "Stabulation toute l'année", seasonal: "Pâturage l'été" },
     handling: { field_spreading: "Épandu sur nos parcelles", lagoon: "Stocké en fosse / cuve", paid_disposal: "Nous payons la collecte / l'élimination", sold_as_feed: "Nous le vendons (ex. alimentation animale)", landfill: "Mis en décharge", other: "Autre / je ne sais pas" },
     business: {
+      central_biogas_plant: { label: "Unités de méthanisation territoriales et coopératives", hint: "Traitement mutualisé des effluents d’élevage et résidus organiques de plusieurs fournisseurs" },
       dairy_farm: { label: "Élevage laitier", hint: "Vaches, génisses, lisier" },
       cattle_farm: { label: "Bovins viande / mixte", hint: "Engraissement, pâturage, polyculture-élevage" },
       pig_farm: { label: "Élevage porcin", hint: "Engraissement et/ou truies" },
@@ -275,12 +276,12 @@ const fr: Translation = {
       crop_farm: { label: "Exploitation de grandes cultures", hint: "Paille, CIVE, ensilage (cultures énergétiques signalées)" },
       fish_processor: { label: "Transformation du poisson", hint: "Têtes, chutes et viscères ; vérifier les contrats de valorisation en alimentation animale" },
 
-      other_livestock: { label: "Autres élevages : ovins, caprins, équins", hint: "Fumier collecté ; caractéristiques par espèce et litière à évaluer séparément" },
+      other_livestock: { label: "Autres élevages : ovins, caprins, équins", hint: "Fumier collecté : analyses MS, MV et BMP, litière comprise" },
       food_manufacturer: { label: "Industries alimentaires et boulangeries", hint: "Rebuts de production séparés ; exclure les produits valorisables en alimentation" },
-      starch_processor: { label: "Amidonneries : manioc, maïs et céréales", hint: "Effluents à forte charge en COD ; conception spécifique du traitement requise" },
+      starch_processor: { label: "Amidonneries : manioc, maïs et céréales", hint: "Effluents industriels · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Usines de pâte à papier et papeteries", hint: "Effluents biodégradables ; exclure les liqueurs noires et le bois" },
-      aquaculture: { label: "Aquaculture et pisciculture", hint: "Boues collectées ; salinité et dilution à évaluer séparément" },
-      landfill_operator: { label: "Exploitants de centres de stockage", hint: "Biogaz de décharge capté ; modèle de captage distinct de la méthanisation" },
+      aquaculture: { label: "Aquaculture et pisciculture", hint: "Boues piscicoles collectées : analyses MS, MV et BMP ; vérifier la salinité" },
+      landfill_operator: { label: "Exploitants de sites de stockage de déchets", hint: "Gaz d’un site de stockage fermé / Flux de biogaz existant → CHP / Upgrading" },
       energy_offtaker: { label: "Acheteurs de gaz et énergéticiens", hint: "Achat de biométhane et contrats d’approvisionnement ; aucun intrant propre supposé" },
     },
     feedstock: {

@@ -124,13 +124,13 @@ describe("economics", () => {
     expect(dairyProc.scenarios.conservative.capex.totalEur).toBeGreaterThan(dairyProc.scenarios.optimistic.capex.totalEur);
   });
 
-  it("subsidies are zero unless explicitly assumed, and flagged", () => {
+  it("uncontracted legacy subsidies never change the base verdict", () => {
     expect(base.opexRev.revenue.some((r) => r.id === "support")).toBe(false);
     expect(dairyProc.supportIncluded).toBe(false);
     const withSupport = assess({ ...ex("ua_sugar"), assumedSupportEurPerKwh: 0.05 }, UA, UK);
-    expect(withSupport.supportIncluded).toBe(true);
-    expect(withSupport.scenarios.base.fin.npvEur).toBeGreaterThan(base.fin.npvEur);
-    expect(withSupport.notes.join(" ")).toMatch(/не гарантована/);
+    expect(withSupport.supportIncluded).toBe(false);
+    expect(withSupport.scenarios.base.fin.npvEur).toBeCloseTo(base.fin.npvEur);
+    expect(withSupport.warnings.join(" ")).toMatch(/виключено/);
   });
 
   it("matches NPV / IRR definitions", () => {

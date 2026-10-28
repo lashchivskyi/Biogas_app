@@ -1,3 +1,4 @@
+import { processCalendar } from "./processes";
 import { HOURS_IN_MONTH, HOURS_PER_YEAR } from "./climate";
 import type { RunContext } from "./context";
 import type { CustomerDemand } from "./demand";
@@ -34,6 +35,7 @@ export function runEnergy(
   demand: CustomerDemand,
   ctx: RunContext,
   cngCompression = false,
+  installedChpKw?: number,
 ): EnergyBalance {
   const { params: p, scenario, mods, input } = ctx;
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
@@ -41,9 +43,11 @@ export function runEnergy(
   const recovery = p.get("eng.chp_heat_recovery");
   const designHours = p.get("eng.chp_design_hours");
   const slipChp = p.get("eng.chp_slip_share");
-  const slipUp = p.get("eng.upgrade_slip_share");
-  const purity = p.get("eng.biomethane_ch4_purity");
-  const upKwh = p.get("eng.upgrade_kwh_per_nm3_raw");
+  const customGas = input.process?.kind === "gas" || input.process?.kind === "landfill" ? input.process : undefined;
+  const slipUp = customGas ? 1 - customGas.upgradingRecoveryPct / 100 : p.get("eng.upgrade_slip_share");
+  const purity = customGas ? customGas.productMethanePct / 100 : p.get("eng.biomethane_ch4_purity");
+  const upKwh = customGas?.upgradingKwhNm3 ?? p.get("eng.upgrade_kwh_per_nm3_raw");
+  const inletPeakFactor = input.process ? processCalendar(input.process).days / input.process.operatingDays : 1;
   const coincidence = p.get("eng.self_consumption_coincidence");
   const parBase = p.get("eng.parasitic_base_kwh_t");
   const parDm = p.get("eng.parasitic_dm_kwh_t_per_pct");
@@ -84,11 +88,13 @@ export function runEnergy(
   let chpKw = 0;
   let etaEl = 0;
 
-  const parasiticMonth = (i: number) => feed.monthlyTonnes[i] * (parBase + parDm * feed.dryMatterPct);
+  const parasiticMonth = (i: number) => input.process
+    ? input.process.auxiliaryKwhYear * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
+    : feed.monthlyTonnes[i] * (parBase + parDm * feed.dryMatterPct);
 
   if (route === "chp") {
     // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.
-    const qNom = Math.max(...gasM.map((g, i) => g / HOURS_IN_MONTH[i])) * (HOURS_PER_YEAR / designHours);
+    const qNom = Math.max(...gasM.map((g, i) => g / HOURS_IN_MONTH[i])) * (HOURS_PER_YEAR / designHours) * inletPeakFactor;
     let eta = 0.36;
     let kw = qNom * eta;
     for (let k = 0; k < 30; k++) {
@@ -98,6 +104,7 @@ export function runEnergy(
     chpKw = kw < 1 ? 0 : roundKw(kw);
     // Rounding changes efficiency: ensure the installed engine can actually absorb design fuel input.
     while (chpKw > 0 && chpKw / chpEtaEl(chpKw, (id) => p.get(id)) + 1e-8 < qNom) chpKw += chpKw < 100 ? 5 : 10;
+    if (installedChpKw !== undefined) chpKw = installedChpKw;
     etaEl = chpEtaEl(Math.max(chpKw, 1), (id) => p.get(id));
     const etaTh = chpEtaTh(Math.max(chpKw, 1), (id) => p.get(id));
     const qInstalled = etaEl > 0 ? chpKw / etaEl : 0;
@@ -235,10 +242,11 @@ export function runEnergy(
     heatNetAvailableKwh: heatNet,
     heatUsefulKwh: heatUseful,
     biomethaneNm3: bioNm3,
+    biomethaneCh4Share: purity,
     rawBiogasNm3PerHour: route === "biomethane" ? rawToUpgrade / designHours : feed.biogasM3Year / designHours,
     rawBiogasCh4Share: frac,
     rawBiogasDesignNm3PerHour: route === "biomethane"
-      ? Math.max(rawToUpgrade / designHours, ...gasM.map((g, i) => (g - Math.min(g, dig[i] / boilerEff)) / lhv / frac / HOURS_IN_MONTH[i]))
+      ? Math.max(rawToUpgrade / designHours, ...gasM.map((g, i) => (g - Math.min(g, dig[i] / boilerEff)) / lhv / frac / HOURS_IN_MONTH[i] * inletPeakFactor))
       : Math.max(feed.biogasM3Year / designHours, ...feed.monthlyCh4M3.map((m3, i) => m3 / frac / HOURS_IN_MONTH[i])),
     upgradingSlipM3: slipUpgradeKwh / lhv,
     methaneLossShare: prodKwh > 0 ? lossCh4Kwh / prodKwh : 0,

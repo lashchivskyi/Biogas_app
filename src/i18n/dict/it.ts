@@ -252,6 +252,7 @@ const it: Translation = {
     housing: { year_round: "Stabulazione tutto l'anno", seasonal: "Pascolo d'estate" },
     handling: { field_spreading: "Spandimento sui nostri campi", lagoon: "Stoccato in vasca / lagone", paid_disposal: "Paghiamo ritiro / smaltimento", sold_as_feed: "Lo vendiamo (es. come mangime)", landfill: "In discarica", other: "Altro / non so" },
     business: {
+      central_biogas_plant: { label: "Impianti consortili di biogas e cooperative", hint: "Trattamento condiviso di effluenti zootecnici e residui organici di più fornitori" },
       dairy_farm: { label: "Allevamento da latte", hint: "Vacche, rimonta, liquame" },
       cattle_farm: { label: "Bovini da carne / misto", hint: "Ingrasso, pascolo, azienda mista" },
       pig_farm: { label: "Allevamento suino", hint: "Ingrasso e/o scrofe" },
@@ -275,12 +276,12 @@ const it: Translation = {
       crop_farm: { label: "Azienda a seminativi", hint: "Paglia, colture intercalari, insilato (colture energetiche segnalate)" },
       fish_processor: { label: "Lavorazione del pesce", hint: "Teste, ritagli e visceri; verificare i contratti per mangimi e farina di pesce" },
 
-      other_livestock: { label: "Altri allevamenti: ovini, caprini, equini", hint: "Letame raccolto; caratteristiche per specie e lettiera da valutare separatamente" },
+      other_livestock: { label: "Altri allevamenti: ovini, caprini, equini", hint: "Letame raccolto: analisi di sostanza secca, solidi volatili e BMP, inclusa la lettiera" },
       food_manufacturer: { label: "Industrie alimentari e panifici", hint: "Scarti di produzione separati; esclusi alimenti e mangimi vendibili" },
-      starch_processor: { label: "Amiderie: manioca, mais e cereali", hint: "Reflui ad alto COD; serve un progetto di trattamento specifico" },
+      starch_processor: { label: "Amiderie: manioca, mais e cereali", hint: "Reflui industriali · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Cartiere e impianti di cellulosa", hint: "Reflui biodegradabili; esclusi liscivio nero e materiale legnoso" },
-      aquaculture: { label: "Acquacoltura e allevamenti ittici", hint: "Fanghi raccolti; salinità e diluizione richiedono una valutazione separata" },
-      landfill_operator: { label: "Gestori di discariche", hint: "Gas di discarica captato; serve un modello di recupero del gas, non un digestore" },
+      aquaculture: { label: "Acquacoltura e allevamenti ittici", hint: "Fanghi raccolti dagli allevamenti ittici: analisi di solidi e BMP; verificare la salinità" },
+      landfill_operator: { label: "Proprietari e gestori di discariche", hint: "Gas da discarica chiusa / Flusso di biogas esistente → CHP / Upgrading" },
       energy_offtaker: { label: "Acquirenti di gas e aziende energetiche", hint: "Acquisto di biometano e contratti di fornitura; nessuna matrice propria presunta" },
     },
     feedstock: {

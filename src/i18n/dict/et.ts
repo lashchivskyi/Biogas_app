@@ -252,6 +252,7 @@ const et: Translation = {
     housing: { year_round: "Laudas aasta läbi", seasonal: "Suvel karjamaal" },
     handling: { field_spreading: "Laotame oma põldudele", lagoon: "Hoiame laguunis / mahutis", paid_disposal: "Maksame äraveo / käitlemise eest", sold_as_feed: "Müüme (nt söödaks)", landfill: "Läheb prügilasse", other: "Muu / ei tea" },
     business: {
+      central_biogas_plant: { label: "Kesksed biogaasijaamad ja ühistud", hint: "Mitme tarnija sõnniku ja orgaaniliste jääkide ühine töötlemine" },
       dairy_farm: { label: "Piimafarm", hint: "Lehmad, noorkari, vedelsõnnik" },
       cattle_farm: { label: "Lihaveise- / segafarm", hint: "Nuumamine, karjamaa, segafarm" },
       pig_farm: { label: "Seafarm", hint: "Nuumsead ja/või emised" },
@@ -275,12 +276,12 @@ const et: Translation = {
       crop_farm: { label: "Taimekasvatustalu", hint: "Põhk, vahekultuurid, silo (energiakultuurid märgitud)" },
       fish_processor: { label: "Kalatöötlemine", hint: "Pead, lõikamisjäägid ja siseelundid; kontrollige sööda- ja kalajahulepinguid" },
 
-      other_livestock: { label: "Muud loomakasvatused: lambad, kitsed, hobused", hint: "Kogutud sõnnik; loomaliigi omadusi ja allapanu tuleb hinnata eraldi" },
+      other_livestock: { label: "Muud loomakasvatused: lambad, kitsed, hobused", hint: "Kogutud sõnnik: kuivaine, orgaanilise aine ja BMP laborianalüüs koos allapanuga" },
       food_manufacturer: { label: "Toiduainetööstused ja pagaritöökojad", hint: "Eraldatud tootmisjäägid; müügikõlblik toit ja sööt ei kuulu hulka" },
-      starch_processor: { label: "Tärklisetehased", hint: "Suure COD-ga protsessireovesi; vaja on eraldi puhastusprojekti" },
+      starch_processor: { label: "Tärklisetehased", hint: "Tööstusreovesi · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Tselluloosi- ja paberitehased", hint: "Biolagunev reovesi; mustleelis ja puidujäägid ei kuulu hulka" },
-      aquaculture: { label: "Vesiviljelus ja kalakasvandused", hint: "Kogutud sete; soolsust ja lahjendust hinnatakse eraldi" },
-      landfill_operator: { label: "Prügilaoperaatorid", hint: "Kogutud prügilagaas; vaja on gaasikogumise, mitte kääriti mudelit" },
+      aquaculture: { label: "Vesiviljelus ja kalakasvandused", hint: "Kogutud kalakasvatussete: kuivaine ja BMP analüüs; soolsuse kontroll" },
+      landfill_operator: { label: "Prügilate omanikud ja käitajad", hint: "Suletud prügila gaas / Olemasolev biogaasivoog → CHP / Upgrading" },
       energy_offtaker: { label: "Gaasiostjad ja energiaettevõtted", hint: "Biometaani ost ja tarnelepingud; oma tooret ei eeldata" },
     },
     feedstock: {

@@ -252,6 +252,7 @@ const tr: Translation = {
     housing: { year_round: "Yıl boyu ahırda", seasonal: "Yazın merada" },
     handling: { field_spreading: "Kendi tarlamıza seriyoruz", lagoon: "Lagün / depoda tutuyoruz", paid_disposal: "Toplama / bertaraf için ödüyoruz", sold_as_feed: "Satıyoruz (örn. yem olarak)", landfill: "Düzenli depolamaya gidiyor", other: "Diğer / bilmiyorum" },
     business: {
+      central_biogas_plant: { label: "Merkezi biyogaz tesisleri ve kooperatifler", hint: "Birden fazla tedarikçinin gübre ve organik artıklarının ortak işlenmesi" },
       dairy_farm: { label: "Süt sığırcılığı", hint: "İnekler, genç hayvanlar, sıvı gübre" },
       cattle_farm: { label: "Besi / karma sığırcılık", hint: "Besi, mera, karma işletme" },
       pig_farm: { label: "Domuz işletmesi", hint: "Besi domuzları ve/veya anaç domuzlar" },
@@ -275,12 +276,12 @@ const tr: Translation = {
       crop_farm: { label: "Bitkisel üretim işletmesi", hint: "Saman, ara ürünler, silaj (enerji bitkileri işaretlenir)" },
       fish_processor: { label: "Balık işleme", hint: "Baş, kesim artıkları ve iç organlar; yem ve balık unu sözleşmelerini kontrol edin" },
 
-      other_livestock: { label: "Diğer hayvancılık: koyun, keçi, at", hint: "Toplanan gübre; hayvan türüne özgü özellikler ve altlık ayrı değerlendirilmelidir" },
+      other_livestock: { label: "Diğer hayvancılık: koyun, keçi, at", hint: "Toplanan gübre: altlık dahil kuru madde, uçucu katı madde ve BMP analizleri" },
       food_manufacturer: { label: "Gıda üreticileri ve fırınlar", hint: "Ayrılmış üretim artıkları; satılabilir gıda ve yem hariç" },
-      starch_processor: { label: "Nişasta fabrikaları: manyok, mısır ve tahıl", hint: "Yüksek COD içeren proses suyu; ayrı arıtma tasarımı gerekir" },
+      starch_processor: { label: "Nişasta fabrikaları: manyok, mısır ve tahıl", hint: "Endüstriyel atık su · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Selüloz ve kâğıt fabrikaları", hint: "Biyolojik olarak parçalanabilir atık su; siyah likör ve odun hariç" },
-      aquaculture: { label: "Su ürünleri yetiştiriciliği", hint: "Toplanan çamur; tuzluluk ve seyreltme ayrı değerlendirilir" },
-      landfill_operator: { label: "Düzenli depolama işletmecileri", hint: "Toplanan depo gazı; çürütücü yerine gaz toplama modeli gerekir" },
+      aquaculture: { label: "Su ürünleri yetiştiriciliği", hint: "Balık çiftliğinden toplanan çamur: katı madde ve BMP analizleri; tuzluluk kontrolü" },
+      landfill_operator: { label: "Atık depolama sahası sahipleri ve işletmecileri", hint: "Kapatılmış düzenli depolama sahası gazı / Mevcut biyogaz akışı → CHP / Upgrading" },
       energy_offtaker: { label: "Gaz alıcıları ve enerji şirketleri", hint: "Biyometan alımı ve tedarik sözleşmeleri; kendi hammaddesi varsayılmaz" },
     },
     feedstock: {

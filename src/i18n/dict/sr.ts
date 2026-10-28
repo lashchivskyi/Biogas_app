@@ -252,6 +252,7 @@ const sr: Translation = {
     housing: { year_round: "Celogodišnje štalsko držanje", seasonal: "Leti na ispaši" },
     handling: { field_spreading: "Razbacujemo po svojim njivama", lagoon: "Čuvamo u laguni / rezervoaru", paid_disposal: "Plaćamo odvoz / zbrinjavanje", sold_as_feed: "Prodajemo (npr. kao stočnu hranu)", landfill: "Ide na deponiju", other: "Drugo / ne znam" },
     business: {
+      central_biogas_plant: { label: "Centralizovana biogasna postrojenja i zadruge", hint: "Zajednička prerada stajnjaka i organskih ostataka više dobavljača" },
       dairy_farm: { label: "Mlečna farma", hint: "Krave, podmladak, tečni stajnjak" },
       cattle_farm: { label: "Tovna / mešovita govedarska farma", hint: "Tov, ispaša, mešovita farma" },
       pig_farm: { label: "Svinjarska farma", hint: "Tovne svinje i/ili krmače" },
@@ -275,12 +276,12 @@ const sr: Translation = {
       crop_farm: { label: "Ratarsko gazdinstvo", hint: "Slama, međuusevi, silaža (energetski usevi označeni)" },
       fish_processor: { label: "Prerada ribe", hint: "Glave, ostaci i iznutrice; proverite ugovore za stočnu hranu i riblje brašno" },
 
-      other_livestock: { label: "Ostalo stočarstvo: ovce, koze, konji", hint: "Sakupljeni stajnjak; svojstva prema vrsti životinje i prostirka procenjuju se zasebno" },
+      other_livestock: { label: "Ostalo stočarstvo: ovce, koze, konji", hint: "Sakupljeni stajnjak: laboratorijske analize suve materije, organske materije i BMP, uključujući prostirku" },
       food_manufacturer: { label: "Prehrambene fabrike i pekare", hint: "Odvojeni proizvodni ostaci; bez hrane i stočne hrane koje se mogu prodati" },
-      starch_processor: { label: "Skrobare: manioka, kukuruz i žitarice", hint: "Procesne vode s visokim COD; potreban je poseban projekat prečišćavanja" },
+      starch_processor: { label: "Skrobare: manioka, kukuruz i žitarice", hint: "Industrijske otpadne vode · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Fabrike celuloze i papira", hint: "Biorazgradive otpadne vode; bez crnog luga i drvenih ostataka" },
-      aquaculture: { label: "Akvakultura i ribnjaci", hint: "Sakupljeni mulj; salinitet i razblaženje procenjuju se posebno" },
-      landfill_operator: { label: "Operateri deponija", hint: "Sakupljeni deponijski gas; potreban je model prikupljanja gasa, ne digestora" },
+      aquaculture: { label: "Akvakultura i ribnjaci", hint: "Sakupljeni mulj iz uzgoja ribe: analize suve materije i BMP; provera saliniteta" },
+      landfill_operator: { label: "Vlasnici i operateri deponija", hint: "Gas sa zatvorene deponije / Postojeći tok biogasa → CHP / Upgrading" },
       energy_offtaker: { label: "Kupci gasa i energetska preduzeća", hint: "Otkup biometana i ugovori o snabdevanju; bez pretpostavljene sopstvene sirovine" },
     },
     feedstock: {

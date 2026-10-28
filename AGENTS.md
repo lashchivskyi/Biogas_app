@@ -32,7 +32,7 @@ Read [current](docs/current.md) first, then only the documents relevant to the t
 | Product, architecture, decisions | [architecture](docs/architecture.md) | src/app, src/components, src/server |
 | Customers, taxonomy, hypotheses | [market research](docs/market-research.md) | src/core/businesses.ts; src/countries/business-markets.ts |
 | Product flow, price, access | [payments](docs/payments.md) | src/config/plans.ts; src/server/payments; src/server/orders.ts |
-| Process and units | [feedstock](docs/feedstock-model.md) | src/core/feedstock.ts, digester.ts, engineeringParams.ts |
+| Process and units | [feedstock](docs/feedstock-model.md) | src/core/feedstock.ts, processes.ts, digester.ts, engineeringParams.ts |
 | Energy and financial logic | [economics](docs/economics.md) | src/core/energy.ts, capex.ts, economics.ts, finance.ts |
 | Sources, freshness, calibration | [data](docs/data-sources.md), [CAPEX](docs/capex-benchmark.md) | src/countries; src/core/modelAudit.ts; scripts/data |
 | Language, geo, currency, UI | [i18n](docs/i18n.md), [brand](docs/brand.md) | src/i18n; src/lib/preferences.ts; LocaleProvider |

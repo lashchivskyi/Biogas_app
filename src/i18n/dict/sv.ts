@@ -252,6 +252,7 @@ const sv: Translation = {
     housing: { year_round: "Stallhållning året runt", seasonal: "Bete på sommaren" },
     handling: { field_spreading: "Sprids på egna åkrar", lagoon: "Lagras i bassäng / behållare", paid_disposal: "Vi betalar för hämtning / omhändertagande", sold_as_feed: "Vi säljer det (t.ex. som foder)", landfill: "Går till deponi", other: "Annat / vet inte" },
     business: {
+      central_biogas_plant: { label: "Samrötningsanläggningar och kooperativ", hint: "Gemensam behandling av gödsel och organiska restprodukter från flera leverantörer" },
       dairy_farm: { label: "Mjölkgård", hint: "Kor, ungdjur, flytgödsel" },
       cattle_farm: { label: "Köttdjur / blandat", hint: "Uppfödning, bete, blandad gård" },
       pig_farm: { label: "Grisgård", hint: "Slaktsvin och/eller suggor" },
@@ -275,12 +276,12 @@ const sv: Translation = {
       crop_farm: { label: "Växtodlingsgård", hint: "Halm, mellangrödor, ensilage (energigrödor markeras)" },
       fish_processor: { label: "Fiskförädling", hint: "Huvuden, spill och inälvor; kontrollera befintliga foder- och fiskmjölsavtal" },
 
-      other_livestock: { label: "Annan djurhållning: får, getter, hästar", hint: "Insamlad gödsel; djurslagets egenskaper och strömaterial bedöms separat" },
+      other_livestock: { label: "Annan djurhållning: får, getter, hästar", hint: "Insamlad stallgödsel: laboratorieanalys av torrsubstans, organisk substans och BMP inklusive strö" },
       food_manufacturer: { label: "Livsmedelsindustrier och bagerier", hint: "Sorterade produktionsrester; säljbara livsmedel och foder undantas" },
-      starch_processor: { label: "Stärkelsefabriker", hint: "Processvatten med hög COD; kräver separat reningsdesign" },
+      starch_processor: { label: "Stärkelsefabriker", hint: "Industriellt avloppsvatten · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Massa- och pappersbruk", hint: "Biologiskt nedbrytbart avloppsvatten; ingen svartlut eller vedrester" },
-      aquaculture: { label: "Vattenbruk och fiskodlingar", hint: "Insamlat slam; salthalt och utspädning bedöms separat" },
-      landfill_operator: { label: "Deponioperatörer", hint: "Insamlad deponigas; kräver en gasinsamlingsmodell, inte en rötkammare" },
+      aquaculture: { label: "Vattenbruk och fiskodlingar", hint: "Insamlat slam från fiskodling: torrsubstans- och BMP-analys; kontrollera salthalten" },
+      landfill_operator: { label: "Ägare och verksamhetsutövare för deponier", hint: "Gas från en avslutad deponi / Befintligt biogasflöde → CHP / Upgrading" },
       energy_offtaker: { label: "Gasköpare och energibolag", hint: "Biometanköp och leveransavtal; inget eget substrat förutsätts" },
     },
     feedstock: {

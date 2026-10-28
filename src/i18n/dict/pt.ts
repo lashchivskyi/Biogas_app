@@ -252,6 +252,7 @@ const pt: Translation = {
     housing: { year_round: "Confinado o ano todo", seasonal: "Pasto no verão" },
     handling: { field_spreading: "Aplicamos na nossa lavoura", lagoon: "Armazenado em lagoa / tanque", paid_disposal: "Pagamos pela coleta / destinação", sold_as_feed: "Vendemos (ex.: como ração)", landfill: "Vai para aterro", other: "Outro / não sei" },
     business: {
+      central_biogas_plant: { label: "Plantas centralizadas de biogás e cooperativas", hint: "Tratamento compartilhado de dejetos e resíduos orgânicos de vários fornecedores" },
       dairy_farm: { label: "Fazenda leiteira", hint: "Vacas, recria, dejeto líquido" },
       cattle_farm: { label: "Pecuária de corte / mista", hint: "Engorda, pasto, propriedade mista" },
       pig_farm: { label: "Granja de suínos", hint: "Terminação e/ou matrizes" },
@@ -275,12 +276,12 @@ const pt: Translation = {
       crop_farm: { label: "Propriedade agrícola de lavouras", hint: "Palha, culturas intercalares, silagem (culturas energéticas sinalizadas)" },
       fish_processor: { label: "Processamento de pescado", hint: "Cabeças, aparas e vísceras; verificar contratos de ração e farinha de peixe" },
 
-      other_livestock: { label: "Outras criações: ovinos, caprinos e equinos", hint: "Esterco coletado; avaliar separadamente as características por espécie e a cama" },
+      other_livestock: { label: "Outras criações: ovinos, caprinos e equinos", hint: "Esterco coletado: análises de sólidos totais, voláteis e BMP, incluindo a cama" },
       food_manufacturer: { label: "Indústrias alimentícias e panificadoras", hint: "Rejeitos de produção segregados; excluir alimentos e rações comercializáveis" },
-      starch_processor: { label: "Fecularias e fábricas de amido", hint: "Efluentes com COD elevado; exigem projeto específico de tratamento" },
+      starch_processor: { label: "Fecularias e fábricas de amido", hint: "Efluentes industriais · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Indústrias de celulose e papel", hint: "Efluentes biodegradáveis; excluir licor negro e resíduos de madeira" },
-      aquaculture: { label: "Aquicultura e piscicultura", hint: "Lodo coletado; salinidade e diluição exigem avaliação separada" },
-      landfill_operator: { label: "Operadores de aterros sanitários", hint: "Gás de aterro captado; exige modelo de captação, não de biodigestão de substratos" },
+      aquaculture: { label: "Aquicultura e piscicultura", hint: "Lodo coletado na piscicultura: análises de sólidos e BMP; verificar a salinidade" },
+      landfill_operator: { label: "Proprietários e operadores de aterros sanitários", hint: "Gás de aterro encerrado / Vazão de biogás existente → CHP / Upgrading" },
       energy_offtaker: { label: "Compradores de gás e empresas de energia", hint: "Compra de biometano e contratos de fornecimento; sem presumir substratos próprios" },
     },
     feedstock: {

@@ -140,7 +140,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "dk_cluster", title: "Danish centralised plant, slurry + food waste, biomethane", description: "Jutland: a developer collects slurry from partner farms and food waste with a gate fee; biomethane to the gas grid, digestate returned to the farms",
     input: {
-      countryCode: "DK", regionId: "jutland", businessType: "biogas_developer",
+      countryCode: "DK", regionId: "jutland", businessType: "central_biogas_plant", projectRole: "developer",
       feedstocks: [
         { id: "a", animal: "dairy_cow", quantity: 6000, housing: "year_round", delivered: true, distanceKm: 8, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
         { id: "b", animal: "sow", quantity: 3000, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
@@ -311,7 +311,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "in_food_40k", title: "Indian biogas cooperative, cattle dung and press mud", description: "Punjab: short-haul purchased dung, seasonal sugar press mud and contracted digestate land; no guaranteed CBG premium.",
     input: {
-      countryCode: "IN", regionId: "punjab", businessType: "biogas_developer",
+      countryCode: "IN", regionId: "punjab", businessType: "central_biogas_plant", projectRole: "developer",
       feedstocks: [
         { id: "collected-dung", type: "cattle_solid_manure", quantity: 15000, dryMatterPct: 16, monthsActive: 12, delivered: true, distanceKm: 5, purchasePricePerTonneLocal: 200, handling: "field_spreading" },
         { id: "sugar-filter-cake", type: "press_mud", quantity: 8000, dryMatterPct: 25, monthsActive: 5, startMonth: 11, delivered: true, distanceKm: 18, purchasePricePerTonneLocal: 600, handling: "field_spreading" },
@@ -337,5 +337,36 @@ export const EXAMPLES: ExampleCase[] = [
       energy: { electricityKwhYear: 900000, heatNeed: "none", hasGridConnection: true },
       site: {},
     },
+  },
+  // Model demonstrations, not disclosed accounts or quotations from the reference operators.
+  {
+    id: "ca_brewery_cod", title: "Canadian brewery wastewater", description: "COD treatment with energy recovery; technical scale informed by Sleeman, budgets illustrative",
+    input: { countryCode: "CA", regionId: "ontario", businessType: "brewery", feedstocks: [],
+      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "wastewater", operatingDays: 330, monthsActive: 12, startMonth: 1, processCapexLocal: 3800000, processOpexLocalYear: 150000, residualCostLocalT: 45, auxiliaryKwhYear: 180000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 30,
+        flowM3Day: 1800, codMgL: 4600, removalPct: 82, methanePct: 65, methaneRecoveryPct: 95, biomassCodPct: 8, sludgeTsPct: 5, sludgeVsPct: 80, hrtDays: 0.25, olr: 19.8, inletTempC: 25, heatRecoveryPct: 60, avoidedTreatmentLocalM3: 0.65 },
+      energy: { electricityKwhYear: 5000000, heatNeed: "year_round_process", heatKwhYear: 8000000, hasGridConnection: true }, site: { gasGridKm: 1 } },
+  },
+  {
+    id: "us_closed_landfill", title: "Closed US municipal landfill", description: "Twenty annual waste cohorts; declining gas with no RIN or LCFS credits assumed",
+    input: { countryCode: "US", regionId: "wisconsin", businessType: "landfill_operator", feedstocks: [],
+      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "landfill", operatingDays: 350, monthsActive: 12, startMonth: 1, processCapexLocal: 2500000, processOpexLocalYear: 220000, residualCostLocalT: 0, auxiliaryKwhYear: 250000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 35,
+        annualWasteTonnes: 100000, depositionYears: 20, yearsSinceClosure: 3, decayPerYear: 0.05, potentialNm3T: 100, collectionPct: 70, methanePct: 50,
+        nitrogenPct: 6, oxygenPct: 1, h2sPpm: 500, upgradingCapexLocal: 4000000, upgradingRecoveryPct: 96, upgradingKwhNm3: 0.4, productMethanePct: 97 },
+      energy: { electricityKwhYear: 200000, heatNeed: "none", hasGridConnection: true }, site: { gasGridKm: 3 } },
+  },
+  {
+    id: "de_existing_biogas", title: "Existing German sludge biogas", description: "Incremental gas-use investment; no new digester and no duplicated sludge processing cost",
+    input: { countryCode: "DE", regionId: "bayern", businessType: "wastewater_treatment", feedstocks: [],
+      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "gas", operatingDays: 365, monthsActive: 12, startMonth: 1, processCapexLocal: 350000, processOpexLocalYear: 25000, residualCostLocalT: 0, auxiliaryKwhYear: 80000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 25,
+        rawGasNm3Hour: 300, methanePct: 62, availabilityPct: 95, declinePctYear: 0, gasPriceLocalNm3: 0.06,
+        nitrogenPct: 1, oxygenPct: 0.2, h2sPpm: 1500, upgradingCapexLocal: 1900000, upgradingRecoveryPct: 98, upgradingKwhNm3: 0.3, productMethanePct: 97 },
+      energy: { electricityKwhYear: 6000000, heatNeed: "year_round_process", heatKwhYear: 4000000, hasGridConnection: true }, site: { gasGridKm: 2 } },
+  },
+  {
+    id: "se_ras_sludge", title: "Collected sludge from Swedish land-based aquaculture", description: "Characterised organic sludge; a resource-potential scenario, not a verified commercial plant",
+    input: { countryCode: "SE", regionId: "skane", businessType: "aquaculture", feedstocks: [],
+      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "residue", operatingDays: 350, monthsActive: 12, startMonth: 1, processCapexLocal: 12000000, processOpexLocalYear: 800000, residualCostLocalT: 150, auxiliaryKwhYear: 150000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 40,
+        tonnesYear: 5000, densityKgM3: 1000, dmPct: 6, vsPct: 75, bmp: 280, methanePct: 60, nKgT: 4, hrtDays: 40, olr: 2 },
+      energy: { electricityKwhYear: 3000000, heatNeed: "year_round_process", heatKwhYear: 500000, hasGridConnection: true }, site: { gasGridKm: 10 } },
   },
 ];

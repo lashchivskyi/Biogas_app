@@ -1,3 +1,4 @@
+import type { ProcessInput, ProcessResult } from "./processes";
 import type { BusinessTypeId } from "./businesses";
 export type { BusinessTypeId } from "./businesses";
 import type { CityClimate } from "./location";
@@ -157,6 +158,8 @@ export interface FinanceInput {
 }
 
 export interface ProjectInput {
+  process?: ProcessInput;
+  projectRole?: "feedstock_owner" | "waste_operator" | "developer" | "offtaker";
   countryCode: string;
   regionId: string;
   city?: CityClimate;
@@ -227,7 +230,7 @@ export interface FeedstockSummary {
 
 export interface TechnologyRecommendation {
   primary: string;
-  digestion: "wet" | "high_solids" | "wet_with_solids_feeding" | "high_rate" | "covered_lagoon";
+  digestion: "none" | "wet" | "high_solids" | "wet_with_solids_feeding" | "high_rate" | "covered_lagoon";
   temperature: "mesophilic" | "thermophilic";
   stages: "single" | "two_stage";
   mode: "continuous" | "batch";
@@ -279,6 +282,7 @@ export interface EnergyBalance {
   heatNetAvailableKwh: number;
   heatUsefulKwh: number; // economically useful (matched to a real demand)
   biomethaneNm3: number;
+  biomethaneCh4Share?: number;
   rawBiogasNm3PerHour: number;
   rawBiogasCh4Share: number; // dry-gas methane volume fraction before upgrading
   rawBiogasDesignNm3PerHour: number; // seasonal peak or annual flow / design operating hours, whichever is larger
@@ -323,6 +327,7 @@ export interface FinancialResult {
 }
 
 export interface ScenarioResult {
+  process?: ProcessResult;
   scenario: ScenarioId;
   route: RouteId;
   feed: FeedstockSummary;
@@ -446,6 +451,7 @@ export interface RegulatoryItem {
 }
 
 export interface DigestateAssessment {
+  basis?: "process_residuals" | "not_applicable";
   tonnesYear: number;
   nKgYear: number;
   landRequiredHa: number;

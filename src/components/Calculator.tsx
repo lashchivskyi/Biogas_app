@@ -9,7 +9,7 @@ import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
-import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, recontextualizeForm, uiDefaults } from "@/lib/form";
+import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, recontextualizeForm, uiDefaults, processIssues } from "@/lib/form";
 import { parseLocalizedNumber } from "@/lib/localized-number";
 import { numberError } from "@/i18n/errors";
 import { useLocale, usePreferences } from "./LocaleProvider";
@@ -24,8 +24,10 @@ import { CitySelect } from "./CitySelect";
 import { locationCopy } from "@/i18n/location";
 import { calculatorHelp } from "@/i18n/calculator-help";
 import { HelpTooltip } from "./HelpTooltip";
-import { BUSINESS_GROUPS, BUSINESS_IDS } from "@/core/businesses";
+import { defaultProcess, BUSINESS_GROUPS, SECTOR_IDS } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
+import { ProcessInputs } from "./ProcessInputs";
+import { processCopy, processFieldLabels } from "@/i18n/processes";
 import { BusinessMarketContext } from "./BusinessMarketContext";
 
 const STORAGE_KEY = "mx.form.v2";
@@ -116,7 +118,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) as FormState : null;
-        if (parsed?.lines?.length && Object.hasOwn(COUNTRIES, parsed.countryCode)) {
+        if (parsed && (parsed.lines?.length || parsed.processKind) && Object.hasOwn(COUNTRIES, parsed.countryCode)) {
           next = recontextualizeForm(parsed, adapter, projectRegion, locale, projectCity);
           hasDraft = true;
           setRestored(true);
@@ -125,7 +127,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       const business = q.get("b");
       if (business && Object.hasOwn(BUSINESS_TYPES, business)) {
         if (!hasDraft || next.businessType !== business) next = { ...initialForm(business as BusinessTypeId, adapter.code, projectRegion ?? "", locale), city: projectCity };
-        setStep(BUSINESS_TYPES[business as BusinessTypeId].scope === "outside_model" ? 0 : 1);
+        setStep(1);
       }
       setForm(next);
       setFormReady(true);
@@ -154,11 +156,10 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
   const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
-  const assessment = useMemo(() => (submitted && form.regionId && BUSINESS_TYPES[form.businessType].scope !== "outside_model" ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form.regionId, form.businessType, input, country, assessmentDate]);
+  const assessment = useMemo(() => (submitted && form.regionId && processIssues(form).length === 0 && (input.process || input.feedstocks.length > 0) ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form, input, country, assessmentDate]);
 
   function next() {
     setError("");
-    if (BUSINESS_TYPES[form.businessType].scope === "outside_model") { setError(H.scopeNote); setStep(0); return; }
     if (step === 0 && !form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null && invalidStep <= step) {
@@ -166,7 +167,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       setStep(invalidStep);
       return;
     }
-    if (step === 1 && input.feedstocks.length === 0) {
+    if (step === 1 && processIssues(form).length) { setError(processIssues(form).map(k => processFieldLabels(locale)[k] ?? k).join(", ")); return; }
+    if (step === 1 && !input.process && input.feedstocks.length === 0) {
       setError(C.errNoFeed);
       return;
     }
@@ -176,7 +178,6 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
 
   function calculate() {
     setError("");
-    if (BUSINESS_TYPES[form.businessType].scope === "outside_model") { setError(H.scopeNote); setStep(0); return; }
     if (!form.regionId) { setError(locationCopy(locale).title + ": " + C.choose); setStep(0); return; }
     const invalidStep = invalidNumberStep(form);
     if (invalidStep !== null) {
@@ -184,7 +185,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       setStep(invalidStep);
       return;
     }
-    if (input.feedstocks.length === 0) {
+    if (processIssues(form).length) { setError(processIssues(form).map(k => processFieldLabels(locale)[k] ?? k).join(", ")); setStep(1); return; }
+    if (!input.process && input.feedstocks.length === 0) {
       setError(C.errNoFeedStep);
       setStep(1);
       return;
@@ -193,7 +195,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     const asOfDate = new Date().toISOString().slice(0, 10);
     setAssessmentDate(asOfDate);
     const a = assess(input, country, { asOfDate });
-    track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: BUSINESS_TYPES[form.businessType].role, verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
+    track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: form.projectRole ?? BUSINESS_TYPES[form.businessType].role, process_model: input.process?.kind ?? "ad", verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
@@ -268,8 +270,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 <fieldset key={group.id} className="mt-5">
                   <legend className="text-sm font-semibold text-ink2">{d.audience.items[group.copyIndex].title}</legend>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {BUSINESS_IDS.filter((b) => BUSINESS_TYPES[b].audience === group.id).map((b) => (
-                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
+                    {SECTOR_IDS.filter((b) => BUSINESS_TYPES[b].audience === group.id).map((b) => (
+                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, processKind: defaultProcess(b), processFields: {}, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
                         <div className="font-semibold">{L.business[b].label}</div>
                         <div className="text-xs text-muted">{L.business[b].hint}</div>
                         {BUSINESS_TYPES[b].scope !== "screening" && <div className="mt-2 text-xs font-semibold text-ink2">{BUSINESS_TYPES[b].scope === "outside_model" ? H.outside : H.specialist}</div>}
@@ -280,6 +282,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               ))}
               {BUSINESS_TYPES[form.businessType].scope === "outside_model" && <p className="mt-4 rounded-xl bg-surface2 p-4 text-sm" role="status">{H.scopeNote}</p>}
               {BUSINESS_TYPES[form.businessType].scope === "specialist" && <p className="mt-4 text-sm text-muted">{H.specialist}. {d.result.robust.accuracy}</p>}
+              <label className="mt-5 block"><span className="label">{processCopy(locale).role}</span><select className="field" value={form.projectRole ?? BUSINESS_TYPES[form.businessType].role} onChange={e => set("projectRole", e.target.value as FormState["projectRole"])}>{Object.entries(processCopy(locale).roles).map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label>
               <BusinessMarketContext business={form.businessType} country={form.countryCode} region={form.regionId} />
             </div>
             <div>
@@ -304,13 +307,14 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-xl font-bold">{C.q3}</h2>
-              <p className="mt-1 text-sm text-muted">{C.q3hint}</p>
+              <h2 className="text-xl font-bold">{form.processKind && form.processKind !== "ad" ? processCopy(locale).models[form.processKind] : C.q3}</h2>
+              {(!form.processKind || form.processKind === "ad") && <p className="mt-1 text-sm text-muted">{C.q3hint}</p>}
             </div>
-            {form.lines.map((l) => (
+            <ProcessInputs form={form} onChange={patch => { setForm(f => ({ ...f, ...patch })); setSubmitted(false); }} locale={locale} currency={cur} adLabel={d.result.dFeed} />
+            {(form.processKind ?? defaultProcess(form.businessType)) === "ad" && <>{form.lines.map((l) => (
               <LineEditor key={l.id} line={l} d={d} cur={cur} locale={locale} onChange={(p) => updateLine(l.id, p)} onRemove={() => setForm((f) => ({ ...f, lines: f.lines.filter((x) => x.id !== l.id) }))} />
             ))}
-            <AddLine d={d} onAdd={(kind, key) => setForm((f) => ({ ...f, lines: [...f.lines, emptyLine(kind, key)] }))} />
+            <AddLine d={d} onAdd={(kind, key) => setForm((f) => ({ ...f, lines: [...f.lines, emptyLine(kind, key)] }))} /></>}
           </div>
         )}
 
@@ -361,8 +365,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
             <h2 className="text-xl font-bold">{C.siteTitle}</h2>
             <p className="-mt-3 text-sm text-muted">{C.siteHint}</p>
             <div className="grid gap-5 md:grid-cols-2">
-              <Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={C.siteHint}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} /></Field>
-              <Field label={C.storage} htmlFor="c-st" hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} /></Field>
+              {!input.process && <><Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={C.siteHint}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} /></Field>
+              <Field label={C.storage} htmlFor="c-st" hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} /></Field></>}
               <Field label={C.gasGrid} htmlFor="c-gg" hint={C.gasGridHint}><Num id="c-gg" value={form.gasGridKm} onChange={(v) => set("gasGridKm", v)} unit={L.units.km} /></Field>
               <div className="space-y-2">
                 <Toggle checked={form.neighbours} onChange={(v) => set("neighbours", v)} label={C.neighbours} />

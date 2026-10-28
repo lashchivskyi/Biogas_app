@@ -3,6 +3,8 @@ import type { BusinessTypeId } from "@/core/businesses";
 /** Deployment evidence is not a probability of buying, a local feedstock survey or an investment verdict. */
 export const SECTOR_REVIEW_DATE = "2026-10-28";
 export const SECTOR_SOURCES = {
+  sleeman: { title: "Veolia — Sleeman brewery wastewater, Ontario (technical reference; date unspecified)", period: "—", url: "https://www.veoliawatertech.com/en/case-studies/reducing-bod-brewery-wastewater-sleeman" },
+  paper: { title: "Veolia — Modern Karton, Turkey (2014 technical reference)", period: "2014", url: "https://www.veoliawatertechnologies.com.cn/sites/g/files/dvc3481/files/document/2019/08/160019_VWT_MOD_Brochure_Pulp%26Paper_ENG_A4_LR.pdf%20-%200.pdf" },
   iea: { title: "IEA — Outlook for Biogas and Biomethane", period: "2025", url: "https://www.iea.org/reports/outlook-for-biogas-and-biomethane" },
   food: { title: "IEA Bioenergy Task 37 — Food and beverage AD", period: "2025", url: "https://www.ieabioenergy.com/wp-content/uploads/2025/03/IEA-Bioenergy-Task-37-Food-and-Beverage_20250302.pdf" },
   eba: { title: "European Biogas Association — Statistical Report", period: "2024–2025", url: "https://www.europeanbiogas.eu/news/eba-statistical-report-2025/" },
@@ -44,9 +46,9 @@ export const BUSINESS_MARKETS: Record<string, Review> = {
   CZ: euResource(), SK: euResource(), HU: euResource(), RO: euResource(),
   MD: review(["cattle_farm", "biogas_developer"], ["food_manufacturer"], ["md"]),
   BG: euResource(), RS: review(["biogas_developer"], [], ["rs"]), GR: euResource(),
-  TR: review(["cattle_farm", "poultry_farm", "municipal_biowaste", "biogas_developer"], [], ["tr"]),
+  TR: review(["cattle_farm", "poultry_farm", "municipal_biowaste", "biogas_developer", "pulp_paper"], [], ["tr", "paper"]),
   LT: euResource(), LV: euResource(), EE: euResource(),
-  DK: review(["dairy_farm", "pig_farm", "biogas_developer", "wastewater_treatment", "wastewater_organic", "landfill_operator"], ["crop_farm", "food_manufacturer"], ["dk"]),
+  DK: review(["dairy_farm", "pig_farm", "central_biogas_plant", "biogas_developer", "wastewater_treatment", "wastewater_organic", "landfill_operator"], ["crop_farm", "food_manufacturer"], ["dk"]),
   SE: review(["municipal_biowaste", "wastewater_treatment", "dairy_farm", "biogas_developer", "landfill_operator"], ["food_manufacturer"], ["se"]),
   FI: euResource(),
   DE: review(["cattle_farm", "pig_farm", "poultry_farm", "crop_farm", "municipal_biowaste", "biogas_developer"], ["dairy_farm", "food_manufacturer"], ["de"]),
@@ -56,7 +58,7 @@ export const BUSINESS_MARKETS: Record<string, Review> = {
   ES: euResource(), NL: review(["potato_processor"], ["dairy_farm", "pig_farm", "poultry_farm"], ["mccain", "eurostat"]),
   GB: review(["municipal_biowaste", "biogas_developer"], ["food_business"], ["refood"]),
   US: review(["dairy_farm", "pig_farm", "biogas_developer", "landfill_operator"], [], ["us", "landfill"]),
-  CA: review(["biogas_developer", "municipal_biowaste", "wastewater_treatment", "landfill_operator"], ["dairy_farm", "food_business"], ["ca"]),
+  CA: review(["biogas_developer", "municipal_biowaste", "wastewater_treatment", "landfill_operator", "brewery"], ["dairy_farm", "food_business"], ["ca", "sleeman"]),
   MX: review([], ["dairy_farm", "cattle_farm", "pig_farm", "crop_farm"], ["mx"]),
   AR: review([], ["dairy_farm", "cattle_farm", "pig_farm", "poultry_farm", "slaughterhouse", "biogas_developer"], ["ar"]),
   BR: review(["biogas_developer"], ["pig_farm", "slaughterhouse", "sugar_ethanol", "landfill_operator"], ["br", "food"]),
@@ -70,12 +72,13 @@ interface RegionEvidence { businesses: readonly BusinessTypeId[]; sources: reado
 const region = (businesses: BusinessTypeId[], sources: SourceId[]): RegionEvidence => ({ businesses, sources });
 /** Exact profile IDs only: ERA5 proximity and city coordinates never infer local commercial demand. */
 export const REGIONAL_BUSINESS_EVIDENCE: Record<string, RegionEvidence> = {
+  "CA:ontario": region(["brewery"], ["sleeman"]),
   "UA:chernihiv": region(["biogas_developer"], ["ua"]),
   "UA:kyiv": region(["biogas_developer"], ["ua"]),
   "UA:khmelnytskyi": region(["biogas_developer"], ["ua"]),
   "UA:vinnytsia": region(["biogas_developer"], ["ua"]),
   "UA:dnipro": region(["biogas_developer"], ["ua"]),
-  "DK:jutland": region(["biogas_developer", "dairy_farm", "pig_farm"], ["dk"]),
+  "DK:jutland": region(["central_biogas_plant", "biogas_developer", "dairy_farm", "pig_farm"], ["dk"]),
   "DK:south-jutland": region(["biogas_developer", "dairy_farm", "pig_farm"], ["dk"]),
   "DK:north-jutland": region(["biogas_developer", "dairy_farm", "pig_farm"], ["dk"]),
   "GB:yorkshire": region(["municipal_biowaste"], ["refood"]),

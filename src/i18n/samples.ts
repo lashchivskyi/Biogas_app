@@ -1,3 +1,5 @@
+import { processCopy, processFieldLabels } from "./processes";
+import { PROCESS_UNITS } from "@/core/processes";
 import type { ExampleCase } from "@/core/examples";
 import { ANIMALS, FEEDSTOCKS } from "@/core/feedstockData";
 import { getCountry } from "@/countries";
@@ -50,7 +52,7 @@ export function sampleNotes(e: ExampleCase, locale: Locale, d: Dict) {
   const dilute = input.feedstocks.some((f) => f.type === "pome" || f.type === "vinasse");
   const context = [
     `${countryName(input.countryCode, locale)} · ${L.business[input.businessType].label}.`,
-    copy[merchant ? 2 : farm ? 0 : 1], competing ? copy[3] : "", seasonal ? copy[4] : "", dilute ? copy[5] : "",
+    input.process ? processCopy(locale).models[input.process.kind] : copy[merchant ? 2 : farm ? 0 : 1], competing ? copy[3] : "", seasonal ? copy[4] : "", dilute ? copy[5] : "",
   ].filter(Boolean).join(" ");
   const operations = input.feedstocks.map((f) => {
     const type = f.type ?? ANIMALS[f.animal!].feedstock;
@@ -75,6 +77,7 @@ export function sampleNotes(e: ExampleCase, locale: Locale, d: Dict) {
     }
     return values.join(" · ");
   });
+  if (input.process) { const labels = processFieldLabels(locale); for (const [key,value] of Object.entries(input.process)) if (typeof value === "number") operations.push(`${labels[key]}: ${n(value)} ${(PROCESS_UNITS[key] ?? "").replace("local",currency)}`); }
   operations.push(`${d.flow.electricity}: ${input.energy.electricityKwhYear === undefined ? "—" : `${n(input.energy.electricityKwhYear)} ${L.units.kwh}/${L.units.years}`} · ${C.elecPrice}: ${input.energy.electricityPriceLocalPerKwh === undefined ? "—" : `${price(input.energy.electricityPriceLocalPerKwh)} ${currency}/${L.units.kwh}`}`);
   operations.push(`${L.heat[input.energy.heatNeed]}${input.energy.gasM3Year === undefined ? "" : ` · ${C.gasToggle.replace(/^\d+\.\s*/, "")}: ${n(input.energy.gasM3Year)} ${L.units.m3}/${L.units.years}`}${input.energy.gasPriceLocalPerM3 === undefined ? "" : ` · ${C.gasPrice}: ${price(input.energy.gasPriceLocalPerM3)} ${currency}/${L.units.m3}`}${input.energy.heatKwhYear === undefined ? "" : ` · ${C.heatKwh}: ${n(input.energy.heatKwhYear)} ${L.units.kwh}/${L.units.years}`}`);
   operations.push(`${C.land}: ${input.site.landHa === undefined ? "—" : `${n(input.site.landHa)} ${L.units.ha}`} · ${C.gasGrid}: ${input.site.gasGridKm === undefined ? "—" : `${n(input.site.gasGridKm)} ${L.units.km}`}`);

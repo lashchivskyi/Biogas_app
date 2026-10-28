@@ -1,3 +1,5 @@
+import { processBounds, processSchema } from "./processes";
+import { modelsForBusiness } from "./businesses";
 import { climateSummary } from "./climate";
 import { projectRegion } from "./location";
 import { biomethaneOfftake } from "./capex";
@@ -56,7 +58,9 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
 }
 
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
-  if (BUSINESS_TYPES[input.businessType].scope === "outside_model") throw new Error("This business requires a separate technical model");
+  if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
+  if (input.process) { processSchema.parse(input.process); if (input.feedstocks.length) throw new Error("Use one physical input basis, not simultaneous AD feedstocks and process data"); }
+  if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad")) throw new Error("Select the appropriate process and supply its input data");
   if (input.countryCode !== country.code) throw new Error("Project country does not match the country adapter");
   projectRegion(input, country);
   const asOfDate = opts.asOfDate ?? DATA_REVIEW_AS_OF;
@@ -108,10 +112,10 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     { country: country.code, date: "undated", origin: "USER_INPUT" },
   ));
   const actualEvidence = new Map(selectedParams.usedIds().map((id) => [id, params.prov(id)]));
-  for (const p of marketEvidence) actualEvidence.set(p.id, p);
+  for (const p of [...marketEvidence, ...(base.process?.provenance ?? [])]) actualEvidence.set(p.id, p);
   const dataAudit: NonNullable<Assessment["dataAudit"]> = {
     modelVersion: MODEL_VERSION,
-    dataVersion: fingerprint({ catalog: CATALOG_VERSION, parameters: params.all(), region: ctxBase.region, support: country.support }),
+    dataVersion: fingerprint({ catalog: CATALOG_VERSION, parameters: params.all(), process: base.process?.provenance, region: ctxBase.region, support: country.support }),
     inputVersion: fingerprint(input),
     asOfDate,
     checks: [...actualEvidence.values()].map((p) => checkEvidence(p, asOfDate)),
@@ -136,6 +140,24 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     };
     return { parameterId: id, lowInput: low, highInput: high, lowNpvEur: npvAt(low), highNpvEur: npvAt(high), basis };
   });
+  if (input.process) {
+    const process = input.process;
+    const keys = process.kind === "landfill" ? ["decayPerYear", "potentialNm3T", "collectionPct"]
+      : process.kind === "wastewater" ? ["codMgL", "removalPct", "avoidedTreatmentLocalM3"]
+      : process.kind === "gas" ? ["rawGasNm3Hour", "declinePctYear", "gasPriceLocalNm3"] : ["bmp", "tonnesYear", "hrtDays"];
+    for (const key of [...keys, "processOpexLocalYear", "residualCostLocalT"]) {
+      const value = Number((process as unknown as Record<string, unknown>)[key]);
+      if (!(value > 0)) continue;
+      const bounds = processBounds(process.kind,key);
+      const low = Math.max(bounds.low,value * (1 - process.uncertaintyPct / 100)), high = Math.min(bounds.high,value * (1 + process.uncertaintyPct / 100));
+      const lower = processSchema.safeParse({ ...process, [key]: low });
+      const upper = processSchema.safeParse({ ...process, [key]: high });
+      // A bounded physical parameter is never extended beyond its schema to fabricate a range.
+      if (!lower.success || !upper.success) continue;
+      const at = (next: typeof process) => runScenarioRoute(makeCtx({ ...input, process: next }, country, params.fork(), "base", NO_MODS, lang), bestRoute).fin.npvEur;
+      parameterSensitivity.push({ parameterId: `process.${key}`, lowInput: low, highInput: high, lowNpvEur: at(lower.data), highNpvEur: at(upper.data), basis: "engineering" });
+    }
+  }
 
   // ---- sensitivity (best route, base scenario) ----
   const tests: Array<[string, string, Partial<Modifiers>]> = [
@@ -145,7 +167,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     ["energy_price", T("Energy prices −20 %", "Ціни на енергію −20 %"), { energyPrice: 0.8 }],
     ["heat_use", T("Heat use −50 %", "Використання тепла −50 %"), { heatUse: 0.5 }],
     ["feedstock", T("Loss of 20 % of feedstock", "Втрата 20 % сировини"), { feedstock: 0.8 }],
-    ["transport", T("Logistics +50 %", "Логістика +50 %"), { transport: 1.5 }],
+    input.process ? ["process_opex", "OPEX +30 %", { opex: 1.3 }] : ["transport", T("Logistics +50 %", "Логістика +50 %"), { transport: 1.5 }],
     ["downtime", T("CHP downtime +10 pp", "Простої КГУ +10 п.п."), { extraDowntimePp: 10 }],
   ];
   const sensitivity: SensitivityItem[] = tests.map(([id, label, m]) => {
@@ -183,10 +205,10 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const methane = methaneCheck(base, cons, opt, params, T);
   const safety = safetyRegister(input, base.feed, lang);
 
-  const regItems = country.regulatory({
+  let regItems = country.regulatory({
     route: bestRoute,
     kwElEquivalent: base.kwElEquivalent,
-    tonnesYear: base.feed.tonnesYear,
+    tonnesYear: input.process && input.process.kind !== "residue" ? 0 : base.feed.tonnesYear,
     abpTonnesYear: base.feed.abpTonnesYear,
     digestateTonnesYear: digestate.tonnesYear,
     neighboursWithin300m: !!input.site.neighboursWithin300m,
@@ -195,6 +217,19 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     gasGridInjection: bestRoute === "biomethane" && biomethaneOfftake(ctxBase, base.energy).mode === "grid",
     lang,
   });
+  if (input.process) {
+    // A wastewater flow is not a solid-waste throughput; land spreading is not assumed.
+    regItems = regItems.filter(r => !["eu.nitrates","uk.nvz","ca.nutrient","ua.digestate"].includes(r.id));
+    regItems.push({ id: "process.basis", status: "TO_VERIFY", effort: "HIGH",
+      title: input.process.kind === "wastewater"
+        ? T("Confirm discharge limits, final polishing and sludge disposal authorisations", "Підтвердити нормативи скиду, доочищення та дозволений шлях утилізації осаду")
+        : input.process.kind === "landfill"
+          ? T("Confirm landfill permit, gas collection obligations and aftercare responsibilities", "Перевірити дозвіл полігона, обов’язки зі збору газу та післяексплуатаційного догляду")
+          : input.process.kind === "gas"
+            ? T("Confirm gas transfer contract, inlet quality and approvals for the new gas-use equipment", "Перевірити договір постачання, якість газу та дозволи на нове газовикористовувальне обладнання")
+            : T("Confirm material classification, pretreatment requirements and lawful residuals disposal", "Перевірити класифікацію матеріалу, вимоги до підготовки та законний шлях утилізації залишків"),
+      appliesBecause: T("Process-specific site conditions; no automatic legal eligibility", "Умови конкретного процесу та майданчика; автоматичного підтвердження законності немає") });
+  }
   const pointsOf = { LOW: 1, MEDIUM: 2, HIGH: 3 } as const;
   const regPoints = regItems.reduce((a, i) => a + pointsOf[i.effort], 0);
   const regComplexity = regPoints >= 17 ? "HIGH" : regPoints >= 13 ? "MEDIUM" : "LOW";
@@ -206,6 +241,10 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (bestRoute === "biomethane") priceIds.push("econ.biomethane_price_base_eur_nm3");
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
   const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: params.prov(capexId).confidence === "LOW" });
+  if (input.process?.basisDate && input.process.basisDate > asOfDate) {
+    quality.score = Math.min(quality.score,34); quality.level = "LOW";
+    quality.reasons.push(T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.", "Дата вихідних даних процесу пізніша за дату оцінки; ці дані не підтверджують поточний висновок."));
+  }
   const expiredPrices = dataAudit.checks.filter((check) => (priceIds.includes(check.parameterId) && check.status === "EXPIRED") || (check.observedThrough && check.observedThrough > asOfDate) || (check.publishedOn && check.publishedOn > asOfDate));
   if (expiredPrices.length) {
     quality.level = "LOW";
@@ -223,10 +262,15 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const verdict = decideVerdict({
     base, cons, opt, confidence: { level: quality.level, score: quality.score }, minKwEl: minChp, breakEven, lang,
   });
+  if (input.process) verdict.whatWouldChange = [
+    T("Verify the inlet analysis and operating history, seasonal availability, and a supplier guarantee for the proposed treatment train.", "Перевірити аналіз потоку, історію роботи, сезонність і гарантії постачальника для запропонованої технології."),
+    T("Confirm complete installed-cost quotations, residuals disposal, final effluent treatment and the energy offtake contract. Check the downside case before investment.", "Підтвердити повні кошториси монтажу, утилізацію залишків, доочищення стоків та договір збуту енергії. Перед інвестуванням перевірити несприятливий сценарій."),
+    T("Obtain site-specific permits and grid gas-quality requirements; extend this pre-tax screening to tax, working capital and lender cash-flow modelling.", "Уточнити дозволи й вимоги мережі до якості газу; доповнити попередню оцінку податками, оборотним капіталом і моделлю грошових потоків для кредитора."),
+  ];
 
   // ---- national support: separate cases, never in the verdict ----
   const manureMass = base.feed.tonnesYear > 0 ? base.feed.lines.filter((l) => l.category === "manure").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear : 0;
-  const supportCases: SupportCase[] = country.support.schemes.map((sc) => {
+  const supportCases: SupportCase[] = (input.process ? [] : country.support.schemes).map((sc) => {
     const route = sc.routes.includes(bestRoute) ? bestRoute : sc.routes[0];
     const ref = matrix[route].base;
     const kw = ref.kwElEquivalent;
@@ -283,12 +327,16 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // ---- warnings ----
   const warnings = [
     ...new Set([
+      ...(input.assumedSupportEurPerKwh ? [T("Legacy assumed support is excluded from the base assessment.", "Старе припущення про підтримку виключено з базової оцінки.")] : []),
       ...base.feed.warnings,
       ...base.feed.lines.flatMap((l) => l.warnings),
       ...base.design.tech.warnings.slice(0, -1), // the last one is the static "no energy crops" note
       ...logistics.warnings,
     ]),
   ];
+  if (input.process) warnings.push(T("Upstream budgets must include pretreatment, logistics, storage and final treatment; they are not independently verified installed quotations.", "Бюджети мають включати підготовку, логістику, зберігання й кінцеву обробку; це не незалежно перевірені монтажні оферти."));
+  if (input.process?.kind === "residue" || input.process?.kind === "wastewater") warnings.push(T("BMP/COD and retention time alone do not verify salinity, ammonia inhibition, toxic contaminants or treatment stability; confirm with representative analysis and continuous pilot/vendor data.", "BMP/COD і час утримання не підтверджують стійкість процесу за наявності солей, аміаку чи токсичних домішок; потрібні репрезентативні аналізи та дані безперервного пілота або виробника."));
+  if (input.process?.kind === "gas" || input.process?.kind === "landfill") warnings.push(T("The treatment quotation and recovery must cover the actual H2S, siloxanes, moisture, N2 and O2. Entered product purity is a design requirement, not demonstrated gas-grid compliance.", "Оферта та recovery мають відповідати фактичним H2S, силоксанам, волозі, N2 та O2. Введена чистота продукту — проєктна вимога, а не доказ відповідності газовій мережі."));
   if (base.energy.heatExternalPurchasedKwh > 0) warnings.push(T("Own biogas is not enough to heat the digester in the coldest months — external heat is needed.", "Власного біогазу бракує для обігріву реактора в найхолодніші місяці — потрібне зовнішнє тепло."));
   const flareShare = Math.round((base.energy.flaredKwh / gasKwh) * 100);
   if (base.energy.flaredKwh / gasKwh > 0.1) warnings.push(T(`≈${flareShare} % of the biogas finds no use (flared): review CHP size or seasonality.`, `≈${flareShare} % біогазу не знаходить використання (факел): перегляньте розмір КГУ чи сезонність.`));
@@ -301,7 +349,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const reviewChecks = dataAudit.checks.filter((check) => ["EXPIRED", "REVIEW_REQUIRED", "UNDATED"].includes(check.status) && check.parameterId.startsWith("econ."));
   if (reviewChecks.length) warnings.push(T(`Market data require review (${reviewChecks.map((check) => check.parameterId).join(", ")}). Observation dates and validity are shown in the evidence; these are not verified current customer quotations.`, `Ринкові дані потребують перевірки (${reviewChecks.map((check) => check.parameterId).join(", ")}). Періоди й строки дії наведено в джерелах; це не підтверджені актуальні пропозиції для замовника.`));
 
-  const supportIncluded = (input.assumedSupportEurPerKwh ?? 0) > 0;
+  const supportIncluded = false;
   const notes = [
     T(`Support: ${country.support.summary.en}`, `Підтримка: ${country.support.summary.uk}`),
     ...country.approachNotes[lang],

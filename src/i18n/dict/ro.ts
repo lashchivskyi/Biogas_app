@@ -252,6 +252,7 @@ const ro: Translation = {
     housing: { year_round: "Stabulație tot anul", seasonal: "Vara la pășune" },
     handling: { field_spreading: "Le aplicăm pe terenul propriu", lagoon: "Depozitate în lagună / bazin", paid_disposal: "Plătim pentru colectare / eliminare", sold_as_feed: "Le vindem (de ex. ca furaj)", landfill: "La groapa de gunoi", other: "Altceva / nu știu" },
     business: {
+      central_biogas_plant: { label: "Instalații centralizate de biogaz și cooperative", hint: "Prelucrarea în comun a gunoiului de grajd și a reziduurilor organice de la mai mulți furnizori" },
       dairy_farm: { label: "Fermă de vaci de lapte", hint: "Vaci, tineret, dejecții lichide" },
       cattle_farm: { label: "Bovine de carne / fermă mixtă", hint: "Îngrășare, pășunat, fermă mixtă" },
       pig_farm: { label: "Fermă de porci", hint: "Porci la îngrășat și/sau scroafe" },
@@ -275,12 +276,12 @@ const ro: Translation = {
       crop_farm: { label: "Fermă vegetală", hint: "Paie, culturi intermediare, siloz (culturi energetice semnalate)" },
       fish_processor: { label: "Procesarea peștelui", hint: "Capete, resturi și viscere; verificați contractele pentru furaje și făină de pește" },
 
-      other_livestock: { label: "Alte ferme: ovine, caprine, cabaline", hint: "Gunoi de grajd colectat; proprietățile specifice speciei și așternutul necesită evaluare separată" },
+      other_livestock: { label: "Alte ferme: ovine, caprine, cabaline", hint: "Gunoi de grajd colectat: analize de substanță uscată, solide volatile și BMP, inclusiv așternutul" },
       food_manufacturer: { label: "Fabrici alimentare și brutării", hint: "Resturi de producție separate; fără alimente și furaje vandabile" },
-      starch_processor: { label: "Fabrici de amidon: manioc, porumb și cereale", hint: "Ape de proces cu COD ridicat; necesită proiect separat de epurare" },
+      starch_processor: { label: "Fabrici de amidon: manioc, porumb și cereale", hint: "Ape uzate industriale · Q / COD → UASB / EGSB" },
       pulp_paper: { label: "Fabrici de celuloză și hârtie", hint: "Efluenți biodegradabili; fără leșie neagră și reziduuri lemnoase" },
-      aquaculture: { label: "Acvacultură și ferme piscicole", hint: "Nămol colectat; salinitatea și diluția se evaluează separat" },
-      landfill_operator: { label: "Operatori de depozite de deșeuri", hint: "Gaz de depozit captat; necesită model de captare, nu de digestie a substraturilor" },
+      aquaculture: { label: "Acvacultură și ferme piscicole", hint: "Nămol colectat din piscicultură: analize de solide și BMP; verificarea salinității" },
+      landfill_operator: { label: "Proprietari și operatori de depozite de deșeuri", hint: "Gaz dintr-un depozit de deșeuri închis / Flux de biogaz existent → CHP / Upgrading" },
       energy_offtaker: { label: "Cumpărători de gaze și companii energetice", hint: "Achiziție de biometan și contracte de furnizare; fără substraturi proprii presupuse" },
     },
     feedstock: {

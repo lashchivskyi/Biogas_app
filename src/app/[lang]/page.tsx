@@ -11,7 +11,7 @@ import { Reveal } from "@/components/Reveal";
 import { Emblem } from "@/components/three/Emblem";
 import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
-import { BUSINESS_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
+import { SECTOR_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
@@ -35,7 +35,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     const ex = EXAMPLES.find((e) => e.id === id)!;
     return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode, example: ex };
   };
-  const segments: SegmentCard[] = BUSINESS_IDS.map((id) => {
+  const segments: SegmentCard[] = SECTOR_IDS.map((id) => {
     const definition = BUSINESS_TYPES[id];
     const guide = SEGMENTS.find((s) => s.businessType === id && s.id !== "small");
     const exampleId = guide?.exampleId ?? EXAMPLES.find((e) => e.input.businessType === id)?.id;
@@ -78,7 +78,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                 <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                   <Icon name={AUDIENCE_ICONS[group.copyIndex]} size={26} className="text-signal" />
                   <div className="mt-4 text-lg font-bold">{it.title}</div>
-                  <p className="mt-1.5 text-white/70">{BUSINESS_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).slice(0, 4).map((id) => d.labels.business[id].label).join(" · ")}</p>
+                  <p className="mt-1.5 text-white/70">{SECTOR_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).slice(0, 4).map((id) => d.labels.business[id].label).join(" · ")}</p>
                 </div>
               </Reveal>
               );
