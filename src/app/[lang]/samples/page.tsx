@@ -25,11 +25,11 @@ export default async function SamplesPage({ params }: PageProps<"/[lang]/samples
   const groups = [...new Set(cards.map(({ a }) => a.verdict.id))].map((verdict) => ({ verdict, cards: cards.filter(({ a }) => a.verdict.id === verdict) }));
   return (
     <main>
-      <PageHero eyebrow={d.samples.eyebrow} title={d.samples.title} lead={d.samples.lead}>
+      <PageHero eyebrow={d.samples.eyebrow} title={d.samples.title} lead={d.samples.lead} wideLead>
         <Link href={`/${locale}/calculator`} className="btn btn-signal mt-7">{d.samples.run}</Link>
       </PageHero>
       <div className="container-x py-10 md:py-14">
-        <p className="max-w-3xl text-sm leading-relaxed text-muted">{d.samples.modelledNote}</p>
+        <p className="text-sm leading-relaxed text-muted">{d.samples.modelledNote}</p>
         <nav aria-label={d.samples.eyebrow} className="mt-5 flex flex-wrap gap-2">
           {groups.map(({ verdict, cards }) => <a key={verdict} href={`#${verdict.toLowerCase()}`} className={`rounded-full px-3 py-2 text-xs font-semibold ${TONE[verdict]} hover:underline focus-visible:outline-2 focus-visible:outline-brand`}>{d.labels.verdict[verdict]} <span className="num ml-1">{cards.length}</span></a>)}
         </nav>

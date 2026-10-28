@@ -63,7 +63,7 @@ export const FEEDSTOCKS: Record<FeedstockTypeId, FeedstockType> = {
   olive_pomace: F({ id: "olive_pomace", name: { en: "two-phase olive pomace (alperujo)", uk: "оливкова вичавка (двофазна)" }, category: "processing", dryMatterPct: 30, vsPctOfDm: 88, yieldLow: 170, yieldTyp: 240, yieldHigh: 310, ch4Fraction: 0.6, nKgT: 3.5, p2o5KgT: 1.0, k2oKgT: 6.0, confidence: "LOW", abp: "none", flags: ["seasonal", "fat"], defaultMonths: 4, defaultStartMonth: 11, defaultHandling: "paid_disposal" }),
   sewage_sludge: F({ id: "sewage_sludge", name: { en: "municipal sewage sludge (primary + surplus, thickened)", uk: "осад міських очисних споруд (згущений)" }, category: "other", dryMatterPct: 5, vsPctOfDm: 70, yieldLow: 200, yieldTyp: 270, yieldHigh: 320, ch4Fraction: 0.63, nKgT: 2.5, p2o5KgT: 2.0, k2oKgT: 0.3, confidence: "MEDIUM", abp: "none", flags: ["contaminants"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "paid_disposal" }),
   grain_stillage: F({ id: "grain_stillage", name: { en: "grain distillery stillage", uk: "зернова барда спиртзаводу" }, category: "processing", dryMatterPct: 8, vsPctOfDm: 92, yieldLow: 300, yieldTyp: 360, yieldHigh: 410, ch4Fraction: 0.6, nKgT: 3.0, p2o5KgT: 1.5, k2oKgT: 1.2, confidence: "MEDIUM", abp: "none", flags: ["competing_use"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "paid_disposal" }),
-  fish_waste: F({ id: "fish_waste", name: { en: "fish processing residues", uk: "відходи переробки риби" }, category: "processing", dryMatterPct: 25, vsPctOfDm: 85, yieldLow: 330, yieldTyp: 430, yieldHigh: 530, ch4Fraction: 0.66, nKgT: 18, p2o5KgT: 8, k2oKgT: 1.5, confidence: "LOW", abp: "cat3", flags: ["fat"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "paid_disposal" }),
+  fish_waste: F({ id: "fish_waste", name: { en: "fish processing residues", uk: "відходи переробки риби" }, category: "processing", dryMatterPct: 25, vsPctOfDm: 85, yieldLow: 330, yieldTyp: 430, yieldHigh: 530, ch4Fraction: 0.66, nKgT: 18, p2o5KgT: 8, k2oKgT: 1.5, confidence: "LOW", abp: "cat3", flags: ["fat", "competing_use"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "paid_disposal" }),
   maize_silage: F({ id: "maize_silage", name: { en: "maize silage (energy crop)", uk: "кукурудзяний силос (енергетична культура)" }, category: "other", dryMatterPct: 33, vsPctOfDm: 95, yieldLow: 310, yieldTyp: 340, yieldHigh: 370, ch4Fraction: 0.52, nKgT: 4.5, p2o5KgT: 1.8, k2oKgT: 5.0, confidence: "MEDIUM", abp: "none", flags: ["competing_use", "energy_crop"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "other" }),
   municipal_biowaste: F({ id: "municipal_biowaste", name: { en: "municipal biowaste (food + garden)", uk: "муніципальні біовідходи" }, category: "processing", dryMatterPct: 30, vsPctOfDm: 70, yieldLow: 220, yieldTyp: 300, yieldHigh: 380, ch4Fraction: 0.58, nKgT: 6, p2o5KgT: 2.5, k2oKgT: 4, confidence: "LOW", abp: "cat3", flags: ["contaminants"], defaultMonths: 12, defaultStartMonth: 1, defaultHandling: "paid_disposal" }),
 };
@@ -99,26 +99,33 @@ export interface BusinessType {
 }
 
 export const BUSINESS_TYPES: Record<BusinessTypeId, BusinessType> = {
+  // Farms
   dairy_farm: { id: "dairy_farm", suggested: [{ animal: "dairy_cow", quantity: 400 }, { animal: "cattle_other", quantity: 200 }], audience: "farm" },
   cattle_farm: { id: "cattle_farm", suggested: [{ animal: "cattle_other", quantity: 300 }], audience: "farm" },
   pig_farm: { id: "pig_farm", suggested: [{ animal: "pig_finisher", quantity: 3000 }], audience: "farm" },
   poultry_farm: { id: "poultry_farm", suggested: [{ animal: "layer_hen", quantity: 150000 }], audience: "farm" },
+  // Residues first: straw is suggested; energy crops (maize silage) are added explicitly and flagged.
+  crop_farm: { id: "crop_farm", suggested: [{ type: "crop_straw", quantity: 2000 }], audience: "farm" },
+  // Food & beverage industry
   dairy_processor: { id: "dairy_processor", suggested: [{ type: "dairy_whey", quantity: 6000 }], audience: "food" },
-  brewery: { id: "brewery", suggested: [{ type: "brewery_spent_grain", quantity: 1500 }], audience: "food" },
   slaughterhouse: { id: "slaughterhouse", suggested: [{ type: "slaughter_residues", quantity: 2000 }], audience: "food" },
+  fish_processor: { id: "fish_processor", suggested: [{ type: "fish_waste", quantity: 3000 }], audience: "food" },
   fruit_veg_processor: { id: "fruit_veg_processor", suggested: [{ type: "fruit_veg_residues", quantity: 1500 }], audience: "food" },
-  food_business: { id: "food_business", suggested: [{ type: "food_waste", quantity: 300 }], audience: "food" },
-  other_industry: { id: "other_industry", suggested: [{ type: "food_waste", quantity: 500 }], audience: "food" },
-  wastewater_organic: { id: "wastewater_organic", suggested: [{ type: "dairy_fat_sludge", quantity: 800 }], audience: "municipal" },
-  biogas_developer: { id: "biogas_developer", suggested: [{ animal: "dairy_cow", quantity: 3000 }, { type: "food_waste", quantity: 10000 }], audience: "developer" },
-  municipal_biowaste: { id: "municipal_biowaste", suggested: [{ type: "municipal_biowaste", quantity: 25000 }], audience: "municipal" },
-  sugar_ethanol: { id: "sugar_ethanol", suggested: [{ type: "vinasse", quantity: 300000 }, { type: "press_mud", quantity: 30000 }], audience: "food" },
-  sugar_beet_factory: { id: "sugar_beet_factory", suggested: [{ type: "sugar_beet_pulp_pressed", quantity: 80000 }], audience: "food" },
   potato_processor: { id: "potato_processor", suggested: [{ type: "potato_processing", quantity: 25000 }], audience: "food" },
-  olive_oil_mill: { id: "olive_oil_mill", suggested: [{ type: "olive_pomace", quantity: 15000 }], audience: "food" },
-  wastewater_treatment: { id: "wastewater_treatment", suggested: [{ type: "sewage_sludge", quantity: 60000 }], audience: "municipal" },
+  sugar_beet_factory: { id: "sugar_beet_factory", suggested: [{ type: "sugar_beet_pulp_pressed", quantity: 80000 }], audience: "food" },
+  sugar_ethanol: { id: "sugar_ethanol", suggested: [{ type: "vinasse", quantity: 300000 }, { type: "press_mud", quantity: 30000 }], audience: "food" },
+  brewery: { id: "brewery", suggested: [{ type: "brewery_spent_grain", quantity: 1500 }], audience: "food" },
   distillery: { id: "distillery", suggested: [{ type: "grain_stillage", quantity: 120000 }], audience: "food" },
+  olive_oil_mill: { id: "olive_oil_mill", suggested: [{ type: "olive_pomace", quantity: 15000 }], audience: "food" },
   palm_oil_mill: { id: "palm_oil_mill", suggested: [{ type: "pome", quantity: 200000 }], audience: "food" },
+  other_industry: { id: "other_industry", suggested: [{ type: "food_waste", quantity: 500 }], audience: "food" },
+  // Waste, water and trade: restaurants are suppliers to a regional plant, not plant owners.
+  food_business: { id: "food_business", suggested: [{ type: "food_waste", quantity: 8000 }], audience: "municipal" },
+  municipal_biowaste: { id: "municipal_biowaste", suggested: [{ type: "municipal_biowaste", quantity: 25000 }], audience: "municipal" },
+  wastewater_treatment: { id: "wastewater_treatment", suggested: [{ type: "sewage_sludge", quantity: 60000 }], audience: "municipal" },
+  wastewater_organic: { id: "wastewater_organic", suggested: [{ type: "dairy_fat_sludge", quantity: 800 }], audience: "municipal" },
+  // Developers
+  biogas_developer: { id: "biogas_developer", suggested: [{ animal: "dairy_cow", quantity: 3000 }, { type: "food_waste", quantity: 10000 }], audience: "developer" },
 };
 
 export const HANDLING_IDS: HandlingId[] = ["field_spreading", "lagoon", "paid_disposal", "sold_as_feed", "landfill", "other"];

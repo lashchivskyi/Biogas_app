@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 /** A portal keeps explanations visible outside horizontally scrolling tables. */
@@ -31,6 +31,17 @@ export function HelpTooltip({ children, description }: { children: ReactNode; de
 
   useEffect(() => () => { if (hideTimer.current) clearTimeout(hideTimer.current); }, []);
 
+  // Keep long translated explanations inside the viewport, including on small screens.
+  useLayoutEffect(() => {
+    if (!position || !bubble.current || !trigger.current) return;
+    const rect = trigger.current.getBoundingClientRect();
+    const height = bubble.current.getBoundingClientRect().height;
+    const below = rect.bottom + 8;
+    const preferred = below + height <= window.innerHeight - 12 ? below : rect.top - height - 8;
+    const top = Math.max(12, Math.min(preferred, window.innerHeight - height - 12));
+    if (position.top !== top || position.above) setPosition({ ...position, top, above: false });
+  }, [position]);
+
   useEffect(() => {
     if (!position) return;
     const close = () => setPosition(null);
@@ -38,15 +49,18 @@ export function HelpTooltip({ children, description }: { children: ReactNode; de
     const onOutside = (event: PointerEvent) => {
       if (!trigger.current?.contains(event.target as Node) && !bubble.current?.contains(event.target as Node)) close();
     };
+    const onScroll = (event: Event) => {
+      if (!bubble.current?.contains(event.target as Node)) close();
+    };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onOutside);
     window.addEventListener("resize", close);
-    document.addEventListener("scroll", close, true);
+    document.addEventListener("scroll", onScroll, true);
     return () => {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onOutside);
       window.removeEventListener("resize", close);
-      document.removeEventListener("scroll", close, true);
+      document.removeEventListener("scroll", onScroll, true);
     };
   }, [position]);
 
@@ -70,7 +84,7 @@ export function HelpTooltip({ children, description }: { children: ReactNode; de
           ref={bubble}
           id={id}
           role="tooltip"
-          className="fixed z-[100] w-80 max-w-[calc(100vw-24px)] rounded-xl border border-line bg-white p-3 text-left font-sans text-sm font-normal normal-case leading-relaxed tracking-normal text-ink shadow-lg"
+          className="fixed z-[100] max-h-[calc(100dvh-24px)] w-80 max-w-[calc(100vw-24px)] overflow-y-auto rounded-xl border border-line bg-white p-3 text-left font-sans text-sm font-normal normal-case leading-relaxed tracking-normal text-ink shadow-lg"
           style={{ left: position.left, top: position.top, transform: position.above ? "translateY(-100%)" : undefined }}
           onMouseEnter={() => { if (hideTimer.current) clearTimeout(hideTimer.current); }}
           onMouseLeave={hideAfterHover}

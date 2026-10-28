@@ -22,6 +22,8 @@ import { CountrySelect } from "./CountrySelect";
 import { CountryFlag } from "./CountryFlag";
 import { CitySelect } from "./CitySelect";
 import { locationCopy } from "@/i18n/location";
+import { calculatorHelp } from "@/i18n/calculator-help";
+import { HelpTooltip } from "./HelpTooltip";
 
 const STORAGE_KEY = "mx.form.v2";
 
@@ -35,10 +37,16 @@ export interface ExampleSummary {
   countryCode: string;
 }
 
-function Field({ label, hint, children, htmlFor }: { label: string; hint?: string; children: React.ReactNode; htmlFor?: string }) {
+function Field({ label, hint, tooltip, children, htmlFor }: { label: string; hint?: string; tooltip?: string; children: React.ReactNode; htmlFor?: string }) {
+  const description = tooltip ?? hint;
   return (
     <div>
-      <label className="label" htmlFor={htmlFor}>{label}</label>
+      {description ? (
+        <div className="label">
+          <label className="sr-only" htmlFor={htmlFor}>{label}</label>
+          <HelpTooltip description={description}>{label}</HelpTooltip>
+        </div>
+      ) : <label className="label" htmlFor={htmlFor}>{label}</label>}
       {children}
       {hint && <p className="hint">{hint}</p>}
     </div>
@@ -274,17 +282,6 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 {country.dataStatus === "calibrated" ? d.country.calibrated : country.dataStatus === "official" ? d.country.official : d.country.profileNote}
               </p>
             </div>
-            <div className="rounded-xl border border-dashed border-line p-4">
-              <div className="text-sm font-semibold">{C.examplesTitle}</div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {examples.map((e) => (
-                  <button key={e.id} type="button" className="flex flex-col items-start rounded-xl border border-line bg-surface px-3 py-2 text-left hover:border-brand" onClick={() => loadExample(e.id)}>
-                    <span className="text-sm font-semibold">{e.title}</span>
-                    <span className={`mt-0.5 flex items-center gap-1.5 text-xs font-semibold ${e.tone === "good" ? "text-good" : e.tone === "mid" ? "text-warn" : "text-muted"}`}><CountryFlag code={e.countryCode} />{countryName(e.countryCode, locale)} · {e.verdict}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 
@@ -331,7 +328,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               )}
             </div>
             <div className="grid gap-5 md:grid-cols-2">
-              <Field label={C.heatQ} htmlFor="c-hn" hint={C.heatQhint}>
+              <Field label={C.heatQ} htmlFor="c-hn" hint={C.heatQhint} tooltip={C.heatKwhHint}>
                 <select id="c-hn" className="field" value={form.heatNeed} onChange={(e) => set("heatNeed", e.target.value as HeatNeed)}>
                   {(["none", "seasonal_buildings", "year_round_process", "greenhouse"] as HeatNeed[]).map((h) => <option key={h} value={h}>{L.heat[h]}</option>)}
                 </select>
@@ -348,7 +345,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
             <h2 className="text-xl font-bold">{C.siteTitle}</h2>
             <p className="-mt-3 text-sm text-muted">{C.siteHint}</p>
             <div className="grid gap-5 md:grid-cols-2">
-              <Field label={C.land} htmlFor="c-la" hint={C.landHint}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} /></Field>
+              <Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={C.siteHint}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} /></Field>
               <Field label={C.storage} htmlFor="c-st" hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} /></Field>
               <Field label={C.gasGrid} htmlFor="c-gg" hint={C.gasGridHint}><Num id="c-gg" value={form.gasGridKm} onChange={(v) => set("gasGridKm", v)} unit={L.units.km} /></Field>
               <div className="space-y-2">
@@ -374,6 +371,19 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
             )}
           </div>
         </div>
+        {step === 0 && (
+          <div className="mt-6 rounded-xl border border-dashed border-line p-4">
+            <div className="text-sm font-semibold">{C.examplesTitle}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {examples.map((e) => (
+                <button key={e.id} type="button" className="flex flex-col items-start rounded-xl border border-line bg-surface px-3 py-2 text-left hover:border-brand" onClick={() => loadExample(e.id)}>
+                  <span className="text-sm font-semibold">{e.title}</span>
+                  <span className={`mt-0.5 flex items-center gap-1.5 text-xs font-semibold ${e.tone === "good" ? "text-good" : e.tone === "mid" ? "text-warn" : "text-muted"}`}><CountryFlag code={e.countryCode} />{countryName(e.countryCode, locale)} · {e.verdict}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div ref={resultRef} className="scroll-mt-20">
@@ -428,6 +438,7 @@ function AddLine({ d, onAdd }: { d: CalculatorDict; onAdd: (kind: "animal" | "ty
 function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLine; d: CalculatorDict; cur: string; locale: Locale; onChange: (p: Partial<FormLine>) => void; onRemove: () => void }) {
   const C = d.calc;
   const L = d.labels;
+  const help = calculatorHelp(locale);
   const isAnimal = line.kind === "animal";
   const t = isAnimal ? FEEDSTOCKS[ANIMALS[line.animal as AnimalKind].feedstock] : FEEDSTOCKS[line.type as FeedstockTypeId];
   const label = isAnimal ? L.animal[line.animal as AnimalKind].label : L.feedstock[line.type as FeedstockTypeId];
@@ -472,11 +483,11 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
       <details className="mt-3">
         <summary className="text-sm font-semibold text-brand">{C.refine}</summary>
         <div className="mt-3 grid gap-4 md:grid-cols-3">
-          <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
-          <Field label="VS (% DM)" htmlFor={`${id}-vs`}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} /></Field>
-          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} /></Field>
-          {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
-          {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`}>
+          <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint} tooltip={help.dm}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
+          <Field label="VS (% DM)" htmlFor={`${id}-vs`} tooltip={help.vs}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} /></Field>
+          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`} tooltip={help.bmp}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} /></Field>
+          {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`} tooltip={help.season}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
+          {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`} tooltip={help.season}>
             <select id={`${id}-start`} className="field" value={line.startMonth || String(t.defaultStartMonth)} onChange={(e) => onChange({ startMonth: e.target.value })}>
               {Array.from({ length: 12 }, (_, month) => <option key={month} value={month + 1}>{new Intl.DateTimeFormat(INTL_TAG[locale], { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2025, month, 1)))}</option>)}
             </select>

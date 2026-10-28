@@ -161,7 +161,7 @@
 }
 
 .methodology-legend {
-  max-width: 80ch;
+  max-width: none;
   margin-top: 8px;
   color: var(--muted);
   font-size: 13px;

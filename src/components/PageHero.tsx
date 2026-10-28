@@ -8,7 +8,7 @@ export interface Crumb {
 }
 
 /** Dark page header with breadcrumbs (visible + BreadcrumbList JSON-LD). */
-export function PageHero({ eyebrow, title, lead, crumbs, children }: { eyebrow?: string; title: string; lead?: ReactNode; crumbs?: Crumb[]; children?: ReactNode }) {
+export function PageHero({ eyebrow, title, lead, wideLead = false, crumbs, children }: { eyebrow?: string; title: string; lead?: ReactNode; wideLead?: boolean; crumbs?: Crumb[]; children?: ReactNode }) {
   return (
     <section className="hero relative overflow-hidden pb-14 pt-28 md:pt-32">
       <div className="hero-grid absolute inset-0" aria-hidden />
@@ -39,7 +39,7 @@ export function PageHero({ eyebrow, title, lead, crumbs, children }: { eyebrow?:
         )}
         {eyebrow && <p className="eyebrow text-signal">{eyebrow}</p>}
         <h1 className="font-display mt-3 max-w-4xl text-3xl font-semibold leading-tight md:text-5xl">{title}</h1>
-        {lead && <div className="mt-4 max-w-2xl text-lg text-white/75">{lead}</div>}
+        {lead && <div className={`mt-4 text-lg text-white/75${wideLead ? "" : " max-w-2xl"}`}>{lead}</div>}
         {children}
       </div>
     </section>

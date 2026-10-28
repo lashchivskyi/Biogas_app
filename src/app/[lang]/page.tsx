@@ -84,7 +84,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <Reveal>
             <p className="eyebrow text-signal">{d.fit.eyebrow}</p>
             <h2 className="font-display mt-3 max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">{d.fit.title}</h2>
-            <p className="mt-4 max-w-2xl text-lg text-white/70">{d.fit.sub}</p>
+            <p className="mt-4 text-lg text-white/70">{d.fit.sub}</p>
           </Reveal>
           <Reveal className="mt-10">
             <SegmentPicker segments={segments} base={base} t={{ ...d.fit, illustrative: d.common.illustrative }} />
@@ -192,7 +192,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <Reveal>
             <p className="eyebrow text-brand">{d.process.eyebrow}</p>
             <h2 className="font-display mt-3 max-w-3xl text-3xl font-semibold leading-tight sm:text-[44px]">{d.process.title}</h2>
-            <p className="mt-4 max-w-2xl text-lg text-ink2">{d.process.sub}</p>
+            <p className="mt-4 text-lg text-ink2">{d.process.sub}</p>
           </Reveal>
           <ol className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {d.process.steps.map((s, i) => (

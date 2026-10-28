@@ -43,7 +43,9 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
   }, [locale]);
 
   const tier = COUNTRIES[country]?.priceTier ?? "A";
-  const money = (cents: number) => `${preferences.currency === "USD" ? "≈ " : ""}${new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: preferences.currency, maximumFractionDigits: 0 }).format(convertedPlanPrice(cents, preferences.currency, preferences.currency === "USD" ? preferences.usd.value : 1) / 100)}`;
+  const money = (cents: number) => new Intl.NumberFormat(INTL_TAG[locale], {
+    style: "currency", currency: preferences.currency, maximumFractionDigits: 0,
+  }).format(convertedPlanPrice(cents, preferences.currency, preferences.currency === "USD" ? preferences.usd.value : 1) / 100);
   const base = `/${locale}`;
   const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) && (!preferences.city || input.city?.signature === preferences.city.signature) ? input : null;
 

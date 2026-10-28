@@ -72,7 +72,9 @@ export type BusinessTypeId =
   | "potato_processor"
   | "olive_oil_mill"
   | "wastewater_treatment"
-  | "distillery";
+  | "distillery"
+  | "crop_farm"
+  | "fish_processor";
 
 export type AnimalKind =
   | "dairy_cow"
