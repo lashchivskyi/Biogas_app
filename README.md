@@ -1,11 +1,32 @@
 # Methalytics
 
-Independent biogas & biomethane feasibility screening for farms, food & beverage processors, developers and municipalities in 33 countries and 25 languages. Free screening and two paid automatic reports; no expert review service.
+Попередня техніко-економічна оцінка біогазових і біометанових проєктів:
+безкоштовний screening і два автоматичні платні звіти.
+Поточна модель допомагає відбирати концепції; точність для інвестиційного
+рішення потребує незалежних даних конкретного майданчика.
 
-- `npm run dev` — local development (demo payments are on outside production)
-- `npm test` — model, payments, sample inputs and localisation tests
-- `npm run lint` / `npm run typecheck` / `npm run build` — validation and production build
+## Запуск
 
-Docs: [architecture](docs/architecture.md) · [i18n & geo](docs/i18n.md) · [pricing](docs/pricing.md) · [payments](docs/payments.md) · [brand](docs/brand.md) · [country and sample ordering](docs/display-order.md) · [market research](docs/market-research.md) · [economics](docs/economics.md) · [feedstock model](docs/feedstock-model.md) · [data sources](docs/data-sources.md). Environment variables: [.env.example](.env.example).
+`npm ci` → налаштування за [.env.example](.env.example) → `npm run dev`.
+У Windows PowerShell використовуйте `npm.cmd`, якщо виконання npm.ps1 заборонено.
+Режими Stripe/demo й зберігання описані в [payments](docs/payments.md).
+Не вмикайте demo для реальних продажів.
 
-The parameter register is rendered directly from the model at `/[lang]/methodology` (`allProvenance` in `src/core/assess.ts`); do not keep a generated Markdown copy. Runtime data in `data/`, dependencies and build/cache output are local and ignored by Git. Repository and temporary-file rules: [AGENTS.md](AGENTS.md).
+## Карта знань
+
+Почніть з [AGENTS.md](AGENTS.md) і [поточного стану](docs/current.md).
+Claude Code отримує ті самі правила через [CLAUDE.md](CLAUDE.md).
+Інші агенти можуть використовувати AGENTS як стартовий контекст.
+
+- [Архітектура, data flow, сталі рішення](docs/architecture.md).
+- [Бізнеси, ринки, активні гіпотези](docs/market-research.md).
+- [Product flow, плани, оплата й доступ](docs/payments.md).
+- [Сировина та процес](docs/feedstock-model.md) · [енергія й економіка](docs/economics.md).
+- [Джерела й оновлення даних](docs/data-sources.md) · [CAPEX benchmarks](docs/capex-benchmark.md).
+- [Локалізація, країна, валюти й порядок відображення](docs/i18n.md) · [бренд](docs/brand.md).
+- [Verification, engineering validity, security і production](docs/quality.md).
+
+Команди перевірки — `npm test`, `npm run lint`, `npm run typecheck`,
+`npm run build`; застосовність до задачі описана в quality.
+Методологія на сайті використовує `allProvenance` з коду:
+окрему Markdown-копію параметрів не підтримуємо.
