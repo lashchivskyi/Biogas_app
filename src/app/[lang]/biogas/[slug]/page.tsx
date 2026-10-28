@@ -16,7 +16,6 @@ import { DisplayMoney } from "@/components/DisplayMoney";
 import { exampleTitle } from "@/lib/examples";
 import { SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
-import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 
 export function generateStaticParams() {
   return SEGMENTS.map((s) => ({ slug: s.slug }));
@@ -99,7 +98,6 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
         </article>
 
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          <BusinessMarketContext business={s.businessType} />
           <div className="card p-6">
             <div className="eyebrow text-brand">{d.fit.modelCase}</div>
             <div className="mt-1 text-sm text-muted">{exampleTitle(ex, d, locale)} · {countryName(ex.input.countryCode, locale)}</div>

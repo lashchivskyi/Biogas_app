@@ -7,7 +7,6 @@ import { BUSINESS_TYPES, businessHref, type BusinessTypeId } from "@/core/busine
 import { businessCopy } from "@/i18n/businesses";
 import { INTL_TAG } from "@/i18n/config";
 import { useLocale } from "../LocaleProvider";
-import { BusinessMarketContext } from "../BusinessMarketContext";
 import { track } from "@/lib/analytics";
 
 export interface SegmentCard {
@@ -95,7 +94,6 @@ export function SegmentPicker({ segments, t, base }: { segments: SegmentCard[]; 
             {definition.scope !== "outside_model" && <Link href={`${base}/calculator?b=${s.businessType}`} className="btn btn-signal">{t.cta} <Icon name="arrow" size={18} /></Link>}
             <Link href={businessHref(s.businessType, base)} className="text-sm font-semibold text-white/75 underline-offset-4 hover:text-white hover:underline">{t.more}</Link>
           </div>
-          <BusinessMarketContext business={s.businessType} />
         </div>
       </div>
     </div>

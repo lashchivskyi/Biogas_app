@@ -28,7 +28,6 @@ import { defaultProcess, BUSINESS_GROUPS, SECTOR_IDS } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
 import { ProcessInputs } from "./ProcessInputs";
 import { processCopy, processFieldLabels } from "@/i18n/processes";
-import { BusinessMarketContext } from "./BusinessMarketContext";
 
 const STORAGE_KEY = "mx.form.v2";
 
@@ -271,7 +270,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                   <legend className="text-sm font-semibold text-ink2">{d.audience.items[group.copyIndex].title}</legend>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {SECTOR_IDS.filter((b) => BUSINESS_TYPES[b].audience === group.id).map((b) => (
-                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, processKind: defaultProcess(b), processFields: {}, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
+                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, projectRole: BUSINESS_TYPES[b].role, processKind: defaultProcess(b), processFields: {}, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
                         <div className="font-semibold">{L.business[b].label}</div>
                         <div className="text-xs text-muted">{L.business[b].hint}</div>
                         {BUSINESS_TYPES[b].scope !== "screening" && <div className="mt-2 text-xs font-semibold text-ink2">{BUSINESS_TYPES[b].scope === "outside_model" ? H.outside : H.specialist}</div>}
@@ -282,8 +281,6 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               ))}
               {BUSINESS_TYPES[form.businessType].scope === "outside_model" && <p className="mt-4 rounded-xl bg-surface2 p-4 text-sm" role="status">{H.scopeNote}</p>}
               {BUSINESS_TYPES[form.businessType].scope === "specialist" && <p className="mt-4 text-sm text-muted">{H.specialist}. {d.result.robust.accuracy}</p>}
-              <label className="mt-5 block"><span className="label">{processCopy(locale).role}</span><select className="field" value={form.projectRole ?? BUSINESS_TYPES[form.businessType].role} onChange={e => set("projectRole", e.target.value as FormState["projectRole"])}>{Object.entries(processCopy(locale).roles).map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label>
-              <BusinessMarketContext business={form.businessType} country={form.countryCode} region={form.regionId} />
             </div>
             <div>
               <h2 className="text-xl font-bold">{C.q2}</h2>

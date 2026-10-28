@@ -5,7 +5,6 @@ import { PageHero } from "@/components/PageHero";
 import { localizedHub } from "@/content/localized";
 import { BUSINESS_GROUPS, SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
-import { BusinessMarketContext } from "@/components/BusinessMarketContext";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 
@@ -64,7 +63,6 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
                     <p className="mt-2 text-sm text-ink2">{d.labels.business[id].hint}</p>
                     {business.scope !== "screening" && <p className="mt-3 text-xs font-semibold">{business.scope === "outside_model" ? B.outside : B.specialist}</p>}
                     {business.scope === "outside_model" ? <p className="mt-2 text-sm text-muted">{B.scopeNote}</p> : <Link href={`${base}/calculator?b=${id}`} className="mt-3 inline-block text-sm font-semibold text-brand hover:underline">{d.fit.cta}</Link>}
-                    <details className="mt-3 text-sm"><summary className="cursor-pointer text-muted">{B.market}</summary><BusinessMarketContext business={id} /></details>
                   </article>;
                 })}
               </div>
