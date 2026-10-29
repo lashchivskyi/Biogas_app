@@ -38,4 +38,4 @@ jobs:
           body: |
             Automated refresh by `scripts/data/fetch_statistics.py --write`; tests passed on this branch.
             Before merging: review changed periods/values, compare NPV impact (`npx tsx scripts/audit-model.ts --as-of <date>`)
-            and follow docs/data-sources.md. Merging and deploying restores the USD checkout option when the FX date is fresh.
+            and check the data provenance in the touched files. Merging and deploying restores the USD checkout option when the FX date is fresh.

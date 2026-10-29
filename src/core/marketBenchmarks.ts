@@ -1,6 +1,6 @@
 /**
  * Published market reference points for turnkey biogas CAPEX (EUR per kW electrical, ex VAT).
- * Collected 2026-10 (docs/capex-benchmark.md). Each band states its source quality honestly —
+ * Collected 2026-10. Each band states its source quality honestly —
  * most are press/trade figures, not audited project costs. Used to show the customer where the
  * model estimate sits relative to the market, never to override the component calculation.
  */

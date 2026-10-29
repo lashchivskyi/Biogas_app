@@ -3,7 +3,7 @@ import type { Pool, PoolClient } from "pg";
 /**
  * Postgres access for production storage. With DATABASE_URL unset (local development, tests) the
  * repositories keep using the JSON files in jsonFile.ts. Schema changes are additive, versioned
- * migrations applied once per process under an advisory lock (docs/architecture.md §7).
+ * migrations applied once per process under an advisory lock.
  */
 export interface Sql {
   query<R = Record<string, unknown>>(text: string, params?: unknown[]): Promise<{ rows: R[] }>;

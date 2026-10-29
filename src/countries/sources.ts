@@ -151,7 +151,7 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     lab: { v: 40.8, ratio: 0.7, src: "BLS Employer Costs for Employee Compensation, private industry, Dec 2025: $46.15 per hour worked ÷ 1.13 $/€", conf: "HIGH", date: "2025-12-31" },
     elec: { v: 0.102, src: "EIA Electric Power Monthly table 5.6.A: U.S. commercial 14.5 ¢ and industrial 9.6 ¢/kWh (Aug 2026); farms/processors taken at ≈ 11.5 ¢ — state prices differ by ×3 (CA ≈ 24–30 ¢)", conf: "MEDIUM", date: "2026-10-01" },
     gas: { v: 15.2, src: "EIA Natural Gas Prices: industrial $5.23/Mcf (2025 annual) → $17.2/MWh", conf: "HIGH", date: "2026-06-30" },
-    capex: { v: 1.12, route: "chp", src: "Labour formula gives 0.97, but US EPA AgSTAR cost data ($1 100–1 500 per cow at 500 cows) sit ≈ 15–25 % above the model at factor 1.0 (docs/capex-benchmark.md, point 9): higher engineering, permitting and interconnection cost", conf: "MEDIUM", date: "2026-10-24" },
+    capex: { v: 1.12, route: "chp", src: "Labour formula gives 0.97, but US EPA AgSTAR cost data ($1 100–1 500 per cow at 500 cows) sit ≈ 15–25 % above the model at factor 1.0: higher engineering, permitting and interconnection cost", conf: "MEDIUM", date: "2026-10-24" },
   },
   CA: {
     spot: { v: 0.028, src: "Alberta Electric System Operator / MSA Q4 2025 report: 2025 average pool price CAD 43.68/MWh ÷ 1.5787 CAD/€", conf: "HIGH", date: "2025-12-31" },
@@ -346,7 +346,7 @@ export function capexFactorFor(code: string, route: RouteId = "chp"): Sourced | 
   // Published plant costs (scripts/calibrate-capex.ts): only MEDIUM calibrations are applied; LOW ones are kept for the record.
   const cal = CAL.countries[code];
   if (route === "chp" && cal?.applied === true && cal.factor !== undefined && cal.confidence === "MEDIUM") {
-    return { value: cal.factor, kind: "CALCULATION", confidence: "LOW", source: `Provisional CHP fit to ${cal.n} published costs (${cal.ids.join(", ")}); reconstructed feedstock/configuration, no independent validation; see docs/capex-benchmark.md, section 6`, date: "2026-10-26", range: { low: cal.factor * 0.7, high: cal.factor * 1.3, basis: "engineering" } };
+    return { value: cal.factor, kind: "CALCULATION", confidence: "LOW", source: `Provisional CHP fit to ${cal.n} published costs (${cal.ids.join(", ")}); reconstructed feedstock/configuration, no independent validation`, date: "2026-10-26", range: { low: cal.factor * 0.7, high: cal.factor * 1.3, basis: "engineering" } };
   }
   const l = labourFor(code);
   const de = labourFor("DE");

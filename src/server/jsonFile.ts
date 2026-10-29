@@ -4,7 +4,7 @@ import path from "node:path";
 /**
  * Tiny JSON-file persistence for the MVP (single instance). Writes are atomic (tmp + rename) and
  * serialised per file, so concurrent requests cannot lose updates. Replace with Postgres behind
- * the same repository interfaces for multi-instance production (docs/architecture.md §7).
+ * the same repository interfaces for multi-instance production.
  */
 const chains = new Map<string, Promise<unknown>>();
 

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Біорахунок brand system — see docs/brand.md */
+/* Біорахунок brand system */
 :root {
   --bg: #f4f5f0;
   --surface: #ffffff;

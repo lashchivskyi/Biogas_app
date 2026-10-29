@@ -1,7 +1,7 @@
 import type { ProjectInput } from "./types";
 
 /**
- * Reference customers used by tests, the demo buttons in the calculator and docs/economics.md.
+ * Reference customers used by tests and the demo buttons in the calculator.
  * One case per distinct business model (feedstock, process, scale or way of earning money), each placed in the market where
  * that model is characteristic. Anonymised archetypes sized like real plants of the type, not named companies.
  * Verdicts are whatever the model returns; the set is curated for coverage and realism, not for a verdict mix.

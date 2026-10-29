@@ -8,7 +8,7 @@ import type { Order, OrderStatus, ProviderId } from "../orders";
  *             local methods enabled in the dashboard (BLIK, iDEAL, Bancontact, …). Signed EUR/USD quotes;
  *             Adaptive Pricing is disabled per session. Webhooks verified with the signing secret.
  *             NOTE: Stripe does not onboard Ukrainian legal entities — the merchant must be an entity in a
- *             Stripe-supported country (docs/payments.md).
+ *             Stripe-supported country.
  *  - demo     local simulator for development and staging only.
  */
 export interface CreateResult {

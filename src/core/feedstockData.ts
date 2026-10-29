@@ -8,7 +8,7 @@ import type { AnimalKind, Confidence, FeedstockTypeId, HandlingId } from "./type
  * Source note (applies to every row): ranges are typical published BMP / full-scale values
  * (FNR Handreichung, KTBL Faustzahlen, IEA Bioenergy Task 37 literature, IPCC B0 defaults) rounded
  * by the project team. NONE of them is a measurement of the customer's substrate. They are
- * ESTIMATEs until laboratory BMP tests are done (docs/feedstock-model.md §7).
+ * ESTIMATEs until laboratory BMP tests are done.
  *
  * UI labels live in the i18n dictionaries; `name` here is used inside the model's own sentences.
  */

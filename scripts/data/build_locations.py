@@ -2,7 +2,7 @@
 
 Python 3.11+: pip install xarray zarr icechunk s3fs dask numpy pandas
 Run: python scripts/data/build_locations.py --cache <external-directory> --write
-No API key/account is required. See docs/data-sources.md for attribution and limitations.
+No API key/account is required.
 """
 import argparse
 import calendar

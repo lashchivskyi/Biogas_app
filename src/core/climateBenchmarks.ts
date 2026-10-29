@@ -1,5 +1,5 @@
 /**
- * Reference climates for engineering analogues (market-research.md §3.1).
+ * Reference climates for engineering analogues.
  * Monthly mean air temperature, °C. ESTIMATE / MEDIUM-LOW: rounded from 1991–2020 normals,
  * to be replaced by an ERA5/Open-Meteo download. Used only to rank "climate twins".
  */

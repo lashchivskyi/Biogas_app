@@ -13,25 +13,10 @@ staging використовують Postgres (`npm run db -- migrate|import-jso
 Production-сервер не стартує з небезпечною конфігурацією (`src/server/config.ts`);
 для локального `next start` задайте `APP_ENV=local`.
 У Windows PowerShell використовуйте `npm.cmd`, якщо виконання npm.ps1 заборонено.
-Режими Stripe/demo й зберігання описані в [payments](docs/payments.md).
+Режими Stripe/demo й зберігання налаштовуються через змінні з `.env.example`.
 Не вмикайте demo для реальних продажів.
 
-## Карта знань
+## Контекст для AI-агентів
 
-Почніть з [AGENTS.md](AGENTS.md) і [поточного стану](docs/current.md).
-Claude Code отримує ті самі правила через [CLAUDE.md](CLAUDE.md).
-Інші агенти можуть використовувати AGENTS як стартовий контекст.
-
-- [Архітектура, data flow, сталі рішення](docs/architecture.md).
-- [Бізнеси, ринки, активні гіпотези](docs/market-research.md).
-- [Product flow, плани, оплата й доступ](docs/payments.md).
-- [Сировина та процес](docs/feedstock-model.md) · [енергія й економіка](docs/economics.md).
-- [Джерела й оновлення даних](docs/data-sources.md) · [CAPEX benchmarks](docs/capex-benchmark.md).
-- [Локалізація, країна, валюти й порядок відображення](docs/i18n.md) · [бренд](docs/brand.md).
-- [Verification, engineering validity, security і production](docs/quality.md).
-- [Експертні ролі й поглиблення задач для агентів](docs/expert-review.md); skill `expert-review` для Claude Code і Codex.
-
-Команди перевірки — `npm test`, `npm run lint`, `npm run typecheck`,
-`npm run build`; застосовність до задачі описана в quality.
-Методологія на сайті використовує `allProvenance` з коду:
-окрему Markdown-копію параметрів не підтримуємо.
+Короткий опис проєкту й домену, правила роботи та команди перевірки — в [AGENTS.md](AGENTS.md).
+Методологія на сайті використовує `allProvenance` з коду: окрему Markdown-копію параметрів не підтримуємо.

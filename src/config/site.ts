@@ -1,6 +1,6 @@
 /**
  * Single source of truth for brand & SEO strings. Change the name here, not in components.
- * Naming rationale: docs/brand.md. Domain checked free via Verisign RDAP on 2026-10-24
+ * Domain checked free via Verisign RDAP on 2026-10-24
  * (methalytics.com → 404); trademark NOT checked.
  */
 export const SITE = {

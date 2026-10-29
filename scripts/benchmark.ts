@@ -1,6 +1,6 @@
 /**
  * CAPEX benchmark: runs the model on configurations that mirror published reference plants
- * and prints model CAPEX next to the published figure. See docs/capex-benchmark.md.
+ * and prints model CAPEX next to the published figure.
  * Usage: npx tsx scripts/benchmark.ts
  */
 import { assess } from "../src/core";

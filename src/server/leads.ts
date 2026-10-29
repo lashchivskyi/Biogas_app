@@ -5,7 +5,7 @@ import { dataFile, exclusive, readJsonArray, writeJsonArray } from "./jsonFile";
 
 /**
  * Lead storage behind a repository interface: Postgres when DATABASE_URL is set, otherwise one JSON
- * file (data/leads.json) for local development (see docs/architecture.md §7).
+ * file (data/leads.json) for local development.
  */
 export type LeadStatus = "new" | "contacted" | "qualified" | "study_sold" | "lost";
 

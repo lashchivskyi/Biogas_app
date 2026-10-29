@@ -84,7 +84,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.upgrade_min_nm3h", "Raw-biogas flow below which biomethane is flagged as sub-scale", 60, "Nm³/h", "ASSUMPTION", "EBA: average EU biomethane plant 483 m³/h; operating UA plants start at ~3 Mm³/a (≈400 Nm³/h)", "MEDIUM"),
 
   // --- engineering CAPEX (reconstructed EU baseline; not current supplier quotations) ---
-  prov("eng.capex.digester_eur_m3_1000", "Digester tank incl. insulation, mixers, heating, membrane roof, at 1 000 m³", 190, "EUR/m³ working", "ESTIMATE", "Historical German component data (fermenter 500–1 200 m³ ≈ €80–100k, 2012) inflated by an unverified ≈ +40 % allowance → €120–200/m³; no current supplier quotation. See docs/capex-benchmark.md", "LOW", { date: "2012-12-31", note: "Scales as V^-0.2; replace with 3–5 current supplier quotations" }),
+  prov("eng.capex.digester_eur_m3_1000", "Digester tank incl. insulation, mixers, heating, membrane roof, at 1 000 m³", 190, "EUR/m³ working", "ESTIMATE", "Historical German component data (fermenter 500–1 200 m³ ≈ €80–100k, 2012) inflated by an unverified ≈ +40 % allowance → €120–200/m³; no current supplier quotation.", "LOW", { date: "2012-12-31", note: "Scales as V^-0.2; replace with 3–5 current supplier quotations" }),
   prov("eng.capex.digester_scale_exp", "Digester unit-cost scale exponent", -0.2, "—", "ASSUMPTION", ENG, "LOW"),
   prov("eng.capex.lagoon_eur_m3", "Covered anaerobic lagoon (liner, HDPE gas-tight cover, gas collection)", 30, "EUR/m³", "ESTIMATE", "Order of magnitude from POME/swine lagoon projects (SE Asia, Latin America); TO VERIFY", "LOW"),
   prov("eng.capex.high_rate_eur_m3", "High-rate reactor (UASB/EGSB) incl. equalisation", 650, "EUR/m³ working", "ESTIMATE", "Industrial anaerobic wastewater reactors; TO VERIFY with supplier quotes", "LOW"),
@@ -110,7 +110,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.capex.contingency_share", "Contingency", 0.1, "of subtotal", "ASSUMPTION", "Typical for pre-FEED estimates (±30 %)", "MEDIUM"),
   prov("eng.capex.grid_connection_fixed", "Electrical grid connection (behind the meter / small export)", 20000, "EUR", "ESTIMATE", ENG, "LOW"),
   prov("eng.capex.grid_connection_per_kw", "Grid connection variable", 60, "EUR/kWel", "ESTIMATE", ENG, "LOW"),
-  prov("eng.capex.upgrade_ref_eur", "Membrane upgrading unit at 250 Nm³/h raw biogas (incl. compression)", 900000, "EUR", "ESTIMATE", "Market check 2026-10: reviews and vendors give 2 500–3 500 EUR per Nm³/h at 250–700 Nm³/h (≈ 3 600 EUR per Nm³/h here incl. small-scale premium); see docs/capex-benchmark.md", "LOW"),
+  prov("eng.capex.upgrade_ref_eur", "Membrane upgrading unit at 250 Nm³/h raw biogas (incl. compression)", 900000, "EUR", "ESTIMATE", "Market check 2026-10: reviews and vendors give 2 500–3 500 EUR per Nm³/h at 250–700 Nm³/h (≈ 3 600 EUR per Nm³/h here incl. small-scale premium)", "LOW"),
   prov("eng.capex.upgrade_scale_exp", "Upgrading scale exponent", 0.65, "—", "ASSUMPTION", ENG, "LOW"),
   prov("eng.capex.injection_fixed", "Compression, metering, injection station", 350000, "EUR", "ESTIMATE", ENG, "LOW"),
   prov("eng.capex.cng_fixed", "Bio-CNG off-grid offtake: filling post + 3–4 cascade trailers (≈ 4 000–5 000 Nm³ each)", 450000, "EUR", "ESTIMATE", "Virtual-pipeline practice (IEA Bioenergy Task 37; SATAT CBG plants in India; Brazilian bio-GNV); TO VERIFY with supplier quotes", "LOW"),
@@ -139,7 +139,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
 
   // --- safety / thresholds used by scoring ---
   prov("eng.methane_loss_good", "Methane loss share considered good practice", 0.02, "of production", "ASSUMPTION", "DK/DE campaign mean ≈2.0 % (IEA Task 37 2017 summary)", "MEDIUM"),
-  prov("eng.methane_loss_high", "Methane loss share that cancels most climate benefit", 0.05, "of production", "ASSUMPTION", "Derived: see docs/economics.md §9", "LOW"),
+  prov("eng.methane_loss_high", "Methane loss share that cancels most climate benefit", 0.05, "of production", "ASSUMPTION", "Engineering assumption; no independent source recorded", "LOW"),
   prov("eng.dry_digestion_dm_pct", "DM above which high-solids digestion is considered", 22, "%", "ASSUMPTION", ENG, "MEDIUM"),
   prov("eng.wet_solids_feeding_dm_pct", "DM above which a solids feeder / recirculation is needed", 12, "%", "ASSUMPTION", ENG, "MEDIUM"),
 ];
