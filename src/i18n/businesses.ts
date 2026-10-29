@@ -32,3 +32,132 @@ export function businessCopy(locale: Locale) {
   const [specialist, outside, scopeNote, national, observed, resource, unverified, scale, uncommon, market, caveat] = copy[locale];
   return { specialist, outside, scopeNote, national, observed, resource, unverified, scale, uncommon, market, caveat };
 }
+
+const groups: Record<Locale, readonly [string,string,string]> = {
+  "en": [
+    "Farming and aquaculture",
+    "Industry and food trade",
+    "Waste, wastewater and biogas facilities"
+  ],
+  "uk": [
+    "Сільське господарство й аквакультура",
+    "Промисловість і торгівля продуктами",
+    "Переробка відходів, очисні та біогазові станції"
+  ],
+  "pl": [
+    "Rolnictwo i akwakultura",
+    "Przemysł i handel żywnością",
+    "Odpady, oczyszczalnie i biogazownie"
+  ],
+  "de": [
+    "Landwirtschaft und Aquakultur",
+    "Industrie und Lebensmittelhandel",
+    "Abfallwirtschaft, Kläranlagen und Biogasanlagen"
+  ],
+  "fr": [
+    "Agriculture et aquaculture",
+    "Industrie et commerce alimentaire",
+    "Déchets, stations d’épuration et unités de méthanisation"
+  ],
+  "it": [
+    "Agricoltura e acquacoltura",
+    "Industria e commercio alimentare",
+    "Rifiuti, depuratori e impianti di biogas"
+  ],
+  "es": [
+    "Agricultura y acuicultura",
+    "Industria y comercio alimentario",
+    "Residuos, depuradoras y plantas de biogás"
+  ],
+  "pt": [
+    "Agropecuária e aquicultura",
+    "Indústria e comércio de alimentos",
+    "Resíduos, estações de tratamento e usinas de biogás"
+  ],
+  "nl": [
+    "Landbouw en aquacultuur",
+    "Industrie en levensmiddelenhandel",
+    "Afvalverwerking, waterzuivering en biogasinstallaties"
+  ],
+  "cs": [
+    "Zemědělství a akvakultura",
+    "Průmysl a obchod s potravinami",
+    "Odpady, čistírny a bioplynové stanice"
+  ],
+  "sk": [
+    "Poľnohospodárstvo a akvakultúra",
+    "Priemysel a obchod s potravinami",
+    "Odpady, čistiarne a bioplynové stanice"
+  ],
+  "hu": [
+    "Mezőgazdaság és akvakultúra",
+    "Ipar és élelmiszer-kereskedelem",
+    "Hulladékkezelők, szennyvíztisztítók és biogázüzemek"
+  ],
+  "ro": [
+    "Agricultură și acvacultură",
+    "Industrie și comerț alimentar",
+    "Deșeuri, stații de epurare și instalații de biogaz"
+  ],
+  "bg": [
+    "Земеделие и аквакултури",
+    "Промишленост и търговия с храни",
+    "Отпадъци, пречиствателни станции и биогазови инсталации"
+  ],
+  "sr": [
+    "Poljoprivreda i akvakultura",
+    "Industrija i trgovina hranom",
+    "Otpad, postrojenja za prečišćavanje i biogas"
+  ],
+  "el": [
+    "Γεωργία, κτηνοτροφία και υδατοκαλλιέργεια",
+    "Βιομηχανία και εμπόριο τροφίμων",
+    "Απόβλητα, μονάδες λυμάτων και βιοαερίου"
+  ],
+  "tr": [
+    "Tarım, hayvancılık ve su ürünleri",
+    "Sanayi ve gıda ticareti",
+    "Atık, atık su ve biyogaz tesisleri"
+  ],
+  "lt": [
+    "Žemės ūkis ir akvakultūra",
+    "Pramonė ir prekyba maistu",
+    "Atliekų, nuotekų ir biodujų įrenginiai"
+  ],
+  "lv": [
+    "Lauksaimniecība un akvakultūra",
+    "Rūpniecība un pārtikas tirdzniecība",
+    "Atkritumu, notekūdeņu un biogāzes iekārtas"
+  ],
+  "et": [
+    "Põllumajandus ja vesiviljelus",
+    "Tööstus ja toidukaubandus",
+    "Jäätmekäitlus, reoveepuhastid ja biogaasijaamad"
+  ],
+  "da": [
+    "Landbrug og akvakultur",
+    "Industri og fødevarehandel",
+    "Affaldsbehandling, renseanlæg og biogasanlæg"
+  ],
+  "sv": [
+    "Lantbruk och vattenbruk",
+    "Industri och livsmedelshandel",
+    "Avfallsbehandling, reningsverk och biogasanläggningar"
+  ],
+  "fi": [
+    "Maatalous ja vesiviljely",
+    "Teollisuus ja elintarvikekauppa",
+    "Jätteenkäsittely, jätevedenpuhdistamot ja biokaasulaitokset"
+  ],
+  "vi": [
+    "Nông nghiệp và nuôi trồng thủy sản",
+    "Công nghiệp và kinh doanh thực phẩm",
+    "Cơ sở xử lý chất thải, nước thải và khí sinh học"
+  ],
+  "th": [
+    "เกษตรกรรมและการเพาะเลี้ยงสัตว์น้ำ",
+    "อุตสาหกรรมและการค้าอาหาร",
+    "โรงบำบัดของเสีย น้ำเสีย และก๊าซชีวภาพ"
+  ]
+};
+export const businessGroupLabel = (id: string, locale: Locale) => groups[locale][id === "farm" ? 0 : id === "food" ? 1 : 2];

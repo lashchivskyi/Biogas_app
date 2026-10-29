@@ -1,6 +1,13 @@
 import type { Dict, Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
 
+/** Calendar date at the user's location. Call on an explicit action, not during SSR. */
+export function calendarDateAt(date: Date, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
+  const parts = new Intl.DateTimeFormat("en", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date);
+  const value = (type: string) => parts.find(p => p.type === type)!.value;
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
 /** Sort the visible labels, never ISO codes, flags or market priority. Do not mutate shared arrays. */
 export function alphabetically<T>(items: readonly T[], locale: Locale, label: (item: T) => string): T[] {
   const collator = new Intl.Collator(INTL_TAG[locale], { sensitivity: "base", numeric: true });

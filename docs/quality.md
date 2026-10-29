@@ -115,3 +115,13 @@ basis, зіставні технічні пропозиції, угоди збу
 стале рішення — таблицю в `architecture.md`; доказ/статус гіпотези —
 `market-research.md`; пріоритет — `current.md`. Не копіюйте таблиці параметрів,
 повні результати тестів або цей checklist в нові файли.
+
+## Незалежні референси та порівнянність
+
+Held-out BV Dairy (Clearfleau, December 2014, slide 9; 200 m³/d, COD 25,400 mg/L, removal 98%, biogas 127 Nm³/h at 60% CH₄): за незмінених biomass/capture припущень модель дає 105.36 Nm³/h (−17.04%). Навіть повна COD-to-CH₄ стехіометрична межа з наведених входів — 120.54 Nm³/h, нижче оприлюднених 127. Параметри можуть належати різним проєктним/експлуатаційним умовам; не калібрувати модель, порушуючи COD balance. Джерело: https://conferences.aquaenviro.co.uk/proceedings/clearfleau-three-case-studies-converting-food-production-residues-into-energy/richard-gueterbock-2/ . Контроль — processes.test.ts.
+
+TH cassava (2021): модель дає 40,796 Nm³/d проти оприлюднених 41,000 m³/d, але нормальні умови джерела та частка COD у біомасі/втрати газу не підтверджені. Близькість цих чисел не є доказом похибки <1%. HRT 15 d у статті суперечить V/Q=25.3 d; у сценарії застосовано V/Q, суперечність позначена.
+
+Dagenham: каталожний food_waste на 160 kt/a дає 19.98 млн Nm³/a проти приблизно 14 млн m³/a з референсу JHA (https://www.j-h-a.co.uk/projects/refood-dagenham.html), різниця +42.71%. Capacity ≠ annual actual throughput, DM/BMP/contamination та газові умови джерела невідомі. Цей check виявляє недостатність універсального default; це не придатний calibration target чи доказ передбачуваної похибки моделі.
+
+Не встановлено незалежної статистичної accuracy для всіх процесів/країн або перевіреної after-tax/project/equity фінмоделі за рахунками реальних заводів. До таких заяв потрібні зіставні operating datasets, EPC scope, періоди й відокремлений hold-out набір. Source observations у нових прикладах і невідомі бюджети перевіряються тестами та локалізованим SSR.

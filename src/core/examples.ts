@@ -11,6 +11,12 @@ export interface ExampleCase {
   title: string;
   description: string;
   input: ProjectInput;
+  /** A reference is evidence for listed observations only, not for the entire modelled project. */
+  reference?: {
+    title: string; url: string; period: string; geography: string; checkedOn: string;
+    stage: "operating_reference" | "historical_reference" | "research";
+    observations: { label: string; value: number; unit: string; inputPath?: string; qualifier: "reported" | "capacity" | "derived"; basis?: string }[];
+  };
 }
 
 const base = {
@@ -56,7 +62,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "es_wholesale_market", title: "Barcelona-type wholesale food market, 12 kt organic waste", description: "The market company digests unsold produce and organic waste on site instead of paying for off-site treatment; power for cold stores",
     input: {
-      countryCode: "ES", regionId: "cataluna", businessType: "municipal_biowaste",
+      countryCode: "ES", regionId: "cataluna", businessType: "food_business",
       feedstocks: [{ id: "market-organics", type: "food_waste", quantity: 12000, dryMatterPct: 14, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 55 }],
       energy: { electricityKwhYear: 9000000, electricityPriceLocalPerKwh: 0.133, heatNeed: "year_round_process", heatKwhYear: 2500000, hasGridConnection: true },
       site: { landHa: 0, gasGridKm: 0.5, neighboursWithin300m: true },
@@ -206,7 +212,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "de_nawaro", title: "German farm plant, maize silage + slurry, heat to a village network", description: "Lower Saxony NawaRo-type plant: purchased maize silage co-digested with own cattle slurry; power exported, CHP heat sold to a local heat network",
     input: {
-      countryCode: "DE", regionId: "niedersachsen", businessType: "dairy_farm",
+      countryCode: "DE", regionId: "niedersachsen", businessType: "crop_farm",
       feedstocks: [
         { id: "a", type: "maize_silage", quantity: 9000, dryMatterPct: 33, monthsActive: 12, delivered: true, distanceKm: 4, purchasePricePerTonneLocal: 42, handling: "other" },
         { id: "b", animal: "dairy_cow", quantity: 250, housing: "year_round" },
@@ -369,4 +375,286 @@ export const EXAMPLES: ExampleCase[] = [
         tonnesYear: 5000, densityKgM3: 1000, dmPct: 6, vsPct: 75, bmp: 280, methanePct: 60, nKgT: 4, hrtDays: 40, olr: 2 },
       energy: { electricityKwhYear: 3000000, heatNeed: "year_round_process", heatKwhYear: 500000, hasGridConnection: true }, site: { gasGridKm: 10 } },
   },
+  ...([
+  {
+    "id": "th_starch_cod",
+    "title": "Cassava starch wastewater: published Thai technical reference",
+    "description": "Covered lagoon; published gas/COD data, inconsistent HRT disclosed; current budgets unknown",
+    "input": {
+      "countryCode": "TH",
+      "regionId": "northeast",
+      "businessType": "starch_processor",
+      "feedstocks": [],
+      "process": {
+        "kind": "wastewater",
+        "basisOrigin": "ENGINEERING_ASSUMPTION",
+        "basisDate": "2026-10-29",
+        "basisReference": "Published technical observations; unreported inputs are engineering assumptions. No current installed budget or upstream operating accounts disclosed.",
+        "operatingDays": 330,
+        "monthsActive": 12,
+        "startMonth": 1,
+        "uncertaintyPct": 50,
+        "methaneRecoveryPct": 95,
+        "biomassCodPct": 8,
+        "sludgeTsPct": 5,
+        "sludgeVsPct": 80,
+        "heatRecoveryPct": 0,
+        "avoidedTreatmentLocalM3": 0,
+        "reactorTechnology": "covered_lagoon",
+        "flowM3Day": 6560,
+        "codMgL": 12200,
+        "removalPct": 92,
+        "methanePct": 55,
+        "hrtDays": 25.30030487804878,
+        "olr": 0.48220762788455745,
+        "inletTempC": 28
+      },
+      "energy": {
+        "heatNeed": "year_round_process",
+        "hasGridConnection": true
+      },
+      "site": {}
+    },
+    "reference": {
+      "title": "Lerdlattaporn et al. — cassava starch circular economy, 2021",
+      "url": "https://link.springer.com/article/10.1186/s42834-021-00093-9",
+      "period": "2021",
+      "geography": "TH",
+      "checkedOn": "2026-10-29",
+      "stage": "historical_reference",
+      "observations": [
+        {
+          "label": "Q",
+          "value": 6560,
+          "unit": "m³/d",
+          "inputPath": "process.flowM3Day",
+          "qualifier": "reported"
+        },
+        {
+          "label": "COD",
+          "value": 12200,
+          "unit": "mg/L",
+          "inputPath": "process.codMgL",
+          "qualifier": "reported"
+        },
+        {
+          "label": "COD removal",
+          "value": 92,
+          "unit": "%",
+          "inputPath": "process.removalPct",
+          "qualifier": "reported"
+        },
+        {
+          "label": "CH₄",
+          "value": 55,
+          "unit": "% vol",
+          "inputPath": "process.methanePct",
+          "qualifier": "reported"
+        },
+        {
+          "label": "V",
+          "value": 165970,
+          "unit": "m³",
+          "qualifier": "reported"
+        },
+        {
+          "label": "Biogas",
+          "value": 41000,
+          "unit": "m³/d",
+          "qualifier": "reported"
+        },
+        {
+          "label": "HRT",
+          "value": 15,
+          "unit": "d",
+          "qualifier": "reported",
+          "basis": "Source inconsistency: V/Q = 25.3 d, not 15 d. Model uses V/Q."
+        }
+      ]
+    }
+  },
+  {
+    "id": "us_paper_cod",
+    "title": "Recycled-paper wastewater: a US design-capacity reference",
+    "description": "US anonymous Veolia reference; design limits, not measured simultaneous flow; current costs unknown",
+    "input": {
+      "countryCode": "US",
+      "regionId": "wisconsin",
+      "businessType": "pulp_paper",
+      "feedstocks": [],
+      "process": {
+        "kind": "wastewater",
+        "basisOrigin": "ENGINEERING_ASSUMPTION",
+        "basisDate": "2026-10-29",
+        "basisReference": "Published technical observations; unreported inputs are engineering assumptions. No current installed budget or upstream operating accounts disclosed.",
+        "operatingDays": 330,
+        "monthsActive": 12,
+        "startMonth": 1,
+        "uncertaintyPct": 50,
+        "methaneRecoveryPct": 95,
+        "biomassCodPct": 8,
+        "sludgeTsPct": 5,
+        "sludgeVsPct": 80,
+        "heatRecoveryPct": 0,
+        "avoidedTreatmentLocalM3": 0,
+        "reactorTechnology": "high_rate",
+        "flowM3Day": 3785.411784,
+        "codMgL": 11887.742356116678,
+        "removalPct": 80,
+        "methanePct": 65,
+        "hrtDays": 0.25,
+        "olr": 20,
+        "inletTempC": 35
+      },
+      "energy": {
+        "heatNeed": "year_round_process",
+        "hasGridConnection": true
+      },
+      "site": {}
+    },
+    "reference": {
+      "title": "Veolia — recycled-paper wastewater, USA; publication date unspecified",
+      "url": "https://www.veoliawatertech.com/en/case-studies/robust-biological-wastewater-system-treats-challenging-wastewater-recycled-paper",
+      "period": "undated",
+      "geography": "US; site undisclosed",
+      "checkedOn": "2026-10-29",
+      "stage": "historical_reference",
+      "observations": [
+        {
+          "label": "Q",
+          "value": 1,
+          "unit": "US MGD",
+          "qualifier": "capacity"
+        },
+        {
+          "label": "COD load",
+          "value": 45000,
+          "unit": "kg/d",
+          "qualifier": "capacity"
+        },
+        {
+          "label": "Q",
+          "value": 3785.411784,
+          "unit": "m³/d",
+          "inputPath": "process.flowM3Day",
+          "qualifier": "derived",
+          "basis": "1 US gallon = 0.003785411784 m³; capacity, not measured flow."
+        }
+      ]
+    }
+  },
+  {
+    "id": "gb_confectionery_gas",
+    "title": "Confectionery biogas: a historical Fawdon gas-use reference",
+    "description": "Uses the 2014 supplier gas reference only, not later operating figures or historical subsidies",
+    "input": {
+      "countryCode": "GB",
+      "regionId": "yorkshire",
+      "businessType": "food_manufacturer",
+      "feedstocks": [],
+      "process": {
+        "kind": "gas",
+        "basisOrigin": "ENGINEERING_ASSUMPTION",
+        "basisDate": "2026-10-29",
+        "basisReference": "Published technical observations; unreported inputs are engineering assumptions. No current installed budget or upstream operating accounts disclosed.",
+        "operatingDays": 330,
+        "monthsActive": 12,
+        "startMonth": 1,
+        "uncertaintyPct": 50,
+        "rawGasNm3Hour": 167,
+        "methanePct": 50,
+        "availabilityPct": 95,
+        "declinePctYear": 0,
+        "gasPriceLocalNm3": 0,
+        "nitrogenPct": 1,
+        "oxygenPct": 0.2,
+        "h2sPpm": 500,
+        "upgradingRecoveryPct": 98,
+        "upgradingKwhNm3": 0.3,
+        "productMethanePct": 97
+      },
+      "energy": {
+        "heatNeed": "year_round_process",
+        "hasGridConnection": true
+      },
+      "site": {}
+    },
+    "reference": {
+      "title": "Clearfleau — Fawdon reference, conference presentation, December 2014",
+      "url": "https://conferences.aquaenviro.co.uk/proceedings/clearfleau-three-case-studies-converting-food-production-residues-into-energy/richard-gueterbock-2/",
+      "period": "2014-12",
+      "geography": "GB; Fawdon (model climate profile is not the original site)",
+      "checkedOn": "2026-10-29",
+      "stage": "historical_reference",
+      "observations": [
+        {
+          "label": "Q (biogas)",
+          "value": 167,
+          "unit": "Nm³/h",
+          "inputPath": "process.rawGasNm3Hour",
+          "qualifier": "reported"
+        },
+        {
+          "label": "CH₄",
+          "value": 50,
+          "unit": "% vol",
+          "inputPath": "process.methanePct",
+          "qualifier": "reported"
+        },
+        {
+          "label": "CHP",
+          "value": 305,
+          "unit": "kWe",
+          "qualifier": "capacity"
+        }
+      ]
+    }
+  },
+  {
+    "id": "gb_fish_residues",
+    "title": "Small fish-residue supplier: regional co-digestion reference",
+    "description": "Creed IWMF is a co-digestion reference, not a dedicated fish-waste plant; annual quantity is an explicit scenario assumption",
+    "input": {
+      "countryCode": "GB",
+      "regionId": "scotland",
+      "businessType": "fish_processor",
+      "feedstocks": [
+        {
+          "id": "salmon",
+          "type": "fish_waste",
+          "quantity": 140,
+          "handling": "other"
+        }
+      ],
+      "energy": {
+        "heatNeed": "none",
+        "hasGridConnection": true
+      },
+      "site": {}
+    },
+    "reference": {
+      "title": "Food Nation / Landia — salmon residues at Creed IWMF",
+      "url": "https://foodnationdenmark.com/cases/salmon-waste-powers-biogas-production/",
+      "period": "2017–2022",
+      "geography": "GB; Isle of Lewis",
+      "checkedOn": "2026-10-29",
+      "stage": "historical_reference",
+      "observations": [
+        {
+          "label": "FM per batch",
+          "value": 7,
+          "unit": "t/shift",
+          "qualifier": "reported"
+        },
+        {
+          "label": "FM total",
+          "value": 835.66,
+          "unit": "t (2017–2022)",
+          "qualifier": "reported",
+          "basis": "140 t/a is a modelled rounded annual quantity; not a reported operating year."
+        }
+      ]
+    }
+  }
+] satisfies ExampleCase[]),
 ];

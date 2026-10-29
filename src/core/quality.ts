@@ -1,3 +1,4 @@
+import { missingProcessInputs } from "./processes";
 import type { CustomerDemand } from "./demand";
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import type { Tr } from "./i18n";
@@ -90,6 +91,10 @@ export function assessQuality(
   if (input.process) {
     score = Math.min(score, 65);
     reasons.push(T("Process inputs and project budgets require document verification; ranges are assumptions, not validated accuracy.", "Параметри процесу й бюджети потребують звірки з документами; діапазони є припущеннями, а не підтвердженою точністю."));
+    if (missingProcessInputs(input.process).length) {
+      score = Math.min(score, 34);
+      missing.push(T("Project budgets, residuals disposal and auxiliary energy", "Бюджети проєкту, утилізація залишків та власні енергопотреби"));
+    }
   }
   score = Math.max(0, Math.min(100, score));
   const level: Confidence = score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";

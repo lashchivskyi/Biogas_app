@@ -3,6 +3,13 @@ import type { BusinessTypeId } from "@/core/businesses";
 /** Deployment evidence is not a probability of buying, a local feedstock survey or an investment verdict. */
 export const SECTOR_REVIEW_DATE = "2026-10-28";
 export const SECTOR_SOURCES = {
+  starchStudy: {"title":"Lerdlattaporn et al. — cassava starch / wastewater field study","period":"2021","url":"https://link.springer.com/article/10.1186/s42834-021-00093-9"},
+  paperUs: {"title":"Veolia — US recycled-paper wastewater design reference","period":"—","url":"https://www.veoliawatertech.com/en/case-studies/robust-biological-wastewater-system-treats-challenging-wastewater-recycled-paper"},
+  fawdon: {"title":"Clearfleau — food production residues, supplier presentation","period":"2014-12","url":"https://conferences.aquaenviro.co.uk/proceedings/clearfleau-three-case-studies-converting-food-production-residues-into-energy/richard-gueterbock-2/"},
+  fish: {"title":"Food Nation / Landia — salmon residues, Creed IWMF","period":"2017–2022","url":"https://foodnationdenmark.com/cases/salmon-waste-powers-biogas-production/"},
+  apsley: {"title":"IEA Bioenergy — Apsley Farms crop-based biomethane","period":"2025-12","url":"https://www.ieabioenergy.com/wp-content/uploads/2026/02/2025_IEA-Bio_T37_Case-story_Biomethane-from-break-crops.pdf"},
+  retail: {"title":"SARIA — food manufacturing and retail collection","period":"—","url":"https://www.saria.co.uk/anaerobic-digestion/food-waste-recycling/"},
+  aquaculture: {"title":"NIBIO — SUFFICIENT research programme, 2025–2028","period":"2026-01-13","url":"https://www.nibio.no/en/projects/sufficient"},
   sleeman: { title: "Veolia — Sleeman brewery wastewater, Ontario (technical reference; date unspecified)", period: "—", url: "https://www.veoliawatertech.com/en/case-studies/reducing-bod-brewery-wastewater-sleeman" },
   paper: { title: "Veolia — Modern Karton, Turkey (2014 technical reference)", period: "2014", url: "https://www.veoliawatertechnologies.com.cn/sites/g/files/dvc3481/files/document/2019/08/160019_VWT_MOD_Brochure_Pulp%26Paper_ENG_A4_LR.pdf%20-%200.pdf" },
   iea: { title: "IEA — Outlook for Biogas and Biomethane", period: "2025", url: "https://www.iea.org/reports/outlook-for-biogas-and-biomethane" },
@@ -56,14 +63,14 @@ export const BUSINESS_MARKETS: Record<string, Review> = {
   IT: review(["biogas_developer"], ["dairy_farm", "cattle_farm", "pig_farm", "crop_farm", "food_manufacturer"], ["it", "eurostat"]),
   FR: review(["biogas_developer"], ["dairy_farm", "cattle_farm", "pig_farm", "crop_farm"], ["fr", "eurostat"]),
   ES: euResource(), NL: review(["potato_processor"], ["dairy_farm", "pig_farm", "poultry_farm"], ["mccain", "eurostat"]),
-  GB: review(["municipal_biowaste", "biogas_developer"], ["food_business"], ["refood"]),
-  US: review(["dairy_farm", "pig_farm", "biogas_developer", "landfill_operator"], [], ["us", "landfill"]),
+  GB: review(["municipal_biowaste", "biogas_developer", "food_manufacturer", "fish_processor", "food_business"], [], ["refood", "fawdon", "fish", "retail"]),
+  US: review(["dairy_farm", "pig_farm", "biogas_developer", "landfill_operator", "pulp_paper"], [], ["us", "landfill", "paperUs"]),
   CA: review(["biogas_developer", "municipal_biowaste", "wastewater_treatment", "landfill_operator", "brewery"], ["dairy_farm", "food_business"], ["ca", "sleeman"]),
   MX: review([], ["dairy_farm", "cattle_farm", "pig_farm", "crop_farm"], ["mx"]),
   AR: review([], ["dairy_farm", "cattle_farm", "pig_farm", "poultry_farm", "slaughterhouse", "biogas_developer"], ["ar"]),
   BR: review(["biogas_developer"], ["pig_farm", "slaughterhouse", "sugar_ethanol", "landfill_operator"], ["br", "food"]),
   IN: review(["biogas_developer"], ["cattle_farm", "crop_farm", "sugar_ethanol", "municipal_biowaste", "energy_offtaker"], ["india", "indiaPolicy"]),
-  TH: review(["palm_oil_mill", "starch_processor"], ["wastewater_organic"], ["th"]),
+  TH: review(["palm_oil_mill", "starch_processor"], ["wastewater_organic"], ["th", "starchStudy"]),
   VN: review(["pig_farm"], [], ["vn"]),
   KZ: review(["biogas_developer"], ["dairy_farm", "cattle_farm", "pig_farm", "poultry_farm"], ["kz", "kzResource"]),
 };
@@ -107,3 +114,227 @@ export function businessMarket(id: BusinessTypeId, country: string, regionId?: s
     sources: sourceIds.map((key) => SECTOR_SOURCES[key]),
   };
 }
+
+/** Category admission is an engineering/product rationale, not measured demand or UX validation. */
+export const BUSINESS_BASIS: Partial<Record<BusinessTypeId,{reason: string; distinction: string; sources: readonly SourceId[]; evidence: "application_reference" | "resource_signal" | "fallback"}>> = {
+  "central_biogas_plant": {
+    "reason": "portfolio",
+    "distinction": "Multiple suppliers, contracted logistics and ownership boundary",
+    "sources": [
+      "dk"
+    ],
+    "evidence": "application_reference"
+  },
+  "dairy_farm": {
+    "reason": "preset",
+    "distinction": "Dairy slurry collection and dairy-herd inputs",
+    "sources": [
+      "us"
+    ],
+    "evidence": "application_reference"
+  },
+  "cattle_farm": {
+    "reason": "preset",
+    "distinction": "Beef cattle and housing/collection differ from dairy herds",
+    "sources": [
+      "us",
+      "eurostat"
+    ],
+    "evidence": "application_reference"
+  },
+  "pig_farm": {
+    "reason": "preset",
+    "distinction": "Pig slurry and wash-water dilution",
+    "sources": [
+      "us",
+      "dk"
+    ],
+    "evidence": "application_reference"
+  },
+  "poultry_farm": {
+    "reason": "constraint",
+    "distinction": "Poultry manure and nitrogen inhibition",
+    "sources": [
+      "tr",
+      "de"
+    ],
+    "evidence": "application_reference"
+  },
+  "crop_farm": {
+    "reason": "constraint",
+    "distinction": "Harvest/storage and alternative feed/crop value",
+    "sources": [
+      "apsley"
+    ],
+    "evidence": "application_reference"
+  },
+  "aquaculture": {
+    "reason": "constraint",
+    "distinction": "Collected sludge, salinity and very dilute solids; no commercial promise",
+    "sources": [
+      "aquaculture"
+    ],
+    "evidence": "resource_signal"
+  },
+  "dairy_processor": {
+    "reason": "inlet",
+    "distinction": "Whey and DAF sludge, or measured COD effluent",
+    "sources": [
+      "food",
+      "fawdon"
+    ],
+    "evidence": "application_reference"
+  },
+  "slaughterhouse": {
+    "reason": "constraint",
+    "distinction": "Animal by-products, hygienisation and fats",
+    "sources": [
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "fish_processor": {
+    "reason": "constraint",
+    "distinction": "Fish residues, feed competition and legal pretreatment",
+    "sources": [
+      "fish"
+    ],
+    "evidence": "application_reference"
+  },
+  "fruit_veg_processor": {
+    "reason": "preset",
+    "distinction": "Seasonal produce residues and storage",
+    "sources": [
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "potato_processor": {
+    "reason": "preset",
+    "distinction": "Potato processing side-stream properties",
+    "sources": [
+      "mccain",
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "starch_processor": {
+    "reason": "inlet",
+    "distinction": "COD flow; lagoon or granular-sludge design",
+    "sources": [
+      "starchStudy"
+    ],
+    "evidence": "application_reference"
+  },
+  "food_manufacturer": {
+    "reason": "inlet",
+    "distinction": "Mixed production rejects or existing factory gas",
+    "sources": [
+      "fawdon",
+      "retail"
+    ],
+    "evidence": "application_reference"
+  },
+  "sugar_beet_factory": {
+    "reason": "constraint",
+    "distinction": "Pressed pulp with alternative feed value and campaigns",
+    "sources": [
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "sugar_ethanol": {
+    "reason": "inlet",
+    "distinction": "Vinasse/press mud, sulfate and seasonal loading",
+    "sources": [
+      "br",
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "brewery": {
+    "reason": "inlet",
+    "distinction": "Spent grain and liquid COD are separate input bases",
+    "sources": [
+      "sleeman",
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "distillery": {
+    "reason": "inlet",
+    "distinction": "Stillage/co-products differ from brewery solids",
+    "sources": [
+      "fawdon",
+      "food"
+    ],
+    "evidence": "application_reference"
+  },
+  "olive_oil_mill": {
+    "reason": "constraint",
+    "distinction": "Pomace, phenolics and seasonal availability",
+    "sources": [
+      "iea",
+      "food"
+    ],
+    "evidence": "resource_signal"
+  },
+  "palm_oil_mill": {
+    "reason": "inlet",
+    "distinction": "POME wastewater and warm-climate lagoons",
+    "sources": [
+      "th"
+    ],
+    "evidence": "application_reference"
+  },
+  "pulp_paper": {
+    "reason": "inlet",
+    "distinction": "Biodegradable industrial COD; exclude wood and black liquor",
+    "sources": [
+      "paperUs",
+      "paper"
+    ],
+    "evidence": "application_reference"
+  },
+  "other_industry": {
+    "reason": "fallback",
+    "distinction": "Characterised stream required; no generic food-waste substitution",
+    "sources": [
+      "iea"
+    ],
+    "evidence": "fallback"
+  },
+  "food_business": {
+    "reason": "portfolio",
+    "distinction": "Retail aggregation and disposal versus external treatment",
+    "sources": [
+      "retail"
+    ],
+    "evidence": "application_reference"
+  },
+  "municipal_biowaste": {
+    "reason": "portfolio",
+    "distinction": "Source-separated waste, gate fees and contamination",
+    "sources": [
+      "refood"
+    ],
+    "evidence": "application_reference"
+  },
+  "wastewater_treatment": {
+    "reason": "inlet",
+    "distinction": "Sludge digestion or existing gas, not raw sewage by wet tonnage",
+    "sources": [
+      "se",
+      "dk"
+    ],
+    "evidence": "application_reference"
+  },
+  "landfill_operator": {
+    "reason": "inlet",
+    "distinction": "Existing gas or closed-landfill FOD; no new digester",
+    "sources": [
+      "landfill"
+    ],
+    "evidence": "application_reference"
+  }
+};

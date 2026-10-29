@@ -112,7 +112,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
 
   if (process) {
     ox("process_operation", T("Upstream process operation (budget)", "Експлуатація технологічної частини (бюджет)"), process.opexEurYear);
-    ox("residual_disposal", T("Residuals treatment and disposal", "Очищення й утилізація залишків"), process.residualTonnesYear * input.process!.residualCostLocalT / ctx.fx * opexMult);
+    ox("residual_disposal", T("Residuals treatment and disposal", "Очищення й утилізація залишків"), process.residualTonnesYear * (input.process!.residualCostLocalT ?? 0) / ctx.fx * opexMult);
     ox("gas_supply", T("Purchased biogas", "Закупівля біогазу"), process.gasPurchaseEurYear);
   }
   const revenueEur = revenue.reduce((a, l) => a + l.eur, 0);

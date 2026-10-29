@@ -21,6 +21,12 @@ export function decideVerdict(args: {
   const reasons: string[] = [];
   const whatWouldChange: string[] = [];
 
+  if (base.process?.missingInputs.length) return {
+    id: "INSUFFICIENT_DATA",
+    reasons: [T("The gas estimate is available, but project costs or auxiliary loads are unknown. An economic conclusion cannot be established.", "Вихід газу оцінено, але витрати проєкту або власні потреби невідомі. Економічний висновок поки неможливий.")],
+    whatWouldChange: [T("Provide installed budgets, upstream OPEX, residuals disposal and auxiliary energy. Enter zero only when its absence is confirmed.", "Вкажіть монтажні бюджети, OPEX технологічної частини, утилізацію залишків та власні енергопотреби. Нуль вводьте лише за підтвердженої відсутності витрат.")],
+  };
+
   if (base.feed.tonnesYear <= 0 && !(base.process && base.energy.ch4ProducedM3 > 0)) {
     return { id: "INSUFFICIENT_DATA", reasons: [T("No feedstock stream entered.", "Не вказано жодного потоку сировини.")], whatWouldChange: [T("Add herd size or waste quantity.", "Додайте поголів'я або обсяг відходів.")] };
   }

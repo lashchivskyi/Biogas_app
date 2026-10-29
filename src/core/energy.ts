@@ -89,7 +89,7 @@ export function runEnergy(
   let etaEl = 0;
 
   const parasiticMonth = (i: number) => input.process
-    ? input.process.auxiliaryKwhYear * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
+    ? (input.process.auxiliaryKwhYear ?? 0) * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
     : feed.monthlyTonnes[i] * (parBase + parDm * feed.dryMatterPct);
 
   if (route === "chp") {

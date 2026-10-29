@@ -22,10 +22,16 @@ export function localizedHub(locale: Locale, d: Dict): HubContent {
   };
 }
 
-export function localizedSegment(s: Segment, locale: Locale, d: Dict): SegmentSeo {
+export function segmentCopy(s: Segment, d: Dict) {
+  const authored = d.fit.segments[s.id as keyof Dict["fit"]["segments"]];
+  const business = d.labels.business[s.businessType];
+  return authored ?? { label: business.label, insight: business.hint, conditions: d.result.robust.steps.slice(1, 4) };
+}
+
+export function localizedSegment(s: Segment, locale: Locale, d: Dict): SegmentSeo & { conditions: readonly string[] } {
+  const segment = segmentCopy(s, d);
   const label = s.id === "small" ? d.fit.segments.small.label : d.labels.business[s.businessType].label;
-  if (locale === "en" || locale === "uk") return { ...s.seo[locale], h1: s.id === "small" ? s.seo[locale].h1 : label };
-  const segment = d.fit.segments[s.id];
+  if ((locale === "en" || locale === "uk") && s.seo) return { ...s.seo[locale], h1: s.id === "small" ? s.seo[locale].h1 : label, conditions: segment.conditions };
   return {
     title: `${label} — ${d.brand.descriptor}`,
     description: segment.insight,
@@ -33,5 +39,6 @@ export function localizedSegment(s: Segment, locale: Locale, d: Dict): SegmentSe
     intro: [segment.insight],
     drivers: d.principles.items.slice(0, 4).map((p) => [p.title, p.text]),
     faq: d.faq.items.slice(0, 3).map((p) => [p.q, p.a]),
+    conditions: segment.conditions,
   };
 }

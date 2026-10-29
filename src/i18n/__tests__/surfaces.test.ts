@@ -6,11 +6,13 @@ import { allProvenance } from "@/core/assess";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES, getCountry } from "@/countries";
 import { SEGMENTS } from "@/content/segments";
-import { localizedHub, localizedSegment } from "@/content/localized";
+import { localizedHub, localizedSegment, segmentCopy } from "@/content/localized";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import NotFoundPage from "@/app/[lang]/not-found";
 import ErrorPage from "@/app/[lang]/error";
 import MethodologyPage from "@/app/[lang]/methodology/page";
+import SegmentPage, { generateStaticParams as sectorParams } from "@/app/[lang]/biogas/[slug]/page";
+import { businessSlug, SECTOR_IDS } from "@/core/businesses";
 import { ResultView } from "@/components/ResultView";
 import { getDictionary, INTL_TAG, LOCALES, LOCALE_COUNTRY } from "..";
 import { methodologyCopy } from "../methodology";
@@ -93,10 +95,39 @@ describe.each(LOCALES)("localised surfaces %s", (locale) => {
       expect(content.h1.trim()).toBeTruthy();
       if (locale !== "en" && locale !== "uk") {
         expect(content.h1).toBe(sector.id === "small" ? d.fit.segments.small.label : d.labels.business[sector.businessType].label);
-        expect(content.intro).toContain(d.fit.segments[sector.id].insight);
+        expect(content.intro).toContain(segmentCopy(sector, d).insight);
       }
     }
+    const legacy = renderToStaticMarkup(await SegmentPage({ params: Promise.resolve({ lang: locale, slug: "dairy-processing" }), searchParams: Promise.resolve({}) }));
+    const headings = (html: string) => [...html.matchAll(/<h2\b[^>]*>(.*?)<\/h2>/g)].map(m => m[1]);
+    // New sectors extend the existing page, including its driver cards, FAQ and model-case sidebar.
+    for (const id of ["starch_processor", "pulp_paper", "aquaculture", "landfill_operator"] as const) {
+      const page = await SegmentPage({ params: Promise.resolve({ lang: locale, slug: businessSlug(id) }), searchParams: Promise.resolve({}) });
+      const html = renderToStaticMarkup(page);
+      expect(html).toContain(d.labels.business[id].label.replaceAll("&", "&amp;").replaceAll("'", "&#x27;"));
+      expect(html).toContain(`href="/${locale}/calculator?b=${id}"`);
+      const sampleLinks = [...html.matchAll(/href="[^\"]*\/samples\/([^\"]+)"/g)].map(m => m[1]);
+      const segment = SEGMENTS.find(s => s.businessType === id)!;
+      expect(sampleLinks).toEqual(segment.exampleId ? [segment.exampleId] : []);
+      expect(headings(html)).toEqual(headings(legacy));
+      expect(html).toContain('"@type":"FAQPage"');
+      const sidebar = html.match(/<aside\b[^>]*>([\s\S]*?)<\/aside>/)![1];
+      expect([...sidebar.matchAll(/<dt\b/g)]).toHaveLength(4);
+      expect([...sidebar.matchAll(/class="card p-6"/g)]).toHaveLength(2);
+      if (id === "starch_processor" || id === "pulp_paper") {
+        const values = [...sidebar.matchAll(/<dd\b[^>]*>(.*?)<\/dd>/g)].map(m => m[1]);
+        expect(values.slice(1)).toEqual(["—", "—", "—"]);
+      }
+      expect(html).not.toMatch(/undefined|NaN/);
+    }
   });
+});
+
+it("prebuilds each business detail page and preserves old guide URLs", () => {
+  const slugs = sectorParams().map(p => p.slug);
+  expect(new Set(slugs).size).toBe(slugs.length);
+  for (const id of SECTOR_IDS) expect(slugs).toContain(businessSlug(id));
+  for (const guide of SEGMENTS) expect(slugs).toContain(guide.slug);
 });
 
 it("keeps a stable localisation ID for every missing-input rule", () => {

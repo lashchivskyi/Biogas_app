@@ -16,6 +16,7 @@ import { getDictionary } from "@/i18n";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ProcessReport } from "@/components/ProcessReport";
+import { EXAMPLES } from "../examples";
 
 const common = { operatingDays: 330, monthsActive: 12, startMonth: 1, processCapexLocal: 1800000, processOpexLocalYear: 70000, residualCostLocalT: 15, auxiliaryKwhYear: 100000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 30 };
 const gasTreatment = { nitrogenPct: 4, oxygenPct: 1, h2sPpm: 500, upgradingCapexLocal: 2500000, upgradingRecoveryPct: 96, upgradingKwhNm3: 0.4, productMethanePct: 97 };
@@ -92,6 +93,39 @@ describe("independent process balance checks", () => {
 });
 
 describe("process economics and cross-country execution", () => {
+  it("distinguishes unknown budgets from an explicitly entered zero", () => {
+    const p = { ...cases[1], processCapexLocal: undefined };
+    const a = assess(input(p),COUNTRIES.DE);
+    expect(inputSchema.safeParse(a.input).success).toBe(true);
+    expect(a.scenarios.base.feed.ch4M3Year).toBeGreaterThan(0);
+    expect(a.scenarios.base.process!.missingInputs).toContain("processCapexLocal");
+    expect(a.verdict.id).toBe("INSUFFICIENT_DATA");
+    expect(a.confidence.score).toBeLessThan(35);
+    const knownZero = assess(input({ ...cases[1], processCapexLocal: 0 }),COUNTRIES.DE);
+    expect(knownZero.scenarios.base.process!.missingInputs).toEqual([]);
+  });
+  it("keeps ambient lagoons separate from heated high-rate COD reactors", () => {
+    const p = cases[1]; if(p.kind !== "wastewater") throw Error();
+    const heated = prepared({ ...p, reactorTechnology: "high_rate" });
+    const ambient = prepared({ ...p, reactorTechnology: "covered_lagoon" });
+    expect(ambient.design.tech.digestion).toBe("covered_lagoon");
+    expect(ambient.design.heatDemandKwhYear).toBe(0);
+    expect(heated.design.heatDemandKwhYear).toBeGreaterThan(0);
+    expect(ambient.feed.ch4M3Year).toBeCloseTo(heated.feed.ch4M3Year);
+    // Removal is a user-supplied performance basis, not predicted from the technology name.
+  });
+  it("records a held-out published reference discrepancy rather than tuning methane coefficients", () => {
+    // Clearfleau, December 2014, slide 9, BV Dairy: 200 m³/d; 25,400 mg COD/L;
+    // 98% removal; 127 Nm³/h biogas at 60% CH4. Historical values are not concurrent measurements.
+    const p = cases[1]; if(p.kind !== "wastewater") throw Error();
+    const r = prepared({ ...p, flowM3Day: 200, codMgL: 25400, removalPct: 98, methanePct: 60, operatingDays: 365 });
+    const predicted = r.feed.biogasM3Year / 365 / 24;
+    const theoretical = 200*25.4*0.98/4/0.717/0.6/24;
+    expect(predicted).toBeLessThan(theoretical);
+    expect(theoretical).toBeLessThan(127); // Published gas exceeds the same-basis COD ceiling.
+    expect(predicted / 127 - 1).toBeLessThan(-0.1);
+    // This identifies a comparison/data-boundary gap; it does not establish an accuracy tolerance.
+  });
   it.each(Object.keys(COUNTRIES))("%s: all four input models close energy and financial balances", country => {
     for (const p of cases) {
       const a = assess(input(p,country),COUNTRIES[country]);
@@ -109,7 +143,7 @@ describe("process economics and cross-country execution", () => {
   });
   it("does not country-scale a local upstream quote twice and includes all disposal costs", () => {
     const i = input(cases[1],"PL"), a = assess(i,COUNTRIES.PL), b = a.scenarios.base;
-    expect(b.capex.lines.find(l => l.id === "process")!.eur).toBeCloseTo(cases[1].processCapexLocal / a.fx);
+    expect(b.capex.lines.find(l => l.id === "process")!.eur).toBeCloseTo(cases[1].processCapexLocal! / a.fx);
     expect(b.opexRev.opex.some(l => l.id === "residual_disposal" && l.eur > 0)).toBe(true);
     expect(b.opexRev.revenue.some(l => l.id === "treatment" && l.eur > 0)).toBe(true);
   });
@@ -129,6 +163,17 @@ describe("process economics and cross-country execution", () => {
 });
 
 describe("process localisation and draft compatibility", () => {
+  it.each(LOCALES)("%s never advertises NPV or a preferred route when reference costs are undisclosed", async locale => {
+    const d = await getDictionary(locale);
+    for (const e of EXAMPLES.filter(e => e.reference && e.input.process)) {
+      const a = assess(e.input,COUNTRIES[e.input.countryCode]);
+      const html = renderToStaticMarkup(createElement(ProcessReport,{ a,d,locale,currency:COUNTRIES[e.input.countryCode].currency,access:"full",methodologyHref:`/${locale}/methodology` }));
+      expect(a.verdict.id,e.id).toBe("INSUFFICIENT_DATA");
+      expect(html,e.id).not.toContain("NPV");
+      expect(html,e.id).not.toMatch(/<th[^>]*>DSCR/);
+      expect(html,e.id).not.toMatch(/undefined|NaN|\uFFFD/);
+    }
+  });
   it.each(SECTOR_IDS)("%s has a usable physical model, not a placeholder", business => {
     const model = defaultProcess(business);
     const f = initialForm(business,"DE",COUNTRIES.DE.regions[0].id);

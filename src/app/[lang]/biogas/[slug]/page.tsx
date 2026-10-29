@@ -18,7 +18,7 @@ import { SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy } from "@/i18n/businesses";
 
 export function generateStaticParams() {
-  return SEGMENTS.map((s) => ({ slug: s.slug }));
+  return SEGMENTS.map(s => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/biogas/[slug]">): Promise<Metadata> {
@@ -43,10 +43,10 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   const d = await getDictionary(locale);
   const seo = localizedSegment(s, locale, d);
   const H = localizedHub(locale, d).sector;
-  const seg = d.fit.segments[s.id];
-  const ex = EXAMPLES.find((e) => e.id === s.exampleId)!;
-  const a = assess(ex.input, getCountry(ex.input.countryCode), { lang: coreLang(locale) });
-  const r = a.ranges;
+  const ex = EXAMPLES.find((e) => e.id === s.exampleId);
+  const a = ex ? assess(ex.input, getCountry(ex.input.countryCode), { lang: coreLang(locale) }) : undefined;
+  const r = a?.ranges;
+  const economicsAvailable = a?.financialsAvailable !== false;
   const f = makeFormat(locale, d.labels.units);
   const base = `/${locale}`;
   const calcHref = `${base}/calculator?b=${s.businessType}`;
@@ -55,7 +55,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   return (
     <main>
       <PageHero
-        crumbs={[{ name: d.brand.descriptor, href: base }, { name: d.hub.sectors, href: `${base}/biogas` }, { name: s.id === "small" ? seg.label : d.labels.business[s.businessType].label, href: `${base}/biogas/${s.slug}` }]}
+        crumbs={[{ name: d.brand.descriptor, href: base }, { name: d.hub.sectors, href: `${base}/biogas` }, { name: s.id === "small" ? d.fit.segments.small.label : d.labels.business[s.businessType].label, href: `${base}/biogas/${s.slug}` }]}
         title={seo.h1}
         lead={seo.intro[0]}
       >
@@ -66,7 +66,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
       </PageHero>
 
       <section className="container-x grid gap-10 py-16 lg:grid-cols-[1.4fr_1fr]">
-        <article>
+        <article className="min-w-0">
           {seo.intro.slice(1).map((p) => <p key={p} className="text-lg leading-relaxed text-ink2">{p}</p>)}
 
           <h2 className="font-display mt-10 text-2xl font-semibold">{H.drivers}</h2>
@@ -81,7 +81,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
 
           <h2 className="font-display mt-10 text-2xl font-semibold">{H.conditions}</h2>
           <ul className="mt-4 space-y-3">
-            {seg.conditions.map((c) => (
+            {seo.conditions.map((c) => (
               <li key={c} className="flex gap-3 text-ink2"><Icon name="check" size={20} className="mt-0.5 shrink-0 text-brand" />{c}</li>
             ))}
           </ul>
@@ -97,20 +97,20 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
           </div>
         </article>
 
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <aside className="min-w-0 space-y-4 lg:sticky lg:top-24 lg:self-start">
           <div className="card p-6">
             <div className="eyebrow text-brand">{d.fit.modelCase}</div>
-            <div className="mt-1 text-sm text-muted">{exampleTitle(ex, d, locale)} · {countryName(ex.input.countryCode, locale)}</div>
-            <div className="font-display mt-3 text-2xl font-semibold">{d.labels.verdict[a.verdict.id]}</div>
+            <div className="mt-1 text-sm text-muted">{ex ? `${exampleTitle(ex, d, locale)} · ${countryName(ex.input.countryCode, locale)}` : d.labels.business[s.businessType].label}</div>
+            <div className="font-display mt-3 text-2xl font-semibold">{d.labels.verdict[a?.verdict.id ?? "INSUFFICIENT_DATA"]}</div>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.biogas}</dt><dd className="num font-bold">{fmt(d.flow.m3Yr, { v: f.range(r.biogasM3[0], r.biogasM3[2], (x) => f.compact(x)) })}</dd></div>
-              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.capacity}</dt><dd className="num font-bold">{f.range(r.kwEl[0], r.kwEl[2])} {d.labels.units.kw}</dd></div>
-              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-bold"><DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${f.eur(r.capexEur[2])} – ${f.eur(r.capexEur[0])}`} /></dd></div>
-              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-bold">{f.years(r.paybackYears[1])}</dd></div>
+              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.biogas}</dt><dd className="num font-bold">{r ? fmt(d.flow.m3Yr, { v: f.range(r.biogasM3[0], r.biogasM3[2], (x) => f.compact(x)) }) : "—"}</dd></div>
+              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.capacity}</dt><dd className="num font-bold">{r && economicsAvailable ? `${f.range(r.kwEl[0], r.kwEl[2])} ${d.labels.units.kw}` : "—"}</dd></div>
+              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-bold">{r && economicsAvailable ? <DisplayMoney value={r.capexEur[2]} end={r.capexEur[0]} initialText={`${f.eur(r.capexEur[2])} – ${f.eur(r.capexEur[0])}`} /> : "—"}</dd></div>
+              <div className="rounded-xl bg-surface2 p-3"><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-bold">{r && economicsAvailable ? f.years(r.paybackYears[1]) : "—"}</dd></div>
             </dl>
-            <p className="mt-3 text-xs text-muted">{d.result.tone[a.verdict.id]} {H.disclaimer}</p>
+            <p className="mt-3 text-xs text-muted">{a ? d.result.tone[a.verdict.id] : d.result.robust.accuracy} {H.disclaimer}</p>
             <Link href={calcHref} className="btn btn-primary mt-5 w-full">{H.calcCta}</Link>
-            <Link href={`${base}/samples/${ex.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline">{d.samples.open} <Icon name="arrow" size={16} /></Link>
+            {ex && <Link href={`${base}/samples/${ex.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline">{d.samples.open} <Icon name="arrow" size={16} /></Link>}
           </div>
           <div className="card p-6">
             <div className="font-bold">{H.expertTitle}</div>

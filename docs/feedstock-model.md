@@ -124,10 +124,16 @@ N/P/K оцінюються за каталогом і DM; добривна ви�
 
 COD sludge: COD/VSS ≈ 1.42 для C₅H₇NO₂; це не COD/TS. Вхідні sludge VS/TS і TS перетворюють VSS на dry solids і wet sludge. Effluent + wet sludge + generated dry gas дорівнюють inflow за наближенням 1 t/m³; це не повний елементний баланс, не гарантія складу стоку. Dissolved/uncollected CH₄ показується окремо; methane climate check обмежений зібраним газом і не є повним LCA полігона. Реакційна вода, домішки й повний nutrient fate потребують розширення.
 
-Mass/COD impossibilities, gas fractions >100%, incompatible bases, incomplete budgets та calendars відхиляються. Actual HRT враховує обмеження OLR. Seasonal/rated flow використовується для conversion capacity; boiler має враховувати доступний газ, а не лише digester heat.
+Mass/COD impossibilities, gas fractions >100%, incompatible bases, несумісні calendars відхиляються; неповні budgets/own loads дозволяють лише технічний результат із LOW/INSUFFICIENT_DATA. Actual HRT враховує обмеження OLR. Seasonal/rated flow використовується для conversion capacity; boiler має враховувати доступний газ, а не лише digester heat.
 
 Методичні першоджерела: [IPCC 2019, wastewater](https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_6_Ch06_Wastewater.pdf) — COD/CH₄, не inventory MCF як reactor efficiency; [EPA LMOP 2021, modelling](https://www.epa.gov/system/files/documents/2021-07/pdh_chapter2.pdf) — FOD; [EPA LFG treatment](https://www.epa.gov/lmop/basic-information-about-landfill-gas) — газозбір і різні ступені очищення. Переглянуто 28.10.2026; ці роки не є базою поточних CAPEX.
 
 Валідація коду: ручні COD/FOD identities, газ/залишки/effluent, енергія й фінанси для чотирьох inlet models у всіх країнах; негативний CAPEX/OPEX case, invalid units/ranges/calendar/composition, локалізований round-trip, джерела й тарифи. Інженерна точність ще потребує незалежного порівняння з operating/as-built datasets; прохід тестів цього не замінює.
 
 Додаткове процесне тепло (`auxiliaryHeatKwhYear`) задається окремо для hygienisation, drying та іншої теплової обробки; воно додається до розрахованого обігріву реактора/стоків, тому цей обігрів повторно вводити не потрібно. Енергетичний баланс та закупівля зовнішнього тепла враховують обидві складові.
+
+COD-модель має явний reactorTechnology: high_rate (підігрів до прийнятих 35 °C) або covered_lagoon (ambient, без reactor heating). Removal є заданою продуктивністю, не прогнозується з назви технології чи температури. Зміна режиму не підтверджує біологічну стійкість; для холодної лагуни потрібні окремі дані про роботу. Спільні COD/methane identities не замінюють reactor kinetics.
+
+Поля `basisDate` і `basisReference` не показуються в анкеті: це необов'язкові
+метадані походження, а не фізичні входи. Core/schema, приклади й збережені звіти
+їх підтримують; відсутня дата залишається `undated`, а не датою оцінки.

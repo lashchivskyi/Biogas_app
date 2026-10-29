@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { BUSINESS_GROUPS, BUSINESS_IDS, SECTOR_IDS, modelsForBusiness, BUSINESS_TYPES, businessHref } from "../businesses";
+import { BUSINESS_GROUPS, BUSINESS_IDS, SECTOR_IDS, modelsForBusiness, BUSINESS_TYPES, businessHref, businessSlug } from "../businesses";
 import { ANIMALS, FEEDSTOCKS } from "../feedstockData";
 import { assess } from "../assess";
 import { EXAMPLES } from "../examples";
 import { COUNTRIES } from "@/countries";
-import { BUSINESS_MARKETS, REGIONAL_BUSINESS_EVIDENCE, SECTOR_SOURCES, businessMarket } from "@/countries/business-markets";
-import { SEGMENTS } from "@/content/segments";
+import { BUSINESS_BASIS, BUSINESS_MARKETS, REGIONAL_BUSINESS_EVIDENCE, SECTOR_SOURCES, businessMarket } from "@/countries/business-markets";
+import { SEGMENTS, segmentBySlug } from "@/content/segments";
 import { getDictionary, LOCALES } from "@/i18n";
 import { businessCopy } from "@/i18n/businesses";
 import { initialForm } from "@/lib/form";
@@ -14,7 +14,10 @@ import { inputSchema } from "@/server/validate";
 describe("canonical business contract", () => {
   it("preserves historical IDs and separates roles, size and feedstock requirements", () => {
     expect(BUSINESS_IDS).toHaveLength(30);
-    expect(SECTOR_IDS).toHaveLength(27);
+    expect(SECTOR_IDS).toHaveLength(26);
+    expect(SECTOR_IDS).not.toContain("other_livestock");
+    expect(BUSINESS_TYPES.aquaculture.audience).toBe("farm");
+    expect(BUSINESS_TYPES.food_business.audience).toBe("food");
     expect(BUSINESS_GROUPS).toHaveLength(3);
     for (const example of EXAMPLES) expect(BUSINESS_IDS).toContain(example.input.businessType);
     expect(BUSINESS_TYPES.cattle_farm.audience).toBe("farm");
@@ -52,8 +55,15 @@ describe("canonical business contract", () => {
     for (const id of BUSINESS_IDS) {
       const business = BUSINESS_TYPES[id];
       if (business.guideSlug) expect(SEGMENTS.some((s) => s.slug === business.guideSlug && s.businessType === id), id).toBe(true);
-      else expect(businessHref(id, "/uk")).toBe(SECTOR_IDS.includes(id) ? `/uk/biogas#business-${id}` : `/uk/calculator?b=${id}`);
+      if (SECTOR_IDS.includes(id)) {
+        expect(businessHref(id, "/uk")).toBe(`/uk/biogas/${businessSlug(id)}`);
+        const segment = segmentBySlug(businessSlug(id));
+        expect(segment?.businessType).toBe(id);
+        if (segment?.exampleId) expect(EXAMPLES.find(e => e.id === segment.exampleId)?.input.businessType).toBe(id);
+      } else expect(businessHref(id, "/uk")).toBe(`/uk/calculator?b=${id}`);
     }
+    expect(new Set(SECTOR_IDS.map(businessSlug)).size).toBe(SECTOR_IDS.length);
+    expect(segmentBySlug("not-a-sector")).toBeUndefined();
   });
 
   it.each(LOCALES)("provides all business names, hints and evidence labels in %s", async (locale) => {
@@ -73,6 +83,16 @@ describe("canonical business contract", () => {
 });
 
 describe("country and regional sector evidence", () => {
+  it("requires an explicit distinction and traceable sources for each offered sector", () => {
+    expect(Object.keys(BUSINESS_BASIS).sort()).toEqual([...SECTOR_IDS].sort());
+    for(const id of SECTOR_IDS) {
+      const basis = BUSINESS_BASIS[id]!;
+      expect(basis.distinction.length,id).toBeGreaterThan(20);
+      for(const source of basis.sources) expect(SECTOR_SOURCES[source],id).toBeDefined();
+    }
+    expect(BUSINESS_BASIS.aquaculture!.evidence).toBe("resource_signal");
+    expect(BUSINESS_BASIS.other_industry!.evidence).toBe("fallback");
+  });
   it("explicitly covers every market and falls back honestly for every configured region", () => {
     expect(Object.keys(BUSINESS_MARKETS).sort()).toEqual(Object.keys(COUNTRIES).sort());
     for (const country of Object.values(COUNTRIES)) for (const region of country.regions) for (const business of BUSINESS_IDS) {

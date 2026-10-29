@@ -1,3 +1,4 @@
+import { businessGroupLabel } from "@/i18n/businesses";
 import Link from "next/link";
 import { assess } from "@/core";
 import type { Assessment } from "@/core";
@@ -11,6 +12,7 @@ import { Reveal } from "@/components/Reveal";
 import { Emblem } from "@/components/three/Emblem";
 import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
+import { segmentCopy } from "@/content/localized";
 import { SECTOR_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
@@ -40,12 +42,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     const guide = SEGMENTS.find((s) => s.businessType === id && s.id !== "small");
     const exampleId = guide?.exampleId ?? EXAMPLES.find((e) => e.input.businessType === id)?.id;
     const result = definition.scope !== "outside_model" && exampleId ? run(exampleId) : undefined;
-    const r = result?.a.ranges;
+    const r = result?.a.scenarios.base.process?.missingInputs?.length ? undefined : result?.a.ranges;
     return {
       id, label: d.labels.business[id].label, businessType: id,
-      group: d.audience.items[BUSINESS_GROUPS.find((g) => g.id === definition.audience)!.copyIndex].title,
+      group: businessGroupLabel(definition.audience,locale),
       insight: d.labels.business[id].hint,
-      conditions: guide ? [...d.fit.segments[guide.id].conditions] : [...d.result.robust.steps.slice(1, 4)],
+      conditions: guide ? [...segmentCopy(guide, d).conditions] : [...d.result.robust.steps.slice(1, 4)],
       example: result && r ? {
         title: `${exampleTitle(result.example, d, locale)} · ${countryName(result.country, locale)}`,
         verdict: d.labels.verdict[result.a.verdict.id],
@@ -77,7 +79,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               <Reveal key={it.title} delay={i * 70} className="h-full">
                 <div className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                   <Icon name={AUDIENCE_ICONS[group.copyIndex]} size={26} className="text-signal" />
-                  <div className="mt-4 text-lg font-bold">{it.title}</div>
+                  <div className="mt-4 text-lg font-bold">{businessGroupLabel(group.id,locale)}</div>
                   <p className="mt-1.5 text-white/70">{SECTOR_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).slice(0, 4).map((id) => d.labels.business[id].label).join(" · ")}</p>
                 </div>
               </Reveal>

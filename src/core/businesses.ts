@@ -1,6 +1,6 @@
 import type { ProcessKind } from "./processes";
 import type { AnimalKind, FeedstockTypeId } from "./types";
-export const BUSINESS_TAXONOMY_VERSION = "2.0.0";
+export const BUSINESS_TAXONOMY_VERSION = "2.1.0";
 
 /** Stable sector IDs are shared by navigation, forms, reports and analytics. Scale is not a sector. */
 export type BusinessAudience = "farm" | "food" | "municipal" | "developer";
@@ -38,9 +38,9 @@ const definitions = {
   olive_oil_mill: { audience: "food", role: "feedstock_owner", scope: "screening", suggested: [{ type: "olive_pomace", quantity: 15000 }], scaleTonnesYear: [5000, 100000] },
   palm_oil_mill: { audience: "food", role: "feedstock_owner", scope: "screening", suggested: [{ type: "pome", quantity: 200000 }], scaleTonnesYear: [50000, 1000000] },
   pulp_paper: { models: ["wastewater","residue"], audience: "food", role: "feedstock_owner", scope: "screening", suggested: [] },
-  aquaculture: { models: ["residue"], audience: "food", role: "feedstock_owner", scope: "screening", suggested: [] },
+  aquaculture: { models: ["residue"], audience: "farm", role: "feedstock_owner", scope: "screening", suggested: [] },
   other_industry: { models: ["residue","wastewater","gas","ad"], audience: "food", role: "feedstock_owner", scope: "screening", suggested: [] },
-  food_business: { audience: "municipal", role: "feedstock_owner", scope: "screening", suggested: [{ type: "food_waste", quantity: 8000 }], scaleTonnesYear: [10000, 150000] },
+  food_business: { audience: "food", role: "feedstock_owner", scope: "screening", suggested: [{ type: "food_waste", quantity: 8000 }], scaleTonnesYear: [10000, 150000] },
   municipal_biowaste: { audience: "municipal", role: "waste_operator", scope: "screening", suggested: [{ type: "municipal_biowaste", quantity: 25000 }], scaleTonnesYear: [15000, 200000], guideSlug: "food-waste" },
   wastewater_treatment: { models: ["ad","residue","gas"], audience: "municipal", role: "waste_operator", scope: "screening", suggested: [{ type: "sewage_sludge", quantity: 60000 }], scaleTonnesYear: [20000, 500000] },
   wastewater_organic: { models: ["ad","residue","wastewater","gas"], audience: "municipal", role: "feedstock_owner", scope: "screening", suggested: [{ type: "dairy_fat_sludge", quantity: 800 }] },
@@ -57,13 +57,15 @@ export const BUSINESS_IDS = Object.keys(BUSINESS_TYPES) as BusinessTypeId[];
 export const BUSINESS_GROUPS: readonly { id: BusinessAudience; copyIndex: number }[] = [
   { id: "farm", copyIndex: 0 }, { id: "food", copyIndex: 1 }, { id: "municipal", copyIndex: 3 },
 ];
-export const businessHref = (id: BusinessTypeId, base: string) => !SECTOR_IDS.includes(id) ? `${base}/calculator?b=${id}` : BUSINESS_TYPES[id].guideSlug
-  ? `${base}/biogas/${BUSINESS_TYPES[id].guideSlug}` : `${base}/biogas#business-${id}`;
+export const businessSlug = (id: BusinessTypeId) => BUSINESS_TYPES[id].guideSlug ?? id.replaceAll("_", "-");
+export const businessHref = (id: BusinessTypeId, base: string) => !SECTOR_IDS.includes(id) ? `${base}/calculator?b=${id}` : `${base}/biogas/${businessSlug(id)}`;
 
 /** Roles are independent of sectors. Legacy IDs remain readable for saved reports. */
 export function modelsForBusiness(id: BusinessTypeId): readonly ("ad" | ProcessKind)[] {
   return BUSINESS_TYPES[id].models ?? (BUSINESS_TYPES[id].audience === "food" ? ["ad", "wastewater", "residue", "gas"] : ["ad", "residue", "gas"]);
 }
-export const SECTOR_IDS = BUSINESS_IDS.filter(id => BUSINESS_TYPES[id].audience !== "developer" && id !== "wastewater_organic");
+// Other livestock has no species-specific preset or distinct input model. Keep its saved ID,
+// but route new projects to characterised organic residues instead of another identical card.
+export const SECTOR_IDS = BUSINESS_IDS.filter(id => BUSINESS_TYPES[id].audience !== "developer" && id !== "wastewater_organic" && id !== "other_livestock");
 export function canonicalBusiness(id: BusinessTypeId): BusinessTypeId { return id === "biogas_developer" ? "central_biogas_plant" : SECTOR_IDS.includes(id) ? id : "other_industry"; }
 export function defaultProcess(id: BusinessTypeId): "ad" | ProcessKind { return modelsForBusiness(id)[0]; }

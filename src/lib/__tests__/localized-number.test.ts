@@ -4,6 +4,14 @@ import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
 import { parseLocalizedNumber } from "../localized-number";
 import { formToInput, inputToForm, invalidNumberStep } from "../form";
+import { calendarDateAt } from "../format";
+
+it("uses the local calendar day for assessment freshness near UTC midnight", () => {
+  const instant = new Date("2026-10-28T22:30:00Z");
+  expect(calendarDateAt(instant,"Europe/Kyiv")).toBe("2026-10-29");
+  expect(calendarDateAt(instant,"America/New_York")).toBe("2026-10-28");
+  expect(calendarDateAt(new Date("2025-12-31T23:30:00Z"),"Europe/Warsaw")).toBe("2026-01-01");
+});
 
 describe.each(LOCALES)("number input %s", (locale) => {
   it("accepts the locale's grouping and decimal separators, including negative gate fees", () => {

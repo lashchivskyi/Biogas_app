@@ -389,6 +389,8 @@ export interface Assessment {
   parameterSensitivity?: { parameterId: string; lowInput: number; highInput: number; lowNpvEur: number; highNpvEur: number; basis: ParameterRange["basis"] }[];
   /** Evidence as actually used for this region, rather than the default national registry. */
   marketEvidence?: Provenance[];
+  /** False means numeric financial intermediates must not be presented as investment results. */
+  financialsAvailable?: boolean;
   breakEven: {
     capexReductionPct: number | null;
     energyPriceIncreasePct: number | null;

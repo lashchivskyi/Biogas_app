@@ -4,7 +4,7 @@ import { Icon } from "@/components/brand/Icon";
 import { PageHero } from "@/components/PageHero";
 import { localizedHub } from "@/content/localized";
 import { BUSINESS_GROUPS, SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
-import { businessCopy } from "@/i18n/businesses";
+import { businessCopy, businessGroupLabel } from "@/i18n/businesses";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 
@@ -54,12 +54,12 @@ export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">)
           <section id="segments" className="scroll-mt-24 pt-10">
             <h2 className="font-display text-2xl font-semibold">{d.hub.sectors}</h2>
             {BUSINESS_GROUPS.map((group) => <section key={group.id} className="mt-8">
-              <h3 className="text-lg font-bold">{d.audience.items[group.copyIndex].title}</h3>
+              <h3 className="text-lg font-bold">{businessGroupLabel(group.id, locale)}</h3>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {SECTOR_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => {
                   const business = BUSINESS_TYPES[id];
                   return <article key={id} id={`business-${id}`} className="card scroll-mt-24 p-5">
-                    <h4 className="font-bold">{business.guideSlug ? <Link href={businessHref(id, base)} className="hover:text-brand">{d.labels.business[id].label}</Link> : d.labels.business[id].label}</h4>
+                    <h4 className="font-bold"><Link href={businessHref(id, base)} className="hover:text-brand">{d.labels.business[id].label}</Link></h4>
                     <p className="mt-2 text-sm text-ink2">{d.labels.business[id].hint}</p>
                     {business.scope !== "screening" && <p className="mt-3 text-xs font-semibold">{business.scope === "outside_model" ? B.outside : B.specialist}</p>}
                     {business.scope === "outside_model" ? <p className="mt-2 text-sm text-muted">{B.scopeNote}</p> : <Link href={`${base}/calculator?b=${id}`} className="mt-3 inline-block text-sm font-semibold text-brand hover:underline">{d.fit.cta}</Link>}

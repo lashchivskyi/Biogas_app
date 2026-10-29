@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/methodology", 0.4, "monthly", LOCALES],
     ["/terms", 0.2, "yearly", LOCALES],
     ["/biogas", 0.8, "monthly", ["en", "uk"]],
-    ...SEGMENTS.map((s) => [`/biogas/${s.slug}`, 0.7, "monthly", ["en", "uk"]] as [string, number, Freq, readonly Locale[]]),
+    ...SEGMENTS.map(s => [`/biogas/${s.slug}`, 0.7, "monthly", ["en", "uk"]] as [string, number, Freq, readonly Locale[]]),
   ];
   return all.flatMap(([path, priority, changeFrequency, locales]) => {
     const languages = Object.fromEntries(locales.map((l) => [INTL_TAG[l], absoluteUrl(`/${l}${path}`)]));

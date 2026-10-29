@@ -16,23 +16,23 @@ const common = {
   operatingDays: positive(365),
   monthsActive: z.number().int().min(1).max(12),
   startMonth: z.number().int().min(1).max(12),
-  processCapexLocal: z.number().finite().min(0).max(1e12),
-  processOpexLocalYear: z.number().finite().min(0).max(1e12),
-  residualCostLocalT: z.number().finite().min(0).max(1e6),
-  auxiliaryKwhYear: z.number().finite().min(0).max(1e12),
-  auxiliaryHeatKwhYear: z.number().finite().min(0).max(1e12),
+  processCapexLocal: z.number().finite().min(0).max(1e12).optional(),
+  processOpexLocalYear: z.number().finite().min(0).max(1e12).optional(),
+  residualCostLocalT: z.number().finite().min(0).max(1e6).optional(),
+  auxiliaryKwhYear: z.number().finite().min(0).max(1e12).optional(),
+  auxiliaryHeatKwhYear: z.number().finite().min(0).max(1e12).optional(),
   uncertaintyPct: z.number().finite().min(10).max(70),
 };
 // LFG / purchased gas cannot inherit agricultural membrane performance or cost.
 const gasTreatment = {
   nitrogenPct: z.number().min(0).max(40), oxygenPct: z.number().min(0).max(10), h2sPpm: z.number().min(0).max(50000),
-  upgradingCapexLocal: positive(1e12), upgradingRecoveryPct: z.number().min(50).max(100),
+  upgradingCapexLocal: positive(1e12).optional(), upgradingRecoveryPct: z.number().min(50).max(100),
   upgradingKwhNm3: positive(5), productMethanePct: z.number().min(95).max(99.99),
 };
 /** Costs are explicit project budgets/quotes, never historical vendor prices labelled as current. */
 export const processSchema = z.discriminatedUnion("kind", [
   z.object({ ...common, kind: z.literal("residue"), tonnesYear: positive(1e8), densityKgM3: z.number().min(50).max(1500), dmPct: positive(95), vsPct: positive(100), bmp: positive(1200), methanePct: z.number().min(40).max(80), nKgT: z.number().min(0).max(200), hrtDays: positive(200), olr: positive(15) }),
-  z.object({ ...common, kind: z.literal("wastewater"), flowM3Day: positive(1e6), codMgL: positive(200000), removalPct: z.number().min(1).max(99), methanePct: z.number().min(40).max(85), methaneRecoveryPct: z.number().min(1).max(100), biomassCodPct: z.number().min(0).max(40), sludgeTsPct: positive(30), sludgeVsPct: positive(100), hrtDays: positive(60), olr: positive(40), inletTempC: z.number().min(0).max(60), heatRecoveryPct: fraction, avoidedTreatmentLocalM3: z.number().min(0).max(1e5) }),
+  z.object({ ...common, kind: z.literal("wastewater"), reactorTechnology: z.enum(["high_rate", "covered_lagoon"]).optional(), flowM3Day: positive(1e6), codMgL: positive(200000), removalPct: z.number().min(1).max(99), methanePct: z.number().min(40).max(85), methaneRecoveryPct: z.number().min(1).max(100), biomassCodPct: z.number().min(0).max(40), sludgeTsPct: positive(30), sludgeVsPct: positive(100), hrtDays: positive(60), olr: positive(40), inletTempC: z.number().min(0).max(60), heatRecoveryPct: fraction, avoidedTreatmentLocalM3: z.number().min(0).max(1e5) }),
   z.object({ ...common, ...gasTreatment, kind: z.literal("landfill"), annualWasteTonnes: positive(1e8), depositionYears: z.number().int().min(1).max(100), yearsSinceClosure: z.number().min(0).max(100), decayPerYear: z.number().min(0.005).max(0.5), potentialNm3T: positive(300), collectionPct: z.number().min(1).max(95), methanePct: z.number().min(30).max(65) }),
   z.object({ ...common, ...gasTreatment, kind: z.literal("gas"), rawGasNm3Hour: positive(1e6), methanePct: z.number().min(30).max(95), availabilityPct: z.number().min(1).max(100), declinePctYear: z.number().min(0).max(40), gasPriceLocalNm3: z.number().min(0).max(1000) }),
 ]).superRefine((p, ctx) => {
@@ -51,14 +51,19 @@ export const processSchema = z.discriminatedUnion("kind", [
 });
 export type ProcessInput = z.infer<typeof processSchema>;
 export type ProcessKind = ProcessInput["kind"];
+export const PROCESS_COST_FIELDS = ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "auxiliaryKwhYear", "auxiliaryHeatKwhYear"] as const;
+export const missingProcessInputs = (p: ProcessInput): string[] => [...PROCESS_COST_FIELDS.filter(key => p[key] === undefined), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : [])];
 export function processBounds(kind: ProcessKind, key: string) {
   const shape = processSchema.options.find(s => s.shape.kind.value === kind)!.shape;
-  const field = (shape as unknown as Record<string,z.ZodType>)[key];
+  const raw = (shape as unknown as Record<string,z.ZodType>)[key];
+  const field = raw instanceof z.ZodOptional ? raw.unwrap() : raw;
   return field instanceof z.ZodNumber ? { low: field.minValue ?? 0, high: field.maxValue ?? Infinity } : { low: 0, high: Infinity };
 }
 export const PROCESS_KINDS: ProcessKind[] = ["residue", "wastewater", "landfill", "gas"];
 export interface ProcessResult {
   kind: ProcessKind;
+  /** Missing costs/loads invalidate economic conclusions; zero is an explicit known zero. */
+  missingInputs: string[];
   /** Values use the units in metrics, never fake a feedstock type for a gas inlet. */
   metrics: Record<string, { value: number; unit: string; origin: "CALCULATED_VALUE" }>;
   provenance: Provenance[];
@@ -133,10 +138,10 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
     const sludgeDryKg = sludgeCod / 1.42 / (p.sludgeVsPct / 100); // COD/VSS, not COD/TS
     residual = sludgeDryKg / (p.sludgeTsPct / 100) / 1000;
     reactor = Math.max(p.flowM3Day * p.hrtDays, p.flowM3Day * p.codMgL / 1000 / p.olr);
-    heat = allocate(tonnes * 1000 * 4.18 * Math.max(0, 35 - p.inletTempC) / 3600 * (1 - p.heatRecoveryPct / 100));
+    heat = allocate((p.reactorTechnology === "covered_lagoon" ? 0 : 1) * tonnes * 1000 * 4.18 * Math.max(0, 35 - p.inletTempC) / 3600 * (1 - p.heatRecoveryPct / 100));
     // Tank losses are additional, not cancelled by the feed/effluent heat exchanger.
     const area = 6 * Math.pow(reactor, 2/3);
-    heat = heat.map((v, m) => v + area * ctx.params.get("eng.digester_u_value_w_m2k") * Math.max(0, 35 - ctx.region.monthlyTempC[m]) * HOURS_IN_MONTH[m] / 1000);
+    heat = heat.map((v, m) => v + (p.reactorTechnology === "covered_lagoon" ? 0 : 1) * area * ctx.params.get("eng.digester_u_value_w_m2k") * Math.max(0, 35 - ctx.region.monthlyTempC[m]) * HOURS_IN_MONTH[m] / 1000);
     avoided = tonnes * p.avoidedTreatmentLocalM3 / ctx.fx;
     metric("codIn", codIn, "kg COD/a"); metric("codOut", codOut, "kg COD/a"); metric("sludgeCod", sludgeCod, "kg COD/a");
     metric("methaneCod", removed - sludgeCod, "kg COD/a"); metric("sludge", residual, "t/a");
@@ -167,11 +172,11 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
     nKgYear: p.kind === "residue" ? tonnes * p.nKgT : 0, p2o5KgYear: 0, k2oKgYear: 0, manureShareVs: 0, poultryShareVs: 0, fatShareVs: 0, abpTonnesYear: 0, inhibitionFactor: 1, warnings: [] };
   const empty: DigesterDesign = { workingVolumeM3: reactor, totalVolumeM3: reactor, hrtDays: p.kind === "wastewater" ? reactor / p.flowM3Day : 0, olrKgVsM3Day: 0,
     monthlyHeatDemandKwh: heat, heatDemandKwhYear: sum(heat), pasteurisationHeatKwhYear: 0, storageVolumeM3: 0, storageCovered: 0, storageNew: 0, surfaceAreaM2: 0,
-    tech: { primary: p.kind === "wastewater" ? "COD / UASB–EGSB" : p.kind === "landfill" ? "LFG / FOD" : "Biogas / CHP / boiler", digestion: p.kind === "wastewater" ? "high_rate" : "none", temperature: "mesophilic", stages: "single", mode: "continuous", reactor: "", hrtDays: 0, reasons: [], warnings: [], alternatives: [] } };
+    tech: { primary: p.kind === "wastewater" ? p.reactorTechnology === "covered_lagoon" ? "COD / Covered lagoon" : "COD / UASB–EGSB" : p.kind === "landfill" ? "LFG / FOD" : "Biogas / CHP / boiler", digestion: p.kind === "wastewater" ? p.reactorTechnology ?? "high_rate" : "none", temperature: "mesophilic", stages: "single", mode: "continuous", reactor: "", hrtDays: 0, reasons: [], warnings: [], alternatives: [] } };
   const design = p.kind === "residue" ? designDigester(feed, { ...ctx, params: ctx.params.with({ "eng.hrt_manure_days": p.hrtDays, "eng.hrt_mixed_days": p.hrtDays, "eng.hrt_waste_days": p.hrtDays, "eng.olr_max_kgvs_m3d": p.olr }) }) : empty;
   // Extra thermal loads (e.g. hygienisation or drying) are supplied by the process design.
   // They exclude the reactor/feed heating already calculated above.
-  const extraHeat = allocate(p.auxiliaryHeatKwhYear);
+  const extraHeat = allocate(p.auxiliaryHeatKwhYear ?? 0);
   design.monthlyHeatDemandKwh = design.monthlyHeatDemandKwh.map((v,m) => v + extraHeat[m]);
   design.heatDemandKwhYear = sum(design.monthlyHeatDemandKwh);
   if (p.kind === "residue") {
@@ -194,8 +199,9 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
     checkedOn: "2026-10-28", period: row.date.slice(0,4), urls: [row.source], scope: "Physical method; not a country price, emission permit or supplier guarantee",
     method: row.source === IPCC ? "COD stoichiometry; inventory MCF is not used as reactor performance" : "Annual integral of first-order decay; historical cohorts, no future deposition",
   };
-  return { feed, design, process: { kind: p.kind, metrics, provenance, capexEur: p.processCapexLocal / ctx.fx * (1 - s * spread) * ctx.mods.capex,
-    opexEurYear: p.processOpexLocalYear / ctx.fx * (1 - s * spread) * ctx.mods.opex,
+  const missingInputs = missingProcessInputs(p);
+  return { feed, design, process: { kind: p.kind, missingInputs, metrics, provenance, capexEur: (p.processCapexLocal ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.capex,
+    opexEurYear: (p.processOpexLocalYear ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.opex,
     residualTonnesYear: residual, avoidedTreatmentEurYear: avoided, gasPurchaseEurYear: purchase,
     annualGasFactors: gasFactors } };
 }

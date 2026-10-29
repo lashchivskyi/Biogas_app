@@ -92,3 +92,182 @@ export function sampleNotes(e: ExampleCase, locale: Locale, d: Dict) {
   const verify = [R.robust.accuracy, segment ? d.fit.segments[segment].conditions.join("; ") : ""].filter(Boolean).join(" ");
   return { context, operations, verify };
 }
+
+const referenceLabels: Record<Locale,readonly [string,string,string,string,string]> = {
+  "en": [
+    "Reported",
+    "Design limit",
+    "Derived",
+    "Reference data",
+    "Source checked"
+  ],
+  "uk": [
+    "Оприлюднене",
+    "Проєктна межа",
+    "Розраховане",
+    "Дані референсу",
+    "Джерело перевірено"
+  ],
+  "pl": [
+    "Opublikowane",
+    "Limit projektowy",
+    "Obliczone",
+    "Dane referencyjne",
+    "Źródło sprawdzono"
+  ],
+  "de": [
+    "Veröffentlicht",
+    "Auslegungsgrenze",
+    "Abgeleitet",
+    "Referenzdaten",
+    "Quelle geprüft"
+  ],
+  "fr": [
+    "Publié",
+    "Limite de conception",
+    "Calculé",
+    "Données de référence",
+    "Source vérifiée"
+  ],
+  "it": [
+    "Pubblicato",
+    "Limite di progetto",
+    "Calcolato",
+    "Dati di riferimento",
+    "Fonte verificata"
+  ],
+  "es": [
+    "Publicado",
+    "Límite de diseño",
+    "Calculado",
+    "Datos de referencia",
+    "Fuente comprobada"
+  ],
+  "pt": [
+    "Publicado",
+    "Limite de projeto",
+    "Calculado",
+    "Dados de referência",
+    "Fonte verificada"
+  ],
+  "nl": [
+    "Gepubliceerd",
+    "Ontwerpgrens",
+    "Berekend",
+    "Referentiegegevens",
+    "Bron gecontroleerd"
+  ],
+  "cs": [
+    "Zveřejněno",
+    "Projektový limit",
+    "Vypočteno",
+    "Referenční údaje",
+    "Zdroj ověřen"
+  ],
+  "sk": [
+    "Zverejnené",
+    "Projektový limit",
+    "Vypočítané",
+    "Referenčné údaje",
+    "Zdroj overený"
+  ],
+  "hu": [
+    "Közzétett",
+    "Tervezési határ",
+    "Számított",
+    "Referenciaadatok",
+    "Forrás ellenőrizve"
+  ],
+  "ro": [
+    "Publicat",
+    "Limită de proiectare",
+    "Calculat",
+    "Date de referință",
+    "Sursă verificată"
+  ],
+  "bg": [
+    "Публикувано",
+    "Проектна граница",
+    "Изчислено",
+    "Референтни данни",
+    "Източникът е проверен"
+  ],
+  "sr": [
+    "Objavljeno",
+    "Projektna granica",
+    "Izračunato",
+    "Referentni podaci",
+    "Izvor proveren"
+  ],
+  "el": [
+    "Δημοσιευμένο",
+    "Όριο σχεδιασμού",
+    "Υπολογισμένο",
+    "Στοιχεία αναφοράς",
+    "Έλεγχος πηγής"
+  ],
+  "tr": [
+    "Yayımlanmış",
+    "Tasarım sınırı",
+    "Hesaplanmış",
+    "Referans verileri",
+    "Kaynak kontrolü"
+  ],
+  "lt": [
+    "Paskelbta",
+    "Projektinė riba",
+    "Apskaičiuota",
+    "Referenciniai duomenys",
+    "Šaltinis patikrintas"
+  ],
+  "lv": [
+    "Publicēts",
+    "Projektētā robeža",
+    "Aprēķināts",
+    "Atsauces dati",
+    "Avots pārbaudīts"
+  ],
+  "et": [
+    "Avaldatud",
+    "Projekteeritud piir",
+    "Arvutatud",
+    "Võrdlusandmed",
+    "Allikas kontrollitud"
+  ],
+  "da": [
+    "Offentliggjort",
+    "Designgrænse",
+    "Beregnet",
+    "Referencedata",
+    "Kilde kontrolleret"
+  ],
+  "sv": [
+    "Publicerat",
+    "Dimensioneringsgräns",
+    "Beräknat",
+    "Referensdata",
+    "Källan kontrollerad"
+  ],
+  "fi": [
+    "Julkaistu",
+    "Suunnitteluraja",
+    "Laskettu",
+    "Viitetiedot",
+    "Lähde tarkistettu"
+  ],
+  "vi": [
+    "Đã công bố",
+    "Giới hạn thiết kế",
+    "Được tính toán",
+    "Dữ liệu tham chiếu",
+    "Ngày kiểm tra nguồn"
+  ],
+  "th": [
+    "ข้อมูลที่เผยแพร่",
+    "ขีดจำกัดการออกแบบ",
+    "คำนวณจากข้อมูล",
+    "ข้อมูลอ้างอิง",
+    "ตรวจสอบแหล่งข้อมูลแล้ว"
+  ]
+};
+export const sampleReferenceCopy = (locale: Locale) => { const c=referenceLabels[locale]; return {reported:c[0],capacity:c[1],derived:c[2],title:c[3],checked:c[4]}; };

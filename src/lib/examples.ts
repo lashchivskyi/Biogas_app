@@ -22,6 +22,9 @@ const VERDICT_ORDER: Record<VerdictId, number> = {
 export function compareExampleEconomics(left: { e: ExampleCase; a: Assessment }, right: { e: ExampleCase; a: Assessment }) {
   const order = VERDICT_ORDER[left.a.verdict.id] - VERDICT_ORDER[right.a.verdict.id];
   if (order) return order;
+  const leftMissing = left.a.financialsAvailable === false, rightMissing = right.a.financialsAvailable === false;
+  if (leftMissing !== rightMissing) return leftMissing ? 1 : -1;
+  if (leftMissing) return left.e.id.localeCompare(right.e.id);
   const roi = (a: Assessment) => a.scenarios.base.fin.npvEur / Math.max(1, a.scenarios.base.capex.totalEur);
   return roi(right.a) - roi(left.a)
     || (left.a.scenarios.base.fin.simplePaybackYears ?? Infinity) - (right.a.scenarios.base.fin.simplePaybackYears ?? Infinity)

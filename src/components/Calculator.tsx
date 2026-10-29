@@ -1,5 +1,7 @@
 "use client";
 
+import { calendarDateAt } from "@/lib/format";
+
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput } from "@/core";
@@ -25,7 +27,7 @@ import { locationCopy } from "@/i18n/location";
 import { calculatorHelp } from "@/i18n/calculator-help";
 import { HelpTooltip } from "./HelpTooltip";
 import { defaultProcess, BUSINESS_GROUPS, SECTOR_IDS } from "@/core/businesses";
-import { businessCopy } from "@/i18n/businesses";
+import { businessCopy, businessGroupLabel } from "@/i18n/businesses";
 import { ProcessInputs } from "./ProcessInputs";
 import { processCopy, processFieldLabels } from "@/i18n/processes";
 
@@ -191,11 +193,17 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       return;
     }
     setSubmitted(true);
-    const asOfDate = new Date().toISOString().slice(0, 10);
+    const asOfDate = calendarDateAt(new Date());
     setAssessmentDate(asOfDate);
     const a = assess(input, country, { asOfDate });
     track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: form.projectRole ?? BUSINESS_TYPES[form.businessType].role, process_model: input.process?.kind ?? "ad", verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  }
+
+  function selectBusiness(b: BusinessTypeId) {
+    setForm(f => ({...f,businessType:b,projectRole:BUSINESS_TYPES[b].role,processKind:defaultProcess(b),processFields:{},lines:linesForBusiness(b)}));
+    setSubmitted(false); setError("");
+    track("business_selected",{source:"calculator",business_id:b,business_group:BUSINESS_TYPES[b].audience,business_role:BUSINESS_TYPES[b].role});
   }
 
   function loadExample(id: string) {
@@ -266,19 +274,20 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
             <div>
               <h2 className="text-xl font-bold">{C.q1}</h2>
               {BUSINESS_GROUPS.map((group) => (
-                <fieldset key={group.id} className="mt-5">
-                  <legend className="text-sm font-semibold text-ink2">{d.audience.items[group.copyIndex].title}</legend>
+                <details key={group.id} name="business-group" open={BUSINESS_TYPES[form.businessType].audience === group.id} className="group mt-4 rounded-xl border border-line p-4">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-semibold text-ink2"><span>{businessGroupLabel(group.id, locale)}</span><span aria-hidden className="text-lg text-muted transition group-open:rotate-90">›</span></summary>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {SECTOR_IDS.filter((b) => BUSINESS_TYPES[b].audience === group.id).map((b) => (
-                      <button key={b} type="button" onClick={() => { setForm((f) => ({ ...f, businessType: b, projectRole: BUSINESS_TYPES[b].role, processKind: defaultProcess(b), processFields: {}, lines: linesForBusiness(b) })); setSubmitted(false); setError(""); track("business_selected", { source: "calculator", business_id: b, business_group: group.id, business_role: BUSINESS_TYPES[b].role }); }} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
+                    {SECTOR_IDS.filter((b) => b !== "other_industry" && BUSINESS_TYPES[b].audience === group.id).map((b) => (
+                      <button key={b} type="button" onClick={() => selectBusiness(b)} aria-pressed={form.businessType === b} className={`rounded-xl border p-3 text-left transition ${form.businessType === b ? "border-brand bg-brandsoft" : "border-line bg-surface hover:border-brand"}`}>
                         <div className="font-semibold">{L.business[b].label}</div>
                         <div className="text-xs text-muted">{L.business[b].hint}</div>
                         {BUSINESS_TYPES[b].scope !== "screening" && <div className="mt-2 text-xs font-semibold text-ink2">{BUSINESS_TYPES[b].scope === "outside_model" ? H.outside : H.specialist}</div>}
                       </button>
                     ))}
                   </div>
-                </fieldset>
+                </details>
               ))}
+              <button type="button" className={`mt-4 w-full rounded-xl border p-3 text-left ${form.businessType === "other_industry" ? "border-brand bg-brandsoft" : "border-line"}`} aria-pressed={form.businessType === "other_industry"} onClick={() => selectBusiness("other_industry")}><span className="font-semibold">{L.business.other_industry.label}</span><span className="mt-1 block text-xs text-muted">{L.business.other_industry.hint}</span></button>
               {BUSINESS_TYPES[form.businessType].scope === "outside_model" && <p className="mt-4 rounded-xl bg-surface2 p-4 text-sm" role="status">{H.scopeNote}</p>}
               {BUSINESS_TYPES[form.businessType].scope === "specialist" && <p className="mt-4 text-sm text-muted">{H.specialist}. {d.result.robust.accuracy}</p>}
             </div>
@@ -423,7 +432,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               samplesHref={samplesHref}
               methodologyHref={`/${locale}/methodology`}
               unlockSlot={<UnlockButton input={input} locale={locale} d={d} demo={demo} plan={preferredPlan} label={d.result.unlock} className="btn btn-primary" />}
-              afterSlot={<WhatIf input={input} base={assessment} country={country} locale={locale} d={d} onApply={applyWhatIf} />}
+              afterSlot={!assessment.scenarios.base.process?.missingInputs?.length && <WhatIf input={input} base={assessment} country={country} locale={locale} d={d} onApply={applyWhatIf} />}
             />
           </div>
         )}

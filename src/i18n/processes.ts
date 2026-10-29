@@ -133,7 +133,7 @@ const scopeLabels: Record<Locale, readonly [string,string]> = {
 };
 export function processCopy(locale: Locale) {
   const c = copy[locale], fields = processFieldLabels(locale);
-  return { models: { residue: c[0], wastewater: c[1], landfill: c[2], gas: c[3] } as Record<ProcessKind,string>, role: c[4], roles: { feedstock_owner: c[5], waste_operator: c[6], developer: c[7], offtaker: c[8] }, modelLabel: scopeLabels[locale][0], costHint: `${c[9]} ${scopeLabels[locale][1]}: ${fields.residualCostLocalT.toLocaleLowerCase()}, ${fields.gasPriceLocalNm3.toLocaleLowerCase()}.`, inputHint: c[10] };
+  return { models: { residue: c[0], wastewater: c[1], landfill: c[2], gas: c[3] } as Record<ProcessKind,string>, role: c[4], roles: { feedstock_owner: c[5], waste_operator: c[6], developer: c[7], offtaker: c[8] }, modelLabel: scopeLabels[locale][0], costHint: `${c[9]} ${scopeLabels[locale][1]}: ${fields.residualCostLocalT.toLocaleLowerCase()}, ${fields.gasPriceLocalNm3.toLocaleLowerCase()}.`, inputHint: usage[locale][1] };
 }
 
 const fieldKeys = ["operatingDays", "monthsActive", "startMonth", "uncertaintyPct", "tonnesYear", "removalPct", "methaneRecoveryPct", "biomassCodPct", "sludgeTsPct", "inletTempC", "heatRecoveryPct", "avoidedTreatmentLocalM3", "annualWasteTonnes", "depositionYears", "yearsSinceClosure", "collectionPct", "availabilityPct", "declinePctYear", "gasPriceLocalNm3", "residualCostLocalT", "auxiliaryKwhYear", "auxiliaryHeatKwhYear"];
@@ -168,5 +168,134 @@ export function processFieldLabels(locale: Locale): Record<string, string> {
   const evidence: Record<Locale, readonly [string,string]> = {
     en: ["Data date (optional)","Source or quotation reference (optional)"], uk: ["Дата даних (необов’язково)","Джерело або номер пропозиції (необов’язково)"], pl: ["Data danych (opcjonalnie)","Źródło lub numer oferty (opcjonalnie)"], de: ["Datenstand (optional)","Quelle oder Angebotsreferenz (optional)"], fr: ["Date des données (facultatif)","Source ou référence du devis (facultatif)"], it: ["Data dei dati (facoltativa)","Fonte o riferimento del preventivo (facoltativo)"], es: ["Fecha de los datos (opcional)","Fuente o referencia de la oferta (opcional)"], pt: ["Data dos dados (opcional)","Fonte ou referência da proposta (opcional)"], nl: ["Datum van de gegevens (optioneel)","Bron of offertereferentie (optioneel)"], cs: ["Datum údajů (nepovinné)","Zdroj nebo číslo nabídky (nepovinné)"], sk: ["Dátum údajov (nepovinné)","Zdroj alebo číslo ponuky (nepovinné)"], hu: ["Adatok dátuma (nem kötelező)","Forrás vagy ajánlatszám (nem kötelező)"], ro: ["Data informațiilor (opțional)","Sursa sau referința ofertei (opțional)"], bg: ["Дата на данните (незадължително)","Източник или номер на оферта (незадължително)"], sr: ["Datum podataka (opciono)","Izvor ili broj ponude (opciono)"], el: ["Ημερομηνία δεδομένων (προαιρετικά)","Πηγή ή αριθμός προσφοράς (προαιρετικά)"], tr: ["Veri tarihi (isteğe bağlı)","Kaynak veya teklif numarası (isteğe bağlı)"], lt: ["Duomenų data (neprivaloma)","Šaltinis arba pasiūlymo numeris (neprivaloma)"], lv: ["Datu datums (neobligāti)","Avots vai piedāvājuma numurs (neobligāti)"], et: ["Andmete kuupäev (valikuline)","Allikas või pakkumise viide (valikuline)"], da: ["Datadato (valgfrit)","Kilde eller tilbudsreference (valgfrit)"], sv: ["Datadatum (valfritt)","Källa eller offertreferens (valfritt)"], fi: ["Tietojen päivämäärä (valinnainen)","Lähde tai tarjouksen viite (valinnainen)"], vi: ["Ngày dữ liệu (không bắt buộc)","Nguồn hoặc mã báo giá (không bắt buộc)"], th: ["วันที่ข้อมูล (ไม่บังคับ)","แหล่งข้อมูลหรือเลขที่ใบเสนอราคา (ไม่บังคับ)"],
   };
-  return { basisDate: evidence[locale][0], basisReference: evidence[locale][1], ...Object.fromEntries(fields[locale].split("|").map((label,i) => [fieldKeys[i],label])), densityKgM3: "ρ = m/V", sludgeVsPct: "VS / TS", nitrogenPct: "N₂", oxygenPct: "O₂", h2sPpm: "H₂S", upgradingCapexLocal: "Upgrading · CAPEX", upgradingRecoveryPct: "Upgrading · η CH₄", upgradingKwhNm3: "Upgrading · kWh/Nm³", productMethanePct: "Upgrading → CH₄", processCapexLocal: "CAPEX", processOpexLocalYear: "OPEX", dmPct: "DM / TS", vsPct: "VS / DM", bmp: "BMP", methanePct: "CH₄", nKgT: "N", hrtDays: "HRT", olr: "OLR", flowM3Day: "Q", codMgL: "COD", decayPerYear: "k", potentialNm3T: "L₀", rawGasNm3Hour: "Q (biogas)" };
+  return { basisDate: evidence[locale][0], basisReference: evidence[locale][1], ...Object.fromEntries(fields[locale].split("|").map((label,i) => [fieldKeys[i],label])), reactorTechnology: "Reactor", densityKgM3: "ρ = m/V", sludgeVsPct: "VS / TS", nitrogenPct: "N₂", oxygenPct: "O₂", h2sPpm: "H₂S", upgradingCapexLocal: "Upgrading · CAPEX", upgradingRecoveryPct: "Upgrading · η CH₄", upgradingKwhNm3: "Upgrading · kWh/Nm³", productMethanePct: "Upgrading → CH₄", processCapexLocal: "CAPEX", processOpexLocalYear: "OPEX", dmPct: "DM / TS", vsPct: "VS / DM", bmp: "BMP", methanePct: "CH₄", nKgT: "N", hrtDays: "HRT", olr: "OLR", flowM3Day: "Q", codMgL: "COD", decayPerYear: "k", potentialNm3T: "L₀", rawGasNm3Hour: "Q (biogas)" };
 }
+
+const usage: Record<Locale,readonly [string,string,string]> = {
+  "en": [
+    "Optional",
+    "Leave unknown costs and auxiliary loads blank. Economics require these inputs. Zero means a confirmed absence of cost or load.",
+    "Covered anaerobic lagoon"
+  ],
+  "uk": [
+    "Необов’язково",
+    "Невідомі витрати й власні потреби залишайте порожніми. Без них економічний висновок недоступний. Нуль означає підтверджену відсутність витрат або навантаження.",
+    "Накрита анаеробна лагуна"
+  ],
+  "pl": [
+    "Opcjonalnie",
+    "Nieznane koszty i potrzeby własne pozostaw puste. Bez nich nie można ocenić ekonomiki. Zero oznacza potwierdzony brak kosztu lub zużycia.",
+    "Przykryta laguna beztlenowa"
+  ],
+  "de": [
+    "Optional",
+    "Unbekannte Kosten und Eigenverbräuche leer lassen. Ohne diese Angaben ist keine Wirtschaftlichkeitsaussage möglich. Null bedeutet nachweislich keine Kosten oder Verbräuche.",
+    "Abgedeckte anaerobe Lagune"
+  ],
+  "fr": [
+    "Facultatif",
+    "Laissez vides les coûts et consommations auxiliaires inconnus. Ils sont nécessaires à l’évaluation économique. Zéro signifie une absence confirmée.",
+    "Lagune anaérobie couverte"
+  ],
+  "it": [
+    "Facoltativo",
+    "Lascia vuoti costi e consumi ausiliari sconosciuti. Servono per valutare la redditività. Zero indica un’assenza confermata.",
+    "Laguna anaerobica coperta"
+  ],
+  "es": [
+    "Opcional",
+    "Deja en blanco los costes y consumos auxiliares desconocidos. Son necesarios para evaluar la rentabilidad. Cero indica una ausencia confirmada.",
+    "Laguna anaerobia cubierta"
+  ],
+  "pt": [
+    "Opcional",
+    "Deixe em branco custos e consumos auxiliares desconhecidos. Eles são necessários para avaliar a viabilidade econômica. Zero indica ausência confirmada.",
+    "Lagoa anaeróbia coberta"
+  ],
+  "nl": [
+    "Optioneel",
+    "Laat onbekende kosten en eigen verbruik leeg. Deze gegevens zijn nodig voor de economische beoordeling. Nul betekent dat kosten of verbruik aantoonbaar ontbreken.",
+    "Afgedekte anaerobe lagune"
+  ],
+  "cs": [
+    "Nepovinné",
+    "Neznámé náklady a vlastní spotřebu ponechte prázdné. Bez nich nelze posoudit ekonomiku. Nula znamená potvrzenou absenci nákladu či spotřeby.",
+    "Zakrytá anaerobní laguna"
+  ],
+  "sk": [
+    "Nepovinné",
+    "Neznáme náklady a vlastnú spotrebu nechajte prázdne. Bez nich nemožno posúdiť ekonomiku. Nula znamená potvrdenú absenciu nákladu či spotreby.",
+    "Zakrytá anaeróbna lagúna"
+  ],
+  "hu": [
+    "Nem kötelező",
+    "Az ismeretlen költségeket és saját fogyasztást hagyja üresen. Ezek nélkül nem adható gazdasági értékelés. A nulla igazoltan hiányzó költséget vagy fogyasztást jelent.",
+    "Fedett anaerob lagúna"
+  ],
+  "ro": [
+    "Opțional",
+    "Lăsați necompletate costurile și consumurile auxiliare necunoscute. Sunt necesare pentru evaluarea economică. Zero înseamnă absență confirmată.",
+    "Lagună anaerobă acoperită"
+  ],
+  "bg": [
+    "Незадължително",
+    "Оставете неизвестните разходи и собствено потребление празни. Без тях няма икономическа оценка. Нула означава потвърдена липса на разход или потребление.",
+    "Покрита анаеробна лагуна"
+  ],
+  "sr": [
+    "Opciono",
+    "Nepoznate troškove i sopstvenu potrošnju ostavite prazne. Bez njih nije moguća ekonomska procena. Nula znači potvrđeno odsustvo troška ili potrošnje.",
+    "Pokrivena anaerobna laguna"
+  ],
+  "el": [
+    "Προαιρετικά",
+    "Αφήστε κενά τα άγνωστα κόστη και τις βοηθητικές καταναλώσεις. Απαιτούνται για την οικονομική αξιολόγηση. Το μηδέν σημαίνει επιβεβαιωμένη απουσία.",
+    "Καλυμμένη αναερόβια λιμνοδεξαμενή"
+  ],
+  "tr": [
+    "İsteğe bağlı",
+    "Bilinmeyen maliyet ve yardımcı tüketim alanlarını boş bırakın. Ekonomik değerlendirme için bunlar gereklidir. Sıfır, maliyet veya tüketimin olmadığının doğrulandığını belirtir.",
+    "Örtülü anaerobik lagün"
+  ],
+  "lt": [
+    "Neprivaloma",
+    "Nežinomas sąnaudas ir savąjį energijos poreikį palikite tuščius. Be jų ekonominis vertinimas negalimas. Nulis reiškia patvirtintą sąnaudų ar vartojimo nebuvimą.",
+    "Dengta anaerobinė lagūna"
+  ],
+  "lv": [
+    "Neobligāti",
+    "Nezināmas izmaksas un pašpatēriņu atstājiet tukšu. Bez tiem ekonomiskais novērtējums nav iespējams. Nulle nozīmē apstiprinātu izmaksu vai patēriņa neesamību.",
+    "Pārklāta anaerobā lagūna"
+  ],
+  "et": [
+    "Valikuline",
+    "Jätke teadmata kulud ja omatarve tühjaks. Ilma nendeta ei saa majanduslikku hinnangut anda. Null tähendab kinnitatud kulu või tarbimise puudumist.",
+    "Kaetud anaeroobne laguun"
+  ],
+  "da": [
+    "Valgfrit",
+    "Lad ukendte omkostninger og eget energiforbrug stå tomme. De er nødvendige for økonomivurderingen. Nul betyder dokumenteret fravær af omkostning eller forbrug.",
+    "Overdækket anaerob lagune"
+  ],
+  "sv": [
+    "Valfritt",
+    "Lämna okända kostnader och egenförbrukning tomma. De krävs för den ekonomiska bedömningen. Noll betyder bekräftad avsaknad av kostnad eller förbrukning.",
+    "Täckt anaerob lagun"
+  ],
+  "fi": [
+    "Valinnainen",
+    "Jätä tuntemattomat kustannukset ja omakäyttö tyhjiksi. Niitä tarvitaan talousarvioon. Nolla tarkoittaa vahvistettua kustannuksen tai kulutuksen puuttumista.",
+    "Katettu anaerobinen laguuni"
+  ],
+  "vi": [
+    "Không bắt buộc",
+    "Để trống chi phí và nhu cầu năng lượng phụ trợ chưa biết. Cần các dữ liệu này để đánh giá kinh tế. Số không nghĩa là đã xác nhận không có chi phí hoặc tiêu thụ.",
+    "Hồ kỵ khí có phủ bạt"
+  ],
+  "th": [
+    "ไม่บังคับ",
+    "เว้นว่างต้นทุนและการใช้พลังงานของระบบที่ยังไม่ทราบ ต้องมีข้อมูลนี้จึงจะประเมินความคุ้มค่าได้ ศูนย์หมายถึงยืนยันแล้วว่าไม่มีต้นทุนหรือการใช้พลังงาน",
+    "บ่อบำบัดไร้อากาศแบบคลุม"
+  ]
+};
+export const processUsage = (locale: Locale) => ({ optional: usage[locale][0], unknown: usage[locale][1], lagoon: usage[locale][2] });

@@ -3,7 +3,7 @@ import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { SAMPLE_CASES } from "@/content/sample-cases";
 import { getCountry } from "@/countries";
-import { formToInput, inputToForm, type FormLine } from "../form";
+import { formToInput, inputToForm, invalidNumberStep, type FormLine } from "../form";
 import { exampleTitle } from "../examples";
 import { getDictionary, INTL_TAG, LOCALES } from "@/i18n";
 import { sampleNotes } from "@/i18n/samples";
@@ -14,6 +14,18 @@ import { renderToStaticMarkup } from "react-dom/server";
 const detailed = EXAMPLES.filter((e) => e.id in SAMPLE_CASES);
 
 describe("detailed sample inputs", () => {
+  it("keeps copied observations distinct from assumptions and historical prices", () => {
+    for(const e of EXAMPLES.filter(e => e.reference)) {
+      const ref=e.reference!;
+      expect(new URL(ref.url).protocol).toBe("https:");
+      expect(ref.checkedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      for(const row of ref.observations.filter(row => row.inputPath)) {
+        const value=row.inputPath!.split(".").reduce<unknown>((obj,key) => (obj as Record<string,unknown>)[key],e.input);
+        expect(value,e.id+":"+row.inputPath).toBeCloseTo(row.value,6);
+        expect(row.inputPath).not.toMatch(/Capex|Opex|Price/);
+      }
+    }
+  });
   it.each(LOCALES)("renders every case brief in %s without an English fallback or stale input figures", async (locale) => {
     const d = await getDictionary(locale);
     const en = await getDictionary("en");
@@ -66,6 +78,7 @@ describe("detailed sample inputs", () => {
 
   it.each(detailed)("preserves monthly supply and economics when $id is loaded into the calculator", ({ input }) => {
     const country = getCountry(input.countryCode);
+    expect(invalidNumberStep(inputToForm(input))).toBeNull();
     const restored = formToInput(inputToForm(input), country, "en");
     const original = assess(input, country);
     const recalculated = assess(restored, country);

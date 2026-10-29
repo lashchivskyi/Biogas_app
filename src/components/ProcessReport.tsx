@@ -9,6 +9,7 @@ import { CashFlowChart } from "./Charts";
 /** A gas inlet and a COD reactor must never render an AD feedstock/digestate diagram. */
 export function ProcessReport({ a, d, locale, currency, display, access, unlockSlot, afterSlot, methodologyHref }: ResultViewProps) {
   const b = a.scenarios.base, process = b.process!;
+  const economicsAvailable = a.financialsAvailable ?? !process.missingInputs?.length;
   const R = d.result, L = d.labels, c = processCopy(locale), fields = processFieldLabels(locale);
   const F = makeFormat(locale, L.units, display);
   const number = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 6 }).format;
@@ -23,21 +24,23 @@ export function ProcessReport({ a, d, locale, currency, display, access, unlockS
       <p className="text-sm text-muted">{L.business[a.input.businessType].label} · {a.countryCode} · {a.climate.regionName}</p>
       <h2 className="mt-2 text-2xl font-bold">{c.models[process.kind]}</h2>
       <p className="mt-3 text-lg font-semibold">{L.verdict[a.verdict.id]}</p>
-      <p>{L.route[a.bestRoute]} · {L.confidence[a.confidence.level]}</p><ul className="mt-3 list-disc space-y-2 pl-5 text-sm">{a.verdict.reasons.map(t => <li key={t}>{t}</li>)}</ul>
+      <p>{economicsAvailable && <>{L.route[a.bestRoute]} · </>}{L.confidence[a.confidence.level]}</p><ul className="mt-3 list-disc space-y-2 pl-5 text-sm">{a.verdict.reasons.map(t => <li key={t}>{t}</li>)}</ul>
       <p className="mt-3 text-sm text-muted">{c.inputHint}</p>
       <p className="mt-2 text-xs text-muted">Model {a.dataAudit?.modelVersion} · {a.dataAudit?.asOfDate} · {a.dataAudit?.inputVersion}</p>
     </header>
     <section className="card p-5"><h3 className="font-bold">{R.flowTitle}</h3>
       <dl className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[...[R.heatProduced,R.heatUseful,R.energy].map((label,i) => [label,[b.energy.heatProducedKwh,b.energy.heatUsefulKwh,b.energy.elNetKwh][i]/1000,"MWh/a"] as const), ["CH₄",b.energy.ch4ProducedM3,"Nm³/a"] as const, [L.route.biomethane,b.energy.biomethaneNm3,"Nm³/a"] as const].map(([label,value,unit]) => <div key={label}><dt className="text-sm text-muted">{label}</dt><dd className="num font-semibold">{F.n0(value)} {unit}</dd></div>)}
+        {(economicsAvailable ? [...[R.heatProduced,R.heatUseful,R.energy].map((label,i) => [label,[b.energy.heatProducedKwh,b.energy.heatUsefulKwh,b.energy.elNetKwh][i]/1000,"MWh/a"] as const), ["CH₄",b.energy.ch4ProducedM3,"Nm³/a"] as const, [L.route.biomethane,b.energy.biomethaneNm3,"Nm³/a"] as const] : [["CH₄",b.feed.ch4M3Year,"Nm³/a"],[R.biogas,b.feed.biogasM3Year,"Nm³/a"]] as const).map(([label,value,unit]) => <div key={label}><dt className="text-sm text-muted">{label}</dt><dd className="num font-semibold">{F.n0(value)} {unit}</dd></div>)}
       </dl>
     </section>
-    {access === "free" ? <section className="card p-5"><h3 className="font-bold">{R.lockedTitle}</h3><p className="mt-2">{R.lockedText}</p>{unlockSlot}</section> : <>
+    {!economicsAvailable && <section className="card p-5"><h3 className="font-bold">{R.whatWouldChange}</h3><p className="mt-2">{c.costHint}</p><ul className="mt-3 list-disc pl-5">{process.missingInputs.map(key => <li key={key}>{fields[key]}: —</li>)}</ul></section>}
+    {access === "free" ? economicsAvailable && <section className="card p-5"><h3 className="font-bold">{R.lockedTitle}</h3><p className="mt-2">{R.lockedText}</p>{unlockSlot}</section> : <>
       <section className="card p-5"><h3 className="font-bold">{R.detailsTitle}</h3>
         <p className="mt-2 text-sm">{c.inputHint}</p>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(process.metrics).map(([id,m]) => <div key={id}><dt className="text-sm text-muted">{metricLabels[id] ?? fields[id]}</dt><dd className="num">{number(m.value)} {m.unit}</dd></div>)}</dl>
         <p className="mt-4 text-sm">{c.costHint}</p>
       </section>
+      {economicsAvailable && <>
       <section className="card p-5"><h3 className="font-bold">{R.capacity}</h3><p className="mt-2 num">CHP: {F.n0(b.energy.chpKwEl)} kWe · {R.biogas}: {F.n1(b.energy.rawBiogasDesignNm3PerHour)} Nm³/h</p><p className="mt-2">{R.elSplit}: {F.n0(b.energy.elSelfConsumedKwh / 1000)} / {F.n0(b.energy.elExportedKwh / 1000)} MWh/a</p><p>{moneyLabels.el_purchased}: {F.n0(b.energy.elPurchasedKwh / 1000)} MWh/a · {moneyLabels.heat_external}: {F.n0(b.energy.heatExternalPurchasedKwh / 1000)} MWh/a</p><p>{d.flow.electricity} · E_aux: {F.n0(b.energy.elParasiticKwh / 1000)} MWh/a</p><p>CH₄ → CHP / Boiler / Upgrading / Flare: {[b.energy.ch4ToChpM3,b.energy.ch4ToBoilerM3,b.energy.ch4ToUpgraderM3,b.energy.ch4FlaredM3].map(F.n0).join(" / ")} Nm³/a</p></section>
       <section className="space-y-3"><h3 className="font-bold">{R.scenariosTitle}</h3>
         <div className="overflow-x-auto"><table className="w-full min-w-[650px] text-left text-sm"><thead><tr>{[R.scenariosTitle,"CAPEX",R.rowOpex,R.rowRevenue,"NPV","IRR","DSCR",R.rowPayback].map(t => <th className="p-3" key={t}>{t}</th>)}</tr></thead>
@@ -51,6 +54,7 @@ export function ProcessReport({ a, d, locale, currency, display, access, unlockS
         <section className="space-y-3"><h3 className="font-bold">{R.routesTitle}</h3><div className="overflow-x-auto"><table className="w-full min-w-[650px] text-left text-sm"><thead><tr>{[R.colRoute,R.scenariosTitle,"CAPEX","EBITDA","NPV","DSCR"].map(t => <th className="p-3" key={t}>{t}</th>)}</tr></thead><tbody>{routes.flatMap(route => scenarios.map(s => { const r = a.routeMatrix[route][s]; return <tr key={`${route}-${s}`} className="border-t border-line"><th className="p-3">{L.route[route]}{route === a.bestRoute && <span className="chip ml-1">{R.chosen}</span>}</th><td className="p-3">{L.scenario[s]}</td>{[F.eur(r.capex.totalEur),F.eur(r.fin.ebitdaEurYear),F.eur(r.fin.npvEur),r.fin.dscrMin === null ? "—" : F.n1(r.fin.dscrMin)].map((v,i) => <td className="num p-3" key={i}>{v}</td>)}</tr>; }))}</tbody></table></div></section>
         <section className="card p-5"><h3 className="font-bold">{R.robust.drivers}</h3><ul className="mt-3 space-y-2">{a.parameterSensitivity?.filter(s => s.parameterId.startsWith("process.")).map(s => <li key={s.parameterId}>{fields[s.parameterId.slice(8)]}: {number(s.lowInput)}–{number(s.highInput)} → NPV {F.range(s.lowNpvEur,s.highNpvEur,F.eur)}</li>)}</ul></section>
         <section className="card p-5"><h3 className="font-bold">{R.robust.drivers}</h3><ul className="mt-3 space-y-2">{a.sensitivity.map(s => <li className="flex justify-between gap-4" key={s.id}><span>{sensitivityLabels(locale,d)[s.id] ?? s.label}</span><span className="num">Δ NPV {F.eur(s.deltaNpvEur)}</span></li>)}</ul></section>
+      </>}
       </>}
       <details className="card p-5"><summary className="font-bold">{R.dAssumptions.replace("{n}",String(process.provenance.length))}</summary><p className="mt-3">{c.inputHint}</p><ul className="mt-3 space-y-2 text-sm">{process.provenance.map(p => <li key={p.id}>{fields[p.id.replace("process.","")] ?? p.label}: {number(p.value)} {p.unit.replace("local",currency)} · {p.origin} · {p.confidence} · {p.date} · {p.country}{p.source.startsWith("https://") && <> · <a href={p.source} className="underline" rel="noreferrer" target="_blank">{p.source}</a></>}</li>)}</ul><a className="mt-3 inline-block underline" href={methodologyHref}>{R.assumptionsText}</a></details>
       <section className="card p-5"><h3 className="font-bold">{R.dReg}</h3><p className="mt-2 text-sm">{R.regNote}</p><ul className="mt-3 list-disc space-y-2 pl-5">{a.regulatory.items.map(r => <li key={r.id}>{r.title}</li>)}</ul></section>

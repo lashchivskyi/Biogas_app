@@ -1,8 +1,10 @@
 import type { BusinessTypeId } from "@/core/types";
+import { SECTOR_IDS, businessSlug } from "@/core/businesses";
+import { EXAMPLES } from "@/core/examples";
 
 /**
- * Sector landing pages (/[lang]/biogas/[slug]). Long-form SEO copy exists in English and Ukrainian;
- * other locales render native summaries through localizedSegment (with locale-specific hreflang).
+ * Sector landing pages (/[lang]/biogas/[slug]). Authored English/Ukrainian articles are retained;
+ * other entries use native product summaries through localizedSegment (with locale-specific hreflang).
  * Short picker texts for the home page live in the i18n dictionaries (dict.fit.segments).
  * Figures in prose are qualitative; numbers on the page come from the model (src/core/examples.ts).
  */
@@ -17,14 +19,14 @@ export interface SegmentSeo {
 
 export interface Segment {
   slug: string;
-  id: "meat" | "dairyproc" | "sugar" | "foodwaste" | "poultry" | "pigs" | "dairy" | "brewery" | "small";
+  id: "meat" | "dairyproc" | "sugar" | "foodwaste" | "poultry" | "pigs" | "dairy" | "brewery" | "small" | BusinessTypeId;
   businessType: BusinessTypeId;
-  exampleId: string;
-  tone: "good" | "mid" | "weak";
-  seo: { en: SegmentSeo; uk: SegmentSeo };
+  exampleId?: string;
+  tone?: "good" | "mid" | "weak";
+  seo?: { en: SegmentSeo; uk: SegmentSeo };
 }
 
-export const SEGMENTS: Segment[] = [
+const AUTHORED_SEGMENTS: Segment[] = [
   {
     slug: "meat-processing", id: "meat", businessType: "slaughterhouse", exampleId: "slaughter_5000", tone: "good",
     seo: {
@@ -364,6 +366,15 @@ export const SEGMENTS: Segment[] = [
       },
     },
   },
+];
+
+/** All businesses extend the existing sector-page registry and use the same renderer. */
+export const SEGMENTS: Segment[] = [
+  ...AUTHORED_SEGMENTS,
+  ...SECTOR_IDS.filter(id => !AUTHORED_SEGMENTS.some(s => s.businessType === id && s.id !== "small")).map(id => ({
+    id, businessType: id, slug: businessSlug(id),
+    exampleId: (EXAMPLES.find(e => e.input.businessType === id && e.reference) ?? EXAMPLES.find(e => e.input.businessType === id))?.id,
+  })),
 ];
 
 export const segmentBySlug = (slug: string) => SEGMENTS.find((s) => s.slug === slug);

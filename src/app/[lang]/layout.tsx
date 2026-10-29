@@ -1,3 +1,4 @@
+import { businessGroupLabel } from "@/i18n/businesses";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -65,7 +66,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
                 <li><Link className="hover:text-white" href={`${base}/biogas`}>{f.hub}</Link></li>
                 {BUSINESS_GROUPS.map((group) => (
                   <li key={group.id}><details>
-                    <summary className="cursor-pointer font-semibold hover:text-white">{d.audience.items[group.copyIndex].title}</summary>
+                    <summary className="cursor-pointer font-semibold hover:text-white">{businessGroupLabel(group.id, lang)}</summary>
                     <ul className="mt-2 space-y-2 pl-3">
                       {SECTOR_IDS.filter((id) => BUSINESS_TYPES[id].audience === group.id).map((id) => <li key={id}><Link className="hover:text-white" href={businessHref(id, base)}>{d.labels.business[id].label}</Link></li>)}
                     </ul>

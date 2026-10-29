@@ -1,3 +1,4 @@
+import { processFieldLabels } from "@/i18n/processes";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
@@ -45,6 +46,7 @@ export default async function SamplesPage({ params }: PageProps<"/[lang]/samples
             <h3 className="mt-3 text-lg font-bold">{exampleTitle(e, d, locale)}</h3>
             <p className="mt-2 text-sm text-ink2">{[...new Set(a.scenarios.base.feed.lines.map((line) => d.labels.feedstock[line.typeId]))].join(" · ")}</p>
             <span className={`mt-3 w-fit rounded-full px-3 py-1 text-xs font-bold ${TONE[a.verdict.id]}`}>{d.labels.verdict[a.verdict.id]}</span>
+            {!a.scenarios.base.process?.missingInputs?.length ? <>
             <dl className="mt-4 grid flex-1 grid-cols-2 gap-3 text-sm">
               <div><dt className="text-muted">{d.fit.investment}</dt><dd className="num font-semibold"><DisplayMoney value={a.ranges.capexEur[1]} initialText={F.eur(a.ranges.capexEur[1])} /></dd></div>
               <div><dt className="text-muted">{d.fit.payback}</dt><dd className="num font-semibold">{F.years(a.ranges.paybackYears[1])}</dd></div>
@@ -55,6 +57,7 @@ export default async function SamplesPage({ params }: PageProps<"/[lang]/samples
                   : <>{F.n0(a.scenarios.base.energy.heatUsefulKwh / 1000)} {d.labels.units.mwh}/{d.labels.units.years}</>}</dd></div>
               <div><dt className="text-muted">NPV</dt><dd className="num font-semibold"><DisplayMoney value={a.ranges.npvEur[1]} initialText={F.eur(a.ranges.npvEur[1])} /></dd></div>
             </dl>
+            </> : <p className="mt-4 text-sm text-muted">{d.samples.verify}: {a.scenarios.base.process.missingInputs.map(key => processFieldLabels(locale)[key]).join(", ")}</p>}
             <span className="mt-4 text-sm font-semibold text-brand group-hover:underline">{d.samples.open} →</span>
           </Link>
         ))}

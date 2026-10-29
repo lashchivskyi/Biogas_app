@@ -62,7 +62,7 @@ const formNumber = (s: string, locale?: Locale) => locale
 /** Do not silently omit an invalid stream or price when calculating the remaining inputs. */
 export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
   const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
-  if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis")).some(([,v]) => invalid(v))) return 1;
+  if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis") && k !== "reactorTechnology").some(([,v]) => invalid(v))) return 1;
   if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
   if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear].some(invalid)) return 2;
   if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", f.gasGridKm].some(invalid)) return 3;
@@ -254,7 +254,7 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
 }
 
 export function processFromForm(f: FormState) {
-  return { kind: f.processKind ?? defaultProcess(f.businessType), ...Object.fromEntries(Object.entries(f.processFields ?? {}).map(([k,v]) => [k, k.startsWith("basis") ? v.trim() || undefined : formNumber(v, f.numberLocale)])) };
+  return { kind: f.processKind ?? defaultProcess(f.businessType), ...Object.fromEntries(Object.entries(f.processFields ?? {}).map(([k,v]) => [k, (k.startsWith("basis") || k === "reactorTechnology") ? v.trim() || undefined : formNumber(v, f.numberLocale)])) };
 }
 export function processIssues(f: FormState): string[] {
   if ((f.processKind ?? defaultProcess(f.businessType)) === "ad") return [];

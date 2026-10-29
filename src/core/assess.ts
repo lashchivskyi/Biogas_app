@@ -371,6 +371,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     bestRoute,
     sensitivity,
     parameterSensitivity,
+    financialsAvailable: !base.process?.missingInputs?.length,
     marketEvidence,
     breakEven,
     scores,
