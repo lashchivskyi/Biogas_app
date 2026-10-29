@@ -29,6 +29,7 @@ Claude Code отримує ті самі правила через [CLAUDE.md](C
 - [Джерела й оновлення даних](docs/data-sources.md) · [CAPEX benchmarks](docs/capex-benchmark.md).
 - [Локалізація, країна, валюти й порядок відображення](docs/i18n.md) · [бренд](docs/brand.md).
 - [Verification, engineering validity, security і production](docs/quality.md).
+- [Експертні ролі й поглиблення задач для агентів](docs/expert-review.md); skill `expert-review` для Claude Code і Codex.
 
 Команди перевірки — `npm test`, `npm run lint`, `npm run typecheck`,
 `npm run build`; застосовність до задачі описана в quality.

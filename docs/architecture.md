@@ -69,6 +69,14 @@ Legacy input `assumedSupportEurPerKwh` приймається для суміс�
 Fingerprints виявляють зміни, але не є криптографічною гарантією чи сертифікатом.
 `allProvenance` живить методологію; реєстр у Markdown не генерується.
 
+### Процесні входи
+
+`ProjectInput.process` — discriminated union у `src/core/processes.ts`. Відсутність process означає каталожний AD; одночасне введення process і feedstocks відхиляється. `prepareProcess` повертає фізичний газовий потік, технологічні величини й витрати для спільного energy/finance ядра. Для нового газового входу не створюються фіктивна сировина, метантенк або добривний дохід.
+
+`ProcessInputs` і `lib/form.ts` забезпечують locale-aware ввід та round-trip; `ProcessReport` відображає відповідні баланси, а не AD-схему для полігона. Для процесів what-if пропонує реальну зміну теплопопиту; додавання ко-субстрату до газового потоку не дозволяється. `ResultView` зберігає розподіл free/standard/full, snapshots і старі звіти залишаються читабельними. Усі меню використовують SECTOR_IDS; BUSINESS_IDS містить також legacy ID.
+
+У process-контракті відсутні budgets/own loads позначаються ProcessResult.missingInputs та Assessment.financialsAvailable=false. Числові фінансові intermediates зі спільного ядра в цьому стані не є інвестиційним результатом; кожен renderer/export повинен перевіряти прапорець. ProcessReport, каталог прикладів і what-if не показують ці результати. Native details у калькуляторі зменшує одночасну кількість бізнес-карток; source-registry не залежить від UI.
+
 ## 4. Web і контекст
 
 | Маршрут | Функція |
@@ -161,27 +169,31 @@ production-конфігурацію не можна підтвердити чи�
 | Реалізовано: offline GeoNames/ERA5 | Без runtime-підписки та залежності від зовнішнього API | Покриття/точність/ліцензія вимагає іншого джерела |
 | Реалізовано: Postgres для orders/leads, JSON лише локально | Snapshot ~0,2–0,3 MB на order робив повне читання файлу непридатним; serverless не має постійного диска | Якщо знадобиться інший сервіс БД — новий repository за тим самим контрактом |
 | Taxonomy 2.1: 25 секторів + загальний ввід / 3 групи, роль автоматична | 30 ID зі збереженням legacy-входів; modelsForBusiness та processSchema визначають сумісну фізичну базу | Перевіряти зрозумілість із клієнтами та незалежно калібрувати процеси |
-| Прийнято для знань: AGENTS + тематичні docs, CLAUDE імпортує AGENTS | Один набір правил без копій і без завантаження всього docs у контекст | Лише за реальною потребою іншого agent loader |
+| Прийнято для знань: AGENTS (завжди) → current → тематичний doc; expert-review для L1/L2; CLAUDE імпортує AGENTS; skill-обгортки для Claude і Codex | Один канон правил без копій, мінімальний постійний контекст, глибина за ризиком задачі | Якщо loader агента не читає AGENTS/skills або AGENTS наближається до ліміту Codex 32 KiB |
 
-## 9. Як підтримувати цю архітектуру знань
+## 9. Архітектура знань для агентів
 
-На старті — AGENTS → current → потрібний тематичний документ → код/тести.
-Не читати всі docs за замовчуванням. Статус/гіпотеза/рішення/числовий параметр
-мають різних власників: current / market-research / ця таблиця / код із provenance.
-Зміна однієї сутності не повинна вимагати редагування її копій у багатьох файлах.
+| Шар | Файл | Коли завантажується |
+|---|---|---|
+| Канон правил, місія, протокол ролей, карта | [AGENTS.md](../AGENTS.md) | Кожна задача: Codex напряму, Claude Code через `@AGENTS.md` у CLAUDE.md |
+| Статус і відкриті питання | [current.md](current.md) | На старті задачі |
+| Глибокі чеклісти ролей і поглиблення промпту | [expert-review.md](expert-review.md) | L1/L2-задачі або skill `expert-review` |
+| Методи, межі, рішення | тематичні docs | Лише релевантні до задачі |
+| Числа й provenance | код і `src/countries/data` | Через код; Markdown-копій немає |
 
-Підключення агентів перевірено за
-[OpenAI: AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
-і [Claude Code: memory/imports](https://code.claude.com/docs/en/memory).
-CLAUDE.md містить тільки імпорт спільної інструкції, сумісний також із сесіями,
-що не читають AGENTS напряму. Тематичні docs — звичайні посилання, не eager imports.
-Для іншого coding agent явно задайте AGENTS як початковий контекст, якщо його
-loader не підтримує цей файл; нову копію правил не створюйте.
+Skill `expert-review` має дві ідентичні тонкі обгортки: `.claude/skills/` для
+Claude Code і `.agents/skills/` для Codex. Вони лише посилаються на
+expert-review.md, тому зміст ролей редагується в одному місці. Символьне
+посилання не використовується: на Windows git за замовчуванням зберігає його як текст.
+Тематичні docs у CLAUDE.md і AGENTS.md — звичайні посилання, а не eager
+`@`-imports, щоб не завантажувати весь docs у кожну сесію.
+Хто й куди записує знання — таблиця в AGENTS.md §7.
 
-## Процесні входи
-
-`ProjectInput.process` — discriminated union у `src/core/processes.ts`. Відсутність process означає каталожний AD; одночасне введення process і feedstocks відхиляється. `prepareProcess` повертає фізичний газовий потік, технологічні величини й витрати для спільного energy/finance ядра. Для нового газового входу не створюються фіктивна сировина, метантенк або добривний дохід.
-
-`ProcessInputs` і `lib/form.ts` забезпечують locale-aware ввід та round-trip; `ProcessReport` відображає відповідні баланси, а не AD-схему для полігона. Для процесів what-if пропонує реальну зміну теплопопиту; додавання ко-субстрату до газового потоку не дозволяється. `ResultView` зберігає розподіл free/standard/full, snapshots і старі звіти залишаються читабельними. Усі меню використовують SECTOR_IDS; BUSINESS_IDS містить також legacy ID.
-
-У process-контракті відсутні budgets/own loads позначаються ProcessResult.missingInputs та Assessment.financialsAvailable=false. Числові фінансові intermediates зі спільного ядра в цьому стані не є інвестиційним результатом; кожен renderer/export повинен перевіряти прапорець. ProcessReport, каталог прикладів і what-if не показують ці результати. Native details у калькуляторі зменшує одночасну кількість бізнес-карток; source-registry не залежить від UI.
+Підключення перевірено 2026-10-30 за
+[OpenAI: AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md),
+[OpenAI: skills](https://learn.chatgpt.com/docs/build-skills),
+[Claude Code: memory/imports](https://code.claude.com/docs/en/memory) і
+[Claude Code: skills](https://code.claude.com/docs/en/skills). Codex обрізає
+сукупний AGENTS понад 32 KiB, тому AGENTS має лишатися компактним.
+Для іншого coding agent явно задайте AGENTS як початковий контекст;
+нову копію правил не створюйте.
