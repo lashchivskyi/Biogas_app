@@ -9,6 +9,7 @@ import { assess } from "@/core";
 import { getCountry } from "@/countries";
 import { countryName, fmt, getDictionary, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
+import { deliveryCopy } from "@/i18n/delivery";
 import { orders } from "@/server/orders";
 import { refreshOrder } from "@/server/payments/service";
 
@@ -33,7 +34,7 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
       <main>
         <PageHero eyebrow={d.report.eyebrow} title={d.labels.business[order.input.businessType].label} lead={countryName(order.input.countryCode, locale)} />
         <div className="container-x max-w-3xl py-12">
-          <ReportPending token={token} t={d.report} pricingHref={`/${locale}/pricing`} />
+          <ReportPending token={token} t={d.report} refunded={{ title: deliveryCopy[locale][5], text: deliveryCopy[locale][6] }} initialStatus={order.status} pricingHref={`/${locale}/pricing`} />
         </div>
       </main>
     );

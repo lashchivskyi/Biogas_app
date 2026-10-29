@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { deliverPaidReport } from "@/server/notify";
 import { orders } from "@/server/orders";
 
 /** Development-only payment simulator. Disabled in production builds. */
@@ -9,6 +10,7 @@ export async function POST(request: Request) {
   if (!p.success) return NextResponse.json({ error: "bad request" }, { status: 400 });
   const order = await orders.get(p.data.order);
   if (!order || order.provider !== "demo") return NextResponse.json({ error: "not found" }, { status: 404 });
-  await orders.update(order.id, { status: p.data.outcome }, "demo");
+  const updated = await orders.update(order.id, { status: p.data.outcome }, "demo");
+  if (updated) await deliverPaidReport(updated);
   return NextResponse.json({ ok: true });
 }

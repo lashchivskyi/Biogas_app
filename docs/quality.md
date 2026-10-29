@@ -22,7 +22,7 @@
 |---|---|
 | Формула / одиниці / параметри / країна | Незалежний контрольний розрахунок; тести `src/core/__tests__`; баланси по маршрутах/сценаріях; порівняння результату до/після; перевірка source date, applicability і sensitivity |
 | Feedstock / бізнес-категорія | `businesses.test.ts`, `core.test.ts`, API validation; відповідний процес, а не лише нова назва; сумісність старих ID, чернеток, прикладів та оплачених snapshots |
-| Оплата / доступ / persistence | `src/server/__tests__/payments.test.ts`; підпис і binding quote, сума/валюта, повторні й запізнілі події, snapshot, відсутній/неправильний token; Stripe test-mode end-to-end перед релізом платіжних змін |
+| Оплата / доступ / persistence | `src/server/__tests__/{payments,storage,operations}.test.ts` (сховище — JSON і Postgres/PGlite; webhook з підписом, лист один раз, cron, config check); підпис і binding quote, сума/валюта, повторні й запізнілі події, snapshot, відсутній/неправильний token; Stripe test-mode end-to-end перед релізом платіжних змін |
 | UI / локалізація / shared preferences | `src/i18n/__tests__`, `src/lib/__tests__`; SSR/hydration, клавіатура, mobile, довгі переклади; країна/мова/валюта/чернетка не змінюють значення непомітно |
 | Пошук міста / клімат | `src/server/__tests__/cities.test.ts`; country binding і HMAC, dataset manifest/checksums, provenance, збережена локація, відсутність runtime API-залежності |
 | Документація | Звірити твердження з кодом; перевірити шляхи/посилання/команди, відсутність дублікатів і суперечностей. Не створювати тести, що перевіряють лише власний текст |
@@ -32,8 +32,11 @@
 build, що змінює `.next/types`; не перебудовуйте активний dev/build-каталог
 іншої сесії. Після релевантних тестів не повторюйте весь набір без нової причини.
 Непройдену чи незапущену перевірку явно зазначайте; не називайте її PASS.
-На дату цього огляду checked-in `.github` CI workflow немає; перелік команд
-не означає, що вони автоматично запускаються при кожному PR.
+`.github/workflows/ci.yml` запускає test → lint → typecheck → build → `npm audit`
+на PR і push у main; branch protection, що блокує merge червоного PR, налаштовується
+в GitHub окремо. `refresh-market-data.yml` щотижня відкриває PR з оновленими
+статистиками й ECB FX (USD-оплата вимагає курс ≤ 7 днів) — merge лише після
+порівняння впливу на модель.
 
 Корисні діагностики без запису: `npx tsx scripts/audit-model.ts --as-of YYYY-MM-DD`,
 `npx tsx scripts/calibrate-capex.ts`, `npx tsx scripts/benchmark.ts`,
@@ -60,8 +63,7 @@ build, що змінює `.next/types`; не перебудовуйте акти
   продаж тієї самої сировини; тепло й газ, що його виробив; поживні речовини
   власного гною; субсидія в базі й у support case. Від'ємна ціна сировини —
   дохід від приймання, а не помилка знака за замовчуванням.
-  Окремо перевірити legacy `assumedSupportEurPerKwh`: зараз воно може потрапити
-  в base, попри загальну продуктову обіцянку (див. current/economics).
+  Legacy `assumedSupportEurPerKwh` не додається до base (попередження в результаті).
 - **Evidence:** `USER_INPUT` не дорівнює перевіреному виміру. Високий confidence,
   нова дата огляду, кліматична локація чи назва галузі не підтверджують місцевий
   тариф, технічну придатність або ймовірність купівлі.
@@ -95,9 +97,19 @@ basis, зіставні технічні пропозиції, угоди збу
   Не передавати token/PII в аналітику, сторонні запити, приклади або логи.
 - Перевіряти server-side input, country/region binding, підписи location/quote,
   строк quote, webhook signature і платіжну суму/валюту. Клієнт не встановлює ціну.
-- JSON persistence і rate limits діють у межах процесу. Для production
-  підтвердити один writer + persistent volume або впровадити спільне сховище;
-  зробити restore rehearsal. Наявність atomic rename не забезпечує multi-instance ACID.
+- Production/staging зберігають orders/leads у Postgres (`DATABASE_URL`); JSON —
+  локально або явно `STORAGE=json` для одного інстансу з volume. Restore rehearsal
+  (PITR/branch або `npm run db -- export-json` → `import-json` у порожню БД)
+  виконати до продажів. Rate limits у коді діють у межах процесу; на serverless
+  потрібні правила firewall хостингу.
+- `src/server/config.ts` при старті сервера блокує небезпечну конфігурацію
+  (demo-оплата, test-ключ у production, відсутні webhook secret/БД/email, однакові
+  або короткі secrets, заглушки SITE.legal). Локальний `next start`: `APP_ENV=local`.
+- Серверні помилки: `instrumentation.ts` → `monitoring.ts` (redaction token/email,
+  Sentry за SENTRY_DSN). `/api/health` — для uptime-моніторингу.
+- `clientIp` бере перше значення `x-forwarded-for`: це довірено на Vercel, який
+  перезаписує заголовок, але не за проксі, що лише дописує його (наприклад,
+  Cloudflare перед іншим хостом) — там потрібен `cf-connecting-ip`.
 - Перевірити HTTPS, trusted geo headers, стабільність серверних secrets,
   закритий `/admin`, вимкнений demo payment, актуальні seller/terms/privacy.
   Не читати/публікувати значення `.env`, не виконувати реальних оплат під час QA.

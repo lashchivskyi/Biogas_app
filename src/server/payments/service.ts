@@ -4,6 +4,7 @@ import { absoluteUrl } from "@/config/site";
 import { getCountry } from "@/countries";
 import { assess } from "@/core";
 import { isLocale } from "@/i18n/config";
+import { deliverPaidReport, notifyOwner } from "../notify";
 import { orders, type Order } from "../orders";
 import { inputSchema } from "../validate";
 import { activeProvider, providerById, type StatusResult } from "./providers";
@@ -57,22 +58,35 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
     assessmentSnapshot: assess({ ...input.input, lang: input.lang === "uk" ? "uk" : "en" }, country, { asOfDate: new Date().toISOString().slice(0, 10) }),
   });
   const reportPath = `/${input.lang}/report/${order.reportToken}`;
-  const { redirectUrl, providerRef } = await provider.create(
-    order,
-    { success: absoluteUrl(reportPath), cancel: absoluteUrl(`/${input.lang}/pricing?cancelled=1`), webhook: absoluteUrl(`/api/payments/webhook/${provider.id}`) },
-    PRODUCT[input.plan],
-  );
-  const updated = await orders.update(order.id, { providerRef, status: "pending" }, "checkout");
-  return { order: updated ?? order, redirectUrl };
+  let session;
+  try {
+    session = await provider.create(
+      order,
+      { success: absoluteUrl(reportPath), cancel: absoluteUrl(`/${input.lang}/pricing?cancelled=1`), webhook: absoluteUrl(`/api/payments/webhook/${provider.id}`) },
+      PRODUCT[input.plan],
+    );
+  } catch (error) {
+    // No session exists, so no payment can arrive for this order; close it instead of leaving it "created".
+    await orders.update(order.id, { status: "failed", notes: "Payment session could not be created" }, "checkout");
+    throw error;
+  }
+  const updated = await orders.update(order.id, { providerRef: session.providerRef, status: "pending" }, "checkout");
+  return { order: updated ?? order, redirectUrl: session.redirectUrl };
 }
 
 /** Applies a provider-reported status; refuses a "paid" whose amount does not match the order. */
 export async function applyProviderStatus(order: Order, s: StatusResult, source: string): Promise<Order | null> {
+  const paymentRef = s.paymentRef && !order.paymentRef ? { paymentRef: s.paymentRef } : {};
   const sameCurrency = s.currency === order.currency;
   if (s.status === "paid" && (!sameCurrency || s.amountMinor !== order.amountMinor)) {
-    return orders.update(order.id, { notes: `${order.notes}\n[${new Date().toISOString()}] Payment mismatch: ${s.amountMinor ?? "unknown"} ${s.currency ?? "unknown"} vs order ${order.amountMinor} ${order.currency} — check manually`.trim() }, source);
+    const note = `Payment mismatch: ${s.amountMinor ?? "unknown"} ${s.currency ?? "unknown"} vs order ${order.amountMinor} ${order.currency} — check manually`;
+    const flagged = await orders.update(order.id, { ...paymentRef, notes: `${order.notes}\n[${new Date().toISOString()}] ${note}`.trim() }, source);
+    await notifyOwner(`Payment mismatch on order ${order.id}`, [note, `Source: ${source}`, `Admin: ${absoluteUrl("/admin")}`]);
+    return flagged;
   }
-  return orders.update(order.id, { status: s.status, providerModifiedAt: s.modifiedAt, ...(s.billingCountry ? { billingCountry: s.billingCountry } : {}) }, source);
+  const updated = await orders.update(order.id, { ...paymentRef, status: s.status, providerModifiedAt: s.modifiedAt, ...(s.billingCountry ? { billingCountry: s.billingCountry } : {}) }, source);
+  if (updated?.status === "paid") await deliverPaidReport(updated);
+  return updated;
 }
 
 /** Pull the latest status from the provider (backup for missed webhooks). */

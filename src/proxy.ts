@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { COUNTRY_COOKIE, COUNTRY_LOCALE, DEFAULT_LOCALE, isLocale, LOCALE_COOKIE, LOCALES, type Locale } from "@/i18n/config";
 import { checkBasicAuth } from "@/server/adminAuth";
+import { clientIp, rateLimited } from "@/server/rateLimit";
 import { countryFromHeaders } from "@/lib/visitor-location";
 import { locationDefaults, readPreferenceCookie, type ProjectPreferences } from "@/lib/preferences";
 
@@ -52,6 +53,8 @@ export function proxy(request: NextRequest) {
     const res = checkBasicAuth(request.headers.get("authorization"));
     if (res === "ok") return NextResponse.next();
     if (res === "disabled") return new NextResponse("CRM disabled: set ADMIN_USER and ADMIN_PASSWORD.", { status: 503 });
+    // Slow down password guessing (per instance; add a host firewall rule for a global limit).
+    if (request.headers.has("authorization") && rateLimited(`admin-fail:${clientIp(request)}`, 20, 15 * 60_000)) return new NextResponse("Too many attempts", { status: 429 });
     return new NextResponse("Authentication required", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="Methalytics CRM", charset="UTF-8"' } });
   }
 

@@ -1,3 +1,5 @@
+import { createHash, timingSafeEqual } from "node:crypto";
+
 /** HTTP Basic auth for the CRM. Credentials come from env; with none set the CRM is closed in production. */
 export type AuthResult = "ok" | "denied" | "disabled";
 
@@ -19,9 +21,8 @@ export function checkBasicAuth(header: string | null): AuthResult {
   return safeEqual(u, user) && safeEqual(p, pass) ? "ok" : "denied";
 }
 
+/** Constant-time comparison that also hides the expected length (hash both sides first). */
 function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let r = 0;
-  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return r === 0;
+  const digest = (s: string) => createHash("sha256").update(s).digest();
+  return timingSafeEqual(digest(a), digest(b));
 }

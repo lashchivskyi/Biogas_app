@@ -1,0 +1,41 @@
+name: Refresh market statistics
+
+# USD checkout needs an ECB reference rate no older than 7 days (src/server/payments/quote.ts).
+# This job refreshes src/countries/data/statistics.json weekly and opens a PR for human review:
+# the same feed also changes electricity/gas/labour inputs, so model outputs must be compared before merge.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/data/fetch_statistics.py --write
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: data/refresh-statistics
+          delete-branch: true
+          add-paths: src/countries/data/statistics.json
+          commit-message: "data: refresh official market statistics and ECB FX"
+          title: "data: weekly market statistics + FX refresh"
+          body: |
+            Automated refresh by `scripts/data/fetch_statistics.py --write`; tests passed on this branch.
+            Before merging: review changed periods/values, compare NPV impact (`npx tsx scripts/audit-model.ts --as-of <date>`)
+            and follow docs/data-sources.md. Merging and deploying restores the USD checkout option when the FX date is fresh.

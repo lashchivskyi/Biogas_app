@@ -28,7 +28,7 @@ Methalytics допомагає власникам сировини, промис
 | Локалізація | `src/i18n/config.ts`, `index.ts`, `dict/`, тематичні каталоги | UI-мови, формати, тексти; EN — структура ключів, CoreLang — EN/UK |
 | Shared context | `src/lib/preferences.ts`, `src/components/LocaleProvider.tsx`, `src/proxy.ts` | Країна проєкту, мова, валюти, локація; правила — [i18n.md](i18n.md) |
 | Web/UI | `src/app/`, `src/components/`, `src/content/` | Маршрути, анкета, методологія, приклади, відображення результату |
-| Server | `src/server/`, `src/app/api/` | Zod validation, city lookup/signing, orders/leads, quote, Stripe, admin auth |
+| Server | `src/server/`, `src/app/api/`, `src/instrumentation.ts` | Zod validation, city lookup/signing, orders/leads (Postgres/JSON), quote, Stripe, email, admin auth, config check, error reporting |
 | Зовнішні дані | `scripts/data/`, `src/server/data/locations.json` | Явне оновлення наборів, manifest, checksum, ліцензії; [data-sources.md](data-sources.md) |
 
 Не вводьте нову паралельну таблицю цін, бізнесів, локалей або параметрів у UI.
@@ -52,8 +52,8 @@ flowchart TD
 ```
 
 `assess` запускає маршрути та сценарії; national support cases відділені від бази.
-Виняток: legacy input `assumedSupportEurPerKwh` може включити підтримку в базу;
-це відкрита розбіжність із безумовною обіцянкою «без субсидій» (economics/current).
+Legacy input `assumedSupportEurPerKwh` приймається для сумісності старих чернеток,
+але виключається з бази з явним попередженням у результаті (`assess.ts`).
 Сировина визначає газ і масштаб; назва підприємства не створює сировину.
 `paramsForProject` враховує країну, регіон і клас споживання; підтверджувані
 входи клієнта можуть замінювати референси. Місто змінює кліматичну основу,
@@ -81,6 +81,7 @@ Fingerprints виявляють зміни, але не є криптограф�
 | `/api/location`, `/api/cities` | IP-country підказка; локальний пошук GeoNames/ERA5 |
 | `/api/checkout/quote`, `/api/checkout`, `/api/payments/*` | Серверна ціна, платіжна сесія, webhook/status |
 | `/admin`, `/api/admin/*` | Замовлення/ліди, Basic auth; у production без credentials закрито |
+| `/api/health`, `/api/cron/reconcile` | Uptime-probe сховища; захищена `CRON_SECRET` звірка незавершених оплат |
 
 Статичні й динамічні маршрути визначає код сторінок, а не припущення, що весь
 сайт SSG. Збережені проєкти й оплачені snapshots не переосмислюються при
@@ -115,6 +116,13 @@ Backend фіксує ціну, input і Assessment перед перенапра
 не підтверджує оплату. Report token є секретом доступу, email — контактним
 полем, а не акаунтом. Повний flow й edge cases — [payments.md](payments.md).
 
+Спостережуваність: `src/instrumentation.ts` перевіряє конфігурацію при старті
+(`src/server/config.ts`) і передає серверні помилки в `src/server/monitoring.ts`:
+JSON-лог без report token/email і, за SENTRY_DSN, Sentry envelope без SDK.
+Клієнтські помилки браузера туди не потрапляють. Операційні листи власнику —
+`src/server/notify.ts`. Security headers задає `next.config.ts`; CSP для
+script/style ще не enforced (потрібні nonce).
+
 `src/lib/analytics.ts` додає події до `window.dataLayer`. Це не підтвердження
 підключення GTM/GA4 або наявності виміряної конверсії. Не надсилати туди
 PII, повний ввід клієнта чи приватні URL. Вбудованого LLM, що генерує розрахунки,
@@ -122,12 +130,21 @@ PII, повний ввід клієнта чи приватні URL. Вбудо�
 
 ## 7. Зберігання й експлуатація
 
-`src/server/jsonFile.ts` → `orders.ts` / `leads.ts`:
-локальні JSON у `data/` або шляхах ORDERS_FILE/LEADS_FILE, tmp + rename,
-послідовні записи в межах одного процесу. Це не розподілена транзакція.
-Для кількох процесів/інстансів потрібне спільне надійне сховище; для одного —
-persistent volume, доступ, backup і перевірений restore.
-Production-конфігурацію не можна підтвердити читанням repository.
+`orders.ts` / `leads.ts` мають один repository-контракт і два сховища:
+
+- **Postgres** (`DATABASE_URL`, `src/server/db.ts`, драйвер `pg`) — production і staging.
+  Snapshot розрахунку зберігається окремою колонкою `json` (байт-у-байт), решта
+  order — `jsonb` з індексами token/provider/payment refs. Оновлення статусу — у
+  транзакції з `SELECT … FOR UPDATE`; лист покупцю — атомарний claim. Міграції —
+  append-only масив `MIGRATIONS`, застосовуються при першому зверненні під advisory lock
+  або `npm run db -- migrate`. Імпорт/експорт JSON: `npm run db -- import-json|export-json`.
+- **JSON-файли** (`src/server/jsonFile.ts`) — локальна розробка й тести; у deployed
+  середовищі лише явно `STORAGE=json` для одного інстансу з persistent volume.
+  Кожен запит читає весь файл, тож для реального обсягу замовлень не придатне.
+
+Тести (`storage.test.ts`) проганяють контракт на обох сховищах; Postgres — через
+PGlite у процесі. Backup/PITR і restore rehearsal — налаштування хостингу БД;
+production-конфігурацію не можна підтвердити читанням repository.
 
 У `.env.example` — доступні налаштування, без секретів; реальні `.env*`,
 замовлення й ліди не є матеріалом для документації чи очищення.
@@ -138,11 +155,11 @@ Production-конфігурацію не можна підтвердити чи�
 | Статус / рішення | Причина | Коли переглянути |
 |---|---|---|
 | Реалізовано: детерміноване ядро окремо від UI/I/O | Відтворюваність, тестованість, прозорі формули | Новий процес потребує іншої моделі; зберегти явні контракти й звірки |
-| Принцип: base без subsidies, national support окремо; legacy override ще потребує узгодження | Eligibility і строки не гарантовані | За перевіреним контрактом/правом; не приховувати внесок підтримки |
+| Реалізовано: base без subsidies, national support окремо; legacy override виключено з бази з попередженням | Eligibility і строки не гарантовані | За перевіреним контрактом/правом; не приховувати внесок підтримки |
 | Реалізовано: language / project country / display currency / billing country розділені | Клієнт, об'єкт і платник можуть бути в різних країнах | Після UX-доказів із збереженням числового змісту |
 | Реалізовано: платний assessment snapshot | Оновлення даних не переписує придбаний результат | Якщо вводиться явне версіоноване редагування/новий entitlement |
 | Реалізовано: offline GeoNames/ERA5 | Без runtime-підписки та залежності від зовнішнього API | Покриття/точність/ліцензія вимагає іншого джерела |
-| Тимчасово: JSON persistence | Простий один процес | До multi-instance hosting або вимог транзакційності/надійного відновлення |
+| Реалізовано: Postgres для orders/leads, JSON лише локально | Snapshot ~0,2–0,3 MB на order робив повне читання файлу непридатним; serverless не має постійного диска | Якщо знадобиться інший сервіс БД — новий repository за тим самим контрактом |
 | Taxonomy 2.1: 25 секторів + загальний ввід / 3 групи, роль автоматична | 30 ID зі збереженням legacy-входів; modelsForBusiness та processSchema визначають сумісну фізичну базу | Перевіряти зрозумілість із клієнтами та незалежно калібрувати процеси |
 | Прийнято для знань: AGENTS + тематичні docs, CLAUDE імпортує AGENTS | Один набір правил без копій і без завантаження всього docs у контекст | Лише за реальною потребою іншого agent loader |
 

@@ -1,7 +1,7 @@
 # Product flow, тарифи, оплата й доступ
 
-Звірено з кодом 2026-10-28. Джерела: `src/config/plans.ts`,
-`src/server/payments/{quote,service,providers}.ts`, `src/server/orders.ts`,
+Звірено з кодом 2026-10-29. Джерела: `src/config/plans.ts`,
+`src/server/payments/{quote,service,providers}.ts`, `src/server/orders.ts`, `src/server/notify.ts`,
 `src/app/api/checkout/`, `src/app/api/payments/`, `src/components/payments/`,
 `src/app/[lang]/report/[token]/page.tsx`.
 Цей документ об'єднує бізнес-правила тарифів і технічний платіжний flow.
@@ -61,11 +61,18 @@
 5. Webhook перевіряє Stripe-Signature по raw body, знаходить order за Session
    або client_reference_id, зберігає PaymentIntent reference. `paid` приймається
    лише за відповідного subtotal та currency.
-6. Report route і `/api/payments/status` можуть викликати `refreshOrder` як
-   резервну перевірку Stripe для нетермінальних статусів. UI повторює polling
+6. Report route, `/api/payments/status` і cron `/api/cron/reconcile` (кожні 15 хв,
+   `vercel.json`, `CRON_SECRET`; замовлення від 5 хв до 3 діб) викликають
+   `refreshOrder` як резервну перевірку Stripe для нетермінальних статусів. Poll теж
+   зберігає PaymentIntent, тож refund зіставляється без webhook. UI повторює polling
    приблизно 2,5 хвилини за успішних відповідей; refresh сторінки запускає його знов.
+   Помилка обробки webhook повертає 500, щоб Stripe повторив доставку.
 7. Лише `paid` відкриває report. Нові orders показують snapshot; старі без нього
    явно позначають повторний розрахунок за поточною моделлю.
+8. Перехід у `paid` (webhook, poll, cron, demo або ручний admin) один раз надсилає
+   покупцю лист із приватним URL мовою замовлення (`deliverPaidReport`, Resend,
+   атомарний claim `customerNotifiedAt`; при помилці відправки claim знімається для
+   повтору). Власник (OWNER_EMAIL) отримує листи про оплату, лід, mismatch, refund і dispute.
 
 ## Entitlement і крайові випадки
 
@@ -73,16 +80,17 @@
 |---|---|
 | Успішна оплата | Order стає paid; token відкриває збережений звіт. Автоматичного строку закінчення доступу в коді немає; доступ залежить від збереженого order та статусу |
 | Вийти, refresh, інший пристрій, очищення cookies | Серверний order зберігається; той самий URL працює без cookies/акаунта. Browser draft може зникнути; історія звітів в акаунті не реалізована |
-| Як отримати посилання | API checkout повертає лише redirectUrl до провайдера; Stripe success redirect відкриває приватний URL. Його треба зберегти з адресного рядка/історії браузера; окремого списку придбаних звітів у UI немає. Сам застосунок не реалізує email-доставку приватного URL або self-service recovery; Stripe invoice/receipt не вважати таким листом |
-| Втрата всіх копій URL | Автоматичне відновлення через email-login відсутнє; потрібна ручна перевірка замовлення. Не обіцяти відновлення лише за знанням email |
+| Як отримати посилання | Stripe success redirect відкриває приватний URL; після підтвердження оплати той самий URL надходить листом на email із checkout (якщо налаштовані RESEND_API_KEY/EMAIL_FROM). Списку придбаних звітів в UI немає |
+| Втрата всіх копій URL | Self-service recovery через email-login відсутній; власник знаходить order в admin, копіює посилання на звіт і надсилає його вручну. Не обіцяти відновлення лише за знанням email |
 | Інший об'єкт, країна, ввід або «домен» | Оплата прив'язана до Order.input/snapshot, не домену клієнта. Редагування цього order або кредиту на новий розрахунок немає; новий ввід → нова покупка |
 | Повторне оформлення/подвійна оплата | Кожен startCheckout створює новий order; дедуплікації покупок за email/input і автоматичного повернення дубля немає |
 | Delayed/duplicate webhook | Повторний paid не додає нове entitlement; пізні pending/failed не знімають paid. providerModifiedAt відсікає старі датовані session events; це не повна exactly-once гарантія |
-| Failed / expired / cancel | Failed/expired не дають доступу. Cancel URL повертає pricing?cancelled=1, але саме повернення не переводить order у cancelled; він може залишатися pending до події/перевірки. Новий checkout — новий order |
+| Failed / expired / cancel | Failed/expired не дають доступу. Якщо Stripe не створив сесію, order одразу стає failed. Cancel URL повертає pricing?cancelled=1, але саме повернення не переводить order у cancelled; він може залишатися pending до події/перевірки. Новий checkout — новий order |
 | Async payment | Completed Session ще може бути pending; доступ лише після provider paid. Невідповідність суми/валюти пише notes для ручної перевірки, не відкриває звіт |
-| Refund | Повний refund, зіставлений за paymentRef, переводить у reversed і закриває report. Частковий — ручна обробка. Політику dispute і всі перестановки refund/session events не вважати перевіреними |
-| Reversed UX | Доступ закрито, але ReportPending не має окремого refunded-повідомлення й показує pending-текст; це відкрита UX-прогалина |
-| Помилка розрахунку / Stripe create | Assessment рахується до створення платіжної сесії; його помилка не запускає оплату. Stripe create може залишити created order; автоматичного recovery queue немає |
+| Refund | Повний refund, зіставлений за paymentRef, переводить у reversed і закриває report; частковий додає note і лист власнику, доступ не змінює. Перестановки refund/session events на реальному Stripe перевіряти на staging |
+| Dispute | `charge.dispute.created` додає note з причиною й дедлайном доказів і надсилає лист власнику; доступ не змінюється автоматично. Відповідь на dispute — вручну в Stripe Dashboard |
+| Reversed UX | Доступ закрито; сторінка звіту показує локалізоване повідомлення про повернення оплати (`src/i18n/delivery.ts`) |
+| Помилка розрахунку / Stripe create | Assessment рахується до створення платіжної сесії; його помилка не запускає оплату. Помилка Stripe create переводить order у failed |
 | Оплачено, але report render/storage недоступні | Snapshot не треба генерувати повторно; повторне відкриття допоможе лише після усунення збою. Автоматичний refund, delivery job і SLA відновлення не реалізовані |
 
 Redirect не є гарантією доставки посилання: вкладка може закритися до
@@ -92,14 +100,19 @@ Redirect не є гарантією доставки посилання: вкл�
 
 ## Налаштування й операційні межі
 
-`.env.example`: PAYMENT_PROVIDER=stripe, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET,
-NEXT_PUBLIC_SITE_URL; необов'язковий STRIPE_TAX. Код quote також підтримує
-CHECKOUT_QUOTE_SECRET, інакше бере STRIPE_SECRET_KEY; demo без них має
-процесний випадковий ключ. Secret має бути стабільним між рестартами/інстансами.
+`.env.example` описує всі змінні. Для оплати: PAYMENT_PROVIDER=stripe (`off` —
+kill switch), STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, NEXT_PUBLIC_SITE_URL,
+окремий CHECKOUT_QUOTE_SECRET; необов'язковий STRIPE_TAX. Без CHECKOUT_QUOTE_SECRET
+код бере STRIPE_SECRET_KEY, demo — процесний випадковий ключ; у production/staging
+`src/server/config.ts` вимагає окремий стабільний secret і не дає стартувати з
+PAYMENTS_DEMO=1, test-ключем у production, без webhook secret, DATABASE_URL,
+email-налаштувань або з заглушками SITE.legal.
 
 Webhook endpoint: `/api/payments/webhook/stripe`; події:
 checkout.session.completed, checkout.session.async_payment_succeeded,
-checkout.session.async_payment_failed, checkout.session.expired, charge.refunded.
+checkout.session.async_payment_failed, checkout.session.expired, charge.refunded,
+charge.dispute.created. Версію API endpoint обирайте як у встановленому SDK
+(`node_modules/stripe/cjs/apiVersion.js`).
 Конфігурацію Stripe Dashboard і legal entity потрібно перевіряти перед запуском
 за [Stripe availability](https://stripe.com/global) та
 [Stripe currencies](https://docs.stripe.com/currencies);

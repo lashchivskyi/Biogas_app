@@ -6,7 +6,7 @@ import type { ProjectInput } from "@/core";
 import { convertedPlanPrice, PLAN_IDS, priceFor, type PlanId } from "@/config/plans";
 import { COUNTRIES } from "@/countries";
 import { fmt, type Dict, type Locale } from "@/i18n";
-import { INTL_TAG } from "@/i18n/config";
+import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
 import { usePreferences } from "../LocaleProvider";
 import { preferenceCopy } from "@/i18n/preferences";
@@ -15,7 +15,7 @@ import type { CurrencyPreference } from "@/lib/preferences";
 import { CountryFlag, CURRENCY_FLAGS } from "../CountryFlag";
 import { FlagSelect } from "../FlagSelect";
 
-export type CheckoutDict = Pick<Dict, "checkout" | "pricing">;
+export type CheckoutDict = Pick<Dict, "checkout" | "pricing" | "common">;
 
 /**
  * Checkout dialog: pick a plan, leave an email, go to Stripe. The browser never sends a price —
@@ -149,6 +149,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
                   {C.consent.split("{terms}")[1]}
                 </span>
               </label>
+              {coreLang(locale) !== locale && <p className="hint">{d.common.reportLangNote}</p>}
               {demo && <p className="hint text-warn">{C.demo}</p>}
               {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-900">{error}</p>}
               <button className="btn btn-primary w-full text-base" type="submit" disabled={state === "sending" || !quote}>{state === "sending" ? C.paying : fmt(C.pay, { price: quote ? formatPrice(quote.amountMinor) : "—" })}</button>

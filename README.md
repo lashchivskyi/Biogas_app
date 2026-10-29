@@ -8,6 +8,10 @@
 ## Запуск
 
 `npm ci` → налаштування за [.env.example](.env.example) → `npm run dev`.
+Локально без `DATABASE_URL` замовлення й ліди пишуться в `data/*.json`; production і
+staging використовують Postgres (`npm run db -- migrate|import-json|export-json`).
+Production-сервер не стартує з небезпечною конфігурацією (`src/server/config.ts`);
+для локального `next start` задайте `APP_ENV=local`.
 У Windows PowerShell використовуйте `npm.cmd`, якщо виконання npm.ps1 заборонено.
 Режими Stripe/demo й зберігання описані в [payments](docs/payments.md).
 Не вмикайте demo для реальних продажів.

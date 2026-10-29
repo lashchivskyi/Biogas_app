@@ -23,6 +23,8 @@ export interface StatusResult {
   currency?: string;
   modifiedAt?: string;
   billingCountry?: string;
+  /** Underlying payment id (Stripe PaymentIntent), needed to match later refunds and disputes. */
+  paymentRef?: string;
 }
 
 export interface PaymentProvider {
@@ -84,9 +86,11 @@ export const stripeProvider: PaymentProvider = {
   async fetchStatus(order) {
     if (!order.providerRef) return null;
     const s = await stripe().checkout.sessions.retrieve(order.providerRef);
-    return { status: mapStripeSession(s), amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase(), billingCountry: s.customer_details?.address?.country ?? undefined };
+    return { status: mapStripeSession(s), amountMinor: s.amount_subtotal ?? undefined, currency: s.currency?.toUpperCase(), billingCountry: s.customer_details?.address?.country ?? undefined, paymentRef: paymentIntentId(s.payment_intent) };
   },
 };
+
+export const paymentIntentId = (pi: string | { id: string } | null | undefined) => (typeof pi === "string" ? pi : pi?.id) ?? undefined;
 
 /** Verifies the Stripe-Signature header against the raw body; throws on failure. */
 export function verifyStripeEvent(rawBody: string, signature: string | null): Stripe.Event {

@@ -1,10 +1,11 @@
 import { randomBytes } from "node:crypto";
 import type { ProjectInput, VerdictId, Confidence } from "@/core";
+import { database, type Database } from "./db";
 import { dataFile, exclusive, readJsonArray, writeJsonArray } from "./jsonFile";
 
 /**
- * Lead storage. MVP: one JSON file (data/leads.json) behind a repository interface.
- * Swap `fileRepository` for a Postgres implementation without touching callers (see docs/architecture.md).
+ * Lead storage behind a repository interface: Postgres when DATABASE_URL is set, otherwise one JSON
+ * file (data/leads.json) for local development (see docs/architecture.md §7).
  */
 export type LeadStatus = "new" | "contacted" | "qualified" | "study_sold" | "lost";
 
@@ -63,4 +64,41 @@ export const fileRepository: LeadRepository = {
   },
 };
 
-export const leads: LeadRepository = fileRepository;
+type Row = { record: Lead };
+
+export function postgresLeads(db: Database): LeadRepository {
+  return {
+    async list() {
+      return (await db.query<Row>("SELECT record FROM leads ORDER BY created_at DESC")).rows.map((r) => r.record);
+    },
+    async get(id) {
+      return (await db.query<Row>("SELECT record FROM leads WHERE id = $1", [id])).rows[0]?.record ?? null;
+    },
+    async add(l) {
+      const lead: Lead = { ...l, id: randomBytes(9).toString("base64url"), createdAt: new Date().toISOString(), status: "new", notes: "" };
+      await db.query("INSERT INTO leads (id, created_at, record) VALUES ($1, $2, $3::jsonb)", [lead.id, lead.createdAt, JSON.stringify(lead)]);
+      return lead;
+    },
+    update(id, patch) {
+      return db.transaction(async (tx) => {
+        const cur = (await tx.query<Row>("SELECT record FROM leads WHERE id = $1 FOR UPDATE", [id])).rows[0]?.record;
+        if (!cur) return null;
+        const next = { ...cur, ...patch };
+        await tx.query("UPDATE leads SET record = $2::jsonb WHERE id = $1", [id, JSON.stringify(next)]);
+        return next;
+      });
+    },
+  };
+}
+
+async function repo(): Promise<LeadRepository> {
+  const db = database();
+  return db ? postgresLeads(await db) : fileRepository;
+}
+
+export const leads: LeadRepository = {
+  list: async () => (await repo()).list(),
+  get: async (id) => (await repo()).get(id),
+  add: async (l) => (await repo()).add(l),
+  update: async (id, patch) => (await repo()).update(id, patch),
+};

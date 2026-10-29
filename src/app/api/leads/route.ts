@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { assess } from "@/core";
 import { getCountry } from "@/countries";
+import { absoluteUrl } from "@/config/site";
 import { leads } from "@/server/leads";
+import { notifyOwner } from "@/server/notify";
 import { leadSchema } from "@/server/validate";
 import { clientIp, rateLimited } from "@/server/rateLimit";
 
@@ -43,5 +45,11 @@ export async function POST(request: Request) {
       npvEur: base.fin.npvEur,
     },
   });
+  await notifyOwner(`New lead: ${lead.company ?? lead.name}`, [
+    `${lead.name}${lead.company ? ` · ${lead.company}` : ""} · ${lead.phone}${lead.email ? ` · ${lead.email}` : ""}`,
+    `Project: ${input.businessType} · ${input.countryCode} · verdict ${lead.verdict} (${lead.confidence})`,
+    ...(lead.message ? [`Message: ${lead.message}`] : []),
+    `Admin: ${absoluteUrl("/admin")}`,
+  ]);
   return NextResponse.json({ id: lead.id });
 }
