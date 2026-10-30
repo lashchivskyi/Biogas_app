@@ -15,6 +15,7 @@ import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
 import { preferenceCopy } from "@/i18n/preferences";
 import { locationCopy } from "@/i18n/location";
 import { FlowDiagram } from "./FlowDiagram";
+import { DataConfidence } from "./DataConfidence";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
@@ -149,7 +150,9 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-xs font-bold uppercase tracking-widest opacity-70">{R.verdict}</span>
-          <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</span>
+          {a.confidence.factors
+            ? <a href="#data-confidence" className={`chip underline decoration-dotted underline-offset-2 ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</a>
+            : <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</span>}
         </div>
         <h2 className="font-display mt-2 text-3xl font-semibold md:text-[42px]">{L.verdict[a.verdict.id]}</h2>
         <ul lang={a.lang} className="mt-4 space-y-1.5 text-[15px]">{a.verdict.reasons.map((x) => <li key={x}>• {x}</li>)}</ul>
@@ -197,7 +200,8 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
           <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(r.npvEur[0]), hi: eur(r.npvEur[2]) })} />
           <Stat label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
         </div>
-        {a.missingData.length > 0 && (
+        <DataConfidence a={a} d={d} locale={locale} currency={currency} />
+        {!a.confidence.factors && a.missingData.length > 0 && (
           <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <div className="font-semibold text-amber-950">{R.missing}</div>
             <ul className="mt-1.5 list-disc pl-5 text-sm text-amber-950/90">{a.missingDataCodes.map((id) => <li key={id}>{qualityGaps[id]}</li>)}</ul>

@@ -103,7 +103,6 @@ export function recommendTechnology(feed: FeedstockSummary, ctx: RunContext, hrt
   if (feed.poultryShareVs > 0.35) warnings.push(T("Poultry manure: limit its share, dilute, or use ammonia stripping — otherwise the process is inhibited.", "Птахівничий послід: обмежте частку, розводьте, або застосуйте відгонку аміаку — інакше процес гальмується."));
   if (feed.fatShareVs > 0.25) warnings.push(T("Fat fraction above 25 % of organic matter — high risk of process failure.", "Жирова фракція > 25 % органічної речовини — високий ризик збою процесу."));
   if (feed.lines.some((l) => l.typeId === "crop_straw")) warnings.push(T("Straw needs pretreatment; without it the yields are unrealistic.", "Солома потребує попередньої обробки; без неї виходи нереалістичні."));
-  warnings.push(T("Energy crops (maize silage) are not modelled: priority is wastes and residues.", "Енергетичні культури (силос кукурудзи) не включені: пріоритет — відходи та залишки."));
 
   return { primary, digestion, temperature, stages, mode, reactor, hrtDays: hrt, reasons, warnings, alternatives };
 }

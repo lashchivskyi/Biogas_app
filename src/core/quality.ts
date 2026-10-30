@@ -2,7 +2,22 @@ import { missingProcessInputs } from "./processes";
 import type { CustomerDemand } from "./demand";
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import type { Tr } from "./i18n";
-import type { Confidence, ProjectInput, QualityGapId, ScenarioResult } from "./types";
+import type { Confidence, ProjectInput, QualityFactor, QualityGapId, ScenarioResult } from "./types";
+
+/** Best score a screening can reach: without verified documents it never claims HIGH (≥ 85). */
+export const QUALITY_START = 80;
+
+export interface QualityResult { level: Confidence; score: number; reasons: string[]; missing: string[]; missingCodes: QualityGapId[]; factors: QualityFactor[] }
+
+const levelOf = (score: number, measuredFeedstock: boolean): Confidence => (score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW");
+
+/** Lowers the score to `max` and records the difference as a factor, so Σ points still explains the score. */
+export function capQuality(q: QualityResult, max: number, factor: Omit<QualityFactor, "points">): void {
+  const points = q.score - Math.min(q.score, max);
+  q.score -= points;
+  if (points > 0) q.factors.push({ ...factor, points });
+  q.level = levelOf(q.score, q.level === "HIGH");
+}
 
 /**
  * Data quality: what the customer told us vs what we assumed. A screening tool cannot reach HIGH
@@ -14,89 +29,88 @@ export function assessQuality(
   demand: CustomerDemand,
   T: Tr,
   ctx: { currency: string; profileOnly: boolean; unvalidatedCapital?: boolean },
-): { level: Confidence; score: number; reasons: string[]; missing: string[]; missingCodes: QualityGapId[] } {
-  let score = 80;
+): QualityResult {
+  let score = QUALITY_START;
   const reasons: string[] = [];
   const missing: string[] = [];
   const missingCodes: QualityGapId[] = [];
-  const gap = (id: QualityGapId, text: string) => { missingCodes.push(id); missing.push(text); };
+  const factors: QualityFactor[] = [];
+  const reason = (id: string, owner: QualityFactor["owner"], points: number, text: string) => {
+    score -= points; reasons.push(text); factors.push({ id, owner, points, text });
+  };
+  const gap = (id: QualityGapId, points: number, text: string) => {
+    score -= points; missingCodes.push(id); missing.push(text); factors.push({ id, owner: "client", points, text, gap: id });
+  };
   const cur = ctx.currency;
-  const measuredFeedstock = Boolean(input.labAnalysisAvailable) && input.feedstocks.every((f) =>
-    (f.dryMatterPct ?? 0) > 0 && (f.vsPctOfDm ?? 0) > 0 && (f.methaneYieldLPerKgVs ?? 0) > 0,
-  );
+  const measured = (f: ProjectInput["feedstocks"][number]) => (f.dryMatterPct ?? 0) > 0 && (f.vsPctOfDm ?? 0) > 0 && (f.methaneYieldLPerKgVs ?? 0) > 0;
+  const measuredFeedstock = Boolean(input.labAnalysisAvailable) && input.feedstocks.every(measured);
+  // A stream with its own lab DM/VS/BMP no longer depends on the weak catalogue entry for its type.
+  const labIds = new Set(input.labAnalysisAvailable ? input.feedstocks.filter(measured).map((f) => f.id) : []);
 
   if (input.feedstocks.some((f) => f.animal)) {
-    score -= 8;
-    reasons.push(T("Manure volumes estimated from head counts, not measured", "Обсяги гною оцінені за кількістю голів, а не виміряні"));
+    reason("head_counts", "client", 8, T("Manure volumes estimated from head counts, not measured — enter measured tonnes per year", "Обсяги гною оцінені за кількістю голів, а не виміряні — вкажіть виміряні тонни на рік"));
   }
   const lowShare =
     base.feed.tonnesYear > 0
-      ? base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear
+      ? base.feed.lines.filter((l) => !labIds.has(l.id) && FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear
       : 0;
   if (lowShare > 0.4) {
-    score -= 12;
-    reasons.push(T("Most feedstock has low-confidence parameters", "Більшість сировини має параметри низької довіри"));
+    reason("low_catalogue", "client", 12, T("Most feedstock has low-confidence catalogue parameters — a laboratory analysis replaces them", "Більшість сировини має каталожні параметри низької довіри — лабораторний аналіз їх замінює"));
   }
   if (!measuredFeedstock && !input.process) {
     score -= 15;
     reasons.push(T("Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing", "Немає повного набору лабораторних DM, VS і BMP для кожної сировини — пропущені значення взято з каталогу"));
-    gap("lab", T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
+    missingCodes.push("lab");
+    missing.push(T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
+    factors.push({ id: "lab", owner: "client", points: 15, text: missing[missing.length - 1], gap: "lab" });
   }
   if (ctx.profileOnly) {
-    score -= 6;
-    reasons.push(T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract", "Принаймні одна ціна, що впливає на цей маршрут, ґрунтується на непідтвердженому ринковому орієнтирі або недоговірному збуті — уточніть застосовний тариф чи контракт із покупцем"));
+    reason("price_proxy", "model", 6, T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract", "Принаймні одна ціна, що впливає на цей маршрут, ґрунтується на непідтвердженому ринковому орієнтирі або недоговірному збуті — уточніть застосовний тариф чи контракт із покупцем"));
   }
   if (ctx.unvalidatedCapital) {
-    score -= 8;
-    reasons.push(T("Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations", "CAPEX цього маршруту не має незалежного локального підтвердження — отримайте зіставні комерційні пропозиції постачальників"));
+    reason("capex_unvalidated", "model", 8, T("Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations", "CAPEX цього маршруту не має незалежного локального підтвердження — отримайте зіставні комерційні пропозиції постачальників"));
   }
   if (!demand.electricityKnown) {
-    score -= 12;
-    gap("electricity", T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
+    gap("electricity", 12, T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
   }
   if (!demand.electricityPriceKnown && input.energy.electricityKwhYear !== 0) {
-    score -= 6;
-    gap("electricity_price", T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
+    gap("electricity_price", 6, T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
   }
   if (demand.heatWanted && !demand.heatKnown) {
-    score -= 14;
-    gap("heat", T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
+    gap("heat", 14, T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
   }
   if (!demand.heatWanted && (input.energy.gasM3Year ?? 0) > 0) {
-    score -= 4;
-    reasons.push(T("Gas is used but a heat need is not confirmed", "Є споживання газу, але потреба в теплі не підтверджена"));
+    reason("heat_need", "client", 4, T("Gas is used but a heat need is not confirmed", "Є споживання газу, але потреба в теплі не підтверджена"));
   }
   if (!input.process && input.site.landHa === undefined) {
-    score -= 8;
-    gap("land", T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
+    gap("land", 8, T("Land available for digestate spreading (ha)", "Площа полів, придатних для внесення дигестату (га)"));
   }
   if (input.feedstocks.filter((f) => f.delivered).some((f) => !(f.distanceKm && f.distanceKm > 0))) {
-    score -= 8;
-    gap("distance", T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
+    gap("distance", 8, T("Distances to delivered feedstock sources", "Відстані до джерел сировини, що доставляється"));
   }
   // Delivered streams with a price (gate fee or purchase) are already priced; only own waste has a disposal cost to ask for.
   const own = new Set(input.feedstocks.filter((f) => !(f.delivered && f.purchasePricePerTonneLocal !== undefined)).map((f) => f.id));
   const paidLines = base.feed.lines.filter((l) => own.has(l.id) && FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
-    score -= 5;
-    gap("disposal", T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
+    gap("disposal", 5, T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
   }
   if (base.kwElEquivalent < 30 || base.kwElEquivalent > 5000) {
-    score -= 8;
-    reasons.push(T("Scale outside the CAPEX calibration range (30 kW – 5 MW electrical equivalent)", "Масштаб поза діапазоном калібрування CAPEX (30 кВт – 5 МВт ел. еквіваленту)"));
+    reason("scale_range", "model", 8, T("Scale outside the CAPEX calibration range (30 kW – 5 MW electrical equivalent)", "Масштаб поза діапазоном калібрування CAPEX (30 кВт – 5 МВт ел. еквіваленту)"));
   }
   if (input.feedstocks.some((f) => f.animal && ANIMALS[f.animal] && f.housing === "seasonal")) {
     reasons.push(T("Seasonal grazing reduces collectable manure — the collected share is estimated", "Сезонне випасання зменшує зібраний гній — частку зібраного оцінено"));
   }
+  const q: QualityResult = { level: "LOW", score: Math.max(0, score), reasons, missing, missingCodes, factors };
   if (input.process) {
-    score = Math.min(score, 65);
-    reasons.push(T("Process inputs and project budgets require document verification; ranges are assumptions, not validated accuracy.", "Параметри процесу й бюджети потребують звірки з документами; діапазони є припущеннями, а не підтвердженою точністю."));
+    const text = T("Process inputs and project budgets require document verification; ranges are assumptions, not validated accuracy.", "Параметри процесу й бюджети потребують звірки з документами; діапазони є припущеннями, а не підтвердженою точністю.");
+    reasons.push(text);
+    capQuality(q, 65, { id: "process_scope", owner: "model", text });
     if (missingProcessInputs(input.process).length) {
-      score = Math.min(score, 34);
-      missing.push(T("Project budgets, residuals disposal and auxiliary energy", "Бюджети проєкту, утилізація залишків та власні енергопотреби"));
+      const need = T("Project budgets, residuals disposal and auxiliary energy", "Бюджети проєкту, утилізація залишків та власні енергопотреби");
+      missing.push(need);
+      capQuality(q, 34, { id: "process_inputs", owner: "client", text: need });
     }
   }
-  score = Math.max(0, Math.min(100, score));
-  const level: Confidence = score >= 85 && measuredFeedstock ? "HIGH" : score >= 50 ? "MEDIUM" : "LOW";
-  return { level, score, reasons, missing, missingCodes };
+  q.level = levelOf(q.score, measuredFeedstock);
+  return q;
 }

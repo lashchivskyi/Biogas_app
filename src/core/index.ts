@@ -3,6 +3,7 @@ export { assess, allProvenance, buildParams, ROUTES } from "./assess";
 export { FEEDSTOCKS, ANIMALS, BUSINESS_TYPES, HANDLING_IDS, feedName } from "./feedstockData";
 export { VERDICT_LABELS } from "./verdict";
 export { SAFETY_DISCLAIMER } from "./safety";
+export { QUALITY_START } from "./quality";
 export { SCENARIOS, SCENARIO_ORDER } from "./scenarios";
 export { MARKET_BANDS, marketBandsFor, UPGRADING_BAND } from "./marketBenchmarks";
 export type { MarketBand } from "./marketBenchmarks";

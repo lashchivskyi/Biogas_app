@@ -1,6 +1,6 @@
 # Status
 
-Updated 2026-10-30. Rewrite this file at the end of a task; keep it under 40 lines.
+Updated 2026-10-31. Rewrite this file at the end of a task; keep it under 40 lines.
 
 ## Current state
 
@@ -9,6 +9,8 @@ Updated 2026-10-30. Rewrite this file at the end of a task; keep it under 40 lin
 - Regional data: US (51), CA (13), BR (27), IN (34), MX (32), IT (7 price zones); cities carry admin1 codes.
 - CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
 - Methodology tab: USD display; country-table numeric widths include six decimal places and a non-shrinking confidence dot; original table layout retained.
+- Data-confidence score is itemised (`confidence.factors`, client vs model) and explained in a
+  report panel with points per missing input; the score formula and verdicts are unchanged.
 - AI knowledge architecture: AGENTS.md + CLAUDE.md + docs/ai + rules + skills.
 
 ## Next (highest value first)
@@ -24,4 +26,6 @@ Updated 2026-10-30. Rewrite this file at the end of a task; keep it under 40 lin
 
 - Small manure-only plants: CAPEX 20–35 % above DBFZ (gas-tight storage assumed).
 - Open digestate storage costed as concrete; earthen lagoons are cheaper.
+- Model-side confidence deductions (price proxy −6, unvalidated CAPEX −8, scale −8) still count
+  toward the verdict gate (LOW blocks STRONG); decide whether the gate should use client data only.
 - Canada electricity is the 2025 Hydro-Québec comparison (2026 edition not published).

@@ -12,6 +12,12 @@ export type DataKind = "FACT" | "ASSUMPTION" | "CALCULATION" | "ESTIMATE";
 export type Confidence = "LOW" | "MEDIUM" | "HIGH";
 export type EvidenceOrigin = "MEASURED" | "USER_INPUT" | "MARKET_DATA" | "ENGINEERING_ASSUMPTION" | "CALCULATED_VALUE";
 export type QualityGapId = "lab" | "electricity" | "electricity_price" | "heat" | "land" | "distance" | "disposal";
+/**
+ * One deduction from the data-quality score. `client` = the customer can remove it with their own data;
+ * `model` = it reflects our country/route evidence or the screening scope, not the customer's inputs.
+ * Score = QUALITY_START − Σ points.
+ */
+export interface QualityFactor { id: string; owner: "client" | "model"; points: number; text: string; gap?: QualityGapId }
 
 /** Evidence about an input, distinct from the date/precision of its numeric conversion. */
 export interface ParameterEvidence {
@@ -409,7 +415,8 @@ export interface Assessment {
   robustness: "clear_go" | "grey" | "clear_no" | "insufficient";
   /** Sensitivity ids that hurt NPV most — what to verify first. */
   drivers: string[];
-  confidence: { level: Confidence; score: number; reasons: string[] };
+  /** `factors` is absent on reports saved before the split into client/model deductions. */
+  confidence: { level: Confidence; score: number; reasons: string[]; factors?: QualityFactor[] };
   missingData: string[];
   /** Stable message IDs for localisation; same order as missingData. */
   missingDataCodes: QualityGapId[];

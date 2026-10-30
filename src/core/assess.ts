@@ -14,7 +14,7 @@ import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
 import { Params, prov, toMap } from "./params";
 import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
-import { assessQuality } from "./quality";
+import { assessQuality, capQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
@@ -244,14 +244,16 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
   const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: params.prov(capexId).confidence === "LOW" });
   if (input.process?.basisDate && input.process.basisDate > asOfDate) {
-    quality.score = Math.min(quality.score,34); quality.level = "LOW";
-    quality.reasons.push(T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.", "Дата вихідних даних процесу пізніша за дату оцінки; ці дані не підтверджують поточний висновок."));
+    const text = T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.", "Дата вихідних даних процесу пізніша за дату оцінки; ці дані не підтверджують поточний висновок.");
+    capQuality(quality, 34, { id: "process_basis_date", owner: "client", text });
+    quality.reasons.push(text);
   }
   const expiredPrices = dataAudit.checks.filter((check) => (priceIds.includes(check.parameterId) && check.status === "EXPIRED") || (check.observedThrough && check.observedThrough > asOfDate) || (check.publishedOn && check.publishedOn > asOfDate));
   if (expiredPrices.length) {
+    const text = T("A price affecting this route is expired or unavailable as of the assessment date; current applicable evidence is required before a verdict", "Ціна, що впливає на цей маршрут, втратила чинність або ще не була доступна на дату оцінки; для висновку потрібні чинні застосовні дані");
+    capQuality(quality, 34, { id: "price_expired", owner: "model", text });
     quality.level = "LOW";
-    quality.score = Math.min(quality.score, 34);
-    quality.reasons.push(T("A price affecting this route is expired or unavailable as of the assessment date; current applicable evidence is required before a verdict", "Ціна, що впливає на цей маршрут, втратила чинність або ще не була доступна на дату оцінки; для висновку потрібні чинні застосовні дані"));
+    quality.reasons.push(text);
   }
   const { scores, overall } = computeScores({
     input, base, cons, opt, demand, logistics, digestate,
@@ -332,7 +334,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       ...(input.assumedSupportEurPerKwh ? [T("Legacy assumed support is excluded from the base assessment.", "Старе припущення про підтримку виключено з базової оцінки.")] : []),
       ...base.feed.warnings,
       ...base.feed.lines.flatMap((l) => l.warnings),
-      ...base.design.tech.warnings.slice(0, -1), // the last one is the static "no energy crops" note
+      ...base.design.tech.warnings,
       ...logistics.warnings,
     ]),
   ];
@@ -381,7 +383,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     verdict,
     robustness,
     drivers,
-    confidence: { level: quality.level, score: quality.score, reasons: quality.reasons },
+    confidence: { level: quality.level, score: quality.score, reasons: quality.reasons, factors: quality.factors },
     missingData: quality.missing,
     missingDataCodes: quality.missingCodes,
     warnings,

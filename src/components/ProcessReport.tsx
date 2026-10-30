@@ -5,6 +5,7 @@ import { makeFormat } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { processCopy, processFieldLabels } from "@/i18n/processes";
 import { CashFlowChart } from "./Charts";
+import { DataConfidence } from "./DataConfidence";
 
 /** A gas inlet and a COD reactor must never render an AD feedstock/digestate diagram. */
 export function ProcessReport({ a, d, locale, currency, display, access, unlockSlot, afterSlot, methodologyHref }: ResultViewProps) {
@@ -28,6 +29,7 @@ export function ProcessReport({ a, d, locale, currency, display, access, unlockS
       <p className="mt-3 text-sm text-muted">{c.inputHint}</p>
       <p className="mt-2 text-xs text-muted">Model {a.dataAudit?.modelVersion} · {a.dataAudit?.asOfDate} · {a.dataAudit?.inputVersion}</p>
     </header>
+    <DataConfidence a={a} d={d} locale={locale} currency={currency} />
     <section className="card p-5"><h3 className="font-bold">{R.flowTitle}</h3>
       <dl className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(economicsAvailable ? [...[R.heatProduced,R.heatUseful,R.energy].map((label,i) => [label,[b.energy.heatProducedKwh,b.energy.heatUsefulKwh,b.energy.elNetKwh][i]/1000,"MWh/a"] as const), ["CH₄",b.energy.ch4ProducedM3,"Nm³/a"] as const, [L.route.biomethane,b.energy.biomethaneNm3,"Nm³/a"] as const] : [["CH₄",b.feed.ch4M3Year,"Nm³/a"],[R.biogas,b.feed.biogasM3Year,"Nm³/a"]] as const).map(([label,value,unit]) => <div key={label}><dt className="text-sm text-muted">{label}</dt><dd className="num font-semibold">{F.n0(value)} {unit}</dd></div>)}

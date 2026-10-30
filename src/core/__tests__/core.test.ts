@@ -4,6 +4,7 @@ import { ENGINEERING_PARAMS } from "../engineeringParams";
 import { EXAMPLES } from "../examples";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS } from "../feedstockData";
 import { npv, irr } from "../finance";
+import { QUALITY_START } from "../quality";
 import type { Assessment, ProjectInput } from "../types";
 import { COUNTRIES, getCountry, UA } from "@/countries";
 
@@ -240,6 +241,28 @@ describe("data quality and honesty", () => {
     expect(bare.confidence.score).toBeLessThan(complete.confidence.score);
     expect(bare.missingData.join(" ")).toMatch(/електроенергії/);
     expect(bare.missingData.join(" ")).toMatch(/теплоспоживання/);
+  });
+
+  it("every point lost from the data-quality score is itemised and owned by the client or the model", () => {
+    for (const e of EXAMPLES) {
+      const a = run(e.input);
+      const factors = a.confidence.factors!;
+      const lost = factors.reduce((s, x) => s + x.points, 0);
+      expect(a.confidence.score, e.id).toBe(Math.max(0, QUALITY_START - lost));
+      for (const x of factors) expect(x.points, `${e.id} ${x.id}`).toBeGreaterThan(0);
+      // Each "what to clarify" item is something the client can supply.
+      for (const id of a.missingDataCodes) expect(factors.find((x) => x.gap === id)?.owner, `${e.id} ${id}`).toBe("client");
+    }
+  });
+
+  it("laboratory DM, VS and BMP replace a low-confidence catalogue entry in the quality score", () => {
+    const stream = { id: "p", type: "poultry_layer_manure" as const, quantity: 3000, dryMatterPct: 27, vsPctOfDm: 70, methaneYieldLPerKgVs: 220 };
+    const typed = assess({ ...PIG_UA, feedstocks: [stream] }, UA);
+    const lab = assess({ ...PIG_UA, feedstocks: [stream], labAnalysisAvailable: true }, UA);
+    expect(typed.confidence.factors!.map((x) => x.id)).toContain("low_catalogue");
+    expect(lab.confidence.factors!.map((x) => x.id)).not.toContain("low_catalogue");
+    expect(lab.confidence.factors!.map((x) => x.id)).not.toContain("lab");
+    expect(lab.confidence.score).toBe(typed.confidence.score + 27);
   });
 
   it("returns INSUFFICIENT DATA for an empty questionnaire", () => {

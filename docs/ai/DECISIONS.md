@@ -28,6 +28,9 @@ replace the line rather than adding a contradicting one.
 - 2026-10-30 — CHP service cost scales with size (2.6 ct/kWh at 100 kW, exponent −0.32).
 - 2026-10-30 — Feedstock-loss sensitivity keeps CAPEX as built (plant was sized for the base case).
 - 2026-10-30 — Revenue lines under €0.5 are hidden in tables but still counted in totals.
+- 2026-10-31 — Data-confidence score starts at 80 (`QUALITY_START`), so a screening never shows
+  HIGH; every lost point is a `QualityFactor` owned by `client` or `model` (test: score = 80 − Σ).
+  Streams with lab DM/VS/BMP no longer count toward the "low-confidence catalogue" deduction.
 
 ## Product
 
