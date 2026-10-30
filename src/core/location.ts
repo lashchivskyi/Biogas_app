@@ -17,6 +17,8 @@ export interface CityClimate {
   fetchedOn: string;
   /** Absent on legacy Open-Meteo snapshots, whose signatures and attribution remain valid. */
   dataset?: "era5-planette-0.25";
+  /** GeoNames admin1 code ("US.WI"): selects state/province market data. Absent on older snapshots. */
+  adminCode?: string;
   signature: string;
 }
 
@@ -38,6 +40,7 @@ export function validCity(city: unknown, countryCode: string): city is CityClima
     Number.isFinite(c.elevationM) && Array.isArray(c.monthlyTempC) && c.monthlyTempC.length === 12 &&
     c.monthlyTempC.every((t) => Number.isFinite(t) && t >= -70 && t <= 55) &&
     [c.startDate, c.endDate, c.fetchedOn].every((d) => typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(Date.parse(d))) &&
+    (c.adminCode === undefined || (typeof c.adminCode === "string" && c.adminCode.startsWith(`${countryCode}.`) && /^[A-Z]{2}\.[A-Za-z0-9]{1,8}$/.test(c.adminCode))) &&
     typeof c.signature === "string" && /^[a-f0-9]{64}$/.test(c.signature);
 }
 

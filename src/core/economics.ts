@@ -50,7 +50,10 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
 
   // ---------- revenue / savings ----------
   const revenue: { id: string; label: string; eur: number }[] = [];
+  // Lines under €0.5 are hidden from the table but still counted, so revenue, EBITDA and cash flow agree.
+  let revenueAll = 0;
   const rev = (id: string, label: string, eur: number) => {
+    revenueAll += eur;
     if (Math.abs(eur) > 0.5) revenue.push({ id, label, eur });
   };
   let selfEur = energy.elSelfConsumedKwh * demand.electricityPriceEurKwh * selfShare;
@@ -115,7 +118,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
     ox("residual_disposal", T("Residuals treatment and disposal", "Очищення й утилізація залишків"), process.residualTonnesYear * (input.process!.residualCostLocalT ?? 0) / ctx.fx * opexMult);
     ox("gas_supply", T("Purchased biogas", "Закупівля біогазу"), process.gasPurchaseEurYear);
   }
-  const revenueEur = revenue.reduce((a, l) => a + l.eur, 0);
+  const revenueEur = revenueAll;
   const opexEur = opex.reduce((a, l) => a + l.eur, 0);
   const opexRev: OpexAndRevenue = { opex, opexEur, revenue, revenueEur, ebitdaEur: revenueEur - opexEur };
 

@@ -1,5 +1,5 @@
 {
-  "checkedOn": "2026-10-26",
+  "checkedOn": "2026-10-30",
   "valuation": "Local-currency observations use the dated official reference FX in statistics.json where available. Unsupported currencies retain an explicitly LOW annual-average fallback. An updated FX does not refresh the tariff observation period. Ranges describe tariffs/applicability, not probability intervals.",
   "observations": [
     {
@@ -8,7 +8,7 @@
       "currency": "BRL",
       "unit": "local/MWh",
       "value": 840.76,
-      "regionalValues": { "santa-catarina": 720.19, "parana": 720.19, "rio-grande-do-sul": 720.19, "sao-paulo": 951.49, "minas-gerais": 951.49, "goias": 914.12, "mato-grosso": 914.12, "pernambuco": 773.65 },
+      "regionalValues": { "BR.01": 869.3, "BR.02": 773.65, "BR.03": 869.3, "BR.04": 869.3, "BR.05": 773.65, "BR.06": 773.65, "BR.07": 914.12, "BR.08": 951.49, "BR.11": 914.12, "BR.13": 773.65, "BR.14": 914.12, "BR.15": 951.49, "BR.16": 869.3, "BR.17": 773.65, "BR.18": 720.19, "BR.20": 773.65, "BR.21": 951.49, "BR.22": 773.65, "BR.23": 720.19, "BR.24": 869.3, "BR.25": 869.3, "BR.26": 720.19, "BR.27": 951.49, "BR.28": 773.65, "BR.29": 914.12, "BR.30": 773.65, "BR.31": 869.3 },
       "bounds": [720.19, 951.49],
       "period": "2026-05",
       "scope": "MME/ANEEL billed industrial electricity, national and macro-regional averages; regulated supply, not a free-market PPA. Macro-regions do not resolve state/network tariffs.",
@@ -68,6 +68,49 @@
       "scope": "Energosbyt Almaty non-household group 2, excluding VAT. Applicable reference for the Almaty region only; special industrial/food producer group is 39.30 KZT/kWh.",
       "method": "Published local tariff /KZT per EUR. Outside Almaty this is a regional proxy and remains LOW until a local tariff or customer bill is supplied.",
       "urls": ["https://esalmaty.kz/ru/business-tariffs"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "IN",
+      "parameter": "elec",
+      "currency": "INR",
+      "unit": "local/kWh",
+      "value": 8.1,
+      "regionalValues": { "IN.01": 13.54, "IN.02": 7.77, "IN.03": 8.66, "IN.05": 5.0, "IN.07": 8.99, "IN.09": 4.75, "IN.10": 8.46, "IN.11": 7.25, "IN.12": 5.29, "IN.13": 7.32, "IN.16": 11.99, "IN.17": 10.38, "IN.18": 7.05, "IN.19": 7.53, "IN.20": 8.24, "IN.21": 6.71, "IN.22": 8.09, "IN.23": 8.15, "IN.24": 7.46, "IN.25": 9.04, "IN.28": 8.03, "IN.29": 10.2, "IN.30": 4.5, "IN.31": 10.86, "IN.33": 6.6, "IN.34": 10.16, "IN.35": 7.51, "IN.36": 8.65, "IN.37": 9.4, "IN.38": 8.02, "IN.39": 9.35, "IN.40": 9.26, "IN.41": 5.3, "IN.52": 6.45 },
+      "bounds": [6.7, 12.0],
+      "period": "2026-03",
+      "scope": "CEA Electricity Tariff & Duty and Average Rates of Electricity Supply in India, March 2026, table 6(f): large industry, 1 000 kW at 60 % load factor, 11 kV, excl. electricity duty; FY2025-26 tariffs. National value = median of states. Fuel surcharges not uniform (Gujarat understated).",
+      "method": "Average rate in paise/kWh ÷ 100 ÷ INR per EUR.",
+      "urls": ["https://cea.nic.in/api/dashboardReports/view-pdf/en/e360e427-4ee0-42c1-b4d6-1e73ee07864e"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "MX",
+      "parameter": "elec",
+      "currency": "MXN",
+      "unit": "local/kWh",
+      "value": 2.83,
+      "regionalValues": { "MX.01": 2.83, "MX.02": 1.96, "MX.03": 3.38, "MX.04": 3.0, "MX.05": 2.73, "MX.06": 2.61, "MX.07": 2.53, "MX.08": 2.97, "MX.09": 2.75, "MX.10": 2.61, "MX.11": 2.83, "MX.12": 2.92, "MX.13": 2.95, "MX.14": 2.93, "MX.15": 2.8, "MX.16": 2.97, "MX.17": 2.92, "MX.18": 2.93, "MX.19": 2.53, "MX.20": 2.73, "MX.21": 2.95, "MX.22": 2.83, "MX.23": 3.0, "MX.24": 2.75, "MX.25": 2.55, "MX.26": 2.55, "MX.27": 2.73, "MX.28": 2.53, "MX.29": 2.95, "MX.30": 2.81, "MX.31": 3.0, "MX.32": 2.83 },
+      "bounds": [1.96, 3.38],
+      "period": "2026-10-01",
+      "validFrom": "2026-10-01",
+      "scope": "CFE basic-supply tariff GDMTH from 01.10.2026 (DOF, CNE oficio F00.06.UE/2658/2026, maximum tariffs), excl. IVA and DAP; reference 300 kW, 120 MWh/month, energy 25/65/10 % base/intermediate/peak. National value: Bajío division. CFE publishes no state-to-division table, so split states are assigned by engineering judgement.",
+      "method": "Energy incl. transmission, CENACE and SCnMEM + (capacity + distribution) × 300 kW ÷ 120 MWh + fixed charge ÷ 120 MWh.",
+      "urls": ["https://dof.gob.mx/nota_detalle_popup.php?codigo=5802191"],
+      "confidence": "MEDIUM"
+    },
+    {
+      "country": "CA",
+      "parameter": "elec",
+      "currency": "CAD",
+      "unit": "local/kWh",
+      "value": 0.107,
+      "regionalValues": { "CA.01": 0.12, "CA.02": 0.0973, "CA.03": 0.0799, "CA.04": 0.1589, "CA.05": 0.1249, "CA.07": 0.1661, "CA.08": 0.166, "CA.09": 0.1731, "CA.10": 0.1045, "CA.11": 0.1289, "CA.12": 0.317, "CA.13": 0.317, "CA.14": 0.661 },
+      "bounds": [0.0799, 0.1731],
+      "period": "2025-04-01",
+      "scope": "Hydro-Québec, Comparison of Electricity Prices in Major North American Cities 2025 (rates 1 Apr 2025, excl. taxes), 500 kW and 200 MWh/month; provinces with two cities averaged; Ontario with Global Adjustment Class B. Territories computed from ATCO Electric Yukon, Naka Power and Qulliq Energy tariffs (2025–2026). National value: mean of five cities + 8 %.",
+      "method": "Monthly bill ÷ monthly kWh, CAD/kWh.",
+      "urls": ["https://www.hydroquebec.com/data/documents-donnees/pdf/comparaison-prix-2025-en.pdf"],
       "confidence": "MEDIUM"
     }
   ]

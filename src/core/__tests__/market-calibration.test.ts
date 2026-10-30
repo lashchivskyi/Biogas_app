@@ -19,6 +19,49 @@ const withValues = (country: CountryAdapter, values: Record<string, number>): Co
 });
 
 describe("primary-source market calibration", () => {
+  it("applies official state data in Brazil, India and Mexico, keeping national values elsewhere", () => {
+    const p = (c: string, region?: string) => buildParams(getCountry(c), region);
+    const fx = (c: string) => fxFor(getCountry(c).currency)!.value;
+    expect(p("BR", "BR.18").get("econ.electricity_retail_eur_kwh") * fx("BR") * 1000).toBeCloseTo(720.19, 6);
+    expect(p("BR", "BR.23").get("econ.electricity_spot_eur_kwh") / p("BR").get("econ.electricity_spot_eur_kwh")).toBeCloseTo(245.95 / 227.87, 6);
+    expect(p("BR", "BR.27").get("econ.operator_wage_ratio")).toBeCloseTo(1.19, 6);
+    expect(p("IN", "IN.16").get("econ.electricity_retail_eur_kwh") * fx("IN")).toBeCloseTo(11.99, 6);
+    expect(p("MX", "MX.03").get("econ.electricity_retail_eur_kwh") * fx("MX")).toBeCloseTo(3.38, 6);
+    expect(p("MX", "MX.03").prov("econ.electricity_retail_eur_kwh").source).toMatch(/DOF/);
+    expect(p("CA", "quebec").get("econ.electricity_retail_eur_kwh") * fx("CA")).toBeCloseTo(0.1045, 6);
+    expect(p("CA", "CA.14").get("econ.electricity_retail_eur_kwh") * fx("CA")).toBeCloseTo(0.661, 6);
+    expect(p("CA", "british-columbia").get("econ.gas_price_eur_mwh") / p("CA", "ontario").get("econ.gas_price_eur_mwh")).toBeCloseTo(9.62 / 6.63, 6);
+    expect(p("CA", "CA.10").get("econ.grid_ef_t_mwh")).toBe(0.0026);
+    expect(p("IT", "IT.14").get("econ.electricity_spot_eur_kwh") / p("IT").get("econ.electricity_spot_eur_kwh")).toBeCloseTo(141.34 / 148.61, 6);
+    expect(p("CA", "CA.11").get("econ.gas_price_eur_mwh") / p("CA", "ontario").get("econ.gas_price_eur_mwh")).toBeCloseTo(5.57 / 6.63, 6);
+    // A state without its own figure keeps the national reference.
+    expect(p("IN", "IN.26").get("econ.electricity_retail_eur_kwh")).toBe(p("IN").get("econ.electricity_retail_eur_kwh"));
+  });
+
+  it("uses US state prices, operator wages, wholesale hubs and eGRID for presets and any city's state", () => {
+    const us = (statistics as unknown as { usStates: { electricity: { values: Record<string, { commercial: number; industrial: number }> }; gas: { values: Record<string, number> }; operator: { meanHourlyWage: Record<string, number>; ecec: { wagesUsdH: number } }; wholesale: { hubs: Record<string, { usdMwh: number }>; states: Record<string, string> } } }).usStates;
+    const usd = fxFor("USD")!.value;
+    const p = (region?: string) => buildParams(getCountry("US"), region);
+    const ca = us.electricity.values["US.CA"];
+    // Preset region and an admin1 code (as carried by a city) resolve to the same state data.
+    expect(p("california").get("econ.electricity_retail_eur_kwh")).toBe(p("US.CA").get("econ.electricity_retail_eur_kwh"));
+    expect(p("US.CA").get("econ.electricity_retail_eur_kwh") * usd).toBeCloseTo((ca.commercial + ca.industrial) / 2, 8);
+    expect(p("US.CA").prov("econ.electricity_retail_eur_kwh").range!.high * usd).toBeCloseTo(ca.commercial, 8);
+    // Gas stays in EUR/MWh LHV: USD/MWh HHV × 1.11 / FX.
+    expect(p("US.TX").get("econ.gas_price_eur_mwh")).toBeCloseTo(us.gas.values["US.TX"] * 1.11 / usd, 8);
+    expect(p("US.TX").get("econ.gas_price_eur_mwh")).toBeGreaterThan(5);
+    expect(p("US.CA").get("econ.operator_wage_ratio")).toBeCloseTo(us.operator.meanHourlyWage["US.CA"] / us.operator.ecec.wagesUsdH, 4);
+    expect(p("US.TX").get("econ.electricity_spot_eur_kwh") * usd * 1000).toBeCloseTo(us.wholesale.hubs[us.wholesale.states["US.TX"]].usdMwh, 6);
+    expect(p("US.CA").get("econ.grid_ef_t_mwh")).toBeCloseTo(393.5 * 0.000453592, 4);
+    const city = { id: 5368361, countryCode: "US", name: "Los Angeles", admin1: "California", adminCode: "US.CA", latitude: 34.05, longitude: -118.24, gridLatitude: 34, gridLongitude: -118.25,
+      elevationM: 89, monthlyTempC: [14, 15, 16, 17, 19, 21, 24, 25, 24, 21, 17, 14], startDate: "2016-01-01", endDate: "2025-12-31", fetchedOn: "2026-10-27", signature: "a".repeat(64) };
+    expect(buildParams(getCountry("US"), "city:5368361", undefined, city).get("econ.electricity_retail_eur_kwh")).toBe(p("US.CA").get("econ.electricity_retail_eur_kwh"));
+    expect(buildParams(getCountry("US"), "city:5368361", undefined, { ...city, adminCode: undefined }).get("econ.electricity_retail_eur_kwh")).toBe(p().get("econ.electricity_retail_eur_kwh"));
+    // National level and a foreign admin code keep the national values.
+    expect(p().get("econ.electricity_retail_eur_kwh")).toBe(p("CA.08").get("econ.electricity_retail_eur_kwh"));
+    expect(p().get("econ.grid_ef_t_mwh")).toBe(getCountry("US").params.find((x) => x.id === "econ.grid_ef_t_mwh")!.value);
+  });
+
   it("uses MME May 2026 industrial tariffs and actual macro-regional references, not wholesale PLD", () => {
     const fx = fxFor("BRL")!.value;
     expect(electricityFor("BR")!.value * fx * 1000).toBeCloseTo(840.76, 6);

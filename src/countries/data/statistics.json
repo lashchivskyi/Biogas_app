@@ -5039,7 +5039,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=SE4&start=2025-10-01&end=2026-10-01"
   },
   "FI": {
@@ -5075,7 +5075,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=IT-North&start=2025-10-01&end=2026-10-01"
   },
   "FR": {
@@ -5113,9 +5113,11 @@
   "ert_bil_eur_a": "2026-07-08T11:00:00+0200"
  },
  "refreshErrors": {
+  "dayAhead.RS": "HTTP Error 429: Too Many Requests",
+  "dayAhead.LT": "HTTP Error 429: Too Many Requests",
   "dayAhead.LV": "HTTP Error 429: Too Many Requests",
-  "dayAhead.SE": "HTTP Error 429: Too Many Requests",
-  "dayAhead.IT": "HTTP Error 429: Too Many Requests"
+  "dayAhead.DE": "HTTP Error 429: Too Many Requests",
+  "dayAhead.ES": "HTTP Error 429: Too Many Requests"
  },
  "fxReference": {
   "asOf": "2026-10-29",
@@ -5182,17 +5184,774 @@
    "perEur": 117.5367,
    "asOf": "2026-10-30",
    "fetchedOn": "2026-10-30",
-   "url": "https://kurs.resenje.org/api/v1/currencies/eur/rates/today",
-   "source": "NBS official middle rate (via kurs.resenje.org), 2026-10-30",
-   "confidence": "HIGH"
+   "url": "https://webappcenter.nbs.rs/ExchangeRateWebApp/ExchangeRate/CurrentMiddleRate"
   },
   "VND": {
-   "perEur": 28715.4,
-   "asOf": "2026-10-30",
+   "perEur": 28501.67,
+   "asOf": "2026-10-29",
    "fetchedOn": "2026-10-30",
-   "url": "https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx",
-   "source": "Cross rate: Vietcombank USD mid 25,800 VND × ECB 1.113 USD/EUR (2026-10-29); SBV publishes no EUR rate",
-   "confidence": "MEDIUM"
+   "url": "https://sbv.gov.vn/tỷ-giá",
+   "source": "State Bank of Vietnam cross rate (tỷ giá tính chéo) valid 29.10–04.11.2026",
+   "confidence": "HIGH"
+  }
+ },
+ "usStates": {
+  "electricity": {
+   "period": "2026-01/2026-08",
+   "periodEnd": "2026-08-31",
+   "url": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_b",
+   "unit": "USD/kWh",
+   "values": {
+    "US.CT": {
+     "commercial": 0.2175,
+     "industrial": 0.1816
+    },
+    "US.ME": {
+     "commercial": 0.2283,
+     "industrial": 0.1562
+    },
+    "US.MA": {
+     "commercial": 0.2466,
+     "industrial": 0.1994
+    },
+    "US.NH": {
+     "commercial": 0.214,
+     "industrial": 0.1807
+    },
+    "US.RI": {
+     "commercial": 0.2368,
+     "industrial": 0.2157
+    },
+    "US.VT": {
+     "commercial": 0.2087,
+     "industrial": 0.129
+    },
+    "US.NJ": {
+     "commercial": 0.179,
+     "industrial": 0.1531
+    },
+    "US.NY": {
+     "commercial": 0.2293,
+     "industrial": 0.1033
+    },
+    "US.PA": {
+     "commercial": 0.139,
+     "industrial": 0.1082
+    },
+    "US.IL": {
+     "commercial": 0.1405,
+     "industrial": 0.1042
+    },
+    "US.IN": {
+     "commercial": 0.1384,
+     "industrial": 0.0917
+    },
+    "US.MI": {
+     "commercial": 0.158,
+     "industrial": 0.0929
+    },
+    "US.OH": {
+     "commercial": 0.1361,
+     "industrial": 0.1023
+    },
+    "US.WI": {
+     "commercial": 0.1373,
+     "industrial": 0.096
+    },
+    "US.IA": {
+     "commercial": 0.1166,
+     "industrial": 0.0766
+    },
+    "US.KS": {
+     "commercial": 0.1177,
+     "industrial": 0.0833
+    },
+    "US.MN": {
+     "commercial": 0.127,
+     "industrial": 0.0978
+    },
+    "US.MO": {
+     "commercial": 0.1117,
+     "industrial": 0.0878
+    },
+    "US.NE": {
+     "commercial": 0.0906,
+     "industrial": 0.0862
+    },
+    "US.ND": {
+     "commercial": 0.0772,
+     "industrial": 0.0818
+    },
+    "US.SD": {
+     "commercial": 0.1168,
+     "industrial": 0.0945
+    },
+    "US.DE": {
+     "commercial": 0.1399,
+     "industrial": 0.1156
+    },
+    "US.DC": {
+     "commercial": 0.237,
+     "industrial": 0.2047
+    },
+    "US.FL": {
+     "commercial": 0.1178,
+     "industrial": 0.092
+    },
+    "US.GA": {
+     "commercial": 0.1201,
+     "industrial": 0.0867
+    },
+    "US.MD": {
+     "commercial": 0.1716,
+     "industrial": 0.1487
+    },
+    "US.NC": {
+     "commercial": 0.1061,
+     "industrial": 0.0795
+    },
+    "US.SC": {
+     "commercial": 0.1186,
+     "industrial": 0.0786
+    },
+    "US.VA": {
+     "commercial": 0.112,
+     "industrial": 0.1007
+    },
+    "US.WV": {
+     "commercial": 0.1164,
+     "industrial": 0.0826
+    },
+    "US.AL": {
+     "commercial": 0.1483,
+     "industrial": 0.0796
+    },
+    "US.KY": {
+     "commercial": 0.1264,
+     "industrial": 0.0749
+    },
+    "US.MS": {
+     "commercial": 0.14,
+     "industrial": 0.0765
+    },
+    "US.TN": {
+     "commercial": 0.1357,
+     "industrial": 0.0684
+    },
+    "US.AR": {
+     "commercial": 0.1155,
+     "industrial": 0.0696
+    },
+    "US.LA": {
+     "commercial": 0.1176,
+     "industrial": 0.0658
+    },
+    "US.OK": {
+     "commercial": 0.0935,
+     "industrial": 0.0689
+    },
+    "US.TX": {
+     "commercial": 0.086,
+     "industrial": 0.0677
+    },
+    "US.AZ": {
+     "commercial": 0.1228,
+     "industrial": 0.0794
+    },
+    "US.CO": {
+     "commercial": 0.1337,
+     "industrial": 0.0964
+    },
+    "US.ID": {
+     "commercial": 0.0975,
+     "industrial": 0.0837
+    },
+    "US.MT": {
+     "commercial": 0.1289,
+     "industrial": 0.0699
+    },
+    "US.NV": {
+     "commercial": 0.0936,
+     "industrial": 0.0869
+    },
+    "US.NM": {
+     "commercial": 0.1096,
+     "industrial": 0.0519
+    },
+    "US.UT": {
+     "commercial": 0.1038,
+     "industrial": 0.0858
+    },
+    "US.WY": {
+     "commercial": 0.0982,
+     "industrial": 0.0878
+    },
+    "US.CA": {
+     "commercial": 0.2696,
+     "industrial": 0.2111
+    },
+    "US.OR": {
+     "commercial": 0.1059,
+     "industrial": 0.0838
+    },
+    "US.WA": {
+     "commercial": 0.1186,
+     "industrial": 0.0717
+    },
+    "US.AK": {
+     "commercial": 0.2304,
+     "industrial": 0.239
+    },
+    "US.HI": {
+     "commercial": 0.4243,
+     "industrial": 0.3783
+    },
+    "US": {
+     "commercial": 0.1404,
+     "industrial": 0.0909
+    }
+   },
+   "fetchedOn": "2026-10-30"
+  },
+  "gas": {
+   "unit": "USD/MWh HHV",
+   "method": "Mean of the latest 12 published monthly industrial prices (USD/Mcf) ÷ (state heat content × 0.29307 MWh/MMBtu)",
+   "url": "https://www.eia.gov/dnav/ng/ng_pri_sum_a_EPG0_PIN_DMcf_m.htm",
+   "heatUrl": "https://www.eia.gov/dnav/ng/ng_cons_heat_a_EPG0_VGTH_btucf_a.htm",
+   "values": {
+    "US": 17.557,
+    "US.AL": 19.499,
+    "US.AK": 24.546,
+    "US.AZ": 12.654,
+    "US.AR": 30.29,
+    "US.CA": 41.784,
+    "US.CO": 26.855,
+    "US.CT": 29.651,
+    "US.DE": 61.651,
+    "US.FL": 23.794,
+    "US.GA": 23.04,
+    "US.HI": 139.1,
+    "US.ID": 13.881,
+    "US.IL": 27.485,
+    "US.IN": 24.016,
+    "US.IA": 20.977,
+    "US.KS": 19.707,
+    "US.KY": 16.866,
+    "US.LA": 15.424,
+    "US.ME": 25.499,
+    "US.MD": 50.536,
+    "US.MA": 52.007,
+    "US.MI": 27.402,
+    "US.MN": 21.907,
+    "US.MS": 20.341,
+    "US.MO": 27.12,
+    "US.MT": 21.998,
+    "US.NE": 18.765,
+    "US.NV": 13.557,
+    "US.NH": 35.884,
+    "US.NJ": 35.535,
+    "US.NM": 21.384,
+    "US.NY": 41.641,
+    "US.NC": 24.77,
+    "US.ND": 13.557,
+    "US.OH": 34.183,
+    "US.OK": 13.489,
+    "US.OR": 20.724,
+    "US.PA": 37.495,
+    "US.RI": 37.796,
+    "US.SC": 22.377,
+    "US.SD": 20.875,
+    "US.TN": 20.775,
+    "US.TX": 12.712,
+    "US.UT": 19.639,
+    "US.VT": 17.145,
+    "US.VA": 19.032,
+    "US.WA": 44.291,
+    "US.WV": 15.141,
+    "US.WI": 22.224,
+    "US.WY": 14.263
+   },
+   "months": {
+    "US": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.AL": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.AK": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.AZ": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.AR": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.CA": [
+     "2025-07",
+     "2026-07",
+     12
+    ],
+    "US.CO": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.CT": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.DE": [
+     "2025-07",
+     "2026-07",
+     12
+    ],
+    "US.FL": [
+     "2025-05",
+     "2026-07",
+     12
+    ],
+    "US.GA": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.HI": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.ID": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.IL": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.IN": [
+     "2024-12",
+     "2025-11",
+     12
+    ],
+    "US.IA": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.KS": [
+     "2025-05",
+     "2026-07",
+     12
+    ],
+    "US.KY": [
+     "2025-06",
+     "2026-07",
+     12
+    ],
+    "US.LA": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.ME": [
+     "2025-02",
+     "2026-01",
+     12
+    ],
+    "US.MD": [
+     "2025-02",
+     "2026-03",
+     12
+    ],
+    "US.MA": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.MI": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.MN": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.MS": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.MO": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.MT": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.NE": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.NV": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.NH": [
+     "2025-06",
+     "2026-05",
+     12
+    ],
+    "US.NJ": [
+     "2025-07",
+     "2026-06",
+     12
+    ],
+    "US.NM": [
+     "2025-01",
+     "2026-07",
+     12
+    ],
+    "US.NY": [
+     "2025-07",
+     "2026-06",
+     12
+    ],
+    "US.NC": [
+     "2025-05",
+     "2026-07",
+     12
+    ],
+    "US.ND": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.OH": [
+     "2025-04",
+     "2026-06",
+     12
+    ],
+    "US.OK": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.OR": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.PA": [
+     "2025-05",
+     "2026-07",
+     12
+    ],
+    "US.RI": [
+     "2025-06",
+     "2026-06",
+     12
+    ],
+    "US.SC": [
+     "2025-07",
+     "2026-07",
+     12
+    ],
+    "US.SD": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.TN": [
+     "2025-07",
+     "2026-07",
+     12
+    ],
+    "US.TX": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.UT": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.VT": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.VA": [
+     "2025-04",
+     "2026-03",
+     12
+    ],
+    "US.WA": [
+     "2025-03",
+     "2026-07",
+     12
+    ],
+    "US.WV": [
+     "2025-06",
+     "2026-07",
+     12
+    ],
+    "US.WI": [
+     "2025-08",
+     "2026-07",
+     12
+    ],
+    "US.WY": [
+     "2025-08",
+     "2026-07",
+     12
+    ]
+   },
+   "fetchedOn": "2026-10-30"
+  },
+  "operator": {
+   "occupation": "51-8031 Water and wastewater treatment plant and system operators",
+   "year": "2025",
+   "url": "https://www.bls.gov/oes/",
+   "meanHourlyWage": {
+    "US": 30.07,
+    "ALL": 33.54,
+    "US.AL": 26.59,
+    "US.AK": 32.98,
+    "US.AZ": 29.41,
+    "US.AR": 21.92,
+    "US.CA": 41.92,
+    "US.CO": 34.94,
+    "US.CT": 37.93,
+    "US.DE": 31.88,
+    "US.FL": 29.41,
+    "US.GA": 24.82,
+    "US.HI": 31.03,
+    "US.ID": 26.47,
+    "US.IL": 34.53,
+    "US.IN": 27.25,
+    "US.IA": 29.23,
+    "US.KS": 23.7,
+    "US.KY": 22.97,
+    "US.LA": 23.15,
+    "US.ME": 31.26,
+    "US.MD": 31.04,
+    "US.MA": 33.61,
+    "US.MI": 28.88,
+    "US.MN": 34.37,
+    "US.MS": 23.59,
+    "US.MO": 25.57,
+    "US.MT": 29.6,
+    "US.NE": 29.03,
+    "US.NV": 38.89,
+    "US.NH": 31.16,
+    "US.NJ": 37.27,
+    "US.NM": 25.9,
+    "US.NY": 33.5,
+    "US.NC": 26.26,
+    "US.ND": 29.85,
+    "US.OH": 28.36,
+    "US.OK": 22.76,
+    "US.OR": 33.95,
+    "US.PA": 30.78,
+    "US.RI": 30.89,
+    "US.SC": 26.88,
+    "US.SD": 26.8,
+    "US.TN": 25.86,
+    "US.TX": 24.96,
+    "US.UT": 29.77,
+    "US.VT": 32.27,
+    "US.VA": 29.09,
+    "US.WA": 39.8,
+    "US.WV": 24.32,
+    "US.WI": 30.8,
+    "US.WY": 34.4
+   },
+   "ecec": {
+    "period": "2026-Q02",
+    "totalUsdH": 46.89,
+    "wagesUsdH": 32.82,
+    "url": "https://www.bls.gov/ecec/"
+   },
+   "fetchedOn": "2026-10-30"
+  },
+  "wholesale": {
+   "from": "2025-10-01",
+   "to": "2026-09-30",
+   "url": "https://www.eia.gov/outlooks/steo/xls/STEO_m.xlsx",
+   "table": "STEO table 7a, wholesale electricity prices",
+   "hubs": {
+    "ELWHU_TX": {
+     "name": "ERCOT North hub",
+     "usdMwh": 34.29
+    },
+    "ELWHU_CA": {
+     "name": "CAISO SP15 zone",
+     "usdMwh": 25.84
+    },
+    "ELWHU_NE": {
+     "name": "ISO-NE Internal hub",
+     "usdMwh": 80.7
+    },
+    "ELWHU_NY": {
+     "name": "NYISO Hudson Valley zone",
+     "usdMwh": 81.57
+    },
+    "ELWHU_PJ": {
+     "name": "PJM Western hub",
+     "usdMwh": 83.56
+    },
+    "ELWHU_MW": {
+     "name": "Midcontinent ISO Illinois hub",
+     "usdMwh": 52.64
+    },
+    "ELWHU_SP": {
+     "name": "SPP ISO South hub",
+     "usdMwh": 36.77
+    },
+    "ELWHU_SE": {
+     "name": "SERC index, Into Southern",
+     "usdMwh": 45.6
+    },
+    "ELWHU_FL": {
+     "name": "FRCC index, Florida Reliability",
+     "usdMwh": 51.04
+    },
+    "ELWHU_NW": {
+     "name": "Northwest index, Mid-Columbia",
+     "usdMwh": 35.63
+    },
+    "ELWHU_SW": {
+     "name": "Southwest index, Palo Verde",
+     "usdMwh": 27.09
+    }
+   },
+   "states": {
+    "US.AL": "ELWHU_SE",
+    "US.AZ": "ELWHU_SW",
+    "US.AR": "ELWHU_MW",
+    "US.CA": "ELWHU_CA",
+    "US.CO": "ELWHU_SW",
+    "US.CT": "ELWHU_NE",
+    "US.DE": "ELWHU_PJ",
+    "US.DC": "ELWHU_PJ",
+    "US.FL": "ELWHU_FL",
+    "US.GA": "ELWHU_SE",
+    "US.ID": "ELWHU_NW",
+    "US.IL": "ELWHU_MW",
+    "US.IN": "ELWHU_MW",
+    "US.IA": "ELWHU_MW",
+    "US.KS": "ELWHU_SP",
+    "US.KY": "ELWHU_SE",
+    "US.LA": "ELWHU_MW",
+    "US.ME": "ELWHU_NE",
+    "US.MD": "ELWHU_PJ",
+    "US.MA": "ELWHU_NE",
+    "US.MI": "ELWHU_MW",
+    "US.MN": "ELWHU_MW",
+    "US.MS": "ELWHU_MW",
+    "US.MO": "ELWHU_MW",
+    "US.MT": "ELWHU_NW",
+    "US.NE": "ELWHU_SP",
+    "US.NV": "ELWHU_SW",
+    "US.NH": "ELWHU_NE",
+    "US.NJ": "ELWHU_PJ",
+    "US.NM": "ELWHU_SW",
+    "US.NY": "ELWHU_NY",
+    "US.NC": "ELWHU_SE",
+    "US.ND": "ELWHU_MW",
+    "US.OH": "ELWHU_PJ",
+    "US.OK": "ELWHU_SP",
+    "US.OR": "ELWHU_NW",
+    "US.PA": "ELWHU_PJ",
+    "US.RI": "ELWHU_NE",
+    "US.SC": "ELWHU_SE",
+    "US.SD": "ELWHU_SP",
+    "US.TN": "ELWHU_SE",
+    "US.TX": "ELWHU_TX",
+    "US.UT": "ELWHU_SW",
+    "US.VT": "ELWHU_NE",
+    "US.VA": "ELWHU_PJ",
+    "US.WA": "ELWHU_NW",
+    "US.WV": "ELWHU_PJ",
+    "US.WI": "ELWHU_MW",
+    "US.WY": "ELWHU_SW"
+   },
+   "fetchedOn": "2026-10-30"
+  },
+  "names": {
+   "US.AL": "Alabama",
+   "US.AK": "Alaska",
+   "US.AZ": "Arizona",
+   "US.AR": "Arkansas",
+   "US.CA": "California",
+   "US.CO": "Colorado",
+   "US.CT": "Connecticut",
+   "US.DE": "Delaware",
+   "US.DC": "District of Columbia",
+   "US.FL": "Florida",
+   "US.GA": "Georgia",
+   "US.HI": "Hawaii",
+   "US.ID": "Idaho",
+   "US.IL": "Illinois",
+   "US.IN": "Indiana",
+   "US.IA": "Iowa",
+   "US.KS": "Kansas",
+   "US.KY": "Kentucky",
+   "US.LA": "Louisiana",
+   "US.ME": "Maine",
+   "US.MD": "Maryland",
+   "US.MA": "Massachusetts",
+   "US.MI": "Michigan",
+   "US.MN": "Minnesota",
+   "US.MS": "Mississippi",
+   "US.MO": "Missouri",
+   "US.MT": "Montana",
+   "US.NE": "Nebraska",
+   "US.NV": "Nevada",
+   "US.NH": "New Hampshire",
+   "US.NJ": "New Jersey",
+   "US.NM": "New Mexico",
+   "US.NY": "New York",
+   "US.NC": "North Carolina",
+   "US.ND": "North Dakota",
+   "US.OH": "Ohio",
+   "US.OK": "Oklahoma",
+   "US.OR": "Oregon",
+   "US.PA": "Pennsylvania",
+   "US.RI": "Rhode Island",
+   "US.SC": "South Carolina",
+   "US.SD": "South Dakota",
+   "US.TN": "Tennessee",
+   "US.TX": "Texas",
+   "US.UT": "Utah",
+   "US.VT": "Vermont",
+   "US.VA": "Virginia",
+   "US.WA": "Washington",
+   "US.WV": "West Virginia",
+   "US.WI": "Wisconsin",
+   "US.WY": "Wyoming"
   }
  }
 }

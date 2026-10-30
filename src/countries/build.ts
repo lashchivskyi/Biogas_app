@@ -67,9 +67,9 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
       : prov(id, label, fallback, unit, "ESTIMATE", SRC, L, { ...o, note });
 
   const elec = electricityFor(c.code, regionId, energy?.electricityKwhYear);
-  const gas = gasFor(c.code, energy?.gasM3Year);
+  const gas = gasFor(c.code, energy?.gasM3Year, regionId);
   const gasV = gas?.value ?? c.gas;
-  const lab = labourFor(c.code);
+  const lab = labourFor(c.code, regionId);
   const labV = lab?.value ?? c.labour;
   const disc = discountFor(c.code);
   // Biomethane without support ≈ wholesale gas (≈ 80 % of the business price) + green premium where grid injection & certificates exist.
@@ -89,7 +89,7 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
   const out: Provenance[] = [
     P("econ.fx_local_per_eur", "Exchange rate", fxFor(c.currency), c.fx, `${c.currency}/EUR`),
     P("econ.electricity_retail_eur_kwh", "Business electricity reference, excl. VAT (default if the customer gives none)", elec, c.elec, "EUR/kWh", elec?.evidence?.scope ?? "National reference for a mid-size business — customer tariff and bill take precedence"),
-    P("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor(c.code), +(c.exp / 0.85).toFixed(3), "EUR/kWh", "Official day-ahead or wholesale average where published"),
+    P("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor(c.code, regionId), +(c.exp / 0.85).toFixed(3), "EUR/kWh", "Official day-ahead or wholesale average where published"),
     prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", haircutFor(c.code).value, "—", "ASSUMPTION", haircutFor(c.code).source, "MEDIUM", o),
     prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", electricityVariableShareFor(c.code), "—", "ASSUMPTION", "TOU reference: energy/Ft portion only, demand/service charges retained. Else 85% engineering allowance. User invoice uses the generic allowance until its energy/demand split is known.", "MEDIUM", { ...o, range: electricityVariableShareFor(c.code) === ENGINEERING_MAP["eng.invoice_variable_share"].value ? ENGINEERING_MAP["eng.invoice_variable_share"].range : undefined }),
     prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, { ...o, date: gas?.date ?? o.date, evidence: gas?.evidence }),
@@ -97,8 +97,8 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
     prov("econ.biomethane_price_cons_eur_nm3", "Biomethane price without support, conservative", bm[0], "EUR/Nm³", "CALCULATION", `${bmSrc}; conservative scenario reference ${bm[0]} EUR/Nm³`, bmConf, o),
     prov("econ.biomethane_price_base_eur_nm3", "Biomethane price without support, base", bm[1], "EUR/Nm³", "CALCULATION", bmSrc, bmConf, o),
     prov("econ.biomethane_price_opt_eur_nm3", "Biomethane price without support, optimistic", bm[2], "EUR/Nm³", "CALCULATION", `${bmSrc}; optimistic scenario reference ${bm[2]} EUR/Nm³`, bmConf, o),
-    P("econ.labour_official_eur_h", "Official hourly labour cost, economy-wide (wages + employer costs)", labourOfficialFor(c.code), +(c.labour / operatorRatioFor(c.code).value).toFixed(1), "EUR/h"),
-    prov("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", operatorRatioFor(c.code).value, "—", "ASSUMPTION", operatorRatioFor(c.code).source, "MEDIUM", o),
+    P("econ.labour_official_eur_h", "Official hourly labour cost, economy-wide (wages + employer costs)", labourOfficialFor(c.code), +(c.labour / operatorRatioFor(c.code, regionId).value).toFixed(1), "EUR/h"),
+    P("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", operatorRatioFor(c.code, regionId), 1, "—"),
     prov("econ.transport_eur_tkm", "Road transport of organic feedstock", +(0.06 + 0.003 * labV).toFixed(3), "EUR/(t·km)", "CALCULATION", "0.06 €/t·km vehicle & fuel + 0.003 × driver labour cost (€/h); matches KTBL slurry haulage ≈ 0.12–0.16 €/t·km in Germany", "MEDIUM", o),
     prov("econ.transport_fixed_eur_t", "Loading/unloading per tonne", +(0.6 + 0.02 * labV).toFixed(2), "EUR/t", "CALCULATION", "0.6 €/t pump & loader + 0.02 h/t × labour cost (KTBL Betriebsplanung machine-cost norms, scaled by national labour cost)", lab?.confidence ?? L, o),
     P("econ.capex_factor", "Local CAPEX relative to the German baseline", capexFactorFor(c.code), c.capex, "—", "Equipment (CHP, upgrading, membranes, pumps) is internationally priced; civil works follow local costs"),
@@ -115,7 +115,7 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
     P("econ.fert_k2o_eur_kg", "Mineral potassium price", fertiliserFor("K2O", c.fertFactor ?? 1), +(c.fertN * 0.65).toFixed(2), "EUR/kg K₂O"),
     prov("econ.digestate_handling_eur_t", "Incremental digestate handling on adequate land", +(1.2 + labV * 0.08).toFixed(2), "EUR/t", "CALCULATION", "Pumping & trailing-hose spreading ≈ 1.2 €/t machinery + 0.08 h/t × labour; ≈ 4.8 €/t in Germany, in line with KTBL contractor rates (3–6 €/m³)", lab?.confidence ?? L, o),
     prov("econ.digestate_excess_eur_t", "Digestate that has no adequate land", +(2.5 + labV * 0.22).toFixed(2), "EUR/t", "CALCULATION", "Third-party export of digestate ≈ 2.5 €/t + 0.22 h/t × labour; ≈ 12 €/t in Germany, in line with manure-exchange prices in surplus regions (LWK Niedersachsen Nährstoffbericht: 10–20 €/t)", lab?.confidence ?? L, o),
-    P("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor(c.code), c.ef, "tCO₂/MWh"),
+    P("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor(c.code, regionId), c.ef, "tCO₂/MWh"),
   ];
   if (c.nitrateLimit !== undefined) out.push(prov("eng.nitrates_limit_kg_n_ha", "N application ceiling from organic fertiliser", c.nitrateLimit, "kgN/ha·a", "ASSUMPTION", "National rule / good practice", "MEDIUM", o));
   if (c.storageMonths !== undefined) out.push(prov("eng.storage_months", "Digestate storage required (closed spreading season)", c.storageMonths, "months", "ASSUMPTION", "National closed-season rule / practice", L, o));
@@ -149,6 +149,7 @@ export function dataStatus(params: Provenance[], calibrated: boolean): "calibrat
 
 export function buildAdapter(c: CountryProfile, regulatory = regulatoryFor(c.regime)): CountryAdapter {
   const params = marketParams(c);
+  const differing = (local: Provenance[]) => local.filter((p) => { const n = params.find((x) => x.id === p.id); return !n || n.value !== p.value || n.source !== p.source; });
   return {
     code: c.code,
     nameEn: c.name,
@@ -156,8 +157,9 @@ export function buildAdapter(c: CountryProfile, regulatory = regulatoryFor(c.reg
     maturity: c.maturity ?? "profile",
     dataStatus: dataStatus(params, false),
     params,
-    paramsForRegion: (regionId) => marketParams(c, regionId).filter((p) => p.id === "econ.electricity_retail_eur_kwh"),
-    paramsForProject: ({ regionId, energy }) => marketParams(c, regionId, energy).filter((p) => ["econ.electricity_retail_eur_kwh", "econ.gas_price_eur_mwh", "econ.heat_value_eur_kwh_th", "econ.biomethane_price_cons_eur_nm3", "econ.biomethane_price_base_eur_nm3", "econ.biomethane_price_opt_eur_nm3"].includes(p.id)),
+    // Only what genuinely differs by region (state tariffs, wages, grid mix) or by the customer's consumption band overrides the national registry.
+    paramsForRegion: (regionId) => differing(marketParams(c, regionId)),
+    paramsForProject: ({ regionId, energy }) => differing(marketParams(c, regionId, energy)),
     regions: regionsFor(c.code, c.regions),
     support: c.support,
     regime: c.regime,

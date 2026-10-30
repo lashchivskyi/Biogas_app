@@ -22,6 +22,7 @@ function payload(c: Omit<CityClimate, "signature">): string {
     c.elevationM, c.monthlyTempC, c.startDate, c.endDate, c.fetchedOn];
   // Keep the original payload for previously saved/purchased snapshots.
   if (c.dataset !== undefined) fields.push(c.dataset);
+  if (c.adminCode !== undefined) fields.push(c.adminCode);
   return JSON.stringify(fields);
 }
 export function signCity(c: Omit<CityClimate, "signature">): CityClimate {
@@ -113,7 +114,7 @@ export async function cityClimate(id: number, country: string, lang: string): Pr
   const rawLon = Math.round((p.longitude - g.lonStart) / g.lonStep);
   const lonIndex = ((rawLon % g.lonCount) + g.lonCount) % g.lonCount;
   const offset = (latIndex * g.lonCount + lonIndex) * 24;
-  const city = signCity({ ...result(p, admins, lang), gridLatitude: g.latStart + latIndex * g.latStep,
+  const city = signCity({ ...result(p, admins, lang), adminCode: p.admin, gridLatitude: g.latStart + latIndex * g.latStep,
     gridLongitude: g.lonStart + lonIndex * g.lonStep, elevationM: p.elevation,
     monthlyTempC: Array.from({ length: 12 }, (_, i) => temperatures.readInt16LE(offset + i * 2) / 10),
     startDate: m.startDate, endDate: m.endDate, fetchedOn: m.fetchedOn, dataset: m.dataset });

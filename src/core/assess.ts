@@ -1,7 +1,7 @@
 import { processBounds, processSchema } from "./processes";
 import { modelsForBusiness } from "./businesses";
 import { climateSummary } from "./climate";
-import { projectRegion } from "./location";
+import { projectRegion, type CityClimate } from "./location";
 import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
 import type { CountryAdapter, SupportScheme } from "./country";
@@ -24,17 +24,17 @@ import { BUSINESS_TYPES } from "./businesses";
 
 export const ROUTES: RouteId[] = ["chp", "boiler", "biomethane"];
 
-export function buildParams(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]): Params {
-  // A city is a climate location, not a verified regional tariff area.
-  const marketRegion = regionId?.startsWith("city:") ? undefined : regionId;
+export function buildParams(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"], city?: CityClimate): Params {
+  // A city selects its state/province market data through its admin1 code; older snapshots without one use national data.
+  const marketRegion = regionId?.startsWith("city:") ? city?.adminCode : regionId;
   const overrides = energy && country.paramsForProject ? country.paramsForProject({ regionId: marketRegion ?? "", energy }) : marketRegion && country.paramsForRegion ? country.paramsForRegion(marketRegion) : [];
   const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(overrides) };
   return new Params(map);
 }
 
 /** Every parameter, engineering + scenario + country, for the registry document and the methodology page. */
-export function allProvenance(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]) {
-  return [...buildParams(country, regionId, energy).all(), ...scenarioProvenance(DATA_REVIEW_AS_OF)];
+export function allProvenance(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"], city?: CityClimate) {
+  return [...buildParams(country, regionId, energy, city).all(), ...scenarioProvenance(DATA_REVIEW_AS_OF)];
 }
 
 function makeCtx(input: Assessment["input"], country: CountryAdapter, params: Params, scenario: ScenarioId, mods: Modifiers, lang: CoreLang, support?: SupportScheme): RunContext {
@@ -67,7 +67,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (!isoDate(asOfDate)) throw new Error("Invalid assessment date");
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";
   const T = tr(lang);
-  const params = buildParams(country, input.regionId, input.energy);
+  const params = buildParams(country, input.regionId, input.energy, input.city);
   const fx = params.get("econ.fx_local_per_eur");
   const run = (route: RouteId, scn: ScenarioId, mods: Modifiers = NO_MODS, support?: SupportScheme) =>
     runScenarioRoute(makeCtx(input, country, params, scn, mods, lang, support), route);

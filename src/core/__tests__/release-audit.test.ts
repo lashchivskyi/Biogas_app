@@ -133,9 +133,9 @@ describe("release gate: temporal evidence, units and actual calculation inputs",
     expect(gasFor("DE", 10000)!.value).toBeCloseTo(statistics.gas.DE.bands["GJ_LT1000"].eurMwh * 1.11, 8);
     expect(gasFor("BR")!.value).toBeCloseTo(283 / fxFor("BRL")!.value * 1.11, 8);
     expect(spotFor("DE")!.date).toBe(statistics.dayAhead.DE.to);
-    // No official EUR rate for VND: a labelled cross rate, never an annual average passed off as current.
-    expect(fxFor("VND")!.source).toMatch(/^Cross rate: .*ECB/);
-    expect(fxFor("VND")!.confidence).toBe("MEDIUM");
+    // VND: the State Bank of Vietnam's own EUR cross rate, never a commercial-bank quote or an annual average.
+    expect(fxFor("VND")!.source).toMatch(/^State Bank of Vietnam/);
+    expect(fxFor("VND")!.confidence).toBe("HIGH");
     expect(fxFor("VND")!.source).not.toMatch(/annual average/i);
     expect(gasFor("GB")!.value).toBeCloseTo(40.3 / fxFor("GBP")!.value * 1.11, 8);
     expect(gasFor("GB")!.date).toBe("2026-06-30");

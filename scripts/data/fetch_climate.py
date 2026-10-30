@@ -319,6 +319,11 @@ def main():
     source = (f'ERA5 reanalysis (Copernicus/ECMWF) via NSF NCAR / Planette; day-weighted monthly mean 2 m temperature '
               f'{start[:4]}–{end[:4]}; nearest 0.25 degree grid cell; no elevation downscaling; not a WMO 30-year normal')
     previous = json.loads(Path(OUT).read_text('utf-8'))['regions']
+    # Market data are published per admin1 (state/province): tag each preset with the admin1 of its nearest city.
+    cities = json.loads(gzip.decompress((directory/'cities.json.gz').read_bytes()))['cities']
+    def admin_of(cc, lat, lon):
+        own = [c for c in cities if c['countryCode'] == cc]
+        return min(own, key=lambda c: (c['latitude']-lat)**2 + ((c['longitude']-lon)*math.cos(math.radians(lat)))**2)['admin']
     data = {'source': source, 'fetchedOn': manifest['fetchedOn'], 'regions': {}}
     changes = []
     for cc, rid, en, loc, lat, lon in L:
@@ -334,7 +339,8 @@ def main():
         data["regions"][key] = {"country": cc, "id": rid, "name": en, "names": loc, "lat": lat, "lon": lon,
                                 "gridLat": g['latStart']+ilat*g['latStep'], "gridLon": g['lonStart']+ilon*g['lonStep'],
                                 "elevationM": prev.get('elevationM'), "monthlyTempC": temps, "days": days,
-                                "period": [start, end], "model": MODEL, "fetchedOn": manifest['fetchedOn'], "source": source}
+                                "period": [start, end], "model": MODEL, "fetchedOn": manifest['fetchedOn'], "source": source,
+                                "admin": admin_of(cc, lat, lon)}
     assert len(data['regions']) == len(L)
     print(f'{len(L)} regional profiles validated; {start} to {end}; maximum monthly change {max(changes, default=0):.1f} C')
     if args.write:

@@ -69,8 +69,9 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
   const selection = resolvePreferences({ locale, markets: COUNTRIES, query: new URLSearchParams({ ...(requested ? { c: requested } : {}), ...(typeof query.r === "string" ? { r: query.r } : {}) }), saved, visitorCountry: cookieStore.get(COUNTRY_COOKIE)?.value });
   const country = COUNTRIES[selection.country];
   const region = country.regions.find((r) => r.id === selection.region);
-  const regionName = region?.names?.[locale] ?? region?.name;
-  const all = allProvenance(country, selection.region);
+  const regionName = region?.names?.[locale] ?? region?.name ?? (selection.city ? [selection.city.name, selection.city.admin1].filter(Boolean).join(", ") : undefined);
+  // A chosen city shows its state/province market data; signature is irrelevant for this read-only view.
+  const all = allProvenance(country, selection.region, undefined, selection.city);
   const registryHref = (code: string) => `/${locale}/methodology?${new URLSearchParams({ c: code })}#parameter-group-4`;
   return (
     <main>
