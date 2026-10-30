@@ -8,7 +8,7 @@ Updated 2026-10-30. Rewrite this file at the end of a task; keep it under 40 lin
 - Market data: official sources for all 33 countries except the LOW items in DATA-SOURCES.md.
 - Regional data: US (51), CA (13), BR (27), IN (34), MX (32), IT (7 price zones); cities carry admin1 codes.
 - CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
-- Methodology tab: every parameter dated; USD display mode.
+- Methodology tab: USD display; country-table numeric widths include six decimal places and a non-shrinking confidence dot; original table layout retained.
 - AI knowledge architecture: AGENTS.md + CLAUDE.md + docs/ai + rules + skills.
 
 ## Next (highest value first)

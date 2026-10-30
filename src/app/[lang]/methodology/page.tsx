@@ -48,7 +48,7 @@ function Cell({ c, id, locale, percentage = false }: { c: (typeof COUNTRIES)[str
       {p && <HelpTooltip description={`${p.source} (${p.confidence})`}>
         {percentage ? new Intl.NumberFormat(INTL_TAG[locale], { style: "percent", maximumFractionDigits: 1 }).format(p.value)
           : <DisplayUnitValue value={p.value} unit={p.unit} digits={6} showUnit={false} initialText={new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(p.value)} />}
-        <span className={`inline-block h-1.5 w-1.5 rounded-full ${DOT[p.confidence]}`} aria-label={p.confidence} />
+        <span className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${DOT[p.confidence]}`} aria-label={p.confidence} />
       </HelpTooltip>}
     </td>
   );
@@ -126,10 +126,10 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
           <div className="methodology-tableFrame" role="region" aria-labelledby="country-conditions-title" tabIndex={0}>
             <table className="num methodology-table methodology-countryTable" aria-labelledby="country-conditions-title" aria-describedby="country-confidence-legend">
               <colgroup>
-                <col className="methodology-countryColumn" /><col style={{ width: 128 }} />
-                <col style={{ width: 128 }} /><col style={{ width: 112 }} /><col style={{ width: 88 }} />
-                <col style={{ width: 88 }} /><col style={{ width: 80 }} /><col style={{ width: 128 }} />
-                <col style={{ width: 140 }} /><col />
+                <col className="methodology-countryColumn" /><col style={{ width: 112 }} />
+                <col style={{ width: 128 }} /><col style={{ width: 112 }} /><col style={{ width: 128 }} />
+                <col style={{ width: 128 }} /><col style={{ width: 104 }} /><col style={{ width: 104 }} />
+                <col style={{ width: 112 }} /><col />
               </colgroup>
               <thead>
                 <tr>

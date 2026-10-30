@@ -31,6 +31,9 @@ replace the line rather than adding a contradicting one.
 
 ## Product
 
+- 2026-10-30 — Keep country conditions as the existing table with six-decimal formatting.
+  Fix numeric column widths and confidence-dot shrinking within the existing table width;
+  do not replace it with cards or round values merely to make them fit.
 - 2026-10-30 — Model computes in EUR; USD is a display conversion at one ECB rate, never
   per-country cross rates.
 - 2026-10-30 — Support schemes: official legal text required for any modelled value; without it
