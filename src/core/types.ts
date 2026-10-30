@@ -250,8 +250,12 @@ export interface DigesterDesign {
   heatDemandKwhYear: number;
   pasteurisationHeatKwhYear: number; // incremental heat above ordinary substrate heating
   storageVolumeM3: number;
+  /** Existing storage given a gas-tight cover (m³). */
   storageCovered: number;
+  /** New gas-tight storage (m³). */
   storageNew: number;
+  /** New open storage for the rest of the closed season (m³). */
+  storageOpenNew: number;
   surfaceAreaM2: number;
   tech: TechnologyRecommendation;
 }

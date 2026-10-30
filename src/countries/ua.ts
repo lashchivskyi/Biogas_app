@@ -4,6 +4,7 @@ import { regionsFor } from "./build";
 import { regulatoryFor } from "./regulatory";
 import { type Sourced, capexFactorFor, discountFor, electricityFor, spotFor, fertiliserFor, fxFor, gasFor, gridEfFor, labourOfficialFor } from "./sources";
 import { ENGINEERING_MAP } from "@/core/engineeringParams";
+import { DATA_REVIEW_AS_OF } from "@/core/modelAudit";
 
 const SRC_NORMALS =
   "Climate normals 1991–2020 rounded by the project team (not a download). Replace with ERA5/Open-Meteo in phase 2";
@@ -39,32 +40,32 @@ export const UA_PARAMS = [
   src("econ.fx_local_per_eur", "Exchange rate", fxFor("UAH"), "UAH/EUR"),
   src("econ.electricity_retail_eur_kwh", "Average all-in business electricity price excl. VAT (default if the customer gives none)", electricityFor("UA"), "EUR/kWh", "Customer-supplied price always overrides"),
   src("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor("UA"), "EUR/kWh"),
-  prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", 0.7, "—", "ASSUMPTION", "30 % profile & balancing discount for a small seller (assumption)", "MEDIUM", { country: "UA" }),
-  prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", 0.85, "—", "ASSUMPTION", "Capacity & fixed network charges are not avoided (≈ 10–20 % of a business bill, same rule as every market)", "MEDIUM", { country: "UA" }),
+  prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", 0.7, "—", "ASSUMPTION", "30 % profile & balancing discount for a small seller (assumption)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", 0.85, "—", "ASSUMPTION", "Capacity & fixed network charges are not avoided (≈ 10–20 % of a business bill, same rule as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   src("econ.gas_price_eur_mwh", "Business natural-gas price", gasFor("UA"), "EUR/MWh"),
   prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced industrial gas / boiler efficiency)", gasFor("UA")!.value / 1000 / ENGINEERING_MAP["eng.boiler_efficiency"].value, "EUR/kWh th", "CALCULATION", `Business gas price: ${gasFor("UA")!.source}`, "MEDIUM", { country: "UA", date: gasFor("UA")!.date, evidence: gasFor("UA")!.evidence }),
-  prov("econ.biomethane_price_cons_eur_nm3", "Realised biomethane price, conservative (domestic gas, no premium)", 0.4, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": domestic gas ≈382 EUR/tcm before the Middle-East conflict", "LOW", { country: "UA" }),
-  prov("econ.biomethane_price_base_eur_nm3", "Realised biomethane price, base (partly exported/certified)", 0.6, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": production cost ≈650 EUR/tcm; profitable price 800–900", "LOW", { country: "UA" }),
-  prov("econ.biomethane_price_opt_eur_nm3", "Realised biomethane price, optimistic (EU export with certificates)", 0.85, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": top EU markets up to 1 000 EUR/tcm", "LOW", { country: "UA" }),
+  prov("econ.biomethane_price_cons_eur_nm3", "Realised biomethane price, conservative (domestic gas, no premium)", 0.4, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": domestic gas ≈382 EUR/tcm before the Middle-East conflict", "LOW", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.biomethane_price_base_eur_nm3", "Realised biomethane price, base (partly exported/certified)", 0.6, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": production cost ≈650 EUR/tcm; profitable price 800–900", "LOW", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.biomethane_price_opt_eur_nm3", "Realised biomethane price, optimistic (EU export with certificates)", 0.85, "EUR/Nm³", "ESTIMATE", SRC_IEA + ": top EU markets up to 1 000 EUR/tcm", "LOW", { country: "UA", date: DATA_REVIEW_AS_OF }),
   src("econ.labour_official_eur_h", "Historical hourly labour-cost reference (wages + employer costs)", labourOfficialFor("UA"), "EUR/h"),
-  prov("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", 1.14, "—", "ASSUMPTION", "Skilled plant operator ≈ 30 k UAH/month gross vs the 26.5 k average → ≈ 4.9 €/h operator cost", "MEDIUM", { country: "UA" }),
-  prov("econ.transport_eur_tkm", "Road transport of liquid/solid organic feedstock", 0.11, "EUR/(t·km)", "ESTIMATE", "Tanker/tipper rate incl. empty return; diesel-driven; TO VERIFY with 3 hauliers", "LOW", { country: "UA" }),
-  prov("econ.transport_fixed_eur_t", "Loading/unloading per tonne", 0.7, "EUR/t", "CALCULATION", "0.6 €/t pump & loader + 0.02 h/t × 4.9 €/h labour (same KTBL-based formula as every market)", "MEDIUM", { country: "UA" }),
+  prov("econ.operator_wage_ratio", "Plant operator wage relative to the economy-wide average", 1.14, "—", "ASSUMPTION", "Skilled plant operator ≈ 30 k UAH/month gross vs the 26.5 k average → ≈ 4.9 €/h operator cost", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.transport_eur_tkm", "Road transport of liquid/solid organic feedstock", 0.11, "EUR/(t·km)", "ESTIMATE", "Tanker/tipper rate incl. empty return; diesel-driven; TO VERIFY with 3 hauliers", "LOW", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.transport_fixed_eur_t", "Loading/unloading per tonne", 0.7, "EUR/t", "CALCULATION", "0.6 €/t pump & loader + 0.02 h/t × 4.9 €/h labour (same KTBL-based formula as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   prov("econ.capex_factor", "Legacy CHP reference factor (route factors drive calculations)", 0.85, "—", "CALCULATION", "Provisional fit to historical Ukrainian CHP references; no independent local validation or biomethane calibration.", "LOW", { country: "UA", date: "2026-10-26" }),
   prov("econ.capex_factor_chp", "CHP: local CAPEX factor", 0.85, "—", "CALCULATION", "Provisional fit to published Ukrainian CHP projects; no independent validation. Does not calibrate upgrading/injection costs or quantify war-risk construction premiums.", "LOW", { country: "UA", date: "2026-10-26", range: { low: 0.595, high: 1.105, basis: "engineering" } }),
   ...(["boiler", "biomethane"] as const).map((route) => src(`econ.capex_factor_${route}`, `${route}: local CAPEX factor`, capexFactorFor("UA", route), "—", "No local route-specific project calibration; supplier quotation required")),
   src("econ.discount_rate", "Discount rate (EUR-equivalent, incl. country & war risk)", discountFor("UA"), "—"),
-  prov("econ.energy_escalation", "Annual real escalation of energy prices (EUR terms)", 0.02, "—", "ASSUMPTION", "Conservative; UAH price rises offset by depreciation (EUR terms)", "MEDIUM", { country: "UA" }),
-  prov("econ.opex_escalation", "Annual escalation of operating costs (EUR terms)", 0.03, "—", "ASSUMPTION", "Wage growth > CPI in UA (NBU inflation report)", "MEDIUM", { country: "UA" }),
-  prov("econ.horizon_years", "Evaluation horizon", 15, "a", "ASSUMPTION", "Shorter than the 20-y technical life — conservative", "MEDIUM", { country: "UA" }),
-  prov("econ.debt_share", "Debt share for DSCR test", 0.5, "—", "ASSUMPTION", "Typical EBRD/IFI-style lending for agrifood", "MEDIUM", { country: "UA" }),
-  prov("econ.debt_interest", "Debt interest rate (EUR)", 0.1, "—", "ASSUMPTION", "Indicative financing assumption informed by EBRD / IFC-backed credit programmes; not a bank term sheet", "LOW", { country: "UA" }),
-  prov("econ.debt_tenor_years", "Debt tenor", 7, "a", "ASSUMPTION", "Typical for agri/energy credit lines (EBRD, IFC, EIB programmes)", "MEDIUM", { country: "UA" }),
+  prov("econ.energy_escalation", "Annual real escalation of energy prices (EUR terms)", 0.02, "—", "ASSUMPTION", "Conservative; UAH price rises offset by depreciation (EUR terms)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.opex_escalation", "Annual escalation of operating costs (EUR terms)", 0.03, "—", "ASSUMPTION", "Wage growth > CPI in UA (NBU inflation report)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.horizon_years", "Evaluation horizon", 15, "a", "ASSUMPTION", "Shorter than the 20-y technical life — conservative", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.debt_share", "Debt share for DSCR test", 0.5, "—", "ASSUMPTION", "Typical EBRD/IFI-style lending for agrifood", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.debt_interest", "Debt interest rate (EUR)", 0.1, "—", "ASSUMPTION", "Indicative financing assumption informed by EBRD / IFC-backed credit programmes; not a bank term sheet", "LOW", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.debt_tenor_years", "Debt tenor", 7, "a", "ASSUMPTION", "Typical for agri/energy credit lines (EBRD, IFC, EIB programmes)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   src("econ.fert_n_eur_kg", "Mineral nitrogen price", fertiliserFor("N"), "EUR/kg N"),
   src("econ.fert_p2o5_eur_kg", "Mineral phosphorus price", fertiliserFor("P2O5"), "EUR/kg P₂O₅"),
   src("econ.fert_k2o_eur_kg", "Mineral potassium price", fertiliserFor("K2O"), "EUR/kg K₂O"),
-  prov("econ.digestate_handling_eur_t", "Incremental digestate handling on adequate land", 1.6, "EUR/t", "CALCULATION", "1.2 €/t machinery + 0.08 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA" }),
-  prov("econ.digestate_excess_eur_t", "Digestate that has no adequate land", 3.6, "EUR/t", "CALCULATION", "2.5 €/t + 0.22 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA" }),
+  prov("econ.digestate_handling_eur_t", "Incremental digestate handling on adequate land", 1.6, "EUR/t", "CALCULATION", "1.2 €/t machinery + 0.08 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
+  prov("econ.digestate_excess_eur_t", "Digestate that has no adequate land", 3.6, "EUR/t", "CALCULATION", "2.5 €/t + 0.22 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   src("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor("UA"), "tCO₂/MWh"),
 ];
 
@@ -81,12 +82,14 @@ export const UA: CountryAdapter = {
   priceTier: "C",
   support: {
     summary: {
-      en: "The biogas green tariff (≈ €0.124/kWh) remains for plants already commissioned (until 2030). New projects must win 'green auctions', but the 2024–2025 auctions failed (0.9 MW small hydro in 2024; no bidders in May 2025); bill No. 13219 passed only first reading (21 Aug 2025). No support is assumed.",
-      uk: "«Зелений» тариф на біогаз (≈12,39 євроцента/кВт·год) залишається для вже введених об'єктів до 2030 р. Нові проєкти мають вигравати «зелені» аукціони, але аукціони 2024–2025 рр. не відбулися (0,9 МВт малої ГЕС у 2024; без учасників у травні 2025); законопроєкт №13219 прийнято лише в першому читанні (21.08.2025). Підтримка не враховується.",
+      en: "The only route for new plants is market-premium auctions (bid cap 12 €c/kWh; the 'other RES' lot was held on 30.10.2026, result pending). The green tariff ends on 01.01.2030 and has no EUR floor for plants commissioned after 2024. Biomethane: export, no subsidy.",
+      uk: "Для нових станцій — лише аукціони з ринковою премією (стеля ставки 12 євроцентів/кВт·год; лот «інші ВДЕ» проведено 30.10.2026, результат очікується). «Зелений» тариф діє до 01.01.2030 і не має євро-мінімуму для об'єктів після 2024 р. Біометан — експорт без субсидій.",
     },
     availableForNewSmallProjects: false,
-    checkedOn: "2026-10-23",
-    schemes: [],
+    checkedOn: "2026-10-30",
+    schemes: [
+      { id: "ua.auction", name: "Аукціон з ринковою премією (інші ВДЕ)", status: "competitive", electricityTariffEurKwh: 0.12, routes: ["chp"], note: { en: "Bid cap 12 €c/kWh; your own winning bid is guaranteed via a market premium. Biogas has never cleared a UA auction yet.", uk: "Стеля ставки 12 євроцентів/кВт·год; ваша виграшна ставка гарантується ринковою премією. Біогаз ще не вигравав аукціон в Україні." }, source: "Guaranteed Buyer auction notice 2026-10 (150 MW, cap 12 €c); Law 555-IV Art. 9-3 (Law 4777-IX, 10.02.2026)", confidence: "LOW", checkedOn: "2026-10-30" },
+    ],
   },
   regulatory: regulatoryFor("UA"),
   approachNotes: {

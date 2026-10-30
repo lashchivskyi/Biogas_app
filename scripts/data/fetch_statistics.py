@@ -7,7 +7,8 @@ Sources (all public, no key):
 - Eurostat nrg_pc_205  Electricity prices, non-household, band IC (500–1 999 MWh/a), excl. VAT & recoverable taxes, EUR/kWh
 - Eurostat nrg_pc_203  Natural gas prices, non-household, band I3 (10 000–99 999 GJ/a), excl. VAT & recoverable taxes, EUR/kWh
 - Eurostat lc_lci_lev  Hourly labour cost, industry/construction/services (B–S excl. O), EUR/h
-- Eurostat ert_bil_eur_a  EUR reference exchange rates, annual average
+- Eurostat ert_bil_eur_a  EUR reference exchange rates, annual average (fallback only)
+- National EUR rates where the ECB has none: NBU (UAH), NBM (MDL), NBK (KZT), BCRA (ARS), NBS (RSD), Vietcombank × ECB (VND)
 - Energy-Charts API (Fraunhofer ISE; ENTSO-E / SMARD data)  Day-ahead prices by bidding zone, EUR/MWh, last 12 months
 """
 import argparse, concurrent.futures, json, time, urllib.request, urllib.error, datetime, statistics, math, calendar
@@ -54,7 +55,9 @@ def eurostat(dataset, query, key_dim="geo", bands=False):
     idx = {k: {i: c for c, i in d["dimension"][k]["category"]["index"].items()} for k in dims}
     out = {}
     for flat, v in d["value"].items():
-        if not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0:
+        if v == 0:
+            continue  # Eurostat reports 0 for bands with no consumers (e.g. ≥ 150 GWh in the Baltics): not a price.
+        if not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
             raise ValueError(f"{dataset}: invalid numeric observation")
         flat = int(flat)
         coords = {}
@@ -141,15 +144,80 @@ except Exception as exc:
     rates = {currency: series[latest] for currency, series in daily.items() if latest in series}
     res["fxReference"] = {"asOf": latest, "fetchedOn": args.as_of, "url": daily_url, "sourceUpdated": updated, "rates": rates}
 
-try:
-    nbu_url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=" + str(as_of - datetime.timedelta(days=1)).replace("-", "") + "&json"
-    quote = get(nbu_url)[0]
-    quote_date = datetime.datetime.strptime(quote["exchangedate"], "%d.%m.%Y").date().isoformat()
-    if quote_date > args.as_of or quote["rate"] <= 0:
-        raise ValueError("Invalid or future NBU quotation")
-    res["fxNational"] = {**old.get("fxNational", {}), "UAH": {"perEur": quote["rate"], "asOf": quote_date, "fetchedOn": args.as_of, "url": nbu_url}}
-except Exception as exc:
-    res["refreshErrors"]["fxNational.UAH"] = str(exc)[:200]
+def text(url):
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 methalytics-data/2.0"}), timeout=25) as r:
+        return r.read()
+
+
+def back(fetch, days=7):
+    """Latest quotation on or before the valuation date (central banks do not publish on holidays)."""
+    for i in range(days):
+        try:
+            return fetch(as_of - datetime.timedelta(days=i))
+        except (LookupError, ValueError, StopIteration, KeyError):
+            continue
+    raise LookupError("no quotation in the last week")
+
+
+def nbu(day):
+    url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=" + day.strftime("%Y%m%d") + "&json"
+    q = get(url)[0]
+    return q["rate"], datetime.datetime.strptime(q["exchangedate"], "%d.%m.%Y").date().isoformat(), url, None
+
+
+def nbm(day):
+    url = "https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=" + day.strftime("%d.%m.%Y")
+    root = ET.fromstring(text(url))
+    node = next(v for v in root.iter("Valute") if v.findtext("CharCode") == "EUR")
+    return float(node.findtext("Value")) / float(node.findtext("Nominal")), datetime.datetime.strptime(root.attrib["Date"], "%d.%m.%Y").date().isoformat(), url, None
+
+
+def nbk(day):
+    url = "https://nationalbank.kz/rss/get_rates.cfm?fdate=" + day.strftime("%d.%m.%Y")
+    root = ET.fromstring(text(url))
+    node = next(i for i in root.iter("item") if i.findtext("title") == "EUR")
+    return float(node.findtext("description")) / float(node.findtext("quant")), datetime.datetime.strptime(root.findtext("date"), "%d.%m.%Y").date().isoformat(), url, None
+
+
+def bcra(day):
+    url = "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=" + day.isoformat()
+    r = get(url)["results"]
+    rate = next(x["tipoCotizacion"] for x in r["detalle"] if x["codigoMoneda"] == "EUR")
+    if not rate:
+        raise LookupError("no BCRA quotation")
+    return rate, r["fecha"], url, None
+
+
+def nbs(_day):
+    # nbs.rs blocks scripted access; kurs.resenje.org republishes the NBS official middle rate.
+    url = "https://kurs.resenje.org/api/v1/currencies/eur/rates/today"
+    q = get(url)
+    return q["exchange_middle"], q["date"], url, ("NBS official middle rate (via kurs.resenje.org), " + q["date"], "HIGH")
+
+
+def vietcombank(_day):
+    # SBV publishes no EUR reference rate and blocks scripted access: USD mid at Vietcombank × ECB USD/EUR.
+    url = "https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx"
+    root = ET.fromstring(text(url))
+    usd = next(x for x in root.iter("Exrate") if x.attrib["CurrencyCode"] == "USD")
+    mid = (float(usd.attrib["Transfer"].replace(",", "")) + float(usd.attrib["Sell"].replace(",", ""))) / 2
+    ecb = res["fxReference"]
+    date = datetime.datetime.strptime(root.findtext("DateTime").split()[0], "%m/%d/%Y").date().isoformat()
+    return mid * ecb["rates"]["USD"], date, url, (f"Cross rate: Vietcombank USD mid {mid:,.0f} VND × ECB {ecb['rates']['USD']} USD/EUR ({ecb['asOf']}); SBV publishes no EUR rate", "MEDIUM")
+
+
+res["fxNational"] = dict(old.get("fxNational", {}))
+for currency, fetch, days in (("UAH", nbu, 7), ("MDL", nbm, 7), ("KZT", nbk, 7), ("ARS", bcra, 7), ("RSD", nbs, 1), ("VND", vietcombank, 1)):
+    try:
+        rate, quote_date, url, label = back(fetch, days)
+        if quote_date > args.as_of or not rate or rate <= 0:
+            raise ValueError("Invalid or future quotation")
+        row = {"perEur": round(rate, 4), "asOf": quote_date, "fetchedOn": args.as_of, "url": url}
+        if label:
+            row["source"], row["confidence"] = label
+        res["fxNational"][currency] = row
+    except Exception as exc:
+        res["refreshErrors"][f"fxNational.{currency}"] = str(exc)[:200]
 
 end = as_of.replace(day=1)
 start = end.replace(year=end.year - 1)

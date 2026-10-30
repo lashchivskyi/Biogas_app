@@ -46,7 +46,7 @@ export const SCENARIOS: Record<ScenarioId, ScenarioDef> = {
 export const SCENARIO_ORDER: ScenarioId[] = ["conservative", "base", "optimistic"];
 
 /** Registry entries so the scenario spread appears on /[lang]/methodology. */
-export function scenarioProvenance(): Provenance[] {
+export function scenarioProvenance(reviewedOn: string): Provenance[] {
   const out: Provenance[] = [];
   const src = "Project-team scenario design; spread intentionally wider than expected error";
   const u: Record<string, string> = {
@@ -56,7 +56,7 @@ export function scenarioProvenance(): Provenance[] {
   for (const id of Object.keys(SCENARIOS) as ScenarioId[]) {
     const s = SCENARIOS[id];
     for (const k of Object.keys(u)) {
-      out.push(prov(`scn.${id}.${k}`, `${s.label}: ${k}`, (s as unknown as Record<string, number>)[k], u[k], "ASSUMPTION", src, "LOW"));
+      out.push(prov(`scn.${id}.${k}`, `${s.label}: ${k}`, (s as unknown as Record<string, number>)[k], u[k], "ASSUMPTION", src, "LOW", { date: reviewedOn }));
     }
   }
   return out;

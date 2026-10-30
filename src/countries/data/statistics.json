@@ -1,5 +1,5 @@
 {
- "fetchedOn": "2026-10-27",
+ "fetchedOn": "2026-10-30",
  "electricity": {
   "AT": {
    "bands": {
@@ -14,7 +14,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -28,7 +28,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -42,7 +42,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -56,7 +56,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -70,7 +70,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -84,7 +84,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -98,7 +98,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -112,7 +112,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -126,7 +126,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "BG": {
@@ -142,7 +142,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -156,7 +156,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -170,7 +170,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -184,7 +184,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -198,7 +198,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -212,7 +212,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -226,7 +226,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -240,7 +240,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -254,7 +254,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "CZ": {
@@ -270,7 +270,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -284,7 +284,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -298,7 +298,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -312,7 +312,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -326,7 +326,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -340,7 +340,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -354,7 +354,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -368,7 +368,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DE": {
@@ -384,7 +384,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -398,7 +398,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -412,7 +412,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -426,7 +426,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -440,7 +440,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -454,7 +454,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -468,7 +468,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -482,7 +482,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -496,7 +496,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DK": {
@@ -512,7 +512,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -526,7 +526,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -540,7 +540,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -554,7 +554,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -568,7 +568,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -582,7 +582,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -596,7 +596,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -610,7 +610,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -624,7 +624,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "EE": {
@@ -640,7 +640,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -654,7 +654,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -668,7 +668,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -682,7 +682,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -696,20 +696,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "MWH_GE150000": {
-     "eurKwh": 0.0,
-     "periods": [
-      "2025-S2"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -723,7 +710,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -737,7 +724,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -751,7 +738,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "GR": {
@@ -767,7 +754,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -781,7 +768,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -795,7 +782,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -809,7 +796,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -823,7 +810,7 @@
       "2025-S2"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -837,7 +824,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -851,7 +838,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -865,7 +852,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -879,7 +866,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "ES": {
@@ -895,7 +882,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -909,7 +896,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -923,7 +910,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -937,7 +924,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -951,7 +938,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -965,7 +952,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -979,7 +966,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -993,7 +980,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1007,7 +994,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FI": {
@@ -1023,7 +1010,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1037,7 +1024,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1051,7 +1038,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1065,7 +1052,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1079,7 +1066,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1093,7 +1080,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1107,7 +1094,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1121,7 +1108,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FR": {
@@ -1137,7 +1124,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1151,7 +1138,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1165,7 +1152,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1179,7 +1166,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1193,7 +1180,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -1207,7 +1194,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1221,7 +1208,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1235,7 +1222,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1249,7 +1236,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "HU": {
@@ -1265,7 +1252,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1279,7 +1266,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1293,7 +1280,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1307,7 +1294,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1321,7 +1308,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -1335,7 +1322,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1349,7 +1336,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1363,7 +1350,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1377,7 +1364,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "IT": {
@@ -1393,7 +1380,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1407,7 +1394,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1421,7 +1408,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1435,7 +1422,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1449,7 +1436,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -1463,7 +1450,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1477,7 +1464,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1491,7 +1478,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1505,7 +1492,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LT": {
@@ -1521,7 +1508,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1535,7 +1522,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1549,7 +1536,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1563,7 +1550,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1577,21 +1564,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "MWH_GE150000": {
-     "eurKwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1605,7 +1578,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1619,7 +1592,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1633,7 +1606,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LV": {
@@ -1649,7 +1622,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1663,7 +1636,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1677,7 +1650,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1691,7 +1664,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1705,21 +1678,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "MWH_GE150000": {
-     "eurKwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1733,7 +1692,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1747,7 +1706,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1761,7 +1720,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "MD": {
@@ -1777,7 +1736,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1791,7 +1750,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1804,7 +1763,7 @@
       "2025-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1818,7 +1777,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1832,7 +1791,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1846,7 +1805,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "NL": {
@@ -1862,7 +1821,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -1876,7 +1835,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -1890,7 +1849,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -1904,7 +1863,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -1918,7 +1877,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -1932,7 +1891,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -1946,7 +1905,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -1960,7 +1919,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -1974,7 +1933,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "PL": {
@@ -1990,7 +1949,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2004,7 +1963,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2018,7 +1977,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2032,7 +1991,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2046,7 +2005,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2060,7 +2019,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2074,7 +2033,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2088,7 +2047,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2102,7 +2061,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RO": {
@@ -2118,7 +2077,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2132,7 +2091,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2146,7 +2105,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2160,7 +2119,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2174,7 +2133,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2188,7 +2147,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2202,7 +2161,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2216,7 +2175,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2230,7 +2189,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RS": {
@@ -2246,7 +2205,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2260,7 +2219,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2274,7 +2233,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2288,7 +2247,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2302,7 +2261,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2316,7 +2275,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2330,7 +2289,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2344,7 +2303,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2358,7 +2317,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SE": {
@@ -2374,7 +2333,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2388,7 +2347,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2402,7 +2361,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2416,7 +2375,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2430,7 +2389,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2444,7 +2403,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2458,7 +2417,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2472,7 +2431,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2486,7 +2445,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SK": {
@@ -2502,7 +2461,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2516,7 +2475,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2530,7 +2489,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2544,7 +2503,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2558,7 +2517,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2572,7 +2531,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2586,7 +2545,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2600,7 +2559,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2614,7 +2573,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "TR": {
@@ -2630,7 +2589,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH2000-19999": {
@@ -2644,7 +2603,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH20000-69999": {
@@ -2658,7 +2617,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH500-1999": {
@@ -2672,7 +2631,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH70000-149999": {
@@ -2686,7 +2645,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_GE150000": {
@@ -2700,7 +2659,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "MWH_LT20": {
@@ -2714,7 +2673,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_KWH": {
@@ -2728,7 +2687,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2742,7 +2701,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   }
  },
@@ -2760,7 +2719,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -2774,7 +2733,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -2788,7 +2747,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -2802,7 +2761,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -2816,7 +2775,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -2830,7 +2789,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "TOT_GJ": {
@@ -2843,7 +2802,7 @@
       "2025-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2857,7 +2816,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "BG": {
@@ -2873,7 +2832,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -2887,7 +2846,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -2901,7 +2860,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -2915,7 +2874,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -2929,7 +2888,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "CZ": {
@@ -2945,7 +2904,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -2959,7 +2918,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -2973,7 +2932,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -2987,7 +2946,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3001,7 +2960,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3015,7 +2974,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DE": {
@@ -3031,7 +2990,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3045,7 +3004,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3059,7 +3018,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3073,7 +3032,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3087,7 +3046,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3101,7 +3060,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3115,7 +3074,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DK": {
@@ -3131,7 +3090,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3145,7 +3104,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3159,7 +3118,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3173,7 +3132,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3187,7 +3146,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3201,7 +3160,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "EE": {
@@ -3217,7 +3176,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3231,7 +3190,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3245,35 +3204,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ1000000-3999999": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ_GE4000000": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3287,7 +3218,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3301,7 +3232,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "GR": {
@@ -3317,7 +3248,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3331,7 +3262,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3345,7 +3276,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3359,7 +3290,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3373,7 +3304,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "ES": {
@@ -3389,7 +3320,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3403,7 +3334,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3417,7 +3348,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3431,7 +3362,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3445,7 +3376,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3459,7 +3390,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3473,7 +3404,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FI": {
@@ -3489,7 +3420,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3503,7 +3434,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3517,7 +3448,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3531,7 +3462,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3545,7 +3476,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3559,7 +3490,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3573,7 +3504,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FR": {
@@ -3589,7 +3520,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3603,7 +3534,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3617,7 +3548,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3631,7 +3562,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3645,7 +3576,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3659,7 +3590,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3673,7 +3604,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "HU": {
@@ -3689,7 +3620,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3703,7 +3634,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3717,7 +3648,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3731,7 +3662,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3745,7 +3676,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3759,7 +3690,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3773,7 +3704,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "IT": {
@@ -3789,7 +3720,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3803,7 +3734,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3817,7 +3748,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -3831,7 +3762,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -3845,7 +3776,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3859,7 +3790,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3873,7 +3804,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LT": {
@@ -3889,7 +3820,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -3903,7 +3834,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -3917,35 +3848,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ1000000-3999999": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ_GE4000000": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -3959,7 +3862,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -3973,7 +3876,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LV": {
@@ -3989,7 +3892,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4003,7 +3906,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4017,35 +3920,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ1000000-3999999": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ_GE4000000": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4059,7 +3934,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4073,7 +3948,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "MD": {
@@ -4089,7 +3964,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4103,7 +3978,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4117,7 +3992,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4131,7 +4006,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "NL": {
@@ -4147,7 +4022,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4161,7 +4036,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4175,7 +4050,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4189,7 +4064,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -4203,7 +4078,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4217,7 +4092,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4231,7 +4106,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "PL": {
@@ -4247,7 +4122,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4261,7 +4136,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4275,7 +4150,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4289,7 +4164,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4303,7 +4178,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4317,7 +4192,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RO": {
@@ -4333,7 +4208,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4347,7 +4222,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4361,7 +4236,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4375,7 +4250,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -4389,7 +4264,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4403,7 +4278,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4417,7 +4292,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RS": {
@@ -4433,7 +4308,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4447,7 +4322,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4461,7 +4336,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4475,21 +4350,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ_GE4000000": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4503,7 +4364,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4517,7 +4378,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SE": {
@@ -4533,7 +4394,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4547,7 +4408,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4561,7 +4422,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4575,21 +4436,7 @@
       "2025-S2"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
-     "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
-    },
-    "GJ_GE4000000": {
-     "eurMwh": 0.0,
-     "periods": [
-      "2026-S1"
-     ],
-     "referenceMean": 0.0,
-     "referencePeriods": [
-      "2025-S2",
-      "2026-S1"
-     ],
-     "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4603,7 +4450,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4617,7 +4464,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SK": {
@@ -4633,7 +4480,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4647,7 +4494,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4661,7 +4508,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4675,7 +4522,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4689,7 +4536,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "TR": {
@@ -4705,7 +4552,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ10000-99999": {
@@ -4719,7 +4566,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ100000-999999": {
@@ -4733,7 +4580,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ1000000-3999999": {
@@ -4747,7 +4594,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_GE4000000": {
@@ -4761,7 +4608,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     },
     "GJ_LT1000": {
@@ -4775,7 +4622,7 @@
       "2026-S1"
      ],
      "sourceUpdated": "2026-10-19T11:00:00+0200",
-     "fetchedOn": "2026-10-27",
+     "fetchedOn": "2026-10-30",
      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
     }
    },
@@ -4789,7 +4636,7 @@
     "2026-S1"
    ],
    "sourceUpdated": "2026-10-19T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_203?format=JSON&lang=en&tax=X_VAT&currency=EUR&unit=KWH&sinceTimePeriod=2025-S1&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   }
  },
@@ -4798,140 +4645,140 @@
    "eurH": 46.3,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "BG": {
    "eurH": 12,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "CZ": {
    "eurH": 19.8,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DE": {
    "eurH": 45,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "DK": {
    "eurH": 51.7,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "EE": {
    "eurH": 21.1,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "GR": {
    "eurH": 18.2,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "ES": {
    "eurH": 26.4,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FI": {
    "eurH": 39.4,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "FR": {
    "eurH": 44.3,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "HU": {
    "eurH": 15.2,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "IT": {
    "eurH": 32,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LT": {
    "eurH": 17.8,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "LV": {
    "eurH": 16.3,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "NL": {
    "eurH": 47.9,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "PL": {
    "eurH": 19.1,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RO": {
    "eurH": 13.6,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "RS": {
    "eurH": 12.8,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SE": {
    "eurH": 43.1,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   },
   "SK": {
    "eurH": 19.8,
    "year": "2025",
    "sourceUpdated": "2026-04-23T23:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lc_lci_lev?format=JSON&lang=en&unit=EUR&lcstruct=D1_D4_MD5&nace_r2=B-S_X_O&sinceTimePeriod=2023&geo=PL&geo=CZ&geo=SK&geo=HU&geo=RO&geo=MD&geo=BG&geo=RS&geo=EL&geo=TR&geo=LT&geo=LV&geo=EE&geo=DK&geo=SE&geo=FI&geo=DE&geo=AT&geo=IT&geo=FR&geo=ES&geo=NL"
   }
  },
@@ -4940,140 +4787,140 @@
    "perEur": 4.2397,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "CZK": {
    "perEur": 24.688,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "HUF": {
    "perEur": 397.77,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "RON": {
    "perEur": 5.0424,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "MDL": {
    "perEur": 19.59107,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "RSD": {
    "perEur": 117.2026,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "TRY": {
    "perEur": 44.8161,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "DKK": {
    "perEur": 7.4634,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "SEK": {
    "perEur": 11.0663,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "GBP": {
    "perEur": 0.85679,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "USD": {
    "perEur": 1.13,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "CAD": {
    "perEur": 1.5787,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "MXN": {
    "perEur": 21.6705,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "ARS": {
    "perEur": 1409.367,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "BRL": {
    "perEur": 6.3072,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "INR": {
    "perEur": 98.5239,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "THB": {
    "perEur": 37.1158,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "VND": {
    "perEur": 29639.169,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "KZT": {
    "perEur": 589.92,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   },
   "UAH": {
    "perEur": 47.09322,
    "year": "2025",
    "sourceUpdated": "2026-07-08T11:00:00+0200",
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_a?format=JSON&lang=en&statinfo=AVG&sinceTimePeriod=2024"
   }
  },
@@ -5084,7 +4931,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=PL&start=2025-10-01&end=2026-10-01"
   },
   "CZ": {
@@ -5093,7 +4940,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=CZ&start=2025-10-01&end=2026-10-01"
   },
   "SK": {
@@ -5102,7 +4949,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=SK&start=2025-10-01&end=2026-10-01"
   },
   "HU": {
@@ -5111,7 +4958,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=HU&start=2025-10-01&end=2026-10-01"
   },
   "RO": {
@@ -5120,7 +4967,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35133,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=RO&start=2025-10-01&end=2026-10-01"
   },
   "BG": {
@@ -5129,7 +4976,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35133,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=BG&start=2025-10-01&end=2026-10-01"
   },
   "RS": {
@@ -5138,7 +4985,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=RS&start=2025-10-01&end=2026-10-01"
   },
   "GR": {
@@ -5147,7 +4994,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35133,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=GR&start=2025-10-01&end=2026-10-01"
   },
   "LT": {
@@ -5156,7 +5003,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35133,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=LT&start=2025-10-01&end=2026-10-01"
   },
   "LV": {
@@ -5169,11 +5016,13 @@
    "url": "https://api.energy-charts.info/price?bzn=LV&start=2025-10-01&end=2026-10-01"
   },
   "EE": {
-   "eurMwh": 81.6,
+   "eurMwh": 81.63545242364728,
    "bzn": "EE",
    "from": "2025-10-01",
    "to": "2026-10-01",
-   "n": 35133
+   "n": 35133,
+   "fetchedOn": "2026-10-30",
+   "url": "https://api.energy-charts.info/price?bzn=EE&start=2025-10-01&end=2026-10-01"
   },
   "DK": {
    "eurMwh": 101.39233804172359,
@@ -5181,7 +5030,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=DK1&start=2025-10-01&end=2026-10-01"
   },
   "SE": {
@@ -5199,15 +5048,17 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35133,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=FI&start=2025-10-01&end=2026-10-01"
   },
   "DE": {
-   "eurMwh": 104.3,
+   "eurMwh": 104.29400643214936,
    "bzn": "DE-LU",
    "from": "2025-10-01",
    "to": "2026-10-01",
-   "n": 35136
+   "n": 35136,
+   "fetchedOn": "2026-10-30",
+   "url": "https://api.energy-charts.info/price?bzn=DE-LU&start=2025-10-01&end=2026-10-01"
   },
   "AT": {
    "eurMwh": 119.75116945582877,
@@ -5215,7 +5066,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=AT&start=2025-10-01&end=2026-10-01"
   },
   "IT": {
@@ -5233,15 +5084,17 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=FR&start=2025-10-01&end=2026-10-01"
   },
   "ES": {
-   "eurMwh": 73.5,
+   "eurMwh": 73.50994250910747,
    "bzn": "ES",
    "from": "2025-10-01",
    "to": "2026-10-01",
-   "n": 35136
+   "n": 35136,
+   "fetchedOn": "2026-10-30",
+   "url": "https://api.energy-charts.info/price?bzn=ES&start=2025-10-01&end=2026-10-01"
   },
   "NL": {
    "eurMwh": 103.28300091074681,
@@ -5249,7 +5102,7 @@
    "from": "2025-10-01",
    "to": "2026-10-01",
    "n": 35136,
-   "fetchedOn": "2026-10-27",
+   "fetchedOn": "2026-10-30",
    "url": "https://api.energy-charts.info/price?bzn=NL&start=2025-10-01&end=2026-10-01"
   }
  },
@@ -5260,54 +5113,86 @@
   "ert_bil_eur_a": "2026-07-08T11:00:00+0200"
  },
  "refreshErrors": {
-  "fxReference": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)>",
-  "dayAhead.EE": "HTTP Error 429: Too Many Requests",
-  "dayAhead.DE": "HTTP Error 429: Too Many Requests",
-  "dayAhead.ES": "HTTP Error 429: Too Many Requests"
+  "dayAhead.LV": "HTTP Error 429: Too Many Requests",
+  "dayAhead.SE": "HTTP Error 429: Too Many Requests",
+  "dayAhead.IT": "HTTP Error 429: Too Many Requests"
  },
  "fxReference": {
-  "asOf": "2026-10-23",
-  "fetchedOn": "2026-10-27",
-  "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ert_bil_eur_d?format=JSON&lang=en&statinfo=AVG&unit=NAC&sinceTimePeriod=2026-10-17",
-  "sourceUpdated": "2026-10-24T11:00:00+0200",
+  "asOf": "2026-10-29",
+  "fetchedOn": "2026-10-30",
+  "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
   "rates": {
-   "AUD": 1.5939,
-   "BRL": 5.6485,
-   "CAD": 1.5665,
-   "CHF": 0.9227,
-   "CNY": 7.466,
-   "CZK": 24.327,
-   "DKK": 7.4748,
-   "GBP": 0.83728,
-   "HKD": 8.7793,
-   "HUF": 366.73,
-   "IDR": 20268.06,
-   "ILS": 3.4939,
-   "INR": 106.272,
-   "ISK": 136.2,
-   "JPY": 175.51,
-   "KRW": 1482.46,
-   "MXN": 21.0226,
-   "MYR": 4.5729,
-   "NOK": 10.4665,
-   "NZD": 1.9682,
-   "PHP": 71.235,
-   "PLN": 4.3945,
-   "RON": 5.3492,
-   "SEK": 11.131,
-   "SGD": 1.431,
-   "THB": 37.771,
-   "TRY": 55.6715,
-   "USD": 1.1193,
-   "ZAR": 18.5777
+   "USD": 1.113,
+   "JPY": 175.92,
+   "CZK": 24.336,
+   "DKK": 7.4736,
+   "GBP": 0.83578,
+   "HUF": 365.95,
+   "PLN": 4.3938,
+   "RON": 5.3441,
+   "SEK": 10.9995,
+   "CHF": 0.9222,
+   "ISK": 135.8,
+   "NOK": 10.3315,
+   "TRY": 55.4691,
+   "AUD": 1.5842,
+   "BRL": 5.9563,
+   "CAD": 1.5577,
+   "CNY": 7.4144,
+   "HKD": 8.733,
+   "IDR": 20193.16,
+   "ILS": 3.468,
+   "INR": 106.0345,
+   "KRW": 1488.4,
+   "MXN": 20.8661,
+   "MYR": 4.5182,
+   "NZD": 1.9817,
+   "PHP": 71.052,
+   "SGD": 1.4265,
+   "THB": 37.569,
+   "ZAR": 18.5218
   }
  },
  "fxNational": {
   "UAH": {
-   "perEur": 50.5766,
-   "asOf": "2026-10-26",
-   "fetchedOn": "2026-10-27",
-   "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=20261026&json"
+   "perEur": 50.6796,
+   "asOf": "2026-10-30",
+   "fetchedOn": "2026-10-30",
+   "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=20261030&json"
+  },
+  "MDL": {
+   "perEur": 20.0954,
+   "asOf": "2026-10-30",
+   "fetchedOn": "2026-10-30",
+   "url": "https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=30.10.2026"
+  },
+  "KZT": {
+   "perEur": 505.8,
+   "asOf": "2026-10-30",
+   "fetchedOn": "2026-10-30",
+   "url": "https://nationalbank.kz/rss/get_rates.cfm?fdate=30.10.2026"
+  },
+  "ARS": {
+   "perEur": 1719.063,
+   "asOf": "2026-10-29",
+   "fetchedOn": "2026-10-30",
+   "url": "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones?fecha=2026-10-29"
+  },
+  "RSD": {
+   "perEur": 117.5367,
+   "asOf": "2026-10-30",
+   "fetchedOn": "2026-10-30",
+   "url": "https://kurs.resenje.org/api/v1/currencies/eur/rates/today",
+   "source": "NBS official middle rate (via kurs.resenje.org), 2026-10-30",
+   "confidence": "HIGH"
+  },
+  "VND": {
+   "perEur": 28715.4,
+   "asOf": "2026-10-30",
+   "fetchedOn": "2026-10-30",
+   "url": "https://portal.vietcombank.com.vn/Usercontrols/TVPortal.TyGia/pXML.aspx",
+   "source": "Cross rate: Vietcombank USD mid 25,800 VND × ECB 1.113 USD/EUR (2026-10-29); SBV publishes no EUR rate",
+   "confidence": "MEDIUM"
   }
  }
 }

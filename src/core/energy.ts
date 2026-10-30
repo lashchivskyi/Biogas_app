@@ -50,7 +50,7 @@ export function runEnergy(
   const inletPeakFactor = input.process ? processCalendar(input.process).days / input.process.operatingDays : 1;
   const coincidence = p.get("eng.self_consumption_coincidence");
   const parBase = p.get("eng.parasitic_base_kwh_t");
-  const parDm = p.get("eng.parasitic_dm_kwh_t_per_pct");
+  const parShare = p.get("eng.parasitic_share_gas_energy");
   const leak = scenario.leakShare;
 
   const ch4Prod = feed.ch4M3Year;
@@ -90,7 +90,7 @@ export function runEnergy(
 
   const parasiticMonth = (i: number) => input.process
     ? (input.process.auxiliaryKwhYear ?? 0) * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
-    : feed.monthlyTonnes[i] * (parBase + parDm * feed.dryMatterPct);
+    : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare);
 
   if (route === "chp") {
     // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.

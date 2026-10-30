@@ -9,7 +9,7 @@ import { COUNTRY_LOCALE } from "@/i18n/config";
 import { preferenceCopy } from "@/i18n/preferences";
 import { adaptToLocation, contextHref, displayCurrency, normalizePreferences, readPreferenceCookie, resolvePreferences, swapLocaleUrl } from "../preferences";
 import { formToInput, inputToForm, recontextualizeForm } from "../form";
-import { makeFormat } from "../format";
+import { displayUnit, makeFormat } from "../format";
 
 describe("shared project and language preferences", () => {
   const saved = { country: "DE", region: COUNTRIES.DE.regions[1].id, displayCurrency: "USD", paymentCurrency: "EUR" };
@@ -130,6 +130,15 @@ describe("project changes preserve quantities without reinterpreting prices", ()
     expect(usd.compact(1000)).toBe(eur.compact(1000));
     expect(usd.pct(0.15)).toBe(eur.pct(0.15));
     expect(usd.money(100, "UAH")).toBe(eur.money(100, "UAH"));
+  });
+  it("shows EUR-based parameters in USD without touching ratios or physical units", () => {
+    const usd = { currency: "USD" as const, rate: 1.1 };
+    expect(displayUnit(0.2, "EUR/kWh", usd)).toEqual({ value: 0.2 * 1.1, unit: "USD/kWh" });
+    expect(displayUnit(30000, "EUR", usd).unit).toBe("USD");
+    expect(displayUnit(40, "EUR per Nm³/h raw biogas", usd).unit).toBe("USD per Nm³/h raw biogas");
+    expect(displayUnit(50.6, "UAH/EUR", usd)).toEqual({ value: 50.6 / 1.1, unit: "UAH/USD" });
+    for (const unit of ["—", "kWh/Nm³ CH₄", "of CAPEX/a", "d"]) expect(displayUnit(0.5, unit, usd)).toEqual({ value: 0.5, unit });
+    expect(displayUnit(0.2, "EUR/kWh", { currency: "EUR", rate: 1 })).toEqual({ value: 0.2, unit: "EUR/kWh" });
   });
   it.each(LOCALES)("provides complete preference copy in %s", (locale) => {
     const copy = preferenceCopy(locale);

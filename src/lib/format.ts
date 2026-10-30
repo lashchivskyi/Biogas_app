@@ -23,6 +23,14 @@ export function sig2(v: number): number {
 
 export type Fmt = ReturnType<typeof makeFormat>;
 
+/** Display a EUR-based parameter in the chosen currency: EUR amounts are multiplied, local/EUR rates divided; other units unchanged. */
+export function displayUnit(value: number, unit: string, display: { currency: "EUR" | "USD"; rate: number }): { value: number; unit: string } {
+  if (display.currency === "EUR" || display.rate <= 0) return { value, unit };
+  if (/^EUR\b/.test(unit)) return { value: value * display.rate, unit: unit.replace(/^EUR/, display.currency) };
+  if (/\/EUR$/.test(unit)) return { value: value / display.rate, unit: unit.replace(/\/EUR$/, `/${display.currency}`) };
+  return { value, unit };
+}
+
 /** Locale-aware formatters. Compact notation and currency symbols come from Intl. */
 export function makeFormat(locale: Locale, units: Dict["labels"]["units"], display: { currency: "EUR" | "USD"; rate: number } = { currency: "EUR", rate: 1 }) {
   const tag = INTL_TAG[locale];

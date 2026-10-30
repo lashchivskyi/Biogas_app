@@ -34,7 +34,7 @@ export function buildParams(country: CountryAdapter, regionId?: string, energy?:
 
 /** Every parameter, engineering + scenario + country, for the registry document and the methodology page. */
 export function allProvenance(country: CountryAdapter, regionId?: string, energy?: Assessment["input"]["energy"]) {
-  return [...buildParams(country, regionId, energy).all(), ...scenarioProvenance()];
+  return [...buildParams(country, regionId, energy).all(), ...scenarioProvenance(DATA_REVIEW_AS_OF)];
 }
 
 function makeCtx(input: Assessment["input"], country: CountryAdapter, params: Params, scenario: ScenarioId, mods: Modifiers, lang: CoreLang, support?: SupportScheme): RunContext {
@@ -171,7 +171,9 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     ["downtime", T("CHP downtime +10 pp", "Простої КГУ +10 п.п."), { extraDowntimePp: 10 }],
   ];
   const sensitivity: SensitivityItem[] = tests.map(([id, label, m]) => {
-    const r = run(bestRoute, "base", { ...NO_MODS, ...m });
+    let r = run(bestRoute, "base", { ...NO_MODS, ...m });
+    // Feedstock lost after construction: the plant was built for the base case, so CAPEX stays as built.
+    if (m.feedstock !== undefined && r.capex.totalEur > 0) r = run(bestRoute, "base", { ...NO_MODS, ...m, capex: base.capex.totalEur / r.capex.totalEur });
     return {
       id,
       label,

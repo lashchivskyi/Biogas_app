@@ -171,7 +171,7 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
     energyDensityKwhPerTonne: tonnes ? ch4 * ctx.params.get("eng.ch4_lhv_kwh_m3") / tonnes : 0,
     nKgYear: p.kind === "residue" ? tonnes * p.nKgT : 0, p2o5KgYear: 0, k2oKgYear: 0, manureShareVs: 0, poultryShareVs: 0, fatShareVs: 0, abpTonnesYear: 0, inhibitionFactor: 1, warnings: [] };
   const empty: DigesterDesign = { workingVolumeM3: reactor, totalVolumeM3: reactor, hrtDays: p.kind === "wastewater" ? reactor / p.flowM3Day : 0, olrKgVsM3Day: 0,
-    monthlyHeatDemandKwh: heat, heatDemandKwhYear: sum(heat), pasteurisationHeatKwhYear: 0, storageVolumeM3: 0, storageCovered: 0, storageNew: 0, surfaceAreaM2: 0,
+    monthlyHeatDemandKwh: heat, heatDemandKwhYear: sum(heat), pasteurisationHeatKwhYear: 0, storageVolumeM3: 0, storageCovered: 0, storageNew: 0, storageOpenNew: 0, surfaceAreaM2: 0,
     tech: { primary: p.kind === "wastewater" ? p.reactorTechnology === "covered_lagoon" ? "COD / Covered lagoon" : "COD / UASB–EGSB" : p.kind === "landfill" ? "LFG / FOD" : "Biogas / CHP / boiler", digestion: p.kind === "wastewater" ? p.reactorTechnology ?? "high_rate" : "none", temperature: "mesophilic", stages: "single", mode: "continuous", reactor: "", hrtDays: 0, reasons: [], warnings: [], alternatives: [] } };
   const design = p.kind === "residue" ? designDigester(feed, { ...ctx, params: ctx.params.with({ "eng.hrt_manure_days": p.hrtDays, "eng.hrt_mixed_days": p.hrtDays, "eng.hrt_waste_days": p.hrtDays, "eng.olr_max_kgvs_m3d": p.olr }) }) : empty;
   // Extra thermal loads (e.g. hygienisation or drying) are supplied by the process design.

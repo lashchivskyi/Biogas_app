@@ -62,7 +62,7 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const advice: string[] = [];
   if (adequacy === "UNKNOWN") advice.push(T("Enter the land area available for spreading: without it digestate is a potential liability.", "Вкажіть площу полів, на які можна вносити дигестат: без цього вартість дигестату — потенційний борг."));
   if (adequacy === "SHORT") advice.push(T(`Not enough land: ≈ ${req} ha needed at ${nLimit} kg N/ha. Surplus digestate is a cost (agreements with neighbours, separation, pelletising).`, `Земель недостатньо: потрібно ≈ ${req} га за лімітом ${nLimit} кг N/га. Надлишок дигестату — витрата (договори з сусідніми господарствами, сепарація, гранулювання).`));
-  advice.push(T(`Covered digestate storage for ${storageMonths} months: required by the spreading season; without it, N and methane are lost.`, `Закрите сховище дигестату на ${storageMonths} міс.: вимога сезону внесення, без нього — втрата N і метан.`));
+  advice.push(T(`Digestate storage for ${storageMonths} months for the closed spreading season; keep ≈ 150 days (incl. the digester) gas-tight, otherwise methane and N are lost.`, `Сховище дигестату на ${storageMonths} міс. на період заборони внесення; ≈ 150 діб (разом із реактором) — газонепроникно, інакше втрачаються метан і азот.`));
   advice.push(T("Spread by injection or trailing hose (not splash plate): less odour and ammonia loss.", "Внесення — інжектором або стрічкове (не розкидання): менше запаху та втрат аміаку."));
 
   const status: DigestateAssessment["status"] = adequacy === "SHORT" || net < 0 ? "LIABILITY" : net > 1000 ? "ASSET" : "NEUTRAL";

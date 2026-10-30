@@ -105,7 +105,7 @@ describe("release gate: temporal evidence, units and actual calculation inputs",
     expect(periodEnd("2026-02-31")).toBeUndefined();
     expect(checkEvidence(ENGINEERING_MAP["eng.ch4_lhv_kwh_m3"], asOfDate).status).toBe("CONSTANT");
     expect(checkEvidence(ENGINEERING_MAP["eng.capex.chp_eur_kw_100"], asOfDate).status).toBe("ASSUMPTION");
-    expect(ENGINEERING_MAP["eng.capex.chp_eur_kw_100"].date).toBe("2008-12-31");
+    expect(ENGINEERING_MAP["eng.capex.chp_eur_kw_100"].date).toBe("2024-02-13");
   });
 
   it("expired applicable tariffs prevent a confident recommendation, including derived heat values", () => {
@@ -133,8 +133,10 @@ describe("release gate: temporal evidence, units and actual calculation inputs",
     expect(gasFor("DE", 10000)!.value).toBeCloseTo(statistics.gas.DE.bands["GJ_LT1000"].eurMwh * 1.11, 8);
     expect(gasFor("BR")!.value).toBeCloseTo(283 / fxFor("BRL")!.value * 1.11, 8);
     expect(spotFor("DE")!.date).toBe(statistics.dayAhead.DE.to);
-    expect(fxFor("VND")!.confidence).toBe("LOW");
-    expect(checkEvidence(buildParams(getCountry("VN")).prov("econ.fx_local_per_eur"), asOfDate).status).toBe("REVIEW_REQUIRED");
+    // No official EUR rate for VND: a labelled cross rate, never an annual average passed off as current.
+    expect(fxFor("VND")!.source).toMatch(/^Cross rate: .*ECB/);
+    expect(fxFor("VND")!.confidence).toBe("MEDIUM");
+    expect(fxFor("VND")!.source).not.toMatch(/annual average/i);
     expect(gasFor("GB")!.value).toBeCloseTo(40.3 / fxFor("GBP")!.value * 1.11, 8);
     expect(gasFor("GB")!.date).toBe("2026-06-30");
   });

@@ -125,13 +125,14 @@ describe("calorific basis, capacity and finance", () => {
     expect(comparison.fitId).not.toBe(comparison.id);
     expect(comparison.errorPct).toBeLessThan(0);
     expect(Object.values(calibration.countries).every((c) => !c.applied)).toBe(true);
-    expect(buildParams(getCountry("FR")).prov("econ.capex_factor_biomethane").range!.high).toBeGreaterThan(2);
+    const frBudgetRatios = calibration.benchmarks.filter((b) => b.country === "FR" && b.route === "biomethane").map((b) => b.factor);
+    expect(buildParams(getCountry("FR")).prov("econ.capex_factor_biomethane").range!.high).toBeGreaterThan(Math.max(...frBudgetRatios));
   });
 
-  it("keeps Indian procurement support conditional and removes the unverified capital grant", () => {
+  it("models the administered Indian CBG price as a separate case without the unmodelled capital aid", () => {
     const c = getCountry("IN");
     const scheme = c.support.schemes.find((s) => s.id === "in.cbg")!;
-    expect(scheme.status).toBe("uncertain");
+    expect(scheme.status).toBe("open");
     expect(scheme.capexGrantShare).toBeUndefined();
     expect(indiaCbgProcurementPrice()).toBeCloseTo(2110 * 9.97 * 0.97 * 1.11 / 293.0710701722222 / fxFor("INR")!.value, 10);
     expect(buildParams(c).get("econ.biomethane_price_base_eur_nm3")).toBeLessThan(scheme.biomethaneEurNm3!);

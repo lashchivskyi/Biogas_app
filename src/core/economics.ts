@@ -90,7 +90,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   };
   const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_per_kw") * Math.max(kwEq, 0));
   ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio") * opexMult);
-  ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * opexMult * maintMult);
+  ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp").reduce((a, l) => a + l.eur, 0);
   const otherCapex = gross.totalEur - upgradingCapex - chpCapex - (process?.capexEur ?? 0);

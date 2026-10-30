@@ -83,7 +83,7 @@ describe("checkout", () => {
     expect(JSON.stringify((await O.orders.get(order.id))?.assessmentSnapshot)).toBe(before);
   });
   it("uses the same commercial price rounded up to USD 10 for both plans in every country tier", () => {
-    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(`${fxFor("USD")!.date}T12:00:00Z`));
     expect(convertedPlanPrice(16000, "USD", 1.1193)).toBe(18000);
     expect(convertedPlanPrice(19000, "USD", 1.1193)).toBe(22000);
     for (const plan of ["standard", "report"] as const) for (const example of ["slaughter_5000", "de_nawaro", "it_whey"]) {
@@ -97,7 +97,7 @@ describe("checkout", () => {
     }
   });
   it("binds the exact dated USD quote to the plan, language and project before creating an order", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-10-27T12:00:00Z"));
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(`${fxFor("USD")!.date}T12:00:00Z`));
     const request = { ...req("report"), paymentCurrency: "USD" as const };
     const quote = Q.createPaymentQuote(request);
     expect(quote.currency).toBe("USD");
@@ -116,14 +116,14 @@ describe("checkout", () => {
     expect(after?.billingCountry).toBe("CA");
     expect(after?.input.countryCode).toBe("UA");
     expect(after?.priceTier).toBe("C");
-    vi.setSystemTime(new Date("2026-10-27T12:31:00Z"));
+    vi.setSystemTime(new Date(`${fxFor("USD")!.date}T12:31:00Z`));
     expect(() => Q.verifyPaymentQuote(quote.token, request)).toThrow();
   });
   it("falls back to EUR for stale conversion rates", () => {
-    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date("2026-11-20T00:00:00Z"));
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(Date.parse(`${fxFor("USD")!.date}T00:00:00Z`) + 21 * 86400000));
     expect(Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" }).currency).toBe("EUR");
     expect(Q.availablePaymentCurrencies()).toEqual(["EUR"]);
-    vi.setSystemTime(new Date("2026-10-27T00:00:00Z"));
+    vi.setSystemTime(new Date(`${fxFor("USD")!.date}T00:00:00Z`));
     const quote = Q.createPaymentQuote({ ...req("report"), paymentCurrency: "USD" });
     expect(quote.availableCurrencies).toEqual(["EUR", "USD"]);
     expect(quote.currency).toBe("USD");

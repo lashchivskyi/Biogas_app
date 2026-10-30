@@ -4,7 +4,7 @@ import type { Assessment, Provenance } from "./types";
 
 export const MODEL_VERSION = "0.6.0";
 /** Deterministic fallback for static examples. Live evaluations pass an explicit date. */
-export const DATA_REVIEW_AS_OF = "2026-10-29";
+export const DATA_REVIEW_AS_OF = "2026-10-30";
 type Check = NonNullable<Assessment["dataAudit"]>["checks"][number];
 const PHYSICAL_CONSTANTS = new Set(["eng.ch4_lhv_kwh_m3", "eng.ch4_density_kg_m3", "eng.co2_density_kg_m3", "eng.gwp_ch4", "eng.gas_emission_factor_t_mwh"]);
 

@@ -5,6 +5,7 @@ import { PageHero } from "@/components/PageHero";
 import { MethodologyFilters } from "@/components/MethodologyFilters";
 import { HelpTooltip } from "@/components/HelpTooltip";
 import { CountryFlag } from "@/components/CountryFlag";
+import { DisplayCurrencyLabel, DisplayRateNote, DisplayUnitValue } from "@/components/DisplayUnitValue";
 import { allProvenance } from "@/core";
 import { isoDate } from "@/core/modelAudit";
 import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
@@ -45,7 +46,8 @@ function Cell({ c, id, locale, percentage = false }: { c: (typeof COUNTRIES)[str
   return (
     <td className="methodology-numericCell">
       {p && <HelpTooltip description={`${p.source} (${p.confidence})`}>
-        {new Intl.NumberFormat(INTL_TAG[locale], { style: percentage ? "percent" : "decimal", maximumFractionDigits: percentage ? 1 : 6 }).format(p.value)}
+        {percentage ? new Intl.NumberFormat(INTL_TAG[locale], { style: "percent", maximumFractionDigits: 1 }).format(p.value)
+          : <DisplayUnitValue value={p.value} unit={p.unit} digits={6} showUnit={false} initialText={new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(p.value)} />}
         <span className={`inline-block h-1.5 w-1.5 rounded-full ${DOT[p.confidence]}`} aria-label={p.confidence} />
       </HelpTooltip>}
     </td>
@@ -118,6 +120,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
           <div className="methodology-sectionHeading">
             <h2 id="country-conditions-title">{copy.countries} <span className="methodology-count">{COUNTRY_ORDER.length}</span></h2>
             <p id="country-confidence-legend" className="methodology-legend">{copy.legend}</p>
+            <DisplayRateNote />
           </div>
           <div className="methodology-tableFrame" role="region" aria-labelledby="country-conditions-title" tabIndex={0}>
             <table className="num methodology-table methodology-countryTable" aria-labelledby="country-conditions-title" aria-describedby="country-confidence-legend">
@@ -131,7 +134,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
                 <tr>
                   {copy.columns.map((label, index) => (
                     <th key={label} scope="col" className={index >= 2 && index <= 7 ? "methodology-numericCell" : undefined}>
-                      <HelpTooltip description={copy.countryHelp[index]}>{label}</HelpTooltip>
+                      <HelpTooltip description={copy.countryHelp[index]}><DisplayCurrencyLabel text={label} /></HelpTooltip>
                     </th>
                   ))}
                 </tr>
@@ -189,7 +192,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
                     {rows.map((p) => (
                       <tr key={p.id} data-parameter={p.id}>
                         <th scope="row" lang="en"><div className="methodology-parameterLabel">{p.label}</div><div className="methodology-parameterId">{p.id}</div>{p.note && <div className="methodology-parameterNote">{p.note}</div>}</th>
-                        <td className="num methodology-numericCell methodology-parameterValue">{new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 8 }).format(p.value)} <span className="methodology-unit">{p.unit}</span></td>
+                        <td className="num methodology-numericCell methodology-parameterValue"><DisplayUnitValue value={p.value} unit={p.unit} digits={8} initialText={<>{new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 8 }).format(p.value)} <span className="methodology-unit">{p.unit}</span></>} /></td>
                         <td className="methodology-kind">{p.kind}</td>
                         <td><span className={`methodology-badge ${CONF_STYLE[p.confidence]}`}>{p.confidence}</span></td>
                         <td className="methodology-source">{p.source} <span className="text-muted">· {p.country}</span></td>

@@ -185,9 +185,14 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   // Dilute industrial effluent is typically treated & discharged/irrigated, not stored 6 months.
   const months = digestion === "high_rate" || digestion === "covered_lagoon" ? Math.min(storageMonths, 1) : storageMonths;
   const storageRequired = (digestateT * months) / 12; // m³ (density ≈ 1)
+  // Only the first (150 d − HRT) of digestate must stay gas-tight (TA Luft 2021 / VDI 3475); the rest of the
+  // closed season can use open storage. Existing storage is covered first, then serves the open part.
+  const hrtActual = qMax > 0 ? working / qMax : hrt;
+  const gasTight = Math.min(storageRequired, (digestateT * Math.max(0, p.get("eng.gastight_retention_days") - hrtActual)) / 365);
   const existing = Math.max(0, ctx.input.site.existingStorageM3 ?? 0);
-  const covered = Math.min(existing, storageRequired);
-  const newStorage = storageRequired - covered;
+  const covered = Math.min(existing, gasTight);
+  const newStorage = gasTight - covered;
+  const openNew = Math.max(0, storageRequired - gasTight - (existing - covered));
 
   const tech = recommendTechnology(feed, ctx, hrt, digestion);
 
@@ -202,6 +207,7 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
     storageVolumeM3: storageRequired,
     storageCovered: covered,
     storageNew: newStorage,
+    storageOpenNew: openNew,
     surfaceAreaM2: surface,
     tech,
   };

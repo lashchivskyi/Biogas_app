@@ -5,7 +5,7 @@ import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
-import { makeFormat, sig2 } from "@/lib/format";
+import { displayUnit, makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
 import { qualityGapCopy } from "@/i18n/quality";
@@ -607,7 +607,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
                 <summary className="cursor-pointer font-semibold">{R.assumptionsText}</summary>
                 <dl lang="en" className="mt-2 space-y-3 break-words">
                   {a.marketEvidence.map((p) => <div key={p.id}>
-                    <dt className="font-semibold">{p.label}: <span className="num">{parameterNumber(p.value)} {p.unit}</span> · {p.origin ?? p.kind} · {p.confidence}</dt>
+                    <dt className="font-semibold">{p.label}: <span className="num">{parameterNumber(displayUnit(p.value, p.unit, { currency: F.currency, rate: F.exchangeRate }).value)} {displayUnit(p.value, p.unit, { currency: F.currency, rate: F.exchangeRate }).unit}</span> · {p.origin ?? p.kind} · {p.confidence}</dt>
                     <dd className="mt-1 text-muted">{p.source}</dd>
                     {p.evidence && <dd className="mt-1 text-muted">{p.evidence.period} · checked {p.evidence.checkedOn} · {p.evidence.scope}</dd>}
                     {a.dataAudit?.checks.find((check) => check.parameterId === p.id) && <dd className="mt-1 text-muted">{a.dataAudit.checks.find((check) => check.parameterId === p.id)!.status}: {a.dataAudit.checks.find((check) => check.parameterId === p.id)!.reason}</dd>}

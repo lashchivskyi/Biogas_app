@@ -92,7 +92,7 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
     P("econ.electricity_spot_eur_kwh", "Wholesale electricity price (market average)", spotFor(c.code), +(c.exp / 0.85).toFixed(3), "EUR/kWh", "Official day-ahead or wholesale average where published"),
     prov("econ.export_haircut", "Share of the wholesale price realised for surplus power", haircutFor(c.code).value, "—", "ASSUMPTION", haircutFor(c.code).source, "MEDIUM", o),
     prov("econ.self_consumption_variable_share", "Share of the bill actually avoided by self-generation", electricityVariableShareFor(c.code), "—", "ASSUMPTION", "TOU reference: energy/Ft portion only, demand/service charges retained. Else 85% engineering allowance. User invoice uses the generic allowance until its energy/demand split is known.", "MEDIUM", { ...o, range: electricityVariableShareFor(c.code) === ENGINEERING_MAP["eng.invoice_variable_share"].value ? ENGINEERING_MAP["eng.invoice_variable_share"].range : undefined }),
-    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, { ...o, date: gas?.date ?? "undated", evidence: gas?.evidence }),
+    prov("econ.heat_value_eur_kwh_th", "Value of useful heat (displaced gas / boiler efficiency)", gasV / 1000 / boilerEff, "EUR/kWh th", "CALCULATION", `Business gas ${gasV} €/MWh LHV ÷ ${boilerEff}`, gas?.confidence ?? L, { ...o, date: gas?.date ?? o.date, evidence: gas?.evidence }),
     P("econ.gas_price_eur_mwh", "Business natural-gas price, excl. VAT, LHV basis", gas, c.gas, "EUR/MWh LHV"),
     prov("econ.biomethane_price_cons_eur_nm3", "Biomethane price without support, conservative", bm[0], "EUR/Nm³", "CALCULATION", `${bmSrc}; conservative scenario reference ${bm[0]} EUR/Nm³`, bmConf, o),
     prov("econ.biomethane_price_base_eur_nm3", "Biomethane price without support, base", bm[1], "EUR/Nm³", "CALCULATION", bmSrc, bmConf, o),
@@ -118,7 +118,7 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
     P("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor(c.code), c.ef, "tCO₂/MWh"),
   ];
   if (c.nitrateLimit !== undefined) out.push(prov("eng.nitrates_limit_kg_n_ha", "N application ceiling from organic fertiliser", c.nitrateLimit, "kgN/ha·a", "ASSUMPTION", "National rule / good practice", "MEDIUM", o));
-  if (c.storageMonths !== undefined) out.push(prov("eng.storage_months", "Gas-tight digestate storage required", c.storageMonths, "months", "ASSUMPTION", "National closed-season rule / practice", L, o));
+  if (c.storageMonths !== undefined) out.push(prov("eng.storage_months", "Digestate storage required (closed spreading season)", c.storageMonths, "months", "ASSUMPTION", "National closed-season rule / practice", L, o));
   return out;
 }
 
