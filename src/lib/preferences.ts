@@ -9,11 +9,19 @@ export type ProjectPreferences = { country: string; region?: string; city?: City
 export type PreferenceMarkets = Record<string, { currency: string; regions: { id: string; name: string; names?: Record<string, string> }[] }>;
 export type CurrencyReference = { value: number; date: string };
 
-/** Shared first-visit/IP-change policy; the detected visitor country itself is never relabelled US. */
+/** Euro-oriented visitor countries: EU, EEA/EFTA, UK, Balkans, Eastern Europe, Caucasus, Turkey and euro-pegged/EU-trade neighbours. Everyone else defaults to USD. */
+const EURO_ORIENTED = new Set([
+  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+  "IS", "LI", "NO", "CH", "GB", "AD", "MC", "SM", "VA", "GI", "GG", "JE", "IM", "FO", "GL", "AX",
+  "AL", "BA", "ME", "MK", "RS", "XK", "UA", "MD", "BY", "RU", "GE", "AM", "AZ", "TR",
+  "MA", "TN", "DZ", "CV", "SN", "CI", "CM", "BJ", "BF", "ML", "NE", "TG", "GA", "CG", "TD", "CF", "GQ", "GW", "KM", "RE", "GP", "MQ", "GF", "YT", "NC", "PF"
+]);
+
+/** Shared first-visit/IP-change policy; the detected visitor country itself is never relabelled US. Currency follows the visitor's country, not the project country. */
 export function locationDefaults(country: string, markets: object = COUNTRY_LOCALE): { country: string; language: Locale; currency: "EUR" | "USD" } {
   const supported = Object.hasOwn(markets, country);
   const projectCountry = supported ? country : "US";
-  return { country: projectCountry, language: supported ? COUNTRY_LOCALE[country] ?? "en" : "en", currency: projectCountry === "US" ? "USD" : "EUR" };
+  return { country: projectCountry, language: supported ? COUNTRY_LOCALE[country] ?? "en" : "en", currency: EURO_ORIENTED.has(country) ? "EUR" : "USD" };
 }
 
 export function normalizePreferences(raw: unknown, markets: PreferenceMarkets, fallback: string): ProjectPreferences {

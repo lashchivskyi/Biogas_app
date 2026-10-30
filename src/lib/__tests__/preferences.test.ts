@@ -27,13 +27,16 @@ describe("shared project and language preferences", () => {
     expect(adaptToLocation(manual, "XX", COUNTRIES).changed).toBe(false);
     expect(adaptToLocation(manual, "ZZ", COUNTRIES).preferences.country).toBe("US");
   });
-  it.each(["CH", "BE", "PT", "IE", "AU", "JP", "AE"])("defaults unsupported %s visitors to US/en/USD and keeps the real detected country", (country) => {
+  it.each([["CH", "EUR"], ["BE", "EUR"], ["PT", "EUR"], ["IE", "EUR"], ["AU", "USD"], ["JP", "USD"], ["AE", "USD"], ["CA", "USD"], ["MX", "USD"], ["BR", "USD"]])("defaults %s visitors to the %s region currency and keeps the real detected country", (country, currency) => {
+    expect(displayCurrency("AUTO", country)).toBe(currency);
+  });
+  it.each(["CH", "BE", "PT", "IE", "AU", "JP", "AE"])("defaults unsupported %s visitors to the US/en project and keeps the real detected country", (country) => {
     const current = normalizePreferences({ ...saved, detectedCountry: "UA" }, COUNTRIES, "GB");
     const adapted = adaptToLocation(current, country, COUNTRIES);
-    expect(adapted).toMatchObject({ changed: true, language: "en", preferences: { country: "US", detectedCountry: country, displayCurrency: "USD", paymentCurrency: "USD", locationDefaultsVersion: 2 } });
+    const currency = displayCurrency("AUTO", country);
+    expect(adapted).toMatchObject({ changed: true, language: "en", preferences: { country: "US", detectedCountry: country, displayCurrency: currency, paymentCurrency: currency, locationDefaultsVersion: 2 } });
     expect(adapted.preferences.region).toBeUndefined();
     expect(adapted.preferences.city).toBeUndefined();
-    expect(displayCurrency("AUTO", country)).toBe("USD");
     expect(resolvePreferences({ locale: "uk", markets: COUNTRIES, visitorCountry: country }).country).toBe("US");
     expect(adaptToLocation(adapted.preferences, country, COUNTRIES).changed).toBe(false);
   });
