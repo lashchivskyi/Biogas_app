@@ -239,7 +239,7 @@ const AUTHORED_SEGMENTS: Segment[] = [
     },
   },
   {
-    slug: "pig-farms", id: "pigs", businessType: "pig_farm", exampleId: "ro_pig_complex", tone: "weak",
+    slug: "pig-farms", id: "pigs", businessType: "pig_farm", exampleId: "ro_pig_complex", tone: "mid",
     seo: {
       en: {
         title: "Biogas for pig farms from slurry: will it pay off?",

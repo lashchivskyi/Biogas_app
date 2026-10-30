@@ -42,6 +42,10 @@ replace the line rather than adding a contradicting one.
 - 2026-10-30 — Support schemes: official legal text required for any modelled value; without it
   the scheme is described but not modelled (e.g. CZ biomethane auction prices).
 
+- 2026-10-31 — Reference examples show prepared clients (lab analysis, metered manure, existing
+  storage, sourced tipping fees/surcharges); each lever is named in the case text. No market or
+  model parameter was changed for them. — Owner asked for more realistic, less pessimistic samples.
+
 ## AI workflow
 
 - 2026-10-30 — `AGENTS.md` is the single instruction file (Codex reads it, `CLAUDE.md` imports it),

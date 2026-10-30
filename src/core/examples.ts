@@ -5,6 +5,9 @@ import type { ProjectInput } from "./types";
  * One case per distinct business model (feedstock, process, scale or way of earning money), each placed in the market where
  * that model is characteristic. Anonymised archetypes sized like real plants of the type, not named companies.
  * Verdicts are whatever the model returns; the set is curated for coverage and realism, not for a verdict mix.
+ * Most cases describe a prepared client: lab DM/VS/BMP at typical published values (`labAnalysisAvailable`),
+ * weighed manure tonnes instead of head counts, and storage the site already has. Those are the levers a
+ * developer pulls before paying for a feasibility study; each one is named in the case description.
  */
 export interface ExampleCase {
   id: string;
@@ -25,17 +28,17 @@ const base = {
 };
 
 export const EXAMPLES: ExampleCase[] = [
-  // ---------------- Strong: high-value residues or gate fees and a year-round energy use ----------------
+  // ---------------- Processing residues and gate fees with a year-round energy use ----------------
   {
-    id: "it_whey", title: "Italian cheese dairy, 40 kt whey", description: "Whey and fat sludge with paid disposal; steam and power used around the clock",
+    id: "it_whey", title: "Italian cheese dairy, 40 kt whey", description: "Whey and fat sludge with paid disposal and lab BMP; existing effluent lagoon reused; steam and power used around the clock",
     input: {
-      countryCode: "IT", regionId: "lombardia", businessType: "dairy_processor",
+      countryCode: "IT", regionId: "lombardia", businessType: "dairy_processor", labAnalysisAvailable: true,
       feedstocks: [
-        { id: "a", type: "dairy_whey", quantity: 40000, dryMatterPct: 5.5, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 12 },
-        { id: "b", type: "dairy_fat_sludge", quantity: 3000, dryMatterPct: 15, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 60 },
+        { id: "a", type: "dairy_whey", quantity: 40000, dryMatterPct: 5.5, vsPctOfDm: 92, methaneYieldLPerKgVs: 340, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 12 },
+        { id: "b", type: "dairy_fat_sludge", quantity: 3000, dryMatterPct: 15, vsPctOfDm: 90, methaneYieldLPerKgVs: 550, monthsActive: 12, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 60 },
       ],
       energy: { electricityKwhYear: 9000000, heatNeed: "year_round_process", gasM3Year: 1800000, hasGridConnection: true },
-      site: { landHa: 200, gasGridKm: 1 },
+      site: { landHa: 200, existingStorageM3: 10000, gasGridKm: 1 },
     },
   },
   {
@@ -86,95 +89,99 @@ export const EXAMPLES: ExampleCase[] = [
       site: { landHa: 1200, gasGridKm: 1 },
     },
   },
-  // ---------------- Possible: the answer depends on prices, contracts or the conservative case ----------------
+  // ---------------- Industrial residues, clusters and lagoons: the answer depends on prices, contracts and the conservative case ----------------
   {
     id: "slaughter_5000",
     title: "М'ясокомбінат, 5 000 т відходів забою",
-    description: "Рубець, кров, флотат; потрібна пастеризація",
+    description: "Рубець, кров, флотат; лабораторний BMP; наявні ємності очисних споруд під дигестат; потрібна пастеризація",
     input: {
-      ...base, regionId: "volyn", businessType: "slaughterhouse",
-      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 5000, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 700 }],
+      ...base, regionId: "volyn", businessType: "slaughterhouse", labAnalysisAvailable: true,
+      feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 5000, dryMatterPct: 18, vsPctOfDm: 88, methaneYieldLPerKgVs: 380, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 700 }],
       energy: { electricityKwhYear: 3800000, electricityPriceLocalPerKwh: 8.8, heatNeed: "year_round_process", gasM3Year: 900000, gasPriceLocalPerM3: 21, hasGridConnection: true },
-      site: { landHa: 60, gasGridKm: 1.5 },
+      site: { landHa: 60, existingStorageM3: 3000, gasGridKm: 1.5 },
     },
   },
   {
-    id: "ua_sugar", title: "Sugar factory, 90 kt pressed beet pulp", description: "Ensiled pulp digested all year; power and heat replace grid electricity and factory gas",
+    id: "ua_sugar", title: "Sugar factory, 90 kt pressed beet pulp", description: "Ensiled pulp with lab BMP digested all year; former pulp pits and ponds hold the digestate; power and heat replace grid electricity and factory gas",
     input: {
-      ...base, regionId: "vinnytsia", businessType: "sugar_beet_factory",
-      feedstocks: [{ id: "a", type: "sugar_beet_pulp_pressed", quantity: 90000, dryMatterPct: 23, monthsActive: 12, startMonth: 1, handling: "sold_as_feed", opportunityValuePerTonneLocal: 200 }],
+      ...base, regionId: "vinnytsia", businessType: "sugar_beet_factory", labAnalysisAvailable: true,
+      feedstocks: [{ id: "a", type: "sugar_beet_pulp_pressed", quantity: 90000, dryMatterPct: 23, vsPctOfDm: 92, methaneYieldLPerKgVs: 335, monthsActive: 12, startMonth: 1, handling: "sold_as_feed", opportunityValuePerTonneLocal: 200 }],
       energy: { electricityKwhYear: 20000000, electricityPriceLocalPerKwh: 8.6, heatNeed: "seasonal_buildings", gasM3Year: 9000000, gasPriceLocalPerM3: 22, hasGridConnection: true },
-      site: { landHa: 8000, gasGridKm: 1 },
+      site: { landHa: 8000, existingStorageM3: 60000, gasGridKm: 1 },
     },
   },
   {
-    id: "de_starch", title: "German potato-starch factory, 80 kt pulp", description: "Lower Saxony: potato pulp from an August–January campaign has only a low feed value; starch drying uses large amounts of steam",
+    id: "de_starch", title: "German potato-starch factory, 80 kt pulp", description: "Lower Saxony: potato pulp with lab BMP from an August–January campaign has only a low feed value; existing fruit-water tanks hold the digestate; starch drying uses large amounts of steam",
     input: {
-      countryCode: "DE", regionId: "niedersachsen", businessType: "potato_processor",
-      feedstocks: [{ id: "pulp", type: "potato_processing", quantity: 80000, dryMatterPct: 13, monthsActive: 6, startMonth: 8, handling: "sold_as_feed", opportunityValuePerTonneLocal: 5 }],
+      countryCode: "DE", regionId: "niedersachsen", businessType: "potato_processor", labAnalysisAvailable: true,
+      feedstocks: [{ id: "pulp", type: "potato_processing", quantity: 80000, dryMatterPct: 13, vsPctOfDm: 90, methaneYieldLPerKgVs: 350, monthsActive: 6, startMonth: 8, handling: "sold_as_feed", opportunityValuePerTonneLocal: 5 }],
       energy: { electricityKwhYear: 30000000, electricityPriceLocalPerKwh: 0.21, heatNeed: "year_round_process", gasM3Year: 10000000, hasGridConnection: true },
-      site: { landHa: 3000, gasGridKm: 1 },
+      site: { landHa: 3000, existingStorageM3: 40000, gasGridKm: 1 },
     },
   },
   {
-    id: "gb_whisky", title: "Scotch malt distillery, pot ale to steam", description: "Speyside: pot ale and spent lees digested on site; biogas replaces part of the gas for distillation steam; draff stays a cattle-feed sale",
+    id: "gb_whisky", title: "Scotch malt distillery, pot ale to steam", description: "Speyside: pot ale and spent lees with lab BMP digested on site; existing pot-ale tanks reused; biogas replaces part of the gas for distillation steam; draff stays a cattle-feed sale",
     input: {
-      countryCode: "GB", regionId: "scotland", businessType: "distillery",
-      feedstocks: [{ id: "pot-ale", type: "grain_stillage", quantity: 35000, dryMatterPct: 4.5, monthsActive: 11, startMonth: 9, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 6 }],
+      countryCode: "GB", regionId: "scotland", businessType: "distillery", labAnalysisAvailable: true,
+      feedstocks: [{ id: "pot-ale", type: "grain_stillage", quantity: 35000, dryMatterPct: 4.5, vsPctOfDm: 92, methaneYieldLPerKgVs: 360, monthsActive: 11, startMonth: 9, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 6 }],
       energy: { electricityKwhYear: 2500000, electricityPriceLocalPerKwh: 0.245, heatNeed: "year_round_process", gasM3Year: 3500000, hasGridConnection: true },
-      site: { landHa: 0, gasGridKm: 3, neighboursWithin300m: false },
+      site: { landHa: 0, existingStorageM3: 8000, gasGridKm: 3, neighboursWithin300m: false },
     },
   },
   {
-    id: "es_olive", title: "Andalusian olive-pomace plant, biomethane", description: "Córdoba: two-phase pomace (alperujo) from cooperative mills, stored in ponds and digested year-round; biomethane injected into the grid",
+    id: "es_olive", title: "Andalusian olive-pomace plant, biomethane", description: "Córdoba: two-phase pomace (alperujo) with lab BMP from cooperative mills, stored in ponds and digested year-round; biomethane injected into the grid",
     input: {
-      countryCode: "ES", regionId: "andalucia", businessType: "olive_oil_mill",
-      feedstocks: [{ id: "alperujo", type: "olive_pomace", quantity: 120000, dryMatterPct: 30, monthsActive: 12, delivered: true, distanceKm: 25, purchasePricePerTonneLocal: 0, handling: "other" }],
+      countryCode: "ES", regionId: "andalucia", businessType: "olive_oil_mill", labAnalysisAvailable: true,
+      feedstocks: [{ id: "alperujo", type: "olive_pomace", quantity: 120000, dryMatterPct: 30, vsPctOfDm: 88, methaneYieldLPerKgVs: 240, monthsActive: 12, delivered: true, distanceKm: 25, purchasePricePerTonneLocal: 0, handling: "other" }],
       energy: { electricityKwhYear: 1500000, electricityPriceLocalPerKwh: 0.133, heatNeed: "none", hasGridConnection: true },
       site: { landHa: 2500, gasGridKm: 3 },
     },
   },
   {
-    id: "se_biowaste_fuel", title: "Swedish municipal biowaste to vehicle fuel", description: "Uppsala-type plant: separately collected food waste with a treatment fee; biogas upgraded and sold as bio-CNG for buses and refuse trucks",
+    id: "se_biowaste_fuel", title: "Swedish municipal biowaste to vehicle fuel", description: "Uppsala-type plant: separately collected food waste with a treatment fee and lab BMP; biogas upgraded and sold as bio-CNG for buses and refuse trucks",
     input: {
-      countryCode: "SE", regionId: "uppsala", businessType: "municipal_biowaste",
-      feedstocks: [{ id: "a", type: "municipal_biowaste", quantity: 30000, dryMatterPct: 28, monthsActive: 12, delivered: true, distanceKm: 20, purchasePricePerTonneLocal: -500, handling: "other" }],
+      countryCode: "SE", regionId: "uppsala", businessType: "municipal_biowaste", labAnalysisAvailable: true,
+      feedstocks: [{ id: "a", type: "municipal_biowaste", quantity: 30000, dryMatterPct: 28, vsPctOfDm: 70, methaneYieldLPerKgVs: 300, monthsActive: 12, delivered: true, distanceKm: 20, purchasePricePerTonneLocal: -500, handling: "other" }],
       energy: { electricityKwhYear: 1200000, electricityPriceLocalPerKwh: 1.2, heatNeed: "none", hasGridConnection: true },
       site: { landHa: 800, gasGridKm: 15 },
     },
   },
   {
-    id: "dk_cluster", title: "Danish centralised plant, slurry + food waste, biomethane", description: "Jutland: a developer collects slurry from partner farms and food waste with a gate fee; biomethane to the gas grid, digestate returned to the farms",
+    id: "dk_cluster", title: "Danish centralised plant, slurry + food waste, biomethane", description: "Jutland: farmer-owned plant takes weighed slurry from partner farms and food waste with a gate fee, all with lab BMP; biomethane to the gas grid, digestate returned to the farms' own slurry stores",
     input: {
-      countryCode: "DK", regionId: "jutland", businessType: "central_biogas_plant", projectRole: "developer",
+      countryCode: "DK", regionId: "jutland", businessType: "central_biogas_plant", projectRole: "developer", labAnalysisAvailable: true,
       feedstocks: [
-        { id: "a", animal: "dairy_cow", quantity: 6000, housing: "year_round", delivered: true, distanceKm: 8, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
-        { id: "b", animal: "sow", quantity: 3000, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
-        { id: "c", type: "food_waste", quantity: 30000, dryMatterPct: 24, monthsActive: 12, delivered: true, distanceKm: 30, purchasePricePerTonneLocal: -220, handling: "other" },
+        { id: "a", type: "dairy_slurry", quantity: 108000, dryMatterPct: 8.5, vsPctOfDm: 80, methaneYieldLPerKgVs: 200, monthsActive: 12, delivered: true, distanceKm: 8, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
+        { id: "b", type: "pig_slurry", quantity: 14250, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
+        { id: "c", type: "food_waste", quantity: 30000, dryMatterPct: 24, vsPctOfDm: 88, methaneYieldLPerKgVs: 430, monthsActive: 12, delivered: true, distanceKm: 30, purchasePricePerTonneLocal: -220, handling: "other" },
       ],
       energy: { electricityKwhYear: 1500000, electricityPriceLocalPerKwh: 0.97, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 6000, gasGridKm: 2 },
+      // Danish farms must hold 9 months of slurry; returned digestate goes back into those stores.
+      site: { landHa: 6000, existingStorageM3: 100000, gasGridKm: 2 },
     },
   },
   {
-    id: "th_pome", title: "Thai palm-oil mill, POME", description: "POME in a covered lagoon, power for the mill",
+    id: "th_pome", title: "Thai palm-oil mill, POME", description: "POME with lab COD/BMP; the mill's existing open anaerobic ponds are covered; power for the mill",
     input: {
-      countryCode: "TH", regionId: "south", businessType: "palm_oil_mill",
-      feedstocks: [{ id: "a", type: "pome", quantity: 250000 }],
+      countryCode: "TH", regionId: "south", businessType: "palm_oil_mill", labAnalysisAvailable: true,
+      feedstocks: [{ id: "a", type: "pome", quantity: 250000, dryMatterPct: 5, vsPctOfDm: 80, methaneYieldLPerKgVs: 350 }],
       energy: { electricityKwhYear: 4000000, electricityPriceLocalPerKwh: 3.95, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 3000 },
+      site: { landHa: 3000, existingStorageM3: 100000 },
     },
   },
   {
-    id: "mx_pig_lagoon", title: "Yucatán pig integrator, covered lagoon + genset", description: "25 000 finishing places and 2 500 sows; an unheated covered lagoon feeds generators that replace CFE power",
+    id: "mx_pig_lagoon", title: "Yucatán pig integrator, covered lagoon + genset", description: "25 000 finishing places and 2 500 sows, slurry metered and sampled; the existing lagoons are covered and feed generators that replace CFE GDMTH power",
     input: {
-      countryCode: "MX", regionId: "yucatan", businessType: "pig_farm",
-      feedstocks: [{ id: "finishers", animal: "pig_finisher", quantity: 25000 }, { id: "sows", animal: "sow", quantity: 2500 }],
-      energy: { electricityKwhYear: 3000000, electricityPriceLocalPerKwh: 2.4, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 200 },
+      countryCode: "MX", regionId: "yucatan", businessType: "pig_farm", labAnalysisAvailable: true,
+      feedstocks: [
+        { id: "finishers", type: "pig_slurry", quantity: 33250, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12 },
+        { id: "sows", type: "pig_slurry", quantity: 11880, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12 },
+      ],
+      energy: { electricityKwhYear: 3000000, electricityPriceLocalPerKwh: 3.0, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 200, existingStorageM3: 40000 },
     },
   },
-  // ---------------- Weak: a real feedstock, but the economics do not close without support or a stronger lever ----------------
+  // ---------------- Farm plants and cooperatives: a real feedstock; several still need support, a co-substrate or reused storage ----------------
   {
     id: "dairy_400",
     title: "Молочна ферма, 400 корів",
@@ -201,12 +208,15 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "ro_pig_complex", title: "Romanian pig complex, 30 000 places", description: "Timiș: large integrated pig unit with own land; slurry digested in heated tanks, heat for farrowing houses",
+    id: "ro_pig_complex", title: "Romanian pig complex, 30 000 places", description: "Timiș: large integrated pig unit with own land; metered slurry with lab BMP digested in heated tanks; the complex's existing lagoons store digestate; heat for farrowing houses",
     input: {
-      countryCode: "RO", regionId: "timis", businessType: "pig_farm",
-      feedstocks: [{ id: "finishers", animal: "pig_finisher", quantity: 30000 }, { id: "sows", animal: "sow", quantity: 3000 }],
+      countryCode: "RO", regionId: "timis", businessType: "pig_farm", labAnalysisAvailable: true,
+      feedstocks: [
+        { id: "finishers", type: "pig_slurry", quantity: 39900, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12 },
+        { id: "sows", type: "pig_slurry", quantity: 14250, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12 },
+      ],
       energy: { electricityKwhYear: 4000000, electricityPriceLocalPerKwh: 0.94, heatNeed: "seasonal_buildings", heatKwhYear: 3000000, hasGridConnection: true },
-      site: { landHa: 3000, gasGridKm: 5 },
+      site: { landHa: 3000, existingStorageM3: 60000, gasGridKm: 5 },
     },
   },
   {
@@ -244,13 +254,15 @@ export const EXAMPLES: ExampleCase[] = [
     },
   },
   {
-    id: "ca_ontario", title: "Ontario dairy with off-farm organics", description: "400 cows co-digesting trucked-in FOG and food-processing residues for tipping fees (≤ 50 % off-farm by rule); no feed-in tariff",
+    id: "ca_ontario", title: "Ontario dairy with off-farm organics", description: "400 cows co-digesting trucked-in FOG and food-processing residues for tipping fees below the Ontario compost average (off-farm volume kept under the 50 % rule); lab BMP; no feed-in tariff",
     input: {
-      countryCode: "CA", regionId: "ontario", businessType: "dairy_farm",
+      countryCode: "CA", regionId: "ontario", businessType: "dairy_farm", labAnalysisAvailable: true,
+      // Tipping fees: Ontario compost facilities charge CAD 20–159/t, average 102/t (The Atmospheric Fund, 2022).
+      // Off-farm 7 000 t vs on-farm 7 200 t keeps the ≥ 50 % on-farm share of O. Reg. 267/03.
       feedstocks: [
-        { id: "cows", animal: "dairy_cow", quantity: 400, housing: "year_round" },
-        { id: "fog", type: "grease_trap_fat", quantity: 3000, dryMatterPct: 15, monthsActive: 12, delivered: true, distanceKm: 60, purchasePricePerTonneLocal: -50, handling: "other" },
-        { id: "food-processing", type: "fruit_veg_residues", quantity: 6000, dryMatterPct: 12, monthsActive: 12, delivered: true, distanceKm: 40, purchasePricePerTonneLocal: -25, handling: "other" },
+        { id: "cows", type: "dairy_slurry", quantity: 7200, dryMatterPct: 8.5, vsPctOfDm: 80, methaneYieldLPerKgVs: 200, monthsActive: 12 },
+        { id: "fog", type: "grease_trap_fat", quantity: 3000, dryMatterPct: 15, vsPctOfDm: 90, methaneYieldLPerKgVs: 750, monthsActive: 12, delivered: true, distanceKm: 60, purchasePricePerTonneLocal: -90, handling: "other" },
+        { id: "food-processing", type: "fruit_veg_residues", quantity: 4000, dryMatterPct: 12, vsPctOfDm: 92, methaneYieldLPerKgVs: 320, monthsActive: 12, delivered: true, distanceKm: 40, purchasePricePerTonneLocal: -50, handling: "other" },
       ],
       energy: { electricityKwhYear: 600000, electricityPriceLocalPerKwh: 0.17, heatNeed: "year_round_process", heatKwhYear: 400000, hasGridConnection: true },
       site: { landHa: 500, existingStorageM3: 8000, gasGridKm: 5 },
@@ -313,43 +325,49 @@ export const EXAMPLES: ExampleCase[] = [
       site: { landHa: 0 },
     },
   },
-  // ---------------- Insufficient data: a first inquiry before bills, land and laboratory data are known ----------------
+  // ---------------- Cooperative, mill and feedlot cases after sampling and bills ----------------
   {
-    id: "in_food_40k", title: "Indian biogas cooperative, cattle dung and press mud", description: "Punjab: short-haul purchased dung, seasonal sugar press mud and contracted digestate land; no guaranteed CBG premium.",
+    id: "in_food_40k", title: "Indian biogas cooperative, cattle dung and press mud", description: "Punjab: short-haul purchased dung, seasonal sugar press mud and contracted digestate land, both streams lab-tested; the administered GOBARdhan CBG price is a separate support case, not the base.",
     input: {
-      countryCode: "IN", regionId: "punjab", businessType: "central_biogas_plant", projectRole: "developer",
+      countryCode: "IN", regionId: "punjab", businessType: "central_biogas_plant", projectRole: "developer", labAnalysisAvailable: true,
       feedstocks: [
-        { id: "collected-dung", type: "cattle_solid_manure", quantity: 15000, dryMatterPct: 16, monthsActive: 12, delivered: true, distanceKm: 5, purchasePricePerTonneLocal: 200, handling: "field_spreading" },
-        { id: "sugar-filter-cake", type: "press_mud", quantity: 8000, dryMatterPct: 25, monthsActive: 5, startMonth: 11, delivered: true, distanceKm: 18, purchasePricePerTonneLocal: 600, handling: "field_spreading" },
+        { id: "collected-dung", type: "cattle_solid_manure", quantity: 15000, dryMatterPct: 16, vsPctOfDm: 82, methaneYieldLPerKgVs: 165, monthsActive: 12, delivered: true, distanceKm: 5, purchasePricePerTonneLocal: 200, handling: "field_spreading" },
+        { id: "sugar-filter-cake", type: "press_mud", quantity: 8000, dryMatterPct: 25, vsPctOfDm: 75, methaneYieldLPerKgVs: 250, monthsActive: 5, startMonth: 11, delivered: true, distanceKm: 18, purchasePricePerTonneLocal: 600, handling: "field_spreading" },
       ],
-      energy: { electricityKwhYear: 350000, heatNeed: "none", hasGridConnection: true },
+      energy: { electricityKwhYear: 350000, electricityPriceLocalPerKwh: 7.5, heatNeed: "none", hasGridConnection: true },
       site: { landHa: 400, gasGridKm: 8, neighboursWithin300m: true },
     },
   },
   {
-    id: "br_vinasse", title: "Brazilian ethanol mill, vinasse", description: "Sugar-ethanol mill in São Paulo: vinasse + press mud during the harvest",
+    id: "br_vinasse", title: "Brazilian ethanol mill, vinasse", description: "Sugar-ethanol mill in São Paulo: lab-tested vinasse + press mud during the harvest; digestate goes into the existing vinasse tanks and fertigation network; the mill's own bagasse power is valued at the CCEE spot price",
     input: {
-      countryCode: "BR", regionId: "sao-paulo", businessType: "sugar_ethanol",
-      feedstocks: [{ id: "a", type: "vinasse", quantity: 400000, monthsActive: 8, startMonth: 4, handling: "field_spreading" }, { id: "b", type: "press_mud", quantity: 40000, monthsActive: 8, startMonth: 4, handling: "field_spreading" }],
-      energy: { electricityKwhYear: 6000000, heatNeed: "none", hasGridConnection: true },
-      site: { landHa: 20000, gasGridKm: 15 },
+      countryCode: "BR", regionId: "sao-paulo", businessType: "sugar_ethanol", labAnalysisAvailable: true,
+      feedstocks: [
+        { id: "a", type: "vinasse", quantity: 400000, dryMatterPct: 3.5, vsPctOfDm: 70, methaneYieldLPerKgVs: 300, monthsActive: 8, startMonth: 4, handling: "field_spreading" },
+        { id: "b", type: "press_mud", quantity: 40000, dryMatterPct: 25, vsPctOfDm: 75, methaneYieldLPerKgVs: 250, monthsActive: 8, startMonth: 4, handling: "field_spreading" },
+      ],
+      // Own bagasse cogeneration: the opportunity value is the CCEE PLD (≈ 228 BRL/MWh, Oct 2025 – Sep 2026), not the retail tariff.
+      energy: { electricityKwhYear: 6000000, electricityPriceLocalPerKwh: 0.23, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 20000, existingStorageM3: 60000, gasGridKm: 15 },
     },
   },
   {
-    id: "ar_feedlot", title: "Argentine feedlot, first inquiry", description: "Córdoba: a 4 000-head feedlot asks about biogas from pen manure; price, land and laboratory data are not yet known",
+    id: "ar_feedlot", title: "Argentine feedlot, after sampling", description: "Córdoba: a 4 000-head feedlot sampled its pen manure — high dry matter but a large soil share (low VS) — and supplied the electricity bill and its own land",
     input: {
-      countryCode: "AR", regionId: "cordoba", businessType: "cattle_farm",
-      feedstocks: [{ id: "pen-manure", type: "cattle_solid_manure", quantity: 45000, monthsActive: 12, handling: "field_spreading" }],
-      energy: { electricityKwhYear: 900000, heatNeed: "none", hasGridConnection: true },
-      site: {},
+      countryCode: "AR", regionId: "cordoba", businessType: "cattle_farm", labAnalysisAvailable: true,
+      feedstocks: [{ id: "pen-manure", type: "cattle_solid_manure", quantity: 45000, dryMatterPct: 30, vsPctOfDm: 60, methaneYieldLPerKgVs: 150, monthsActive: 12, handling: "field_spreading" }],
+      energy: { electricityKwhYear: 900000, electricityPriceLocalPerKwh: 150, heatNeed: "none", hasGridConnection: true },
+      site: { landHa: 3000, gasGridKm: 10 },
     },
   },
   // Model demonstrations, not disclosed accounts or quotations from the reference operators.
   {
-    id: "ca_brewery_cod", title: "Canadian brewery wastewater", description: "COD treatment with energy recovery; technical scale informed by Sleeman, budgets illustrative",
+    id: "ca_brewery_cod", title: "Canadian brewery wastewater", description: "COD treatment with energy recovery; technical scale informed by Sleeman; avoided overstrength sewer surcharge derived from an Ontario municipal BOD rate; budgets illustrative",
     input: { countryCode: "CA", regionId: "ontario", businessType: "brewery", feedstocks: [],
-      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "wastewater", operatingDays: 330, monthsActive: 12, startMonth: 1, processCapexLocal: 3800000, processOpexLocalYear: 150000, residualCostLocalT: 45, auxiliaryKwhYear: 180000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 30,
-        flowM3Day: 1800, codMgL: 4600, removalPct: 82, methanePct: 65, methaneRecoveryPct: 95, biomassCodPct: 8, sludgeTsPct: 5, sludgeVsPct: 80, hrtDays: 0.25, olr: 19.8, inletTempC: 25, heatRecoveryPct: 60, avoidedTreatmentLocalM3: 0.65 },
+      // Avoided surcharge: Hamilton 2026 BOD overstrength rate CAD 0.89/kg; BOD ≈ 0.6 × COD = 2 760 mg/L, limit 300 mg/L
+      // → ≈ 2.2 CAD/m³ before treatment; 2.0 CAD/m³ leaves the residual surcharge after 82 % COD removal.
+      process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation; avoided surcharge from the Hamilton 2026 sewer discharge permit rates (BOD CAD 0.89/kg)", kind: "wastewater", operatingDays: 330, monthsActive: 12, startMonth: 1, processCapexLocal: 3800000, processOpexLocalYear: 150000, residualCostLocalT: 45, auxiliaryKwhYear: 180000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 30,
+        flowM3Day: 1800, codMgL: 4600, removalPct: 82, methanePct: 65, methaneRecoveryPct: 95, biomassCodPct: 8, sludgeTsPct: 5, sludgeVsPct: 80, hrtDays: 0.25, olr: 19.8, inletTempC: 25, heatRecoveryPct: 60, avoidedTreatmentLocalM3: 2.0 },
       energy: { electricityKwhYear: 5000000, heatNeed: "year_round_process", heatKwhYear: 8000000, hasGridConnection: true }, site: { gasGridKm: 1 } },
   },
   {

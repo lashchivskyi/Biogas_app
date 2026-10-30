@@ -13,7 +13,7 @@ import { Emblem } from "@/components/three/Emblem";
 import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
 import { segmentCopy } from "@/content/localized";
-import { SECTOR_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
+import { SECTOR_IDS, FIT_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
 import { countryName, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
@@ -37,7 +37,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     const ex = EXAMPLES.find((e) => e.id === id)!;
     return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode, example: ex };
   };
-  const segments: SegmentCard[] = SECTOR_IDS.map((id) => {
+  const segments: SegmentCard[] = FIT_IDS.map((id) => {
     const definition = BUSINESS_TYPES[id];
     const guide = SEGMENTS.find((s) => s.businessType === id && s.id !== "small");
     const exampleId = guide?.exampleId ?? EXAMPLES.find((e) => e.input.businessType === id)?.id;

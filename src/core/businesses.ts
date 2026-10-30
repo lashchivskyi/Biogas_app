@@ -67,5 +67,17 @@ export function modelsForBusiness(id: BusinessTypeId): readonly ("ad" | ProcessK
 // Other livestock has no species-specific preset or distinct input model. Keep its saved ID,
 // but route new projects to characterised organic residues instead of another identical card.
 export const SECTOR_IDS = BUSINESS_IDS.filter(id => BUSINESS_TYPES[id].audience !== "developer" && id !== "wastewater_organic" && id !== "other_livestock");
+/** Display order of the home "fit" picker: strongest-fit sectors first. Any sector not listed follows in taxonomy order. */
+const FIT_ORDER: readonly BusinessTypeId[] = [
+  "central_biogas_plant", "dairy_farm", "wastewater_treatment", "municipal_biowaste", "crop_farm",
+  "landfill_operator", "pig_farm", "slaughterhouse", "dairy_processor", "brewery", "distillery",
+  "sugar_beet_factory", "fruit_veg_processor", "potato_processor", "poultry_farm", "cattle_farm",
+  "starch_processor", "food_manufacturer", "food_business", "pulp_paper", "sugar_ethanol",
+  "palm_oil_mill", "olive_oil_mill", "fish_processor", "aquaculture", "other_industry",
+];
+export const FIT_IDS: readonly BusinessTypeId[] = [
+  ...FIT_ORDER.filter(id => SECTOR_IDS.includes(id)),
+  ...SECTOR_IDS.filter(id => !FIT_ORDER.includes(id)),
+];
 export function canonicalBusiness(id: BusinessTypeId): BusinessTypeId { return id === "biogas_developer" ? "central_biogas_plant" : SECTOR_IDS.includes(id) ? id : "other_industry"; }
 export function defaultProcess(id: BusinessTypeId): "ad" | ProcessKind { return modelsForBusiness(id)[0]; }

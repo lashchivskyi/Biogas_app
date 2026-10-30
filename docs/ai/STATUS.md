@@ -11,6 +11,8 @@ Updated 2026-10-31. Rewrite this file at the end of a task; keep it under 40 lin
 - Methodology tab: USD display; country-table numeric widths include six decimal places and a non-shrinking confidence dot; original table layout retained.
 - Data-confidence score is itemised (`confidence.factors`, client vs model) and explained in a
   report panel with points per missing input; the score formula and verdicts are unchanged.
+- Reference examples (39): 9 strong, 11 possible, 9 weak, 6 too small, 4 insufficient. Most
+  model a prepared client: lab DM/VS/BMP at catalogue-typical values, metered manure, reused storage.
 - AI knowledge architecture: AGENTS.md + CLAUDE.md + docs/ai + rules + skills.
 
 ## Next (highest value first)
@@ -23,6 +25,10 @@ Updated 2026-10-31. Rewrite this file at the end of a task; keep it under 40 lin
 5. Argentina and Kazakhstan regional electricity by distributor.
 
 ## Known weaknesses
+
+- India: base CBG value is gas parity and CAPEX is high for small dung plants, so the Punjab
+  cooperative stays weak; only the GOBARdhan support case changes it. Check Indian CAPEX at < 1 MW.
+- Process examples with `basisDate` after the market-data date fall to INSUFFICIENT_DATA silently.
 
 - Small manure-only plants: CAPEX 20–35 % above DBFZ (gas-tight storage assumed).
 - Open digestate storage costed as concrete; earthen lagoons are cheaper.
