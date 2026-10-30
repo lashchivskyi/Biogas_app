@@ -79,3 +79,8 @@ __pycache__/
 next-env.d.ts
 /data/*.json
 !.env.example
+
+# Claude Code local state (rules and skills are shared and committed)
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+CLAUDE.local.md

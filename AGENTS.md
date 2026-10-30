@@ -1,68 +1,80 @@
-# Methalytics — контекст проєкту
+# Methalytics
 
-## Що це
+Web product for the **preliminary techno-economic screening of biogas and biomethane
+projects** in 33 countries and 25 languages. A free screening, then two automated paid
+reports (`standard`, `report`) for one locked project, delivered by private link.
+It is not design documentation, a bankable feasibility study or an expert service: it
+tells the client whether a detailed feasibility study is worth paying for.
 
-Веб-продукт для **попередньої техніко-економічної оцінки біогазових і
-біометанових проєктів**. Безкоштовний screening → два автоматичні платні звіти
-(`standard`, `report`) для одного зафіксованого проєкту, доступ за приватним
-посиланням. Це не проєктна документація, не банківське ТЕО і не експертна
-послуга: результат допомагає вирішити, чи варто переходити до детального
-feasibility.
+Start here, then read only what the task needs:
 
-**Для кого:** власники сировини (ферми, харчова й переробна промисловість),
-промислові споживачі тепла й енергії, оператори відходів і стоків, девелопери.
+| Need | Where |
+|---|---|
+| Users, business, flow, critical calculations, open hypotheses | [docs/ai/PRODUCT.md](docs/ai/PRODUCT.md) |
+| Current state, next steps, what is blocked | [docs/ai/STATUS.md](docs/ai/STATUS.md) |
+| Decisions already taken and why (do not relitigate without new evidence) | [docs/ai/DECISIONS.md](docs/ai/DECISIONS.md) |
+| Market data: source policy, official sources per country, refresh cadence | [docs/ai/DATA-SOURCES.md](docs/ai/DATA-SOURCES.md) |
+| Rules for `src/core/**` and `src/countries/**` | `.claude/rules/core-model.md`, `.claude/rules/country-data.md` |
+| Procedures (expert review, market-data update) | `.claude/skills/*/SKILL.md` |
 
-**Бізнес:** разова оплата за проєкт через Stripe; ціну й tier (за країною
-проєкту) визначає сервер (`src/config/plans.ts`).
+The source of truth for formulas, parameters and their provenance is the code
+(`src/core`, `src/countries`), shown to users on `/[lang]/methodology` via `allProvenance`.
+Do not copy parameters into Markdown.
 
-## Домен коротко
+## How to work
 
-Ланцюг розрахунку (`src/core/assess.ts`): свіжа маса → TS → VS → BMP/CH₄ →
-метантенк (HRT, OLR, тепло) → місячний баланс CHP / котел / апгрейд до
-біометану → CAPEX, OPEX, виручка → pre-tax cash flow → NPV, IRR, окупність,
-спрощений DSCR → висновок і якість даних. Стоки (COD), полігон і наявний
-біогаз входять у газовий потік, а не як вигадана сировина.
+- **Everything is a hypothesis.** Code, formulas, assumptions, data and the owner's
+  instructions are the current state, not the truth. When you find something more accurate,
+  newer, simpler or economically stronger: verify it in authoritative sources (date,
+  geography, units, applicability to the country), explain the benefit plainly, then
+  propose or make the change. Never tune inputs toward a positive verdict.
+- **Think as the whole team** on non-trivial work: biogas/biomethane engineer, energy and
+  industrial developer, financial and data analyst, product strategist, software
+  architect, QA/security, CEO. The `expert-review` skill holds the checklist.
+- **Be a mentor.** Flag weak spots, wrong assumptions and gaps even if not asked; offer the
+  stronger alternative; explain simply, with the practical consequence first.
+- **Plan yourself, ask rarely.** Ask only when a decision is genuinely the owner's
+  (pricing, legal, scope). Otherwise decide, state the assumption, continue.
+- **Label evidence**: Measured / User Input / Market Data / Engineering Assumption /
+  Calculated Value. Never claim accuracy, freshness, bankability or expert review without proof.
+- **External data**: official, regulatory, scientific or recognised industry sources only,
+  latest published period. Third-party copies, news and broker data are not sources of
+  numbers. No official source reachable → keep the value, mark confidence LOW and say why.
 
-Критичне: різні бази (свіжа маса / TS / VS), Nm³ біогазу ≠ CH₄ ≠ біометан,
-kW ≠ kWh, баланси маси, метану, енергії й грошей мають замикатися, без
-подвійного рахунку. Субсидії — окремо від бази. Модель — скринінг, не
-after-tax і не bankable.
+## Critical invariants
 
-Код: `src/core` (детерміноване ядро), `src/countries` (дані 33 країн),
-`src/server` (оплата, Postgres, замовлення), `src/i18n` (25 мов).
+- Bases never mix: fresh mass / TS / VS; Nm³ biogas ≠ Nm³ CH₄ ≠ Nm³ biomethane; kW ≠ kWh;
+  HHV vs LHV stated; currency and year stated.
+- Mass, methane, energy and money balances close with no double counting
+  (`src/core/__tests__/audit-balances.test.ts`).
+- Subsidies are a separate case and never change the base verdict.
+- The model is pre-tax screening, not after-tax and not bankable.
+- Wastewater (COD), landfill and existing biogas enter as gas streams, never as invented feedstock.
 
-## Правила для агента
+## Commands (PowerShell: use `npm.cmd`)
 
-- Код, формули, припущення й вказівки власника — поточний стан або гіпотеза.
-  Знайшов точніше, новіше чи простіше рішення — перевір на офіційних,
-  нормативних, наукових джерелах (дата, географія, одиниці, застосовність),
-  поясни перевагу й запропонуй зміну.
-- Розрізняй: Measured / User Input / Market Data / Engineering Assumption /
-  Calculated Value. Не підганяй входи під позитивний висновок; не заявляй
-  точність, свіжість, bankability чи перевірку експертом без доказу.
-- Дивись як команда експертів: інженер біогазу, енергетик, девелопер,
-  фінансовий й data-аналітик, продакт, архітектор, QA, безпека. Помічай слабкі
-  місця й пояснюй просто, як наставник.
-- Перевірка змін: `npm test`, `npm run lint`, `npm run typecheck`,
-  `npm run build` (`npm.cmd` у PowerShell). Для розрахунків — звірка балансів і
-  порівняння до/після. Кажи, що запускав, а що ні.
-- Спершу `git status`, не чіпай чужі зміни; не читай `.env*`.
+- Verify: `npm test` · `npm run lint` · `npm run typecheck` · `npm run build`
+- One test file: `npx vitest run src/core/__tests__/market-calibration.test.ts`
+- Model impact of any data/formula change:
+  `npx tsx scripts/compare-scenarios.ts --save <before.json>` before, `--save <after.json>` after,
+  then `--diff <before.json> <after.json>` (all 39 examples × 33 countries).
+- Market data refresh: `python -I scripts/data/fetch_statistics.py --output <tmp.json>` (dry run) or `--write`.
+- Data quality audit: `npx tsx scripts/audit-sources.ts` (LOW, undated, non-official sources).
 
-<!-- BEGIN:nextjs-agent-rules -->
+Say what you ran and what you did not.
+
+## Working rules
+
+- Start with `git status`; never touch others' unfinished changes; never read `.env*`.
+- One-off scripts, downloads and screenshots go to the system temp folder, never the repo.
+- No new reports or analysis files. Persistent knowledge lives only in `docs/ai/` (4 files) and
+  skills. Before finishing a task that changed direction, data or a rule: update
+  `docs/ai/STATUS.md` (rewrite, ≤ 40 lines) and append to `DECISIONS.md` only what a future
+  session must not rediscover. Delete stale lines instead of adding new ones.
+- Research done by helper agents must end in code, tests or `docs/ai/`, never only in chat.
 
 ## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
-
-## Repository hygiene
-
-Не створюй і не зберігай нові `.md`, звіти, analysis/debug файли, проміжні результати чи інші артефакти без реальної довгострокової потреби. Використовуй існуючі файли та структуру. Створюй новий файл лише якщо він має чітке постійне призначення і не дублює наявну інформацію. Тимчасові дослідження залишай у робочому контексті або спеціально визначеному temporary location, яке не входить у production repository. Після виконання задачі видаляй непотрібні тимчасові артефакти.
-
-- Для одноразових скриптів, скриншотів і профілів браузера використовуй окремий каталог у системному TEMP (`$env:TEMP` на Windows). Не створюй їх у `src`, `public`, `docs` чи корені репозиторію.
-- Актуальні правила й відкриті питання оновлюй у відповідному наявному документі; не додавай окремий датований звіт для кожної задачі.
-- Перед видаленням перевір імпорти, маршрути Next.js, package scripts, тести, посилання документації й ліцензійні вимоги. Для рекурсивного очищення спочатку покажи dry-run і перевір абсолютні шляхи.
-- Не видаляй `.env*`, дані замовлень/лідів, активні build/dev каталоги та чужі незавершені зміни як «сміття». Не використовуй необмежений `git clean -fdx`.

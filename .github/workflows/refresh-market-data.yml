@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: pip install openpyxl==3.1.5  # EIA STEO workbook (US wholesale hubs)
       - run: python scripts/data/fetch_statistics.py --write
       - uses: actions/setup-node@v4
         with:
@@ -37,5 +38,5 @@ jobs:
           title: "data: weekly market statistics + FX refresh"
           body: |
             Automated refresh by `scripts/data/fetch_statistics.py --write`; tests passed on this branch.
-            Before merging: review changed periods/values, compare NPV impact (`npx tsx scripts/audit-model.ts --as-of <date>`)
+            Before merging: review changed periods/values, compare NPV impact (`npx tsx scripts/compare-scenarios.ts --save/--diff`, see docs/ai/DATA-SOURCES.md)
             and check the data provenance in the touched files. Merging and deploying restores the USD checkout option when the FX date is fresh.
