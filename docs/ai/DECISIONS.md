@@ -150,6 +150,12 @@ replace the line rather than adding a contradicting one.
   in equipment modules (≤ ~12 % of CAPEX per step); confidence drops outside 30 kW–5 MW (`scale_range`), so a verdict can
   fall one level for a much larger plant; revenue lines < €0.5 are hidden but counted.
 
+- 2026-10-31 — Competitor tools are a cross-check, never a calibration target: KTBL and WSU read 18–28 % more gas
+  because they apply standard/design yields with no realisation, Luke reads 36 % less power because it heats the
+  digester with a separate boiler; the AgSTAR back-test (0.94) stays the yield anchor. How to re-run them: KTBL
+  daten.ktbl.de/biogas is a session form app (scriptable with HTTP POSTs), Luke v3 and WSU ADBC are Excel workbooks
+  that the Python `formulas` package recalculates headless; outputs recorded in `scripts/benchmark.ts`.
+
 ## AI workflow
 
 - 2026-10-30 — `AGENTS.md` is the single instruction file (Codex reads it, `CLAUDE.md` imports it),

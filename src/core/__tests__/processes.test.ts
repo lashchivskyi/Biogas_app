@@ -56,6 +56,19 @@ describe("independent process balance checks", () => {
     expect(landfillMethane(p,1).generated / r.generated).toBeCloseTo(Math.exp(-0.05));
     expect(r.captured).toBeLessThan(r.generated);
   });
+  it("matches US EPA LandGEM v3.03 generation within 3 % (competitor benchmark 2026-10-31)", () => {
+    const p = cases[2]; if (p.kind !== "landfill") throw Error();
+    // LandGEM: Q_T = Σi Σj k·L0·(Mi/10)·e^(−k·t_ij), tenth-year sections, gas from the year after acceptance.
+    const landgem = (T: number) => {
+      let q = 0;
+      for (let i = 1; i < Math.min(T, p.depositionYears + 1); i++) for (let j = 1; j <= 10; j++)
+        q += p.decayPerYear * p.potentialNm3T * p.annualWasteTonnes / 10 * Math.exp(-p.decayPerYear * (T - i - 1 + j / 10));
+      return q;
+    };
+    const firstYear = p.depositionYears + p.yearsSinceClosure + 1;
+    // Mid-year placement here vs LandGEM's convention: a constant ≈ −2 % timing offset, not a method difference.
+    for (const y of [0, 5, 14]) expect(landfillMethane(p, y).generated / landgem(firstYear + y)).toBeCloseTo(0.978, 2);
+  });
   it("closes the characterised residue mass balance", () => {
     const r = prepared(cases[0]);
     expect(r.process.metrics.massIn.value).toBeCloseTo(r.process.metrics.gasMass.value + r.process.residualTonnesYear);

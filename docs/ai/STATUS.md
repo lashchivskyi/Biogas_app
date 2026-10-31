@@ -8,6 +8,8 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
 - Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests; ensiling loss + clamp silo; gas streams.
+- Competitor benchmark 2026-10-31 (PRODUCT.md › Market): 4 examples run through KTBL, Luke v3, WSU, LandGEM; every gap
+  > 15 % explained, nothing retuned; recorded outputs re-checked by `scripts/benchmark.ts`, LandGEM in `processes.test.ts`.
 - Finance audit 2026-10-31: 3 examples recomputed by hand = code (`finance-audit.test.ts`); "pre-tax, not bankable" in UI/export.
 - Scenario sweep 2026-10-31 (`scenario-matrix.ts`, `scenario-sweep.test.ts`, `properties.test.ts` fast-check,
   `hostile-input.test.ts`, `regressions-sweep.test.ts`): 7 segments × 6 sizes × 17 mixes × 2 data levels × 33 countries × 2
@@ -26,10 +28,9 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 3. Bank pack: construction year + IDC, CIT + depreciation (then after-tax WACC), equity IRR, yearly DSCR,
    reinvestment, residual value. Landfill/process budgets: confirm scope vs model gas system with a real quote.
 4. Straw pretreatment yield (Madsen gap); grass silage type; other cattle / swine VS vs IPCC (swine back-test 0.80
-   argues against IPCC 0.30 kg/d). 5. Injection (350 k€, LOW) / grid connection by country. 6. Request templates in
-   more languages. EVPI "yield" item ignores catalogue DM/VS.
-- Carried: UASB €/m³; labour > 1 MW extrapolated; lipid shares; Canary gate, KZ gas ceilings, CA provincial gas,
-  AR/KZ regional power; Canada dairy still on the catalogue (IPCC N. America 5.4).
+   argues against IPCC 0.30 kg/d). 5. Injection (350 k€ LOW; WSU $1.02 M 2013) / grid connection by country.
+   6. Line-item cost overrides. Request templates in more languages. EVPI "yield" item ignores catalogue DM/VS.
+- Carried: UASB €/m³; labour > 1 MW; lipid shares; Canary gate; KZ gas; CA provincial gas; AR/KZ power; CA dairy VS.
 ## Known weaknesses
 
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
