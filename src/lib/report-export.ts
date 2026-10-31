@@ -18,7 +18,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
 
   const summary: Cell[][] = [
     [T("Methalytics preliminary screening — export", "Methalytics — попередня оцінка, експорт"), ""],
-    [T("Pre-tax screening, not a bankable feasibility study. All money in EUR.", "Попередня оцінка до оподаткування, не банківське ТЕО. Усі гроші в EUR."), ""],
+    [T("Pre-tax screening, not a bankable feasibility study. All money in nominal EUR (prices escalated, discounted at the country rate).", "Попередня оцінка до оподаткування, не банківське ТЕО. Усі гроші в номінальних EUR (ціни індексуються, дисконтування за ставкою країни)."), ""],
     [T("Model version", "Версія моделі"), a.dataAudit?.modelVersion ?? ""],
     [T("Data version", "Версія даних"), a.dataAudit?.dataVersion ?? ""],
     [T("Data as of", "Дані станом на"), a.dataAudit?.asOfDate ?? ""],
@@ -38,6 +38,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     [T("NPV", "NPV"), base.fin.npvEur],
     [T("IRR (share: 0.08 = 8 %)", "IRR (частка: 0,08 = 8 %)"), base.fin.irr],
     [T("Simple payback, years", "Проста окупність, років"), base.fin.simplePaybackYears],
+    [T("Discounted payback at the project discount rate, years (empty: not within the horizon)", "Дисконтована окупність за ставкою проєкту, років (порожньо: не в межах горизонту)"), base.fin.discountedPaybackYears ?? null],
     [T("Minimum DSCR (EBITDA-based screening ratio)", "Мінімальний DSCR (оціночний, на основі EBITDA)"), base.fin.dscrMin],
     [T("Debt, EUR", "Борг, EUR"), base.fin.debtEur],
     [T("Biogas, m³/year", "Біогаз, м³/рік"), base.feed.biogasM3Year],

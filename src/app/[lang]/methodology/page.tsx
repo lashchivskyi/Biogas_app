@@ -40,7 +40,7 @@ const TECHNICAL_NOTES = [
   "Manure yield × collectable share → tonnes → dry matter → volatile solids → methane (L CH₄/kg VS).",
   "Volume = max(retention time, organic loading). CSTR / solids feeding / dry digestion / high-rate reactor / unheated covered lagoon (warm climates).",
   "Monthly energy balance: CHP / boiler / biomethane; digester heat first.",
-  "Component CAPEX × country factor; OPEX; own use / export / heat / disposal / digestate. NPV / IRR / DSCR: 15 years.",
+  "Component CAPEX × country factor; OPEX; own use / export / heat / disposal / digestate. Pre-tax, nominal EUR, 15 years: NPV, IRR, simple and discounted payback, DSCR = EBITDA ÷ debt annuity. Not a bankable model (no tax, depreciation, working capital).",
 ] as const;
 /** Value with its confidence dot; the source is in the tooltip. */
 function Cell({ c, id, locale, percentage = false }: { c: (typeof COUNTRIES)[string]; id: string; locale: Locale; percentage?: boolean }) {

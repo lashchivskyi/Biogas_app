@@ -84,6 +84,10 @@ replace the line rather than adding a contradicting one.
   haulage are paid on it, DM loss 9.3 % base / 12 % cons. / 8 % opt. (KTBL 2021 Tab. 1) reduces what is digested,
   nutrients stay. A clamp holding the full annual harvest is costed at 60 €/m³ (LfL 2015/16 escalated; fee tables are
   the upper check) and 780 kg FM/m³ (LfL). Checked against the BMWK/IEE/DBFZ 510 kW reference (`scripts/benchmark.ts`): CAPEX +15 % vs the 2023–2026 range, cost per kWh 5–12 % below it, reference scope (silo, storage) undisclosed → not retuned.
+- 2026-10-31 — Money basis: pre-tax, nominal EUR. Energy +2 %/a and OPEX +2.5 %/a (nominal), tariffs flat, discount
+  6 % + 0.6 × Damodaran CRP read as a nominal pre-tax EUR rate (Damodaran Jan 2026 Green & Renewable 6.04 % after-tax USD
+  ≈ 7.8–8.1 % pre-tax USD ≈ 6.3–6.6 % EUR) with a −1/+2 pp sensitivity, not retuned. Payback shown simple and discounted.
+  Lender audit (`finance-audit.test.ts`): hand recompute of de_nawaro, fr_farm_injection, us_closed_landfill = code to 1e-13.
 - 2026-10-31 — Year-1 start-up share (`eng.rampup_year1`, FNR: new digester reaches target load ≈ day 110) applies only
   to new digesters; existing gas streams (`gas`, `landfill`) start at full output. — A running digester was charged
   25 % of its first-year revenue (−0.2…−0.5 M€ NPV). Commissioning of new CHP/upgrader is not modelled (weeks).

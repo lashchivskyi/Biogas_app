@@ -461,14 +461,20 @@ export function capexFactorFor(code: string, route: RouteId = "chp"): Sourced | 
   return { value: f, kind: "CALCULATION", confidence: benchmarked && l.confidence !== "LOW" && !budget ? "MEDIUM" : "LOW", source: `0.72 traded equipment + 0.28 × local/German labour cost (${l.value}/${de.value} €/h); split after DBFZ/Fraunhofer 2024; supplier quotes needed${budget ? `. Published budgets ≈ ${budget.factor} × model at similar size` : ""}`, date: l.date, range: { low: f * 0.7, high: Math.max(f * 1.3, budget ? budget.factor * 1.2 : 0), basis: "engineering" } };
 }
 
-/** EUR-equivalent project discount rate = 6.0 % mature-market project WACC + 0.6 × Damodaran country risk premium (λ-approach), capped at 16 %. */
+/**
+ * Nominal, pre-tax, EUR-equivalent project discount rate = 6.0 % mature-market project WACC + 0.6 × Damodaran country
+ * risk premium (λ-approach), capped at 16 %. Cross-check (Damodaran, cost of capital by industry, US, January 2026):
+ * Green & Renewable Energy 6.04 % after tax in USD, ≈ 7.8–8.1 % pre-tax (equity 7.77 % grossed up at 21–25 % tax, debt
+ * 6.02 %, D/(D+E) 53 %); EUR rates run ≈ 1.5 pp below USD → ≈ 6.3–6.6 % pre-tax in EUR. The range −1 / +2 pp covers the
+ * currency step and the pre-tax/after-tax ambiguity and is shown as a parameter sensitivity.
+ */
 export const BASE_WACC = 0.06;
 export const COUNTRY_RISK_LAMBDA = 0.6;
 export function discountFor(code: string): Sourced | undefined {
   const c = R.countries[code];
   if (!c) return undefined;
   const v = +Math.min(0.16, BASE_WACC + COUNTRY_RISK_LAMBDA * c.crp).toFixed(3);
-  return { value: v, kind: "CALCULATION", confidence: "MEDIUM", source: `${(BASE_WACC * 100).toFixed(1)} % mature-market WACC + ${COUNTRY_RISK_LAMBDA} × country risk premium ${(c.crp * 100).toFixed(2)} % (${c.rating}; Damodaran, ${R.observedThrough.slice(0, 7)}); not a bank offer`, date: R.observedThrough, evidence: { checkedOn: R.checkedOn, period: R.observedThrough, observedThrough: R.observedThrough, publishedOn: R.publishedOn, urls: [R.url], scope: "Rating-based CRP; baseline WACC and lambda are engineering/financial assumptions", method: "6% + 0.6 × CRP, capped at 16%; does not replace project financing terms" } };
+  return { value: v, kind: "CALCULATION", confidence: "MEDIUM", range: { low: +(v - 0.01).toFixed(3), high: +(v + 0.02).toFixed(3), basis: "engineering" }, source: `Nominal, pre-tax, EUR-equivalent: ${(BASE_WACC * 100).toFixed(1)} % mature-market WACC + ${COUNTRY_RISK_LAMBDA} × country risk premium ${(c.crp * 100).toFixed(2)} % (${c.rating}; Damodaran, ${R.observedThrough.slice(0, 7)}); not a bank offer`, date: R.observedThrough, evidence: { checkedOn: R.checkedOn, period: R.observedThrough, observedThrough: R.observedThrough, publishedOn: R.publishedOn, urls: [R.url], scope: "Rating-based CRP; baseline WACC and lambda are engineering/financial assumptions", method: "6% + 0.6 × CRP, capped at 16%; discounts pre-tax nominal EUR cash flows (energy +2 %/a, OPEX +2.5 %/a, tariffs flat); range −1/+2 pp; does not replace project financing terms" } };
 }
 
 export function debtRateFor(code: string): Sourced | undefined {

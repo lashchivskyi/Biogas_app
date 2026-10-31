@@ -568,6 +568,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
                   [R.rowRevenue, (s: ScenarioId) => eur(a.scenarios[s].opexRev.revenueEur)],
                   [R.rowEbitda, (s: ScenarioId) => eur(a.scenarios[s].fin.ebitdaEurYear)],
                   [R.rowPayback, (s: ScenarioId) => years(a.scenarios[s].fin.simplePaybackYears)],
+                  [R.rowPaybackDisc, (s: ScenarioId) => years(a.scenarios[s].fin.discountedPaybackYears ?? null)],
                   [R.rowNpv, (s: ScenarioId) => eur(a.scenarios[s].fin.npvEur)],
                   [R.rowIrr, (s: ScenarioId) => (a.scenarios[s].fin.irr === null ? "—" : pct(a.scenarios[s].fin.irr as number, 1))],
                   [R.rowDscr, (s: ScenarioId) => (a.scenarios[s].fin.dscrMin === null ? "—" : n1(a.scenarios[s].fin.dscrMin as number))],

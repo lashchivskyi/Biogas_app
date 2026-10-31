@@ -73,15 +73,19 @@ export function buildFinancials(i: CashFlowInput): FinancialResult {
 
   const cumulative: number[] = [];
   let acc = 0;
-  let dyn: number | null = null;
-  flows.forEach((cf, t) => {
-    const prev = acc;
+  flows.forEach((cf) => {
     acc += cf;
     cumulative.push(acc);
-    if (dyn === null && t > 0 && acc >= 0) {
-      const frac = cf !== 0 ? (0 - prev) / cf : 0;
-      dyn = t - 1 + Math.min(1, Math.max(0, frac));
-    }
+  });
+  // Discounted payback: first year in which the discounted cumulative cash flow turns positive, interpolated inside
+  // that year; null when it never does within the horizon (a project with NPV < 0 never pays back at the hurdle rate).
+  let disc: number | null = null;
+  let dAcc = 0;
+  flows.forEach((cf, t) => {
+    const dcf = cf / Math.pow(1 + i.discount, t);
+    const prev = dAcc;
+    dAcc += dcf;
+    if (disc === null && t > 0 && dAcc >= 0 && dcf > 0) disc = t - 1 + Math.min(1, Math.max(0, -prev / dcf));
   });
 
   const debt = i.capexEur * i.debtShare;
@@ -106,7 +110,7 @@ export function buildFinancials(i: CashFlowInput): FinancialResult {
     revenueEurYear: i.energyRevenue + i.otherRevenue + (i.fixedRevenue ?? 0),
     ebitdaEurYear: steadyEbitda,
     simplePaybackYears: simple,
-    dynamicPaybackYears: dyn,
+    discountedPaybackYears: disc,
     npvEur: npv(i.discount, flows),
     irr: irr(flows),
     dscrMin,

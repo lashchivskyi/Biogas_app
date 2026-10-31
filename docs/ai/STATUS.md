@@ -3,18 +3,17 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 019), lint, typecheck, build pass. Browser check pending for all
+- Model 0.6.1; data review 2026-10-30. Tests (1 069), lint, typecheck, build pass. Browser check pending for all
   2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
-- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI "how to check" requests (en, uk); ensiling
-  loss + clamp silo for energy crops; EU dairy cows at IPCC 2006 VS. Expert pass: existing gas streams (`gas`,
-  `landfill`) no longer get the new-digester start-up year (0.75); year-by-year gas forecasts escalate like the
-  steady case. compare-scenarios: 3 verdict changes (us_closed_landfill ES/FI WEAK → POSSIBLE, still NPV < 0;
-  de_existing_biogas LV POSSIBLE → STRONG), max NPV +0.75 M€ (NL), only the 3 gas-stream examples moved.
-- EU check (Danish Energy Agency, "Biogas plants in Denmark and Mexico", plant-reported): model ÷ reported CH₄ per
-  tonne 0.88 (Combigas, pie labels ambiguous), 0.90 (Kroghsminde, grass silage entered as maize), 0.61 (Madsen:
-  7 % pretreated straw at untreated yield, 85 d HRT). Per-tonne only: it does not test manure per head.
+- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests (en, uk); ensiling loss + clamp silo;
+  existing gas streams without the start-up year (3 verdict changes, only gas-stream examples moved).
+- Lender-style finance audit 2026-10-31: 3 examples recomputed by hand = code (max gap 3e-14); new
+  `finance-audit.test.ts` (50 tests); discounted payback replaces the mislabelled undiscounted one and is shown; discount
+  rate ±pp sensitivity (dk_cluster +2 pp: 6.5 → 4.2 M€); "pre-tax, nominal EUR, not bankable, DSCR = EBITDA ÷ annuity" in
+  UI (25 languages), export and methodology; process budget help says the model adds gas holder/flare/H₂S itself.
+- EU check (Danish Energy Agency): model ÷ reported CH₄ per tonne 0.88 / 0.90 / 0.61 (Madsen: pretreated straw).
 
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
@@ -24,7 +23,8 @@ Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
    the flexibility engine is added at the model's own curve; without the clamp (0.93 M€) +4…17 %. But total cost per
    kWh is 5–12 % BELOW the report's 31.5 ct (model OPEX 0.88 M€ is ≈ 20 % lower than implied). Report does not say
    whether silo and digestate storage are in the 7 521 €/kW → nothing retuned. Open: its scope (ask DBFZ/IEE).
-3. Bank pack: construction year, CIT + depreciation, equity IRR, yearly DSCR, reinvestment, residual value.
+3. Bank pack: construction year + IDC, CIT + depreciation (then after-tax WACC), equity IRR, yearly DSCR,
+   reinvestment, residual value. Landfill/process budgets: confirm scope vs model gas system with a real quote.
 4. Straw pretreatment yield (Madsen gap); grass silage type; other cattle / swine VS vs IPCC (swine back-test 0.80
    argues against IPCC 0.30 kg/d). 5. Injection (350 k€, LOW) / grid connection by country. 6. Request templates in
    more languages. EVPI "yield" item ignores catalogue DM/VS.
@@ -36,5 +36,5 @@ Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
 - Only membrane upgrading; no propane/odorisation, injection fees, flexible-CHP premium.
-- Boiler with no heat buyer can be "best" when all routes lose (warned). `dynamicPaybackYears` undiscounted (not shown).
+- Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (see DECISIONS).
 - Gas streams (`process`) get no support cases; PL FIT is CPI-indexed but modelled flat (conservative).

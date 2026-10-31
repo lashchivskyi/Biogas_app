@@ -185,7 +185,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     if (id === "econ.electricity_retail_eur_kwh") return !demand.electricityPriceKnown;
     if ((id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share") && base.energy.elSelfConsumedKwh <= 0) return false;
     if (id.startsWith("econ.fert_")) return base.opexRev.revenue.some((line) => line.id === "digestate" && line.eur > 0);
-    return (id.startsWith("econ.capex_factor_") && !quoteApplies) || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share";
+    return (id.startsWith("econ.capex_factor_") && !quoteApplies) || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share" || id === "econ.discount_rate";
   });
   const parameterSensitivity = rangeIds.map((id) => {
     const { low, high, basis } = params.prov(id).range!;

@@ -353,7 +353,9 @@ export interface FinancialResult {
   revenueEurYear: number;
   ebitdaEurYear: number;
   simplePaybackYears: number | null;
-  dynamicPaybackYears: number | null;
+  /** Years until the cumulative cash flow discounted at the project rate turns positive; null if never within the horizon.
+   * Snapshots saved before 2026-10-31 do not have it. */
+  discountedPaybackYears?: number | null;
   npvEur: number;
   irr: number | null;
   dscrMin: number | null;
