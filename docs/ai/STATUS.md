@@ -3,17 +3,17 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 005), lint, typecheck, build pass.
+- Model 0.6.1; data review 2026-10-30. Tests (1 011), lint, typecheck, build pass.
 - Market data: official sources for 33 countries except LOW items in DATA-SOURCES.md. Regional data: US, CA, BR,
   IN, MX, IT via admin1 codes. CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
-- Stress tests 2026-10-31 (~300 cases) fixed storage, effluent, yield-as-built, grease, warm climates, unit slips,
-  manure digestate return, haulage. Follow-ups: low-DM residues as effluent; operator time 22.5·kWe^0.72;
-  optional client inputs (export/heat price, operator cost, loan); straw milling 66.6 kWh/t; weak-currency
-  validation bounds; supplier quote replaces one route's CAPEX (scenarios still apply). Baseline 1 287 runs.
+- Stress tests 2026-10-31 (~300 cases) and follow-ups fixed storage, effluent, yield-as-built, grease, unit slips,
+  haulage, operator time, optional client inputs, straw milling, supplier quote per route. Baseline 1 287 runs.
 - Competitor-audit items 1–7 (2026-10-31): break-even values, quote check, XLSX export, plant-size table (delivered
   haul × √size), existing-plant CHP option (gas process), RED climate case, AgSTAR back-test on /methodology
   (79 US digesters, model ÷ reported electricity median 0.94, was 0.53 before NRCS dairy manure). 0 verdict changes;
-  5 US dairy cases moved (larger plants without credits lose more). Browser check of new panels pending.
+  5 US dairy cases moved (larger plants without credits lose more). Items 8–9: "what to verify first" (EVPI per
+  input, one line per action) and Monte Carlo P10/P50/P90 (160 LHS draws, fixed seed) in paid reports; free
+  calculator, what-if, back-test and compare-scenarios run with `uncertainty: false`. Browser check pending.
 
 ## Next (highest value first)
 

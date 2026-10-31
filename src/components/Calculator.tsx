@@ -159,7 +159,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
   const updateLine = (id: string, patch: Partial<FormLine>) => setForm((f) => ({ ...f, lines: f.lines.map((l) => (l.id === id ? { ...l, ...patch } : l)) }));
 
   const input = useMemo(() => formToInput(form, country, lang), [form, country, lang]);
-  const assessment = useMemo(() => (submitted && form.regionId && processIssues(form).length === 0 && (input.process || input.feedstocks.length > 0) ? assess(input, country, { asOfDate: assessmentDate }) : null), [submitted, form, input, country, assessmentDate]);
+  const assessment = useMemo(() => (submitted && form.regionId && processIssues(form).length === 0 && (input.process || input.feedstocks.length > 0) ? assess(input, country, { asOfDate: assessmentDate, uncertainty: false }) : null), [submitted, form, input, country, assessmentDate]);
 
   function next() {
     setError("");
@@ -197,7 +197,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     setSubmitted(true);
     const asOfDate = calendarDateAt(new Date());
     setAssessmentDate(asOfDate);
-    const a = assess(input, country, { asOfDate });
+    const a = assess(input, country, { asOfDate, uncertainty: false });
     track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: form.projectRole ?? BUSINESS_TYPES[form.businessType].role, process_model: input.process?.kind ?? "ad", verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }

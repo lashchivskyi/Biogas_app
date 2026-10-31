@@ -14,7 +14,7 @@ const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
 describe("engineering and financial reconciliation", () => {
   it("reconciles monthly feed, methane, electricity and year-one cash for every reference project", () => {
     for (const { id, input } of EXAMPLES) {
-      const result = assess(input, getCountry(input.countryCode));
+      const result = assess(input, getCountry(input.countryCode), { uncertainty: false });
       for (const route of ["chp", "boiler", "biomethane"] as const) {
         const r = result.routesBase[route];
         const { feed, energy, opexRev, fin } = r;

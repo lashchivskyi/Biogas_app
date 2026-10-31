@@ -44,7 +44,7 @@ function snapshot(): Record<string, Row> {
   for (const e of EXAMPLES) for (const code of COUNTRY_ORDER) {
     const c = COUNTRIES[code];
     try {
-      const a = assess({ ...inCountry(e.input, code), countryCode: code, regionId: c.regions[0]?.id }, c);
+      const a = assess({ ...inCountry(e.input, code), countryCode: code, regionId: c.regions[0]?.id }, c, { uncertainty: false });
       const f = a.scenarios.base.fin;
       out[`${e.id}|${code}`] = { route: a.bestRoute, npv: Math.round(f.npvEur), irr: f.irr === null ? null : +f.irr.toFixed(4), capex: Math.round(f.capexEur), verdict: a.verdict.id, confidence: a.confidence.score };
     } catch (err) {

@@ -80,6 +80,12 @@ replace the line rather than adding a contradicting one.
   credits are valued only inside support cases with an official mechanism (US RIN/LCFS). Heat in CHP is allocated by
   the RED Carnot share at 150 °C.
 
+- 2026-10-31 — Monte Carlo samples the existing scenario quantities independently (triangular: conservative /
+  base / optimistic), Latin hypercube, fixed seed, 160 draws, chosen route only. No new ranges were invented; the
+  asymmetric scenario spreads make the median NPV lower than the base case on purpose. It never changes the verdict.
+- 2026-10-31 — "What to verify first" ranks by EVPI (build / no-build) over each input's own evidence range, three
+  runs per input, NPV interpolated linearly; inputs the client supplied are not listed.
+
 ## Product
 
 - 2026-10-30 — Keep country conditions as the existing table with six-decimal formatting.

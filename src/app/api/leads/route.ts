@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   if (website) return NextResponse.json({ id: "ok" }); // honeypot: pretend success
 
   // Recompute on the server: stored verdict can never be forged by the client.
-  const a = assess(input, getCountry(input.countryCode), { asOfDate: new Date().toISOString().slice(0, 10) });
+  const a = assess(input, getCountry(input.countryCode), { asOfDate: new Date().toISOString().slice(0, 10), uncertainty: false });
   const base = a.scenarios.base;
   const lead = await leads.add({
     name: contact.name,

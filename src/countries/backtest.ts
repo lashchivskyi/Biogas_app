@@ -76,7 +76,7 @@ function stat(ratios: number[]): BacktestStat {
 export function runAgstarBacktest(): BacktestSummary & { rows: { row: AgstarRow; electricityRatio?: number; biogasRatio?: number }[] } {
   const country = getCountry("US");
   const rows = (agstar.rows as AgstarRow[]).map((row) => {
-    const a = assess(agstarInput(row), country);
+    const a = assess(agstarInput(row), country, { uncertainty: false });
     const chp = a.routesBase.chp;
     return {
       row,
@@ -86,7 +86,7 @@ export function runAgstarBacktest(): BacktestSummary & { rows: { row: AgstarRow;
       ...(row.biogasM3Day ? { biogasRatio: chp.feed.biogasM3Year / 365 / row.biogasM3Day } : {}),
     };
   });
-  const country0 = assess(agstarInput(agstar.rows[0] as AgstarRow), country);
+  const country0 = assess(agstarInput(agstar.rows[0] as AgstarRow), country, { uncertainty: false });
   return {
     modelVersion: country0.dataAudit?.modelVersion ?? "",
     dataThrough: agstar.dataThrough,

@@ -35,7 +35,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   const run = (id: string): { a: Assessment; country: string; example: (typeof EXAMPLES)[number] } => {
     const ex = EXAMPLES.find((e) => e.id === id)!;
-    return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl }), country: ex.input.countryCode, example: ex };
+    return { a: assess(ex.input, getCountry(ex.input.countryCode), { lang: cl, uncertainty: false }), country: ex.input.countryCode, example: ex };
   };
   const segments: SegmentCard[] = FIT_IDS.map((id) => {
     const definition = BUSINESS_TYPES[id];

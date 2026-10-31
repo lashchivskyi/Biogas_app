@@ -44,7 +44,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   const seo = localizedSegment(s, locale, d);
   const H = localizedHub(locale, d).sector;
   const ex = EXAMPLES.find((e) => e.id === s.exampleId);
-  const a = ex ? assess(ex.input, getCountry(ex.input.countryCode), { lang: coreLang(locale) }) : undefined;
+  const a = ex ? assess(ex.input, getCountry(ex.input.countryCode), { lang: coreLang(locale), uncertainty: false }) : undefined;
   const r = a?.ranges;
   const economicsAvailable = a?.financialsAvailable !== false;
   const f = makeFormat(locale, d.labels.units);

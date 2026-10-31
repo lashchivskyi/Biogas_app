@@ -14,13 +14,15 @@ import { PLAUSIBLE_DISPOSAL_EUR_T, PLAUSIBLE_GATE_FEE_EUR_T, PLAUSIBLE_PURCHASE_
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
 import { ghgCase } from "./ghg";
+import { evpi, latinHypercube, percentile, sampleScenario, SAMPLED_FIELDS, triangular } from "./uncertainty";
+import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import { Params, prov, toMap } from "./params";
 import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
 import { assessQuality, capQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
-import type { Assessment, ProductBreakEven, QuoteCheck, RouteId, ScalePoint, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
+import type { Assessment, MeasureItem, MeasureKind, MonteCarloResult, ProductBreakEven, QuoteCheck, RouteId, ScalePoint, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
 import { decideVerdict } from "./verdict";
 import { BUSINESS_TYPES } from "./businesses";
 
@@ -83,6 +85,9 @@ function productValue(r: ScenarioResult, params: Params): { product: ProductBrea
   return e.biomethaneNm3 > 0 && eur > 0 ? { product: "biomethane", unit: "EUR/Nm3", unitEur: eur / e.biomethaneNm3, lhvKwhNm3: lhv } : null;
 }
 
+/** Monte Carlo draws (Latin hypercube): stratified, so 160 draws give stable P10–P90 for display. */
+const MC_DRAWS = 160;
+
 /** Plant sizes shown in the scale comparison, as multiples of the entered feedstock. */
 const SCALE_STEPS = [0.5, 0.75, 1, 1.5, 2, 3];
 
@@ -91,7 +96,8 @@ const PRICE_BAND = 3;
 /** A supplier CAPEX quote more than this factor above or below the model's own estimate is flagged (judgement). */
 const QUOTE_BAND = 2.5;
 
-export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
+/** `uncertainty: false` skips the value-of-information runs and the Monte Carlo (about 300 extra runs) for bulk or what-if use. */
+export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean } = {}): Assessment {
   if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
   if (input.process) { processSchema.parse(input.process); if (input.feedstocks.length) throw new Error("Use one physical input basis, not simultaneous AD feedstocks and process data"); }
   if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad")) throw new Error("Select the appropriate process and supply its input data");
@@ -325,6 +331,86 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${ratio.toFixed(1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${ratio.toFixed(1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
     if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T(`Your supplier quote is for the ${routeName} route, but the model finds the ${bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.`, `Пропозиція постачальника стосується варіанта «${routeName}», але модель вважає вигіднішим «${bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.`));
   }
+  // ---- what to verify first (value of information) ----
+  // Each input's plausible range, three runs (low / base / high), EVPI for the build decision. Inputs the client already
+  // supplied (lab yield, supplier quote, own prices) have no range left and do not appear.
+  let measureFirst: MeasureItem[] | undefined;
+  const uncertainty = opts.uncertainty !== false && !input.process;
+  if (uncertainty) {
+    const items: MeasureItem[] = [];
+    const add = (kind: MeasureKind, x: [number, number, number], n: [number, number], parameterId?: string) => {
+      const { evpi: value } = evpi({ low: [x[0], n[0]], base: [x[1], npv0], high: [x[2], n[1]] });
+      items.push({ kind, ...(parameterId ? { parameterId } : {}), lowNpvEur: n[0], highNpvEur: n[1], evpiEur: value, flips: Math.min(n[0], n[1], npv0) < 0 && Math.max(n[0], n[1], npv0) > 0 });
+    };
+    const npvWith = (m: Partial<Modifiers>) => run(bestRoute, "base", { ...NO_MODS, ...m }).fin.npvEur;
+    // Methane yield: catalogue low–high for streams without a lab value, weighted by their methane.
+    const lines = base.feed.lines.filter((l) => l.ch4M3Year > 0);
+    const lab = (l: (typeof lines)[number]) => input.feedstocks.find((f) => f.id === l.id)?.methaneYieldLPerKgVs !== undefined;
+    const ch4 = lines.reduce((a, l) => a + l.ch4M3Year, 0);
+    if (ch4 > 0 && lines.some((l) => !lab(l))) {
+      const ratio = (end: "yieldLow" | "yieldHigh") => lines.reduce((a, l) => a + l.ch4M3Year * (lab(l) ? 1 : FEEDSTOCKS[l.typeId][end] / FEEDSTOCKS[l.typeId].yieldTyp), 0) / ch4;
+      const lo = ratio("yieldLow"), hi = ratio("yieldHigh");
+      add("yield", [lo, 1, hi], [npvWith({ methaneYield: lo }), npvWith({ methaneYield: hi })]);
+    }
+    // Manure quantity per head: the catalogue range for herds (waste streams are entered as tonnes).
+    const herd = input.feedstocks.filter((f) => f.animal && f.quantity > 0);
+    if (herd.length) {
+      const share = (end: "rangeLow" | "rangeHigh") => {
+        let w = 0, t = 0;
+        for (const l of lines) {
+          const f = input.feedstocks.find((x) => x.id === l.id);
+          const a = f?.animal ? ANIMALS[f.animal] : undefined;
+          w += l.ch4M3Year * (a ? a[end] / a.tonnesPerHeadYear : 1);
+          t += l.ch4M3Year;
+        }
+        return t > 0 ? w / t : 1;
+      };
+      const lo = share("rangeLow"), hi = share("rangeHigh");
+      add("quantity", [lo, 1, hi], [npvWith({ feedstock: lo }), npvWith({ feedstock: hi })]);
+    }
+    // Market evidence ranges already run per parameter; CAPEX without a quote is the supplier-quote item.
+    const kindOf = (id: string): MeasureKind => id.startsWith("econ.capex_factor") ? "capex" : id === "econ.electricity_retail_eur_kwh" ? "electricity_price" : id === "econ.electricity_spot_eur_kwh" ? "export_price"
+      : id === "econ.heat_value_eur_kwh_th" ? "heat_price" : id.startsWith("econ.fert_") ? "fertiliser" : id.includes("variable_share") ? "bill_structure" : "market";
+    for (const ps of parameterSensitivity) add(kindOf(ps.parameterId), [ps.lowInput, params.get(ps.parameterId), ps.highInput], [ps.lowNpvEur, ps.highNpvEur], ps.parameterId);
+    if (!quoteApplies && !parameterSensitivity.some((ps) => ps.parameterId.startsWith("econ.capex_factor"))) {
+      const { conservative: c, optimistic: o } = SCENARIOS;
+      add("capex", [o.capexMult, 1, c.capexMult], [npvWith({ capex: o.capexMult }), npvWith({ capex: c.capexMult })]);
+    }
+    if (base.energy.heatUsefulKwh > 0 && !(input.energy.heatPriceLocalPerKwh && input.energy.heatPriceLocalPerKwh > 0)) {
+      const { conservative: c, base: b, optimistic: o } = SCENARIOS;
+      add("heat_buyer", [c.heatUtilisation / b.heatUtilisation, 1, o.heatUtilisation / b.heatUtilisation], [npvWith({ heatUse: c.heatUtilisation / b.heatUtilisation }), npvWith({ heatUse: o.heatUtilisation / b.heatUtilisation })]);
+    }
+    if (bestRoute === "biomethane") {
+      const bm = (k: string) => params.get(`econ.biomethane_price_${k}_eur_nm3`);
+      const lo = bm("cons") / bm("base"), hi = bm("opt") / bm("base");
+      add("offtake", [lo, 1, hi], [npvWith({ productPrice: lo }), npvWith({ productPrice: hi })]);
+    }
+    // One line per action (N, P and K prices are one fertiliser check): keep the strongest item of each kind.
+    measureFirst = items.sort((x, y) => y.evpiEur - x.evpiEur || Math.abs(y.highNpvEur - y.lowNpvEur) - Math.abs(x.highNpvEur - x.lowNpvEur))
+      .filter((m, i, all) => all.findIndex((o) => o.kind === m.kind) === i);
+  }
+
+  // ---- Monte Carlo over the scenario quantities (chosen route) ----
+  let monteCarlo: MonteCarloResult | undefined;
+  if (uncertainty) {
+    const draws = latinHypercube(MC_DRAWS, SAMPLED_FIELDS.length + 1).map((u) => {
+      const { scenario, biomethaneU } = sampleScenario(u);
+      const bm = (k: string) => params.get(`econ.biomethane_price_${k}_eur_nm3`);
+      const priced = params.with({ "econ.biomethane_price_base_eur_nm3": triangular(biomethaneU, Math.min(bm("cons"), bm("opt")), bm("base"), Math.max(bm("cons"), bm("opt"))) });
+      const ctx = { ...makeCtx(input, country, priced, "base", NO_MODS, lang), scenario };
+      return runScenarioRoute(ctx, bestRoute).fin;
+    });
+    const npvs = draws.map((f) => f.npvEur).sort((x, y) => x - y);
+    const paybacks = draws.map((f) => f.simplePaybackYears ?? Infinity).sort((x, y) => x - y);
+    const p50pb = percentile(paybacks, 0.5);
+    monteCarlo = {
+      n: MC_DRAWS,
+      p10NpvEur: percentile(npvs, 0.1), p50NpvEur: percentile(npvs, 0.5), p90NpvEur: percentile(npvs, 0.9),
+      probPositive: npvs.filter((v) => v > 0).length / npvs.length,
+      p50PaybackYears: Number.isFinite(p50pb) ? p50pb : null,
+    };
+  }
+
   // Scale: the same mix at other sizes, re-sized from scratch (no quote, since a quote is for one size).
   const scale: ScalePoint[] | undefined = input.process ? undefined : SCALE_STEPS.map((m) => {
     // Delivered streams come from a supply area that grows with the quantity: haul distance × √size (uniform density).
@@ -508,6 +594,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     breakEven,
     ...(quoteCheck ? { quoteCheck } : {}),
     ...(scale ? { scale } : {}),
+    ...(measureFirst ? { measureFirst } : {}),
+    ...(monteCarlo ? { monteCarlo } : {}),
     ...(input.process ? {} : { ghg: ghgCase(base, params) }),
     scores,
     overall,

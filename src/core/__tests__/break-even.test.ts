@@ -21,7 +21,7 @@ function npvWith(input: ProjectInput, route: RouteId, mods: Partial<Modifiers>):
 describe("absolute break-even values", () => {
   it("each reported break-even value returns NPV to zero for every reference project", () => {
     for (const { id, input } of EXAMPLES) {
-      const a = assess(input, getCountry(input.countryCode));
+      const a = assess(input, getCountry(input.countryCode), { uncertainty: false });
       const base = a.scenarios.base;
       const tolerance = Math.max(1, base.capex.totalEur * 1e-9);
       const be = a.breakEven;
@@ -60,7 +60,7 @@ describe("absolute break-even values", () => {
 describe("supplier quote check", () => {
   // A CHP project whose break-even CAPEX is reachable, so the installed-price ceiling exists.
   const input = EXAMPLES.map((e) => e.input).find((i) => {
-    const a = assess(i, getCountry(i.countryCode));
+    const a = assess(i, getCountry(i.countryCode), { uncertainty: false });
     return a.bestRoute === "chp" && !i.process && (a.breakEven.maxCapexEur ?? 0) > 0;
   })!;
   const country = getCountry(input.countryCode);

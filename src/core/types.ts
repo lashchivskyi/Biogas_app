@@ -437,6 +437,10 @@ export interface Assessment {
   quoteCheck?: QuoteCheck;
   /** Climate case with EU RED default values for the chosen route; never part of the verdict. Absent for process inputs and older reports. */
   ghg?: import("./ghg").GhgCase | null;
+  /** What to verify first: inputs ranked by the value of knowing them before deciding (EVPI). Absent for process inputs and older reports. */
+  measureFirst?: MeasureItem[];
+  /** Monte Carlo over the scenario quantities for the chosen route (independent triangular draws). */
+  monteCarlo?: MonteCarloResult;
   /** Same feedstock mix at other plant sizes (base case, every route re-sized); absent for process inputs and older reports. */
   scale?: ScalePoint[];
   scores: Score[];
@@ -491,6 +495,31 @@ export interface ProductBreakEven {
   /** Biomethane only: the same values per MWh of product, LHV basis. */
   currentEurMwh?: number;
   breakEvenEurMwh?: number;
+}
+
+export type MeasureKind = "yield" | "quantity" | "capex" | "electricity_price" | "export_price" | "heat_price" | "heat_buyer" | "offtake" | "fertiliser" | "bill_structure" | "market";
+
+export interface MeasureItem {
+  kind: MeasureKind;
+  /** Registry parameter behind the item, when it comes from market evidence. */
+  parameterId?: string;
+  /** NPV at the low and high end of the plausible range (base case otherwise). */
+  lowNpvEur: number;
+  highNpvEur: number;
+  /** Expected value of perfect information: what exact knowledge is worth for the build / no-build decision, EUR. */
+  evpiEur: number;
+  /** The range crosses NPV = 0, so this input alone can change the answer. */
+  flips: boolean;
+}
+
+export interface MonteCarloResult {
+  n: number;
+  p10NpvEur: number;
+  p50NpvEur: number;
+  p90NpvEur: number;
+  /** Share of draws with NPV > 0. */
+  probPositive: number;
+  p50PaybackYears: number | null;
 }
 
 export interface ScalePoint {

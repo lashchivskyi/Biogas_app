@@ -58,7 +58,7 @@ describe("release gate: country, scale and regional reconciliation", () => {
           energy: { ...template.energy, electricityKwhYear: tonnes * 100, electricityPriceLocalPerKwh: undefined, gasM3Year: tonnes * 10, gasPriceLocalPerM3: undefined },
         };
         expect(inputSchema.safeParse(input).success).toBe(true);
-        const a = assess(input, country, { asOfDate });
+        const a = assess(input, country, { asOfDate, uncertainty: false });
         const p = buildParams(country, input.regionId, input.energy);
         expect(a.dataAudit!.asOfDate).toBe(asOfDate);
         expect(a.confidence.level).not.toBe("HIGH");
@@ -82,7 +82,7 @@ describe("release gate: country, scale and regional reconciliation", () => {
     for (const country of Object.values(COUNTRIES)) for (const region of country.regions) {
       const input = { ...template, countryCode: country.code, regionId: region.id };
       expect(inputSchema.safeParse(input).success, `${country.code}/${region.id}`).toBe(true);
-      const a = assess(input, country, { asOfDate });
+      const a = assess(input, country, { asOfDate, uncertainty: false });
       expect(a.input.regionId).toBe(region.id);
       expect(a.climate).toBeDefined();
       for (const route of ROUTES) expect(Number.isFinite(a.routesBase[route].fin.npvEur)).toBe(true);

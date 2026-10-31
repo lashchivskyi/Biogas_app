@@ -355,6 +355,51 @@ function BreakEvenPanel({ a, F, locale, unreachable }: { a: Assessment; F: Retur
   );
 }
 
+function MeasureFirstPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof makeFormat>; locale: Locale }) {
+  const items = a.measureFirst?.slice(0, 6);
+  if (!items?.length) return null;
+  const M = decisionCopy[locale].measure;
+  return (
+    <Section title={M.title} sub={M.sub}>
+      <div className="card overflow-x-auto p-1">
+        <table className="num w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="text-left text-xs uppercase tracking-wide text-muted">
+              <th className="p-3">{M.action}</th><th className="p-3 text-right">{M.range}</th><th className="p-3 text-right">{M.value}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((m) => (
+              <tr key={`${m.kind}:${m.parameterId ?? ""}`} className="border-t border-line align-top">
+                <td className="p-3 font-sans">{M.kinds[m.kind]}{m.flips && <span className="chip ml-2 bg-amber-100 text-amber-900">{M.flips}</span>}</td>
+                <td className="p-3 text-right">{F.eur(Math.min(m.lowNpvEur, m.highNpvEur))} … {F.eur(Math.max(m.lowNpvEur, m.highNpvEur))}</td>
+                <td className="p-3 text-right font-semibold">{m.evpiEur > 0 ? F.eur(m.evpiEur) : "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+  );
+}
+
+function MonteCarloPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof makeFormat>; locale: Locale }) {
+  const mc = a.monteCarlo;
+  if (!mc) return null;
+  const C = decisionCopy[locale].monteCarlo;
+  return (
+    <Section title={C.title} sub={C.sub}>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <Stat label={C.p10} value={F.eur(mc.p10NpvEur)} />
+        <Stat label={C.p50} value={F.eur(mc.p50NpvEur)} />
+        <Stat label={C.p90} value={F.eur(mc.p90NpvEur)} />
+        <Stat label={C.prob} value={<span className={mc.probPositive >= 0.5 ? "text-good" : "text-warn"}>{F.pct(mc.probPositive)}</span>} />
+        <Stat label={C.payback} value={F.years(mc.p50PaybackYears)} />
+      </div>
+    </Section>
+  );
+}
+
 function ClimatePanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof makeFormat>; locale: Locale }) {
   const g = a.ghg;
   if (!g) return null;
@@ -610,7 +655,9 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
       {/* ---------- Details ---------- */}
       </>}
+      <MeasureFirstPanel a={a} F={F} locale={locale} />
       <BreakEvenPanel a={a} F={F} locale={locale} unreachable={R.unreachable} />
+      <MonteCarloPanel a={a} F={F} locale={locale} />
       <ScalePanel a={a} d={d} F={F} locale={locale} />
       <ClimatePanel a={a} F={F} locale={locale} />
       <Section title={R.detailsTitle}>

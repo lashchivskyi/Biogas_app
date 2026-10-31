@@ -165,7 +165,7 @@ describe("universal methodology registry", () => {
         expect(row).toContain(parameter.unit);
       }
     }
-  });
+  }, 30_000); // renders the methodology page for all 33 countries; slow under a parallel run
 
   it("uses regional overrides and resets invalid regions or countries safely", async () => {
     const region = market(await render({ c: "BR", r: "parana" }));

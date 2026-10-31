@@ -58,10 +58,10 @@ per-parameter provenance. Closest: Anessa AD•A (enterprise, sales-led, CI-focu
 plants post-EEG), LFGcost-Web v3.6 (US landfill, after-tax, loan, credits, break-even price solver),
 RETScreen (generic, Monte Carlo), Bioflux (free, 10 languages, scenario compare, no NPV/method).
 Roadmap by Impact × Differentiation ÷ Complexity. Done 2026-10-31: absolute break-even, supplier-quote check, XLSX
-export, AgSTAR back-test on /methodology, plant-size table, existing-plant CHP option, RED climate case.
+export, AgSTAR back-test on /methodology, plant-size table, existing-plant CHP option, RED climate case, "what to
+verify first" (EVPI), Monte Carlo P10/P50/P90.
 Next, highest first:
-1. "Measure first" ranking: which lab test or quote moves the verdict most (value of information).
-2. EU back-test (DBFZ operator data or a national register) and EU dairy/swine manure per head.
-3. P10/P50/P90 Monte Carlo; 4. portfolio and cross-country comparison of one project;
-5. flexible CHP (EU flexibility premiums) for existing plants; 6. after-tax/equity IRR only if banks ask.
+1. EU back-test (DBFZ operator data or a national register) and EU dairy/swine manure per head.
+2. Portfolio and cross-country comparison of one project.
+3. Flexible CHP (EU flexibility premiums) for existing plants; 4. after-tax/equity IRR only if banks ask.
 Not a goal: dynamic ADM1 simulation; HRT kinetics without sourced per-substrate constants.

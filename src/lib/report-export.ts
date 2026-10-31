@@ -55,6 +55,11 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
       [T(`Product value at NPV = 0, ${be.product.unit}`, `Цінність продукту при NPV = 0, ${be.product.unit}`), be.product.breakEvenEur],
       ...(be.product.breakEvenEurMwh !== undefined ? [[T("Biomethane at NPV = 0, EUR/MWh LHV", "Біометан при NPV = 0, EUR/МВт·год (нижча теплота згоряння)"), be.product.breakEvenEurMwh]] : []),
     ] : []),
+    ...(a.monteCarlo ? [
+      [T(`Monte Carlo (${a.monteCarlo.n} independent draws of the scenario quantities)`, `Монте-Карло (${a.monteCarlo.n} незалежних вибірок величин сценаріїв)`), ""],
+      ["NPV P10, EUR", a.monteCarlo.p10NpvEur], [T("NPV median, EUR", "Медіана NPV, EUR"), a.monteCarlo.p50NpvEur], ["NPV P90, EUR", a.monteCarlo.p90NpvEur],
+      [T("Chance that NPV > 0", "Імовірність NPV > 0"), a.monteCarlo.probPositive],
+    ] as Cell[][] : []),
     [T("Feedstock price headroom, EUR/t of every input (+ can pay more, − needs a gate fee)", "Запас ціни сировини, EUR/т кожної сировини (+ можна платити більше, − потрібна плата за прийом)"), be.feedstockEurT ?? null],
     blank,
     [T("Notes", "Примітки"), ""],
@@ -92,6 +97,13 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     { name: T("CAPEX and OPEX", "CAPEX і OPEX"), rows: money, widths: [70, 16] },
     { name: T("Assumptions", "Припущення"), rows: assumptions, widths: [50, 14, 14, 22, 12, 12, 90, 40] },
   ];
+
+  if (a.measureFirst?.length) {
+    sheets.push({ name: T("Verify first", "Перевірити першим"), widths: [22, 30, 18, 18, 18, 14], rows: [
+      [T("Input", "Вхідні дані"), T("Registry parameter", "Параметр реєстру"), T("NPV at low end, EUR", "NPV на нижній межі, EUR"), T("NPV at high end, EUR", "NPV на верхній межі, EUR"), T("Value of knowing (EVPI), EUR", "Цінність знання (EVPI), EUR"), T("Can flip the answer", "Може змінити відповідь")],
+      ...a.measureFirst.map((m) => [m.kind, m.parameterId ?? "", m.lowNpvEur, m.highNpvEur, m.evpiEur, m.flips ? T("yes", "так") : ""] as Cell[]),
+    ] });
+  }
 
   if (a.ghg) {
     const g = a.ghg;
