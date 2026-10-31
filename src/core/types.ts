@@ -472,7 +472,7 @@ export interface Assessment {
   warnings: string[];
   safety: SafetyItem[];
   regulatory: { items: RegulatoryItem[]; complexity: "LOW" | "MEDIUM" | "HIGH" };
-  methane: { lossShare: number; lossShareRange: [number, number]; co2eTonnesYear: number; displacedCo2eTonnesYear: number; ratio: number; advice: string[] };
+  methane: { lossShare: number; lossShareRange: [number, number]; co2eTonnesYear: number; displacedCo2eTonnesYear: number; /** Lost-methane CO2e ÷ displaced CO2e; null when nothing is displaced but methane is lost. */ ratio: number | null; advice: string[] };
   digestate: DigestateAssessment;
   logistics: LogisticsAssessment;
   climate: { regionName: string; meanTempC: number; hdd: number; analogues: { name: string; distance: number; meanTempC: number }[] };

@@ -29,7 +29,8 @@ export function methaneCheck(
     ((e.elSelfConsumedKwh + e.elExportedKwh) / 1000) * efGrid +
     (e.heatUsefulKwh / 1000) * efGas +
     ((e.biomethaneNm3 * lhv * purity) / 1000) * efGas;
-  const ratio = displaced > 0 ? co2e / displaced : co2e > 0 ? Infinity : 0;
+  // null = losses with no displaced emissions to offset them (a ratio would be infinite); never Infinity in a stored report
+  const ratio = displaced > 0 ? co2e / displaced : co2e > 0 ? null : 0;
 
   const advice = [
     T("Gas-tight covers on the digester and digestate storage (incl. lagoon covers) — the single most important measure.", "Газонепроникні покриття реактора та сховища дигестату (накриття лагуни) — головний захід."),
@@ -40,7 +41,7 @@ export function methaneCheck(
   const lp = (e.methaneLossShare * 100).toFixed(1);
   const gp = (good * 100).toFixed(0);
   if (e.methaneLossShare > good) advice.unshift(T(`Expected loss ${lp} % is above good practice (${gp} %): budget for monitoring.`, `Очікувані втрати ${lp} % вищі за добру практику (${gp} %): закладіть бюджет на моніторинг.`));
-  if (e.methaneLossShare > high || ratio > 0.5) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements.", "Втрати метану можуть знівелювати кліматичну вигоду. Не декларуйте зменшення викидів без вимірювань."));
+  if (e.methaneLossShare > high || (ratio === null || ratio > 0.5)) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements.", "Втрати метану можуть знівелювати кліматичну вигоду. Не декларуйте зменшення викидів без вимірювань."));
 
   return {
     lossShare: e.methaneLossShare,

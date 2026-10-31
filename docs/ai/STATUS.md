@@ -3,18 +3,18 @@
 Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 069), lint, typecheck, build pass. Browser check pending for all
+- Model 0.6.1; data review 2026-10-30. Tests (1 321), lint, typecheck, build pass. Browser check pending for all
   2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
 - Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests; ensiling loss + clamp silo; gas streams.
-- Lender-style finance audit 2026-10-31: 3 examples recomputed by hand = code; `finance-audit.test.ts` (50 tests);
-  discounted payback; discount-rate ±pp sensitivity; "pre-tax, nominal EUR, not bankable" in UI, export, methodology.
-
+- Finance audit 2026-10-31: 3 examples recomputed by hand = code (`finance-audit.test.ts`); "pre-tax, not bankable" in UI/export.
+- Scenario sweep 2026-10-31 (`scenario-matrix.ts`, `scenario-sweep.test.ts`, `properties.test.ts` fast-check,
+  `hostile-input.test.ts`, `regressions-sweep.test.ts`): 7 segments × 6 sizes × 17 mixes × 2 data levels × 33 countries × 2
+  climates = 13 464 assessments, 0 throws, 0 NaN, balances close (`MATRIX=full`, ≈ 8 min; `FC_RUNS=2000` for a deeper hunt).
 - Report consistency 2026-10-31: `components/__tests__/report-consistency.test.ts` (+ `report-audit*.ts`) renders 10 examples × free/
   standard/full × en/uk/de, checks every figure against the model and between sections, plus export, translations, mutations.
   0 contradictions in 30 reports. Open: in 39 of 234 sampled cases the "optimistic" scenario is worse than base (see DECISIONS).
-
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
@@ -30,7 +30,6 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
    more languages. EVPI "yield" item ignores catalogue DM/VS.
 - Carried: UASB €/m³; labour > 1 MW extrapolated; lipid shares; Canary gate, KZ gas ceilings, CA provincial gas,
   AR/KZ regional power; Canada dairy still on the catalogue (IPCC N. America 5.4).
-
 ## Known weaknesses
 
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.

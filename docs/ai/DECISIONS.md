@@ -139,6 +139,12 @@ replace the line rather than adding a contradicting one.
   cases (mostly loss-making boiler/biomethane) "optimistic" has a lower NPV/EBITDA than "base" (e.g. a net electricity buyer
   pays the higher "optimistic" power price). Not changed: needs a decision (size the plant once at base, or define
   scenarios by outcome). The test ratchets the count (≤ 45 of 234); do not raise it, fix the cause.
+- 2026-10-31 — Sweep findings (do not rediscover). Fixed: methane-loss `ratio` was Infinity (now `null`); CHP round-up loop
+  hung above 1e16 kW; `processSchema.safeParse` threw on `monthsActive` = 1e300; `assess` returned NaN for non-finite input
+  (now throws). By design, NOT bugs: net buyers of power/heat are worse off when that price rises (only sell-side prices are
+  monotone); biomethane is eligible only above `eng.upgrade_min_nm3h`, so the headline NPV steps there; CAPEX is stepwise
+  in equipment modules (≤ ~12 % of CAPEX per step); confidence drops outside 30 kW–5 MW (`scale_range`), so a verdict can
+  fall one level for a much larger plant; revenue lines < €0.5 are hidden but counted.
 
 ## AI workflow
 

@@ -764,7 +764,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
           <Fold title={R.dMethane}>
             <p className="text-sm">
               {f(R.mLine, { v: pct(a.methane.lossShare, 1), lo: pct(a.methane.lossShareRange[0], 1), hi: pct(a.methane.lossShareRange[1], 1), co2: n0(a.methane.co2eTonnesYear), disp: n0(a.methane.displacedCo2eTonnesYear) })}{" "}
-              {Number.isFinite(a.methane.ratio) ? f(R.mRatio, { v: pct(a.methane.ratio) }) : ""}
+              {a.methane.ratio !== null ? f(R.mRatio, { v: pct(a.methane.ratio) }) : ""}
             </p>
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
             <p className="mt-2 text-xs text-muted">{R.mNote}</p>

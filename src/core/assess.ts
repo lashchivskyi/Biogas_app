@@ -110,7 +110,17 @@ const PRICE_BAND = 3;
 const QUOTE_BAND = 2.5;
 
 /** `uncertainty: false` skips the value-of-information runs and the Monte Carlo (about 300 extra runs) for bulk or what-if use. */
+/** First path of a NaN/±Infinity number in the input, so garbage fails loudly instead of surfacing as NaN in a report. */
+function nonFiniteInputPath(value: unknown, path = "input"): string | undefined {
+  if (typeof value === "number") return Number.isFinite(value) ? undefined : path;
+  if (!value || typeof value !== "object") return undefined;
+  for (const [k, v] of Object.entries(value)) { const bad = nonFiniteInputPath(v, `${path}.${k}`); if (bad) return bad; }
+  return undefined;
+}
+
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean } = {}): Assessment {
+  const badPath = nonFiniteInputPath(input);
+  if (badPath) throw new Error(`Input contains a non-finite number at ${badPath}`);
   if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
   if (input.process) { processSchema.parse(input.process); if (input.feedstocks.length) throw new Error("Use one physical input basis, not simultaneous AD feedstocks and process data"); }
   if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad")) throw new Error("Select the appropriate process and supply its input data");

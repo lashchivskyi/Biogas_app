@@ -38,6 +38,8 @@ export const processSchema = z.discriminatedUnion("kind", [
     // Existing plant: the CHP already on site and the budget to keep it running replace a new engine in the CHP option.
     existingChpKwEl: positive(1e5).optional(), chpOverhaulLocal: z.number().finite().min(0).max(1e15).optional() }),
 ]).superRefine((p, ctx) => {
+  // zod still runs this refinement when a field already failed; an invalid calendar must be reported by its own check, not crash Array.from.
+  if (!Number.isInteger(p.monthsActive) || p.monthsActive < 1 || p.monthsActive > 12 || !Number.isInteger(p.startMonth) || p.startMonth < 1 || p.startMonth > 12) return;
   const days = Array.from({ length: p.monthsActive }, (_, n) => DAYS_IN_MONTH[(p.startMonth - 1 + n) % 12]).reduce((a,b) => a+b, 0);
   if (p.operatingDays > days) ctx.addIssue({ code: "custom", path: ["operatingDays"], message: "Operating days exceed the selected calendar period" });
   if ((p.kind === "gas" || p.kind === "landfill") && p.methanePct + p.nitrogenPct + p.oxygenPct + p.h2sPpm / 10000 > 100) ctx.addIssue({ code: "custom", path: ["methanePct"], message: "Dry gas fractions exceed 100%" });

@@ -105,7 +105,8 @@ export function runEnergy(
     }
     chpKw = kw < 1 ? 0 : roundKw(kw);
     // Rounding changes efficiency: ensure the installed engine can actually absorb design fuel input.
-    while (chpKw > 0 && chpKw / chpEtaEl(chpKw, (id) => p.get(id)) + 1e-8 < qNom) chpKw += chpKw < 100 ? 5 : 10;
+    // Bounded: above ~1e16 kW a 10 kW step no longer changes the float and an open loop would never end.
+    for (let n = 0; n < 1000 && chpKw > 0 && chpKw / chpEtaEl(chpKw, (id) => p.get(id)) + 1e-8 < qNom; n++) chpKw += chpKw < 100 ? 5 : 10;
     if (installedChpKw !== undefined) chpKw = installedChpKw;
     etaEl = chpEtaEl(Math.max(chpKw, 1), (id) => p.get(id));
     const etaTh = chpEtaTh(Math.max(chpKw, 1), (id) => p.get(id));
