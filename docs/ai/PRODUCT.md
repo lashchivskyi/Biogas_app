@@ -49,3 +49,19 @@ as a separate case. Market data per country and, where official data exist, per 
 - Inputs the client does not yet control (export price, operator wage, heat price, financing
   terms, vendor quotes) would improve accuracy enough to justify a longer form.
 - Regional (admin1) market data matter enough beyond US, CA, BR, IN, MX, IT.
+
+## Market position (benchmark 2026-10-31; re-check yearly)
+
+No public tool combines multi-country official market data, three routes, verdict and provenance.
+Nearest rivals by group: free single-country screeners (KTBL, Méthasim FR, EPA/GMI AD Screening
+Tool, LFGcost-Web, Luke FI, RETScreen generic); enterprise SaaS (Anessa AD•A: mass/energy, GHG,
+finance, scenarios; sales-led price); process simulators (SIMBA#, BioWin: ADM1, no market data);
+carbon calculators (CARB Tier 1, GREET, ABC Biogas CAT); Excel finance templates; consultants.
+Gaps that matter most for paying clients, in order:
+1. GHG / carbon intensity and its revenue (LCFS, RIN, RED III/GoO, ETS) as a separate case:
+   for US/EU biomethane this is often the largest revenue line; today only a methane-loss check.
+2. Back-test against real plants (AgSTAR database, DBFZ data) with a published error band.
+3. Editable export (cash flow to Excel) and a bank-style case: equity IRR, debt sculpting, tax.
+4. P10/P50/P90 (Monte Carlo) instead of three fixed scenarios.
+5. Portfolio screening of many sites for developers.
+Not a goal: dynamic ADM1 simulation (design stage, not screening).
