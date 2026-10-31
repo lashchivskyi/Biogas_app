@@ -11,6 +11,7 @@ import { track } from "@/lib/analytics";
 import { usePreferences } from "../LocaleProvider";
 import { preferenceCopy } from "@/i18n/preferences";
 import { offerCopy } from "@/i18n/offer";
+import { formErrorCopy } from "@/i18n/form-errors";
 import type { PublicPaymentQuote } from "@/server/payments/quote";
 import type { CurrencyPreference } from "@/lib/preferences";
 import { CountryFlag, CURRENCY_FLAGS } from "../CountryFlag";
@@ -37,6 +38,8 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   const O = offerCopy[locale];
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<"email" | "consent" | "waiver", string>>>({});
+  const V = formErrorCopy[locale];
   const [isOpen, setIsOpen] = useState(false);
   const [quote, setQuote] = useState<PublicPaymentQuote | null>(null);
   const [quoteRevision, setQuoteRevision] = useState(0);
@@ -77,6 +80,16 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
     e.preventDefault();
     if (!input || !quote) return;
     const fd = new FormData(e.currentTarget);
+    // Inline, localised messages instead of the browser's bubbles (WCAG 3.3.1 / 3.3.3): the first problem gets focus.
+    const email = String(fd.get("email") ?? "").trim();
+    const problems: typeof fieldErrors = {};
+    if (!email) problems.email = V[0];
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) problems.email = V[1];
+    if (fd.get("consent") !== "on") problems.consent = V[2];
+    if (fd.get("withdrawalWaiver") !== "on") problems.waiver = V[2];
+    setFieldErrors(problems);
+    const first = (["email", "consent", "waiver"] as const).find((k) => problems[k]);
+    if (first) { document.getElementById(`${id}-${first}`)?.focus(); return; }
     setState("sending");
     setError("");
     try {
@@ -112,7 +125,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
           {!input ? (
             <p className="mt-4 text-ink2">{C.noInput}</p>
           ) : (
-            <form onSubmit={submit} className="mt-5 space-y-4">
+            <form onSubmit={submit} noValidate className="mt-5 space-y-4">
               <fieldset disabled={state === "sending"}>
                 <legend className="label">{C.plan}</legend>
                 <div className="grid gap-2">
@@ -138,24 +151,26 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
                 <p className="mt-2 text-xs text-muted">{copy.tax}</p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-email`}>{C.email} *</label><input id={`${id}-email`} name="email" type="email" required maxLength={160} autoComplete="email" className="field" /></div>
+                <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-email`}>{C.email} *</label><input id={`${id}-email`} name="email" type="email" required aria-required="true" aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? `${id}-email-err` : undefined} onChange={() => fieldErrors.email && setFieldErrors((f) => ({ ...f, email: undefined }))} maxLength={160} autoComplete="email" className="field" />{fieldErrors.email && <p id={`${id}-email-err`} role="alert" className="mt-1 text-sm font-semibold text-red-800">{fieldErrors.email}</p>}</div>
                 <div><label className="label" htmlFor={`${id}-name`}>{C.name}</label><input id={`${id}-name`} name="name" maxLength={120} autoComplete="name" className="field" /></div>
                 <div><label className="label" htmlFor={`${id}-company`}>{C.company}</label><input id={`${id}-company`} name="company" maxLength={160} autoComplete="organization" className="field" /></div>
                 <div className="sm:col-span-2"><label className="label" htmlFor={`${id}-vat`}>{C.vat}</label><input id={`${id}-vat`} name="vatId" maxLength={40} className="field" /></div>
               </div>
               <label className="flex items-start gap-3 text-sm text-ink2">
-                <input type="checkbox" name="consent" required className="mt-1 h-4 w-4" />
+                <input id={`${id}-consent`} type="checkbox" name="consent" required aria-required="true" aria-invalid={!!fieldErrors.consent} aria-describedby={fieldErrors.consent ? `${id}-consent-err` : undefined} onChange={() => fieldErrors.consent && setFieldErrors((f) => ({ ...f, consent: undefined }))} className="mt-1 h-4 w-4" />
                 <span>
                   {C.consent.split("{terms}")[0]}
                   <Link href={`/${locale}/terms`} target="_blank" className="font-semibold text-brand underline">{C.terms}</Link>
                   {C.consent.split("{terms}")[1]}
                 </span>
               </label>
+              {fieldErrors.consent && <p id={`${id}-consent-err`} role="alert" className="-mt-2 text-sm font-semibold text-red-800">{fieldErrors.consent}</p>}
               {/* EU/UK digital content: separate, unticked, express request + acknowledgement (CRD Art. 16(m)). */}
               <label className="flex items-start gap-3 text-sm text-ink2">
-                <input type="checkbox" name="withdrawalWaiver" required className="mt-1 h-4 w-4" />
+                <input id={`${id}-waiver`} type="checkbox" name="withdrawalWaiver" required aria-required="true" aria-invalid={!!fieldErrors.waiver} aria-describedby={fieldErrors.waiver ? `${id}-waiver-err` : undefined} onChange={() => fieldErrors.waiver && setFieldErrors((f) => ({ ...f, waiver: undefined }))} className="mt-1 h-4 w-4" />
                 <span>{O.waiver}</span>
               </label>
+              {fieldErrors.waiver && <p id={`${id}-waiver-err`} role="alert" className="-mt-2 text-sm font-semibold text-red-800">{fieldErrors.waiver}</p>}
               {coreLang(locale) !== locale && <p className="hint">{d.common.reportLangNote}</p>}
               {demo && <p className="hint text-warn">{C.demo}</p>}
               {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-900">{error}</p>}

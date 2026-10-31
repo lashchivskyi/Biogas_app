@@ -94,7 +94,7 @@ export const UA: CountryAdapter = {
     availableForNewSmallProjects: false,
     checkedOn: "2026-10-30",
     schemes: [
-      { id: "ua.auction", name: "Аукціон з ринковою премією (інші ВДЕ)", status: "competitive", electricityTariffEurKwh: 0.12, routes: ["chp"], note: { en: "Bid cap 12 €c/kWh; your own winning bid is guaranteed via a market premium. The 30.10.2026 lot did not take place (Prozorro).", uk: "Стеля ставки 12 євроцентів/кВт·год; ваша виграшна ставка гарантується ринковою премією. Лот 30.10.2026 не відбувся (Prozorro)." }, source: "Guaranteed Buyer notice 03.09.2026 (150 MW, cap 12 €c); Prozorro: auction did not take place; CMU order 298-р (508-р); Law 555-IV Art. 9-3", confidence: "LOW", checkedOn: "2026-10-30" },
+      { id: "ua.auction", name: "Аукціон з ринковою премією (інші ВДЕ) — market-premium auction", status: "competitive", electricityTariffEurKwh: 0.12, routes: ["chp"], note: { en: "Bid cap 12 €c/kWh; your own winning bid is guaranteed via a market premium. The 30.10.2026 lot did not take place (Prozorro).", uk: "Стеля ставки 12 євроцентів/кВт·год; ваша виграшна ставка гарантується ринковою премією. Лот 30.10.2026 не відбувся (Prozorro)." }, source: "Guaranteed Buyer notice 03.09.2026 (150 MW, cap 12 €c); Prozorro: auction did not take place; CMU order 298-р (508-р); Law 555-IV Art. 9-3", confidence: "LOW", checkedOn: "2026-10-30" },
     ],
   },
   regulatory: regulatoryFor("UA"),

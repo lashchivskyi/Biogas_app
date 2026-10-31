@@ -1,6 +1,9 @@
 import { fmtInt, type CoreLang, tr } from "./i18n";
 import type { Assessment, Confidence, ScenarioResult, VerdictId } from "./types";
 
+/** Below this client-side data score the verdict is INSUFFICIENT_DATA and no report is sold. */
+export const VERDICT_MIN_SCORE = 35;
+
 /**
  * The verdict is rule-based and every branch states the evidence that triggered it.
  * It never comes from the composite score alone, and it never counts subsidies.
@@ -31,7 +34,7 @@ export function decideVerdict(args: {
   if (base.feed.tonnesYear <= 0 && !(base.process && base.energy.ch4ProducedM3 > 0)) {
     return { id: "INSUFFICIENT_DATA", reasons: [T("No feedstock stream entered.", "Не вказано жодного потоку сировини.")], whatWouldChange: [T("Add herd size or waste quantity.", "Додайте поголів'я або обсяг відходів.")] };
   }
-  if ((confidence.clientScore ?? confidence.score) < 35) {
+  if ((confidence.clientScore ?? confidence.score) < VERDICT_MIN_SCORE) {
     reasons.push(T(`Not enough data for a conclusion (data quality ${confidence.score}/100).`, `Недостатньо даних для висновку (якість даних ${confidence.score}/100).`));
     return { id: "INSUFFICIENT_DATA", reasons, whatWouldChange: [T("Add the items listed under “What you can add” below.", "Додайте дані зі списку «Що можете додати ви» нижче.")] };
   }

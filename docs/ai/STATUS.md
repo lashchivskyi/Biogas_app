@@ -3,16 +3,18 @@
 Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 371), lint, typecheck, build pass.
+- Model 0.6.1; data review 2026-10-30. Tests (1 378), lint, typecheck, build pass.
 - UX audit 2026-10-31 (Chrome, prod build, demo payments; en/uk/de, desktop+390 px; axe WCAG 2.2 AA, Lighthouse): fixed CLS
   (skeleton heights), contrast, DE/NL/FI mobile overflow, report re-render on client, three.js loaded late, font preload,
   scroll-region focus, 24 px footer targets. Lighthouse after: desktop 99/100/100/100; mobile a11y/SEO 100, perf home/pricing
-  ≈ 89–91, calculator/report ≈ 79 (model bundle ≈ 135 kB gz runs at hydration). NOT tested: real Stripe test checkout, real email.
+  ≈ 89–91, calculator/report ≈ 79 (model bundle ≈ 135 kB gz at hydration). Not tested: real Stripe test, real email.
 - Offer audit 2026-11-01: pricing lists = report content; gas-stream reports got residues, methane, break-even, "if eligible"
   support; free/paid boundary, INSUFFICIENT_DATA not sold, withdrawal waiver, VAT note, no "Feasibility" in names
   (DECISIONS). Prices unchanged; plans independent, no upgrade (owner). NOT browser-tested.
-- UX open: failed payment loses the project; /en link
-  overridden by IP-country language; Ukrainian source notes in en/de reports; no dark theme; native validation text not localised.
+- UX follow-up 2026-11-01: INSUFFICIENT_DATA verdict lists the minimum fields (`minimumGapsForVerdict`); failed payment →
+  "try again" reopens checkout for the same project; inline localised checkout errors; helpful report-link 404; no Ukrainian-only
+  text in en reports (`ux-audit.test.ts`). Language-by-IP checked with geo headers: first visit only, explicit choice persists.
+  Left as is: no dark theme; 30 tiles + mandatory city on step 1.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
 - Competitor benchmark (PRODUCT.md › Market): 4 examples vs KTBL, Luke v3, WSU, LandGEM; gaps > 15 % explained, nothing retuned (`scripts/benchmark.ts`).
@@ -32,9 +34,7 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
    6. Line-item cost overrides; request templates in more languages; EVPI "yield" ignores catalogue DM/VS.
 - Carried: UASB €/m³; labour > 1 MW; lipid shares; Canary gate; KZ/CA gas; AR/KZ power; CA dairy VS.
 ## Known weaknesses
-
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
 - Only membrane upgrading; no odorisation, injection fees, flexible-CHP premium. Gas-stream support: "if eligible" only.
-- Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (see DECISIONS).
-- PL FIT is CPI-indexed but modelled flat (conservative).
+- Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (DECISIONS). PL FIT modelled flat.

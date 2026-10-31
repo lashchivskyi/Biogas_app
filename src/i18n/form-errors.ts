@@ -1,0 +1,30 @@
+import type { Locale } from "./config";
+
+/** Inline form errors: [email missing, email malformed, required checkbox]. Native browser bubbles follow the browser language, not the page. */
+export const formErrorCopy: Record<Locale, readonly [string, string, string]> = {
+  en: ["Enter your email so we can send the report link.", "Enter a valid email address, e.g. name@company.com.", "Tick this box to continue."],
+  uk: ["Вкажіть email, щоб ми надіслали посилання на звіт.", "Введіть коректну адресу email, наприклад name@company.com.", "Поставте позначку, щоб продовжити."],
+  pl: ["Podaj e-mail, na który wyślemy link do raportu.", "Podaj poprawny adres e-mail, np. name@company.com.", "Zaznacz to pole, aby kontynuować."],
+  de: ["Geben Sie Ihre E-Mail-Adresse ein, damit wir den Berichtslink senden können.", "Geben Sie eine gültige E-Mail-Adresse ein, z. B. name@company.com.", "Bitte setzen Sie das Häkchen, um fortzufahren."],
+  fr: ["Saisissez votre e-mail pour recevoir le lien du rapport.", "Saisissez une adresse e-mail valide, par exemple name@company.com.", "Cochez cette case pour continuer."],
+  it: ["Inserite l’e-mail a cui inviare il link del rapporto.", "Inserite un indirizzo e-mail valido, ad esempio name@company.com.", "Spuntate questa casella per continuare."],
+  es: ["Introduzca su correo para enviarle el enlace del informe.", "Introduzca un correo válido, por ejemplo name@company.com.", "Marque esta casilla para continuar."],
+  pt: ["Informe seu e-mail para enviarmos o link do relatório.", "Informe um e-mail válido, por exemplo name@company.com.", "Marque esta caixa para continuar."],
+  nl: ["Vul uw e-mailadres in zodat we de rapportlink kunnen sturen.", "Vul een geldig e-mailadres in, bijvoorbeeld name@company.com.", "Vink dit vakje aan om door te gaan."],
+  cs: ["Zadejte e-mail, na který pošleme odkaz na zprávu.", "Zadejte platnou e-mailovou adresu, např. name@company.com.", "Pro pokračování zaškrtněte toto políčko."],
+  sk: ["Zadajte e-mail, na ktorý pošleme odkaz na správu.", "Zadajte platnú e-mailovú adresu, napr. name@company.com.", "Na pokračovanie zaškrtnite toto políčko."],
+  hu: ["Adja meg az e-mail-címét, hogy elküldhessük a jelentés linkjét.", "Adjon meg érvényes e-mail-címet, pl. name@company.com.", "A folytatáshoz jelölje be ezt a négyzetet."],
+  ro: ["Introduceți e-mailul la care trimitem linkul raportului.", "Introduceți o adresă de e-mail validă, de ex. name@company.com.", "Bifați această casetă pentru a continua."],
+  bg: ["Въведете имейл, за да изпратим връзката към доклада.", "Въведете валиден имейл адрес, напр. name@company.com.", "Поставете отметка, за да продължите."],
+  sr: ["Унесите имејл да бисмо послали везу до извештаја.", "Унесите исправну имејл адресу, нпр. name@company.com.", "Означите ово поље да бисте наставили."],
+  el: ["Εισαγάγετε το email σας για να σας στείλουμε τον σύνδεσμο της αναφοράς.", "Εισαγάγετε έγκυρη διεύθυνση email, π.χ. name@company.com.", "Επιλέξτε αυτό το πλαίσιο για να συνεχίσετε."],
+  tr: ["Rapor bağlantısını gönderebilmemiz için e-postanızı girin.", "Geçerli bir e-posta adresi girin, örn. name@company.com.", "Devam etmek için bu kutuyu işaretleyin."],
+  lt: ["Įveskite el. paštą, kad galėtume išsiųsti ataskaitos nuorodą.", "Įveskite tinkamą el. pašto adresą, pvz., name@company.com.", "Pažymėkite šį langelį, kad tęstumėte."],
+  lv: ["Ievadiet e-pastu, lai varētu nosūtīt atskaites saiti.", "Ievadiet derīgu e-pasta adresi, piemēram, name@company.com.", "Atzīmējiet šo rūtiņu, lai turpinātu."],
+  et: ["Sisestage e-post, et saaksime aruande lingi saata.", "Sisestage kehtiv e-posti aadress, nt name@company.com.", "Jätkamiseks märkige see ruut."],
+  da: ["Angiv din e-mail, så vi kan sende linket til rapporten.", "Angiv en gyldig e-mailadresse, f.eks. name@company.com.", "Sæt flueben for at fortsætte."],
+  sv: ["Ange din e-postadress så att vi kan skicka rapportlänken.", "Ange en giltig e-postadress, t.ex. name@company.com.", "Kryssa i rutan för att fortsätta."],
+  fi: ["Anna sähköpostiosoite, johon lähetämme raportin linkin.", "Anna kelvollinen sähköpostiosoite, esim. name@company.com.", "Valitse tämä ruutu jatkaaksesi."],
+  vi: ["Nhập email để chúng tôi gửi liên kết báo cáo.", "Nhập địa chỉ email hợp lệ, ví dụ name@company.com.", "Đánh dấu ô này để tiếp tục."],
+  th: ["กรอกอีเมลเพื่อให้เราส่งลิงก์รายงานให้คุณ", "กรอกอีเมลที่ถูกต้อง เช่น name@company.com", "ทำเครื่องหมายช่องนี้เพื่อดำเนินการต่อ"],
+};

@@ -29,3 +29,32 @@ export const deliveryCopy: Record<Locale, DeliveryCopy> = {
   vi: ["Báo cáo {site} của bạn đã sẵn sàng", "Đã nhận thanh toán — báo cáo đánh giá sơ bộ của bạn đã sẵn sàng.", "Mở báo cáo", "Hãy lưu email này. Liên kết là riêng tư: bất kỳ ai có liên kết đều có thể mở báo cáo, vì vậy đừng chuyển tiếp.", "Có câu hỏi? Chỉ cần trả lời email này.", "Đã hoàn tiền", "Đơn hàng này đã được hoàn tiền nên báo cáo không còn khả dụng. Hãy liên hệ với chúng tôi nếu điều này nằm ngoài dự kiến."],
   th: ["รายงาน {site} ของคุณพร้อมแล้ว", "ได้รับการชำระเงินแล้ว — รายงานการประเมินเบื้องต้นของคุณพร้อมแล้ว", "เปิดรายงาน", "โปรดเก็บอีเมลนี้ไว้ ลิงก์นี้เป็นลิงก์ส่วนตัว ใครก็ตามที่มีลิงก์สามารถเปิดรายงานได้ จึงไม่ควรส่งต่อ", "มีคำถาม? ตอบกลับอีเมลนี้ได้เลย", "คืนเงินแล้ว", "คำสั่งซื้อนี้ได้รับการคืนเงินแล้ว รายงานจึงไม่สามารถเปิดได้อีก โปรดติดต่อเราหากไม่ได้คาดไว้"],
 };
+
+/** Button on a report whose payment failed or expired: reopens checkout for the same project and plan. */
+export const retryPayment: Record<Locale, string> = {
+  en: "Try payment again",
+  uk: "Спробувати оплатити ще раз",
+  pl: "Spróbuj zapłacić ponownie",
+  de: "Zahlung erneut versuchen",
+  fr: "Réessayer le paiement",
+  it: "Riprova il pagamento",
+  es: "Reintentar el pago",
+  pt: "Tentar o pagamento novamente",
+  nl: "Betaling opnieuw proberen",
+  cs: "Zkusit platbu znovu",
+  sk: "Skúsiť platbu znova",
+  hu: "Fizetés újrapróbálása",
+  ro: "Încercați din nou plata",
+  bg: "Опитайте плащането отново",
+  sr: "Покушајте плаћање поново",
+  el: "Δοκιμάστε ξανά την πληρωμή",
+  tr: "Ödemeyi yeniden dene",
+  lt: "Bandyti mokėti dar kartą",
+  lv: "Mēģināt maksāt vēlreiz",
+  et: "Proovi makset uuesti",
+  da: "Prøv betalingen igen",
+  sv: "Försök betala igen",
+  fi: "Yritä maksua uudelleen",
+  vi: "Thử thanh toán lại",
+  th: "ลองชำระเงินอีกครั้ง",
+};

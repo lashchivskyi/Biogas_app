@@ -7,11 +7,13 @@ import { decisionCopy } from "@/i18n/decision";
 import { ResultView, type ResultViewProps } from "@/components/ResultView";
 import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { ReportPending } from "@/components/payments/ReportPending";
+import { UnlockButton } from "@/components/payments/Checkout";
+import { paymentsMode } from "@/server/payments/providers";
 import { assess } from "@/core";
 import { getCountry } from "@/countries";
 import { countryName, fmt, getDictionary, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
-import { deliveryCopy } from "@/i18n/delivery";
+import { deliveryCopy, retryPayment } from "@/i18n/delivery";
 import { orders } from "@/server/orders";
 import { refreshOrder } from "@/server/payments/service";
 
@@ -36,7 +38,8 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
       <main>
         <PageHero eyebrow={d.report.eyebrow} title={d.labels.business[order.input.businessType].label} lead={countryName(order.input.countryCode, locale)} />
         <div className="container-x max-w-3xl py-12">
-          <ReportPending token={token} t={d.report} refunded={{ title: deliveryCopy[locale][5], text: deliveryCopy[locale][6] }} initialStatus={order.status} pricingHref={`/${locale}/pricing`} />
+          <ReportPending token={token} t={d.report} refunded={{ title: deliveryCopy[locale][5], text: deliveryCopy[locale][6] }} initialStatus={order.status} pricingHref={`/${locale}/pricing`}
+            retry={<UnlockButton input={order.input} locale={locale} d={d} demo={paymentsMode().demo} plan={order.plan === "standard" ? "standard" : "report"} label={retryPayment[locale]} className="btn btn-primary mt-5" />} />
         </div>
       </main>
     );

@@ -87,6 +87,35 @@ const panel: Record<Locale, Panel> = {
   th: ["ตัวเลขเหล่านี้เชื่อถือได้แค่ไหน", "{score}/100 แสดงว่าผลลัพธ์อิงข้อมูลของคุณเองมากเพียงใดแทนค่าทั่วไป ไม่ใช่คะแนนของโครงการ", "ข้อมูลที่คุณเพิ่มได้", "เมื่อเพิ่มครบ: สูงสุด {n}/100", "ข้อจำกัดฝั่งเรา", "มาจากข้อมูลราคาและต้นทุนของประเทศหรือขอบเขตของการคัดกรอง ไม่ได้มาจากโครงการของคุณ เราปรับปรุงข้อมูลเหล่านี้อยู่เสมอ", "คุณกรอกข้อมูลครบทุกอย่างที่การคัดกรองนี้ใช้ได้แล้ว", "ระดับสูงต้องมีผลแล็บและเอกสารโครงการที่ตรวจสอบแล้ว การคัดกรองจึงหยุดที่ {max}/100", "ได้ผลมากที่สุด"],
 };
 
+/** Heading of the short list of fields a customer must add before the verdict stops being INSUFFICIENT_DATA. */
+export const minimumForVerdict: Record<Locale, string> = {
+  en: "Minimum needed for a conclusion — add at least:",
+  uk: "Мінімум для висновку — додайте щонайменше:",
+  pl: "Minimum potrzebne do wniosku — uzupełnij co najmniej:",
+  de: "Mindestens nötig für ein Ergebnis — bitte ergänzen:",
+  fr: "Minimum requis pour une conclusion — ajoutez au moins :",
+  it: "Minimo necessario per una conclusione — aggiungete almeno:",
+  es: "Mínimo necesario para una conclusión — añada al menos:",
+  pt: "Mínimo necessário para uma conclusão — adicione pelo menos:",
+  nl: "Minimaal nodig voor een conclusie — vul minstens aan:",
+  cs: "Minimum pro závěr — doplňte alespoň:",
+  sk: "Minimum pre záver — doplňte aspoň:",
+  hu: "A következtetéshez szükséges minimum — adja meg legalább:",
+  ro: "Minimul necesar pentru o concluzie — adăugați cel puțin:",
+  bg: "Минимум за извод — добавете поне:",
+  sr: "Минимум за закључак — додајте најмање:",
+  el: "Ελάχιστο για συμπέρασμα — προσθέστε τουλάχιστον:",
+  tr: "Sonuç için gereken en az bilgi — en azından şunu ekleyin:",
+  lt: "Minimumas išvadai — pridėkite bent:",
+  lv: "Minimums secinājumam — pievienojiet vismaz:",
+  et: "Järelduseks vajalik miinimum — lisage vähemalt:",
+  da: "Minimum for en konklusion — tilføj mindst:",
+  sv: "Minimum för en slutsats — lägg till minst:",
+  fi: "Johtopäätökseen tarvittava vähimmäismäärä — lisää vähintään:",
+  vi: "Tối thiểu để có kết luận — hãy bổ sung ít nhất:",
+  th: "ขั้นต่ำที่ต้องมีเพื่อสรุปผล — โปรดเพิ่มอย่างน้อย:",
+};
+
 export function qualityPanelCopy(locale: Locale) {
   const [title, lead, client, reach, model, modelNote, done, ceiling, biggest] = panel[locale];
   return { title, lead, client, reach, model, modelNote, done, ceiling, biggest };

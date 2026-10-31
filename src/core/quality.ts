@@ -122,3 +122,18 @@ export function assessQuality(
   q.level = levelOf(q.score, measuredFeedstock);
   return q;
 }
+
+/**
+ * Fewest customer-fillable gaps that lift the verdict score to `gate`, biggest first. Empty when the gate is met;
+ * every fillable gap when even all of them are not enough (the caller then states what is still missing).
+ */
+export function minimumGapsForVerdict(factors: QualityFactor[], clientScore: number, gate: number): QualityGapId[] {
+  let deficit = gate - clientScore;
+  const picked: QualityGapId[] = [];
+  for (const f of factors.filter((x) => x.owner === "client" && x.gap).sort((x, y) => y.points - x.points)) {
+    if (deficit <= 0) break;
+    picked.push(f.gap!);
+    deficit -= f.points;
+  }
+  return picked;
+}

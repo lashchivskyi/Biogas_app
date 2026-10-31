@@ -1,7 +1,7 @@
 import { ProcessReport } from "./ProcessReport";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { marketBandsFor, SAFETY_DISCLAIMER } from "@/core";
+import { marketBandsFor, minimumGapsForVerdict, SAFETY_DISCLAIMER, VERDICT_MIN_SCORE } from "@/core";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
@@ -13,7 +13,7 @@ import { evidenceRequest } from "@/lib/evidence";
 import { CopyButton } from "./CopyButton";
 import fieldCheck from "@/countries/data/backtest-summary.json";
 import { climateCopy } from "@/i18n/climate";
-import { qualityGapCopy } from "@/i18n/quality";
+import { minimumForVerdict, qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
 import { COUNTRIES } from "@/countries";
 import { CashFlowChart, ScoreBar, Tornado } from "./Charts";
@@ -157,6 +157,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
   const paybackSorted = [...r.paybackYears].sort((x, y) => (x ?? Infinity) - (y ?? Infinity));
   const driver = keyDriver(a);
   const qualityGaps = qualityGapCopy(locale, d, currency);
+  const minimumGaps = a.verdict.id === "INSUFFICIENT_DATA" && a.confidence.factors ? minimumGapsForVerdict(a.confidence.factors, a.confidence.clientScore ?? a.confidence.score, VERDICT_MIN_SCORE) : [];
   const full = access !== "free";
 
   return (
@@ -179,6 +180,12 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
           <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm">
             <div className="font-semibold">{R.whatWouldChange}</div>
             <ul lang={a.lang} className="mt-1 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
+          </div>
+        )}
+        {minimumGaps.length > 0 && (
+          <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm" role="note">
+            <div className="font-semibold">{minimumForVerdict[locale]}</div>
+            <ul className="mt-1 list-disc space-y-1 pl-5">{minimumGaps.map((id) => <li key={id}>{qualityGaps[id]}</li>)}</ul>
           </div>
         )}
         <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
@@ -301,7 +308,7 @@ function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result
           return (
             <li key={m.id} className="flex flex-col gap-0.5 border-t border-line pt-2 first:border-0 first:pt-0">
               <span><b className="num">{F.n0(m.lowEurPerKw * F.exchangeRate)}–{F.n0(m.highEurPerKw * F.exchangeRate)} {F.currency}/kW</b> — {marketLabel(locale, m.id) ?? m.label} · <span className={pos === R.inRange ? "text-good" : "text-warn"}>{pos}</span></span>
-              <span className="text-xs text-muted"><span lang="uk">{m.source}</span> · {m.year} · {marketQuality(locale, m.quality) ?? m.quality}</span>
+              <span className="text-xs text-muted"><span lang={locale === "uk" ? "uk" : "en"}>{locale === "uk" ? m.source : m.sourceEn}</span> · {m.year} · {marketQuality(locale, m.quality) ?? m.quality}</span>
             </li>
           );
         })}

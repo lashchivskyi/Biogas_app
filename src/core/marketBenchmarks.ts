@@ -12,7 +12,9 @@ export interface MarketBand {
   feed: "manure" | "waste" | "any";
   lowEurPerKw: number;
   highEurPerKw: number;
+  /** Ukrainian text; `sourceEn` is shown in every other language. */
   source: string;
+  sourceEn: string;
   quality: "official study" | "trade press" | "vendor" | "single project";
   year: string;
 }
@@ -22,30 +24,35 @@ export const MARKET_BANDS: MarketBand[] = [
     id: "de_small_manure", label: "Малі гнойові установки < 100 кВт (Німеччина)", minKw: 0, maxKw: 100, feed: "manure",
     lowEurPerKw: 6500, highEurPerKw: 10000,
     source: "Fachverband Biogas (через biomasse-nutzung.de); C.A.R.M.E.N. e.V. (оновлено 2025): «до 10 000 €/кВт реалістично»; LWK Niedersachsen: 75 кВт ≈ €0,5–0,75 млн (≈2014)",
+    sourceEn: "Fachverband Biogas (via biomasse-nutzung.de); C.A.R.M.E.N. e.V. (updated 2025): \"up to €10,000/kW is realistic\"; LWK Niedersachsen: 75 kW ≈ €0.5–0.75 m (≈2014)",
     quality: "trade press", year: "2014–2025",
   },
   {
     id: "task37_manure_200", label: "200 кВт лише на гною ВРХ (IEA Task 37)", minKw: 100, maxKw: 300, feed: "manure",
     lowEurPerKw: 8000, highEurPerKw: 10000,
     source: "IEA Bioenergy Task 37, презентація P. Kornatz (DBFZ): ≈ €1,81 млн за 200 кВт",
+    sourceEn: "IEA Bioenergy Task 37, presentation by P. Kornatz (DBFZ): ≈ €1.81 m for 200 kW",
     quality: "single project", year: "≈2022–2023",
   },
   {
     id: "de_500_flex", label: "Нова установка 510 кВт (енергокультури + гній, гнучка, Німеччина)", minKw: 300, maxKw: 800, feed: "any",
     lowEurPerKw: 3400, highEurPerKw: 7500,
     source: "DBFZ / Fraunhofer IEE для BMWK (лютий 2024): 7 521 € на кВт номінальної (≈ 3 400 € на кВт встановленої) потужності",
+    sourceEn: "DBFZ / Fraunhofer IEE for BMWK (February 2024): €7,521 per kW rated (≈ €3,400 per kW installed) capacity",
     quality: "official study", year: "2023",
   },
   {
     id: "pl_500_1000", label: "Сільськогосподарські установки 0,5–1 МВт (Польща)", minKw: 400, maxKw: 1200, feed: "any",
     lowEurPerKw: 2800, highEurPerKw: 7000,
     source: "Польська галузева преса 2023–2024 (7–20 млн зл за 500 кВт; 12–16 млн зл за 1 МВт); IOŚ-PIB: ≈ 30 млн зл за 1 МВт",
+    sourceEn: "Polish trade press 2023–2024 (PLN 7–20 m for 500 kW; PLN 12–16 m for 1 MW); IOŚ-PIB: ≈ PLN 30 m for 1 MW",
     quality: "trade press", year: "2023–2024",
   },
   {
     id: "ua_1mw", label: "Біогазові установки ≈ 1 МВт (Україна)", minKw: 700, maxKw: 1500, feed: "any",
     lowEurPerKw: 3000, highEurPerKw: 4500,
     source: "Оцінка постачальника (Zorg Biogas, ≈ 3 500 €/кВт за 1 МВт — первинне джерело не знайдено); Ecodevelop 333 кВт ≈ €1,5 млн (давній проєкт)",
+    sourceEn: "Supplier estimate (Zorg Biogas, ≈ €3,500/kW at 1 MW — primary source not found); Ecodevelop 333 kW ≈ €1.5 m (older project)",
     quality: "vendor", year: "≈2013–2020",
   },
 ];
@@ -61,4 +68,5 @@ export const UPGRADING_BAND = {
   lowEurPerNm3h: 2500,
   highEurPerNm3h: 3500,
   source: "Огляди мембранних технологій (Frontiers in Chem. Eng. 2021; ResearchGate review 2020) та дані постачальників 2025–2026 для 250–700 Нм³/год",
+  sourceEn: "Membrane technology reviews (Frontiers in Chem. Eng. 2021; ResearchGate review 2020) and supplier data 2025–2026 for 250–700 Nm³/h",
 };

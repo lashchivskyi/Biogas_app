@@ -48,9 +48,9 @@ export function climateDistance(a: number[], b: number[]): number {
   return Math.sqrt(s / n);
 }
 
-export function climateSummary(region: Region) {
+export function climateSummary(region: Region, lang: "en" | "uk" = "uk") {
   const analogues = CLIMATE_BENCHMARKS.map((b) => ({
-    name: b.name,
+    name: lang === "uk" ? b.name : b.nameEn,
     distance: climateDistance(region.monthlyTempC, b.monthlyTempC),
     meanTempC: meanTemp(b.monthlyTempC),
   }))

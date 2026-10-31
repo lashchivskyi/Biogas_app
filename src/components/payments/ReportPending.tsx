@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { track } from "@/lib/analytics";
 
 /** Shown on a report whose payment is not confirmed yet (or was refunded); polls and refreshes the server page when paid. */
-export function ReportPending({ token, t, refunded, initialStatus, pricingHref }: {
+export function ReportPending({ token, t, refunded, initialStatus, pricingHref, retry }: {
   token: string; t: { pending: string; pendingText: string; failed: string; tryAgain: string };
   refunded: { title: string; text: string }; initialStatus: string; pricingHref: string;
+  /** Checkout button for the same project and plan; falls back to the pricing page. */
+  retry?: ReactNode;
 }) {
   const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
@@ -50,7 +52,8 @@ export function ReportPending({ token, t, refunded, initialStatus, pricingHref }
     <div className={`rounded-3xl p-6 sm:p-8 ${failed ? "bg-red-50 text-red-900" : "bg-amber-50 text-amber-950"}`} role="status" aria-live="polite">
       <h2 className="font-display text-2xl font-semibold">{failed ? t.failed : t.pending}</h2>
       {!failed && <p className="mt-2">{t.pendingText}</p>}
-      {failed && <Link href={pricingHref} className="btn btn-primary mt-5">{t.tryAgain}</Link>}
+      {failed && (retry ?? <Link href={pricingHref} className="btn btn-primary mt-5">{t.tryAgain}</Link>)}
+      {failed && retry && <div className="mt-3"><Link href={pricingHref} className="text-sm font-semibold underline underline-offset-4">{t.tryAgain}</Link></div>}
     </div>
   );
 }

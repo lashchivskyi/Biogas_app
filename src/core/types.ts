@@ -465,7 +465,7 @@ export interface Assessment {
   /** Sensitivity ids that hurt NPV most — what to verify first. */
   drivers: string[];
   /** `factors` is absent on reports saved before the split into client/model deductions. */
-  confidence: { level: Confidence; score: number; reasons: string[]; factors?: QualityFactor[] };
+  confidence: { level: Confidence; score: number; /** Score the verdict gate uses (model-side gaps excluded). */ clientScore?: number; reasons: string[]; factors?: QualityFactor[] };
   missingData: string[];
   /** Stable message IDs for localisation; same order as missingData. */
   missingDataCodes: QualityGapId[];
