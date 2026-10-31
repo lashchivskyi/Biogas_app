@@ -44,7 +44,7 @@ export function latinHypercube(n: number, dims: number, seed = 20261031): number
 }
 
 /** Numeric scenario fields that are sampled; the order is the hypercube dimension order. */
-export const SAMPLED_FIELDS = ["yieldBlend", "processRealisation", "capexMult", "opexMult", "energyPriceMult", "heatUtilisation", "chpHours", "leakShare", "digestateValueFactor", "disposalRealisation", "feedstockAvailability"] as const;
+export const SAMPLED_FIELDS = ["yieldBlend", "processRealisation", "capexMult", "opexMult", "energyPriceMult", "heatUtilisation", "chpHours", "leakShare", "digestateValueFactor", "disposalRealisation", "feedstockAvailability", "ensilingLoss"] as const;
 
 /** Hypercube dimensions: the scenario fields, then the catalogue-solids and lab-BMP quantiles. */
 export const MC_DIMS = SAMPLED_FIELDS.length + 2;

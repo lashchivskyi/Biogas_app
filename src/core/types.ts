@@ -228,6 +228,8 @@ export interface FeedstockLineResult {
   purchaseCostEurYear: number; // negative = income (gate fee)
   disposalSavingEurYear: number;
   opportunityCostEurYear: number;
+  /** Ensiled crops: harvested fresh mass put into the clamp (tonnesYear is what reaches the digester after ensiling loss). */
+  ensiledTonnesYear?: number;
   category: "manure" | "processing" | "other";
   warnings: string[];
 }
@@ -252,6 +254,8 @@ export interface FeedstockSummary {
   /** Share of VS from streams that are fat/grease themselves (grease-trap fat, DAF sludge), not merely fat-containing residues. */
   fatDominantShareVs: number;
   abpTonnesYear: number;
+  /** Harvested fresh mass of ensiled crops a year; sizes the clamp silo. */
+  ensiledTonnesYear?: number;
   inhibitionFactor: number;
   warnings: string[];
 }

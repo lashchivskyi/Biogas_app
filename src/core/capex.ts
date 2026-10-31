@@ -80,6 +80,8 @@ export function buildCapex(
   const dirtyTpa = feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("contaminants") && l.category === "processing").reduce((a, l) => a + l.tonnesYear, 0);
   if (dirtyTpa > 0) feedEur += p.get("eng.capex.pretreatment_eur_per_tpa") * dirtyTpa;
   add("feed", T("Feeding, reception and pre-treatment", "Подача, приймання, підготовка сировини"), feedEur);
+  // A crop harvested once a year is stored whole: the clamp holds the full annual harvest.
+  if ((feed.ensiledTonnesYear ?? 0) > 0) add("silage_clamp", T("Bunker silo (clamp) for the annual crop harvest", "Силосна траншея для річного врожаю"), (feed.ensiledTonnesYear! * 1000 / p.get("eng.silage_density_kg_m3")) * p.get("eng.capex.silage_clamp_eur_m3"));
 
   // Pasteurisation for ABP
   if (feed.abpTonnesYear > 0) {

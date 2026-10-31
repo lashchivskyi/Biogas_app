@@ -1,6 +1,7 @@
 import type { CountryAdapter, Region } from "@/core/country";
 import { prov } from "@/core/params";
 import { regionsFor } from "./build";
+import { dairyManure } from "./profiles";
 import { regulatoryFor } from "./regulatory";
 import { type Sourced, capexFactorFor, discountFor, electricityFor, spotFor, fertiliserFor, fxFor, gasFor, gridEfFor, labourOfficialFor } from "./sources";
 import { ENGINEERING_MAP } from "@/core/engineeringParams";
@@ -67,6 +68,11 @@ export const UA_PARAMS = [
   prov("econ.digestate_handling_eur_t", "Incremental digestate handling on adequate land", 1.6, "EUR/t", "CALCULATION", "1.2 €/t machinery + 0.08 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   prov("econ.digestate_excess_eur_t", "Digestate that has no adequate land", 3.6, "EUR/t", "CALCULATION", "2.5 €/t + 0.22 h/t × 4.9 €/h labour (same formula as every market)", "MEDIUM", { country: "UA", date: DATA_REVIEW_AS_OF }),
   src("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor("UA"), "tCO₂/MWh"),
+  ...((m) => [
+    prov("eng.animal.dairy_cow.t_head_year", "Manure as excreted per dairy cow and year", m.tonnesHeadYear, "t/head·a", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
+    prov("eng.animal.dairy_cow.dm_pct", "Dry matter of dairy cow manure as excreted", m.dryMatterPct, "% FM", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
+    prov("eng.animal.dairy_cow.vs_pct_dm", "Volatile solids of dairy cow manure", m.vsPctOfDm, "% DM", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
+  ])(dairyManure(4.5, "Eastern Europe").dairy_cow),
 ];
 
 export const UA: CountryAdapter = {

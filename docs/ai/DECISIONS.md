@@ -76,6 +76,14 @@ replace the line rather than adding a contradicting one.
   without better evidence. Scale is answered by the plant-size table instead.
 - 2026-10-31 — National manure per head lives in country profiles (`manure`); US dairy uses NRCS AWMFH ch. 4 /
   ASAE D384.2 because the AgSTAR back-test showed the EU-style catalogue at half of reported US output.
+- 2026-10-31 — European dairy cows (22 profiles + UA) excrete the IPCC 2006 Table 10A-4 VS (W. Europe 5.1, E. Europe
+  4.5 kg/d) in the DüV volume of 20 m³/a (DM 11.6 / 10.3 %); was 3.7 kg/d. Other cattle and swine stay on the catalogue:
+  the US swine back-test (0.80, n = 12) argues against IPCC's 0.30 kg/d for market swine. Not tuned to a verdict: the
+  8 changed verdicts are a US-size herd placed in Europe.
+- 2026-10-31 — Energy crops (`energy_crop`): the entered quantity is the harvested mass into the clamp; purchase and
+  haulage are paid on it, DM loss 9.3 % base / 12 % cons. / 8 % opt. (KTBL 2021 Tab. 1) reduces what is digested,
+  nutrients stay. A clamp holding the full annual harvest is costed at 60 €/m³ (LfL 2015/16 escalated; fee tables are
+  the upper check) and 780 kg FM/m³ (LfL). Checked against the BMWK/IEE/DBFZ 510 kW reference (`scripts/benchmark.ts`): CAPEX +15 % vs the 2023–2026 range, cost per kWh 5–12 % below it, reference scope (silo, storage) undisclosed → not retuned.
 - 2026-10-31 — Climate case uses RED Annex VI default values only (no actual-value calculation, no carbon price);
   credits are valued only inside support cases with an official mechanism (US RIN/LCFS). Heat in CHP is allocated by
   the RED Carnot share at 150 °C.
@@ -107,6 +115,9 @@ replace the line rather than adding a contradicting one.
   storage, sourced tipping fees/surcharges); each lever is named in the case text. No market or
   model parameter was changed for them. — Owner asked for more realistic, less pessimistic samples.
 
+- 2026-10-31 — "What to verify first" items carry steps, a request pre-filled with the screening design basis (lab,
+  suppliers, power/heat/biomethane buyers) and the calculator field for the answer; the client re-runs the report with
+  the evidence. Paid reports only (EVPI is). Texts in en/uk, English elsewhere.
 - 2026-10-31 — Excel export (in-browser XLSX, no dependency) is a paid-report feature: standard plan gets base
   case, CAPEX/OPEX and assumptions; full plan adds scenarios, routes, sensitivities, support cases. Not in the
   free calculator. Money in EUR with the FX row; labels follow the model language (en/uk).

@@ -19,10 +19,23 @@ const EU_BM: [number, number, number] = [0.4, 0.55, 0.8];
 const EU_BM_NEW: [number, number, number] = [0.35, 0.5, 0.75];
 const NO_GRID_BM: [number, number, number] = [0.3, 0.4, 0.55];
 
+/**
+ * European dairy-cow manure: slurry volume per DüV Anlage 9 Tab. 1 (20 m³ ≈ 20 t a year at 8 000 kg milk) with the dry
+ * matter set so that volatile solids match the IPCC 2006 regional default. The catalogue's 8.5 % DM gave 3.7 kg VS per
+ * cow and day, 27 % below the Western and 18 % below the Eastern European default.
+ */
+export const dairyManure = (vsKgDay: number, region: string) => ({
+  dairy_cow: { tonnesHeadYear: 20, dryMatterPct: +(vsKgDay * 365 / (20 * 1000 * 0.8) * 100).toFixed(1), vsPctOfDm: 80, confidence: "MEDIUM" as const, date: "2006-12-31",
+    source: `IPCC 2006 GL Vol. 4 Table 10A-4, ${region}: ${vsKgDay} kg VS/cow·d (600 kg cow, older herd yields: a floor for today's cows); volume 20 m³/a per DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (Nov 2024, 8 000 kg milk); DM = VS ÷ (volume × 80 % VS of DM)` },
+});
+const MANURE_WEST = dairyManure(5.1, "Western Europe");
+const MANURE_EAST = dairyManure(4.5, "Eastern Europe");
+
 export const PROFILES: CountryProfile[] = [
   // ---------------- Central & Eastern Europe ----------------
   {
     code: "PL", name: "Poland", currency: "PLN", fx: 4.25, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.19, exp: 0.1, gas: 50, labour: 12, capex: 0.9, disc: 0.085, debtRate: 0.07, tkm: 0.12, bm: EU_BM_NEW, fertN: 1.15, ef: 0.65,
     regions: [region("wielkopolskie", "Wielkopolska", [-0.9, 0.2, 3.8, 9.3, 14.3, 17.6, 19.7, 19.2, 14.4, 9.2, 4.3, 0.6], { pl: "Wielkopolskie" }), region("podkarpackie", "Podkarpackie (Rzeszów)", [-1.8, -0.6, 3.3, 9.5, 14.4, 17.9, 19.7, 19.2, 14.1, 8.9, 3.9, -0.4], { pl: "Podkarpackie" })],
     support: sup("Small agricultural biogas CHP ≤ 1 MW can still enter FIT/FIP until 31.12.2027 (15 years); biomethane FIP for ≤ 1 MWe-eq.; auctions for larger biomethane plants from 2027.", "Мала агробіогазова КГУ ≤ 1 МВт ще може увійти у FIT/FIP до 31.12.2027 (15 років); FIP для біометану ≤ 1 МВт ел.-екв.; аукціони для більших біометанових станцій — з 2027 р.", [
@@ -33,6 +46,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "CZ", name: "Czechia", currency: "CZK", fx: 24.5, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.18, exp: 0.09, gas: 48, labour: 13, capex: 0.9, disc: 0.08, debtRate: 0.065, tkm: 0.12, bm: EU_BM, fertN: 1.15, ef: 0.45,
     regions: [region("vysocina", "Vysočina", [-2.5, -1.5, 2.0, 7.5, 12.5, 15.8, 17.6, 17.2, 12.8, 7.8, 2.8, -1.2], { cs: "Vysočina" }), region("praha", "Central Bohemia (Prague)", [0.0, 1.2, 4.9, 10.2, 14.6, 18.2, 20.1, 19.7, 14.7, 9.6, 4.5, 1.2], { cs: "Středočeský kraj" })],
     support: none("No operating support for new biogas CHP. New biomethane plants bid in MPO auctions (top-up to the bid price; first round awarded 8 Sep 2026, commissioning by 31.12.2029); award prices are not published in a form we could verify, so no value is modelled.", "Операційної підтримки нових біогазових КГУ немає. Нові біометанові станції беруть участь в аукціонах MPO (доплата до ціни заявки; перший раунд — 08.09.2026, запуск до 31.12.2029); ціни перемог не вдалося перевірити в офіційному джерелі, тож значення не моделюється."),
@@ -40,6 +54,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "SK", name: "Slovakia", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.19, exp: 0.09, gas: 50, labour: 12, capex: 0.9, disc: 0.085, debtRate: 0.065, tkm: 0.12, bm: EU_BM_NEW, fertN: 1.15, ef: 0.12,
     regions: [region("nitra", "Nitra region", [-1.0, 1.0, 5.5, 11.5, 16.5, 20.0, 21.8, 21.3, 16.3, 10.8, 5.2, 0.2], { sk: "Nitriansky kraj" })],
     support: sup("New biogas CHP ≤ 500 kW receives a regulated top-up price from ÚRSO (≈ €165/MWh in 2026, manure-based). No operating support for biomethane yet.", "Нові біогазові КГУ ≤ 500 кВт отримують регульовану доплату від ÚRSO (≈ €165/МВт·год у 2026 р., на гною). Операційної підтримки біометану ще немає.", [
@@ -49,6 +64,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "HU", name: "Hungary", currency: "HUF", fx: 395, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.16, exp: 0.1, gas: 48, labour: 10, capex: 0.88, disc: 0.095, debtRate: 0.08, tkm: 0.11, bm: EU_BM_NEW, fertN: 1.1, ef: 0.2,
     regions: [region("alfold", "Great Plain (Alföld)", [-0.5, 1.5, 6.5, 12.3, 17.3, 20.8, 22.8, 22.4, 17.2, 11.5, 5.6, 1.0], { hu: "Alföld" })],
     support: sup("The HUF 40 bn biogas/biomethane grant call (45–65 %) is closed and oversubscribed; no new call announced and no open operating tariff for new small plants confirmed.", "Грантовий конкурс HUF 40 млрд на біогаз/біометан закрито з перевищенням попиту; нового не оголошено, відкритого тарифу для нових малих станцій не підтверджено.", [
@@ -58,6 +74,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "RO", name: "Romania", currency: "RON", fx: 5.05, tier: "B", regime: "EU", inj: false,
+    manure: MANURE_EAST,
     elec: 0.18, exp: 0.1, gas: 45, labour: 9, capex: 0.85, disc: 0.1, debtRate: 0.085, tkm: 0.1, bm: NO_GRID_BM, fertN: 1.05, ef: 0.25,
     regions: [region("baragan", "Bărăgan / Muntenia", [-1.5, 0.6, 5.5, 11.8, 17.3, 21.2, 23.2, 22.7, 17.4, 11.3, 5.3, 0.4], { ro: "Muntenia" }), region("transilvania", "Transylvania (Cluj)", [-3.0, -1.0, 3.8, 9.5, 14.5, 17.8, 19.5, 19.2, 14.6, 9.3, 3.8, -1.3], { ro: "Transilvania" })],
     support: none("No support open for new biogas or biomethane: the PNRR manure-biogas scheme ended in June 2026; OUG 9/2026 only enables future biomethane aid schemes.", "Відкритої підтримки нового біогазу чи біометану немає: схема PNRR для гнойового біогазу закінчилася в червні 2026 р.; OUG 9/2026 лише дозволяє майбутні схеми для біометану."),
@@ -65,6 +82,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "MD", name: "Moldova", currency: "MDL", fx: 19.5, tier: "C", regime: "GENERIC", inj: false,
+    manure: MANURE_EAST,
     elec: 0.15, exp: 0.1, gas: 50, labour: 4, capex: 0.82, disc: 0.13, debtRate: 0.1, tkm: 0.1, bm: NO_GRID_BM, fertN: 1.0, ef: 0.45,
     regions: [region("chisinau", "Central Moldova", [-2.5, -1.2, 3.7, 10.5, 16.2, 20.0, 22.0, 21.4, 16.2, 10.0, 4.3, -0.8], { ro: "Centrul Moldovei" })],
     support: sup("Moldova keeps a fixed biogas tariff (2.37 MDL ≈ €0.12/kWh, 15 years) for small producers; the biogas quota is largely unused (7 MW built of 65 MW).", "Молдова зберігає фіксований тариф для малого біогазу (≈ €0,11–0,12/кВт·год, 15 років); квота для біогазу майже не використана (збудовано 7 МВт із 65 МВт).", [
@@ -74,6 +92,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "BG", name: "Bulgaria", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: false,
+    manure: MANURE_EAST,
     elec: 0.15, exp: 0.1, gas: 45, labour: 7, capex: 0.82, disc: 0.095, debtRate: 0.075, tkm: 0.1, bm: NO_GRID_BM, fertN: 1.05, ef: 0.4,
     regions: [region("danube", "Danube plain (Pleven)", [-0.8, 1.5, 6.5, 12.5, 17.5, 21.5, 23.8, 23.3, 18.3, 12.2, 6.0, 1.0], { bg: "Дунавска равнина" })],
     support: none("No operating support for new biogas: KEVR sets new feed-in prices only for rooftop PV ≤ 30 kW; biogas prices apply to existing plants only.", "Операційної підтримки нового біогазу немає: КЕВР встановлює нові тарифи лише для дахових СЕС ≤ 30 кВт; ціни на біогаз діють лише для наявних станцій."),
@@ -81,6 +100,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "RS", name: "Serbia", currency: "RSD", fx: 117, tier: "B", regime: "GENERIC", inj: false,
+    manure: MANURE_EAST,
     elec: 0.11, exp: 0.09, gas: 45, labour: 7, capex: 0.82, disc: 0.11, debtRate: 0.08, tkm: 0.1, bm: NO_GRID_BM, fertN: 1.0, ef: 0.7,
     regions: [region("vojvodina", "Vojvodina", [0.0, 2.0, 6.8, 12.3, 17.3, 20.8, 22.6, 22.3, 17.3, 11.9, 6.4, 1.5], { sr: "Vojvodina" })],
     support: none("The law allows a feed-in tariff for biogas < 500 kW and market premiums, but only through quota auctions; no biogas quota or auction is open.", "Закон дозволяє тариф для біогазу < 500 кВт і ринкові премії, але лише через квотні аукціони; квоти чи аукціону для біогазу немає."),
@@ -88,6 +108,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "GR", name: "Greece", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: false,
+    manure: MANURE_WEST,
     elec: 0.16, exp: 0.1, gas: 50, labour: 14, capex: 0.92, disc: 0.09, debtRate: 0.07, tkm: 0.12, bm: NO_GRID_BM, fertN: 1.1, ef: 0.35,
     regions: [region("thessaly", "Thessaly (Larissa)", [5.5, 7.0, 10.0, 14.5, 20.0, 25.0, 28.0, 27.5, 22.5, 16.8, 11.0, 6.8], { el: "Θεσσαλία" })],
     support: none("Biogas FiP/FiT under Law 4414/2016 served earlier plants; access for new plants after 2025 is unconfirmed; biomethane support is still a draft.", "FiP/FiT для біогазу за законом 4414/2016 діяв для попередніх станцій; доступ нових після 2025 р. не підтверджено; підтримка біометану — лише проєкт."),
@@ -105,6 +126,7 @@ export const PROFILES: CountryProfile[] = [
   // ---------------- Baltics & Nordics ----------------
   {
     code: "LT", name: "Lithuania", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.16, exp: 0.09, gas: 45, labour: 12, capex: 0.9, disc: 0.085, debtRate: 0.065, tkm: 0.12, bm: EU_BM_NEW, fertN: 1.15, ef: 0.15,
     regions: [region("kaunas", "Central Lithuania (Kaunas)", [-3.5, -3.0, 0.8, 7.4, 13.0, 16.3, 18.6, 17.6, 12.8, 7.3, 2.3, -1.6], { lt: "Vidurio Lietuva" })],
     support: none("No open support for new biogas or biomethane found; the 2022 biomethane investment call is closed and policy now targets demand.", "Відкритої підтримки нового біогазу чи біометану не знайдено; інвестиційний конкурс 2022 р. закрито, політика спрямована на попит."),
@@ -112,6 +134,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "LV", name: "Latvia", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.16, exp: 0.09, gas: 45, labour: 11, capex: 0.9, disc: 0.085, debtRate: 0.065, tkm: 0.12, bm: EU_BM_NEW, fertN: 1.15, ef: 0.1,
     regions: [region("zemgale", "Zemgale (Jelgava)", [-3.1, -3.0, 0.6, 6.9, 12.6, 16.1, 18.5, 17.6, 12.9, 7.4, 2.4, -1.3], { lv: "Zemgale" })],
     support: sup("Biomethane-only ALTUM loan with a capital rebate (≈ 50 % of principal, ≤ €4.2 m) is fully booked; no operating support for new small CHP.", "Позика ALTUM лише для біометану зі списанням (≈ 50 % тіла, ≤ €4,2 млн) — кошти повністю зарезервовано; операційної підтримки нових малих КГУ немає.", [
@@ -121,6 +144,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "EE", name: "Estonia", currency: "EUR", fx: 1, tier: "B", regime: "EU", inj: true,
+    manure: MANURE_EAST,
     elec: 0.14, exp: 0.09, gas: 45, labour: 14, capex: 0.92, disc: 0.08, debtRate: 0.065, tkm: 0.12, bm: EU_BM_NEW, fertN: 1.15, ef: 0.6,
     regions: [region("tartu", "Southern Estonia (Tartu)", [-4.6, -4.9, -1.0, 5.5, 11.6, 15.3, 18.0, 16.7, 11.8, 6.2, 1.0, -2.6], { et: "Lõuna-Eesti" })],
     support: none("No open support for new biogas plants; the 2024 biomethane grant (60 %) is closed and 2026 aid funds only a grid injection point.", "Відкритої підтримки нових біогазових станцій немає; грант 2024 р. на біометан (60 %) закрито, у 2026 р. фінансується лише точка подачі в мережу."),
@@ -128,6 +152,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "DK", name: "Denmark", currency: "DKK", fx: 7.46, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.12, exp: 0.07, gas: 45, labour: 38, capex: 1.08, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: EU_BM, fertN: 1.2, ef: 0.12,
     regions: [region("jutland", "Jutland (Herning)", [1.2, 1.0, 3.0, 6.9, 11.0, 14.1, 16.6, 16.5, 13.2, 9.3, 5.3, 2.4], { da: "Jylland" })],
     support: none("Legacy biogas premiums closed to new plants since 2020; the EU-approved green-gas tender (20-year premium) has not been held, so there is no route for new small plants.", "Старі премії на біогаз закриті для нових станцій з 2020 р.; схвалений ЄС тендер на зелений газ (20-річна премія) ще не проведено, тож шляху для нових малих станцій немає."),
@@ -135,6 +160,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     bmOverride: true, code: "SE", name: "Sweden", currency: "SEK", fx: 11.3, tier: "A", regime: "EU", inj: false,
+    manure: MANURE_WEST,
     elec: 0.09, exp: 0.04, gas: 50, labour: 32, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: [0.5, 0.65, 0.85], fertN: 1.2, ef: 0.03,
     regions: [region("skane", "Skåne", [1.4, 1.3, 3.3, 7.2, 11.5, 15.0, 17.6, 17.3, 13.9, 9.6, 5.6, 2.6], { sv: "Skåne" })],
     support: sup("Annual production premium for manure biogas and upgrading (budget-capped, pro-rated), plus competitive Klimatklivet investment grants for farm biogas.", "Щорічна премія за біогаз із гною та очищення (бюджет обмежений, виплата пропорційна) і конкурсні інвестиційні гранти Klimatklivet для фермерського біогазу.", [
@@ -145,6 +171,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     bmOverride: true, code: "FI", name: "Finland", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: false,
+    manure: MANURE_WEST,
     elec: 0.09, exp: 0.05, gas: 50, labour: 30, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: [0.5, 0.65, 0.85], fertN: 1.2, ef: 0.08,
     regions: [region("ostrobothnia", "Ostrobothnia (Seinäjoki)", [-7.0, -7.3, -3.3, 2.6, 9.3, 14.2, 16.9, 14.8, 9.6, 4.2, -0.6, -4.6], { fi: "Pohjanmaa", sv: "Österbotten" })],
     support: sup("Farms get a 50 % investment grant for biogas plants sized to own energy use (up to half may be sold); no operating tariff; larger biomethane relies on case-by-case energy aid.", "Ферми отримують інвестиційний грант 50 % на біогазові станції під власне споживання (до половини енергії можна продавати); тарифу немає; більший біометан — індивідуальна енергодопомога.", [
@@ -156,6 +183,7 @@ export const PROFILES: CountryProfile[] = [
   // ---------------- Western Europe ----------------
   {
     code: "DE", name: "Germany", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.21, exp: 0.08, gas: 50, labour: 30, capex: 1.0, disc: 0.065, debtRate: 0.05, tkm: 0.15, bm: EU_BM, fertN: 1.3, ef: 0.38,
     regions: [region("niedersachsen", "Lower Saxony", [1.5, 2.0, 5.0, 9.0, 13.3, 16.2, 18.3, 17.9, 14.3, 10.0, 5.5, 2.4], { de: "Niedersachsen" }), region("bayern", "Bavaria", [-0.2, 0.8, 4.8, 9.3, 13.6, 17.3, 19.2, 18.8, 14.2, 9.5, 4.1, 0.7], { de: "Bayern" }), region("sachsen", "Saxony", [0.8, 1.8, 5.2, 10.2, 14.4, 17.9, 19.8, 19.5, 14.8, 10.0, 5.2, 2.0], { de: "Sachsen" })],
     support: sup("Small manure plants ≤ 150 kW get a fixed EEG rate (≈ 20 ct/kWh, 20 years, ≥ 80 % manure); larger plants bid in tenders (2026 average award 18.5 ct/kWh) with a flexible-operation duty.", "Малі гнойові станції ≤ 150 кВт мають фіксований тариф EEG (≈ 20 ц/кВт·год, 20 років, ≥ 80 % гною); більші — тендери (середня ставка 2026 р. 18,5 ц/кВт·год) з обов'язком гнучкої роботи.", [
@@ -167,6 +195,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "AT", name: "Austria", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.18, exp: 0.09, gas: 48, labour: 29, capex: 1.0, disc: 0.065, debtRate: 0.05, tkm: 0.15, bm: EU_BM, fertN: 1.25, ef: 0.1,
     regions: [region("oberoesterreich", "Upper Austria", [-0.5, 1.0, 5.0, 9.8, 14.5, 17.8, 19.7, 19.2, 14.7, 9.5, 4.2, 0.6], { de: "Oberösterreich" })],
     support: sup("New off-grid biogas CHP ≤ 250 kW gets an EAG market premium up to 29.02 ct/kWh for 20 years, but only 1.5 MWel per year is available; the renewable-gas law is still stalled.", "Нова КГУ ≤ 250 кВт далеко від газомережі отримує ринкову премію EAG до 29,02 ц/кВт·год на 20 років, але лише 1,5 МВт ел. на рік; закон про відновлюваний газ досі не ухвалено.", [
@@ -176,6 +205,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "IT", name: "Italy", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.22, exp: 0.11, gas: 50, labour: 24, capex: 0.97, disc: 0.075, debtRate: 0.055, tkm: 0.14, bm: EU_BM, fertN: 1.25, ef: 0.27,
     regions: [region("lombardia", "Lombardy (Po valley)", [1.8, 4.0, 8.5, 12.8, 17.5, 21.8, 24.0, 23.4, 19.0, 13.5, 7.6, 2.8], { it: "Lombardia" }), region("emilia", "Emilia-Romagna", [2.5, 4.5, 8.8, 13.0, 17.8, 22.0, 24.5, 24.0, 19.5, 14.2, 8.3, 3.5], { it: "Emilia-Romagna" })],
     support: sup("Small farm biogas ≤ 300 kW: FER 2 tariff ≈ 226 €/MWh via annual rounds (next expected 2027). The PNRR biomethane incentive closed on 30.06.2026; a new decree is pending.", "Малий агробіогаз ≤ 300 кВт: тариф FER 2 ≈ 226 €/МВт·год через щорічні раунди (наступний очікується у 2027 р.). Стимул PNRR для біометану закрито 30.06.2026; новий декрет очікується.", [
@@ -186,6 +216,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "FR", name: "France", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.16, exp: 0.06, gas: 45, labour: 30, capex: 1.0, disc: 0.07, debtRate: 0.05, tkm: 0.15, bm: EU_BM, fertN: 1.2, ef: 0.05,
     regions: [region("bretagne", "Brittany", [5.8, 6.2, 8.6, 10.6, 14.0, 17.0, 19.0, 19.0, 16.5, 13.0, 9.0, 6.4], { fr: "Bretagne" }), region("grand-est", "Grand Est", [1.8, 2.8, 6.3, 9.8, 14.0, 17.4, 19.5, 19.1, 15.2, 10.7, 5.6, 2.6], { fr: "Grand Est" })],
     support: sup("Small biomethane injection tariff (≤ 13 GWh/yr, ≈ 1.1–1.25 €/Nm³) for complete requests filed by 31.12.2026; from 2027 new plants go through tenders or biogas production certificates.", "Тариф для малого біометану в мережу (≤ 13 ГВт·год/рік, ≈ 1,1–1,25 €/Нм³) для повних заявок, поданих до 31.12.2026; з 2027 р. — тендери або сертифікати виробництва біогазу.", [
@@ -195,6 +226,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "ES", name: "Spain", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.13, exp: 0.06, gas: 42, labour: 20, capex: 0.92, disc: 0.075, debtRate: 0.055, tkm: 0.13, bm: EU_BM_NEW, fertN: 1.15, ef: 0.15,
     regions: [region("cataluna", "Catalonia (Lleida)", [5.5, 7.5, 11.0, 13.5, 17.8, 22.3, 25.2, 24.7, 20.5, 15.3, 9.3, 5.6], { es: "Cataluña (Lleida)" }), region("castilla", "Castile and León", [3.5, 5.0, 8.0, 10.0, 13.8, 18.5, 21.6, 21.2, 17.5, 12.5, 7.3, 4.2], { es: "Castilla y León" })],
     support: none("No open support: IDAE biogas grants have no active call, and a biomethane quota (0.5 % in 2028 → 6 % in 2035) is still a draft decree.", "Відкритої підтримки немає: гранти IDAE на біогаз без активного конкурсу, квота біометану (0,5 % у 2028 р. → 6 % у 2035 р.) — лише проєкт декрету."),
@@ -202,6 +234,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "NL", name: "Netherlands", currency: "EUR", fx: 1, tier: "A", regime: "EU", inj: true,
+    manure: MANURE_WEST,
     elec: 0.16, exp: 0.08, gas: 45, labour: 32, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: EU_BM, fertN: 1.2, ef: 0.3,
     regions: [region("brabant", "North Brabant", [3.6, 4.0, 6.8, 10.0, 13.8, 16.6, 18.8, 18.4, 15.0, 11.0, 7.0, 4.2], { nl: "Noord-Brabant" })],
     support: sup("SDE++ 2026 is open (27 Oct – 26 Nov) with high base amounts for manure-only digestion, both green gas and CHP (12 years); competitive, a permit is required before applying.", "SDE++ 2026 відкрито (27.10–26.11) з високими базовими сумами для зброджування лише гною — зелений газ і КГУ (12 років); конкурс, дозвіл потрібен до подання.", [
@@ -212,6 +245,7 @@ export const PROFILES: CountryProfile[] = [
   },
   {
     code: "GB", name: "United Kingdom", currency: "GBP", fx: 0.86, tier: "A", regime: "UK", inj: true,
+    manure: MANURE_WEST,
     elec: 0.27, exp: 0.09, gas: 58, labour: 26, capex: 1.08, disc: 0.075, debtRate: 0.06, tkm: 0.16, bm: [0.45, 0.6, 0.8], fertN: 1.25, ef: 0.2,
     regions: [region("midlands", "West Midlands / Shropshire", [4.3, 4.5, 6.4, 8.5, 11.5, 14.4, 16.4, 16.1, 13.8, 10.5, 7.0, 4.6]), region("east-anglia", "East Anglia", [4.2, 4.5, 6.7, 9.0, 12.3, 15.3, 17.7, 17.6, 14.9, 11.3, 7.2, 4.6])],
     support: sup("GGSS pays 7.09 p/kWh (2026/27, Tier 1) for 15 years on injected biomethane (≥ 50 % waste feedstock); applications until March 2028, commissioning by March 2030; no CHP tariff for new plants.", "GGSS платить 7,09 п/кВт·год (2026/27, Tier 1) протягом 15 років за біометан у мережу (≥ 50 % відходів); заявки до березня 2028 р., запуск до березня 2030 р.; тарифу для нових КГУ немає.", [

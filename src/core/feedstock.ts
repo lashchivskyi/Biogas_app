@@ -68,15 +68,19 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (!(line.quantity > 0)) continue;
     const { typeDef: t, nutrientDm, tonnesBase, isAnimal } = resolveLine(line, params);
     const tonnes = tonnesBase * scenario.feedstockAvailability * mods.feedstock;
+    // Ensiled crops lose dry matter in the clamp: purchase and haulage are paid on the harvested mass, gas comes from what is
+    // left (nutrients stay in the silage). The digester is fed the remaining mass.
+    const ensiled = t.flags.includes("energy_crop");
+    const fed = ensiled ? tonnes * (1 - scenario.ensilingLoss) : tonnes;
     const dm = line.dryMatterPct ?? t.dryMatterPct;
     const months = isAnimal ? 12 : line.monthsActive ?? t.defaultMonths;
     const start = line.startMonth ?? t.defaultStartMonth;
     const act = activeMonths(months, start);
     const activeDays = act.reduce((acc, on, i) => acc + (on ? DAYS_IN_MONTH[i] : 0), 0) || 1;
-    const mt = act.map((on, i) => (on ? (tonnes * DAYS_IN_MONTH[i]) / activeDays : 0));
+    const mt = act.map((on, i) => (on ? (fed * DAYS_IN_MONTH[i]) / activeDays : 0));
 
     const vsPct = line.vsPctOfDm ?? t.vsPctOfDm;
-    const vsT = (tonnes * dm * vsPct) / 10000;
+    const vsT = (fed * dm * vsPct) / 10000;
     const blend = scenario.yieldBlend;
     const yieldL = line.methaneYieldLPerKgVs ?? (blend < 0 ? t.yieldTyp + -blend * (t.yieldLow - t.yieldTyp) : t.yieldTyp + blend * (t.yieldHigh - t.yieldTyp));
     // 1 L/kg VS × t VS ×1000 kg/t / 1000 L/m3 = t VS × yield  → m3 CH4
@@ -121,12 +125,13 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
       w.push(T(`"${nm}": the entered price per tonne is far above usual market levels (disposal > ${PLAUSIBLE_DISPOSAL_EUR_T}, gate fee > ${PLAUSIBLE_GATE_FEE_EUR_T}, purchase > ${PLAUSIBLE_PURCHASE_EUR_T} €/t equivalent): check the unit (per tonne, local currency) — the result depends on it directly.`, `«${nm}»: введена ціна за тонну значно вища за звичний ринковий рівень (утилізація > ${PLAUSIBLE_DISPOSAL_EUR_T}, плата за приймання > ${PLAUSIBLE_GATE_FEE_EUR_T}, закупівля > ${PLAUSIBLE_PURCHASE_EUR_T} €/т в еквіваленті): перевірте одиниці (за тонну, у місцевій валюті) — результат прямо від неї залежить.`));
     if (isEffluentLike(t, dm)) w.push(T(`"${nm}" is very dilute: consider a high-rate reactor (UASB / covered lagoon) instead of a CSTR — the model's CSTR costing is conservative here.`, `«${nm}» дуже розбавлений: розгляньте високонавантажений реактор (UASB / накрита лагуна) замість CSTR — оцінка CAPEX тут консервативна.`));
     if (t.flags.includes("energy_crop") && !((line.purchasePricePerTonneLocal ?? 0) > 0) && opportunity === 0) w.push(T(`"${nm}" is a purchased or own-grown crop — enter its cost per tonne (typically 30–45 €/t delivered), otherwise the gas is counted as free.`, `«${nm}» — покупна або власна культура: вкажіть її вартість за тонну (зазвичай 30–45 €/т з доставкою), інакше газ рахується як безкоштовний.`));
+    if (ensiled) w.push(T(`"${nm}": enter the harvested fresh mass that goes into the clamp; ${Math.round(scenario.ensilingLoss * 100)} % of its dry matter is lost during ensiling (KTBL) and a clamp silo is costed. If you buy finished silage out of another farm's clamp, the loss and the clamp are the seller's and this result is conservative.`, `«${nm}»: вкажіть масу врожаю, що закладається в траншею; ${Math.round(scenario.ensilingLoss * 100)} % сухої речовини втрачається під час силосування (KTBL), а вартість силосної траншеї враховано. Якщо купуєте готовий силос із чужої траншеї, втрати й траншея — на продавцеві, і цей результат консервативний.`));
     if (t.flags.includes("energy_crop")) w.push(T("Energy-crop share is capped in many support schemes (e.g. EEG maize cap, RED III sustainability criteria) — check before relying on it.", "Частка енергетичних культур обмежена в багатьох схемах підтримки (напр. ліміт кукурудзи в EEG, критерії сталості RED III) — перевірте заздалегідь."));
     if (t.abp !== "none") w.push(T(`Animal by-products (${t.abp === "cat3" ? "Cat. 3" : "Cat. 2"}) → pasteurisation and veterinary approval required.`, `Побічні продукти тваринного походження (${t.abp === "cat3" ? "кат. 3" : "кат. 2"}) → потрібна пастеризація та ветеринарне узгодження.`));
     if (delivered && !(line.distanceKm && line.distanceKm > 0)) w.push(T("Delivery distance not given — logistics cost is understated.", "Відстань доставки не вказана — вартість логістики занижена."));
 
     lines.push({
-      id: line.id, label: t.name[lang], typeId: t.id, tonnesYear: tonnes, monthlyTonnes: mt, dryMatterPct: dm,
+      id: line.id, label: t.name[lang], typeId: t.id, tonnesYear: fed, ...(ensiled ? { ensiledTonnesYear: tonnes } : {}), monthlyTonnes: mt, dryMatterPct: dm,
       vsPctOfDm: vsPct, methaneYieldLPerKgVs: yieldL,
       vsTonnesYear: vsT, ch4M3Year: ch4, ch4Fraction, nKgYear: nKg, p2o5KgYear: pKg, k2oKgYear: kKg, delivered,
       distanceKm: distance, transportCostEurYear: transportCost, purchaseCostEurYear: purchaseCost,
@@ -134,7 +139,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     });
 
     for (let i = 0; i < 12; i++) {
-      const f = tonnes > 0 ? mt[i] / tonnes : 0;
+      const f = fed > 0 ? mt[i] / fed : 0;
       monthlyTonnes[i] += mt[i];
       monthlyVs[i] += vsT * f;
       monthlyCh4[i] += ch4 * f;
@@ -197,6 +202,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     fatShareVs: fatShare,
     fatDominantShareVs: vsTotal > 0 ? fatDominantVs / vsTotal : 0,
     abpTonnesYear: abpT,
+    ensiledTonnesYear: sum(lines.map((l) => l.ensiledTonnesYear ?? 0)),
     inhibitionFactor: inhibition,
     warnings,
   };

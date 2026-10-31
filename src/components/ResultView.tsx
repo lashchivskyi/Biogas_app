@@ -9,6 +9,8 @@ import { displayUnit, makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
 import { decisionCopy } from "@/i18n/decision";
+import { evidenceRequest } from "@/lib/evidence";
+import { CopyButton } from "./CopyButton";
 import fieldCheck from "@/countries/data/backtest-summary.json";
 import { climateCopy } from "@/i18n/climate";
 import { qualityGapCopy } from "@/i18n/quality";
@@ -383,6 +385,31 @@ function MeasureFirstPanel({ a, F, locale }: { a: Assessment; F: ReturnType<type
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="mt-3 space-y-2">
+        {items.map((m) => {
+          const ev = evidenceRequest(a, m, locale);
+          if (!ev) return null;
+          return (
+            <details key={`how:${m.kind}:${m.parameterId ?? ""}`} className="group card p-4 text-sm">
+              <summary className="flex cursor-pointer items-center gap-1.5 font-semibold">
+                <span aria-hidden className="inline-block text-muted transition group-open:rotate-90">›</span>
+                {M.how}: {M.kinds[m.kind]}
+              </summary>
+              <ol className="mt-2 list-decimal space-y-1 pl-5 text-ink2">{ev.steps.map((s) => <li key={s}>{s}</li>)}</ol>
+              {ev.request && (
+                <div className="mt-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-semibold">{M.request}</span>
+                    <CopyButton text={ev.request} label={M.copy} done={M.copied} />
+                  </div>
+                  <pre className="mt-1 whitespace-pre-wrap break-words rounded-xl bg-surface2 p-3 font-sans text-xs text-ink2">{ev.request}</pre>
+                </div>
+              )}
+              <p className="mt-3 text-ink2"><span className="font-semibold">{M.enterIn}:</span> {ev.enterIn}</p>
+            </details>
+          );
+        })}
       </div>
     </Section>
   );

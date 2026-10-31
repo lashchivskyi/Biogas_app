@@ -71,12 +71,10 @@ for this project (EVPI) and re-run with each piece of evidence, so confidence ri
 
 ## Roadmap (Impact × Accuracy gain × Client value × Competitive edge ÷ Complexity; audit 2026-10-31)
 
-1. Done 2026-10-31: honest uncertainty (coupled prices, DM/VS and lab bands, stress-test wording, AgSTAR band) and
-   the buyer's biomethane offer. 2. EU compliance value as support cases from legal texts (FR CPB, DE THG, NL ERE,
-   UK RTFO).
-3. Evidence loop: "what to verify first" turns into RFQ / sampling / grid-operator request templates; the client
-   uploads results and the report re-runs with a higher evidence level. Main reason to pay.
-4. Silage clamp and ensiling loss for stored feeds. 5. Bank pack (construction year, CIT, depreciation, equity IRR,
-   yearly DSCR, reinvestment, residual value) as the top plan. 6. EU back-test and EU manure per head.
+1. Done 2026-10-31: honest uncertainty, buyer's biomethane offer, evidence requests ("how to check"), silage clamp
+   and ensiling loss, EU dairy manure per head (IPCC) with a Danish per-tonne check.
+2. EU compliance value as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
+3. Next step of the evidence loop: upload of lab / quote documents and a visible evidence level per input.
+4. Bank pack (construction year, CIT, depreciation, equity IRR, yearly DSCR, reinvestment, residual value).
 7. Injection and grid connection by country + operator quote input. 8. Portfolio / cross-country comparison.
 Not a goal: ADM1 simulation, plant monitoring (Anessa's space), GIS potential maps (IEA BioGRAM is free).

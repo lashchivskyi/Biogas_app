@@ -46,6 +46,34 @@ const extra: Record<Locale, readonly [string, string, string]> = {
   th: ["ราคาพลังงาน", "ระยะเวลาหยุด CHP", "การเชื่อมต่อโครงข่าย"],
 };
 
+const clamp: Record<Locale, string> = {
+  en: "Bunker silo for the crop harvest",
+  uk: "Силосна траншея для врожаю",
+  pl: "Silos przejazdowy na plon",
+  de: "Fahrsilo für die Ernte",
+  fr: "Silo couloir pour la récolte",
+  it: "Trincea per l’insilato",
+  es: "Silo trinchera para la cosecha",
+  pt: "Silo trincheira para a colheita",
+  nl: "Sleufsilo voor de oogst",
+  cs: "Žlabové silo pro sklizeň",
+  sk: "Žľabové silo pre úrodu",
+  hu: "Falközi siló a termésnek",
+  ro: "Siloz tip tranșee pentru recoltă",
+  bg: "Силозна траншея за реколтата",
+  sr: "Trenč silos za useve",
+  el: "Τάφρος ενσίρωσης για τη σοδειά",
+  tr: "Silaj çukuru (hasat için)",
+  lt: "Tranšėja silosui",
+  lv: "Skābbarības tranšeja ražai",
+  et: "Silohoidla saagi jaoks",
+  da: "Plansilo til afgrøden",
+  sv: "Plansilo för skörden",
+  fi: "Laakasiilo sadolle",
+  vi: "Hầm ủ chua cho vụ thu hoạch",
+  th: "บ่อหมักพืชสำหรับผลผลิต",
+};
+
 const equipment: Record<Locale, readonly [string, string, string]> = {
   en: ["Pasteurisation", "Gas-grid injection", "Gas pipeline"],
   uk: ["Пастеризація", "Подача до газової мережі", "Газопровід"],
@@ -83,7 +111,7 @@ export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result
     ...Object.fromEntries(keys.map((k, i) => [k, values[i]])),
     digester: d.flow?.digester ?? d.result.dTech, chp: d.labels.route.chp, boiler: d.labels.route.boiler,
     pasteurisation: `${equipment[locale][0]} (70 °C / 1 h)`, upgrading: "Upgrading", cng: "Bio-CNG (250 bar)",
-    grid: extra[locale][2], injection: equipment[locale][1], pipeline: equipment[locale][2], upgrading_maintenance: `${values[13]} (Upgrading)`,
+    silage_clamp: clamp[locale], grid: extra[locale][2], injection: equipment[locale][1], pipeline: equipment[locale][2], upgrading_maintenance: `${values[13]} (Upgrading)`,
     el_tariff: `${values[25]} (${d.result.colScheme})`, heat: d.result.heatUseful, biomethane: d.labels.route.biomethane, support: d.result.assumedSupport,
   };
 }

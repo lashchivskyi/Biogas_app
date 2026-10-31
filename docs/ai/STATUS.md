@@ -3,27 +3,34 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 015), lint, typecheck, build pass. Browser check pending
-  (calculator field and report texts of 2026-10-31 not seen in a browser yet).
+- Model 0.6.1; data review 2026-10-30. Tests (1 017), lint, typecheck, build pass. Browser check pending for all
+  2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
-- Audit 2026-10-31 (39 examples × 33 countries): CH₄, CAPEX/OPEX/revenue, electricity split and cash flows close.
-- Done 2026-10-31 (audit items a, b): buyer's biomethane offer (local/MWh HHV) replaces the estimate; Monte Carlo
-  couples energy and biomethane prices, adds catalogue DM × VS ±20 % and lab BMP ±8 %; report calls the
-  conservative case a stress test, shows "> 99 %" instead of 100 % and the AgSTAR per-plant band (0.4–2.2×).
-  compare-scenarios: 0 of 1 287 verdicts or NPVs moved. MC widened modestly (gb_food P10–P90 3.5 → 4.2 M€); it is
-  still narrower than real plants scatter, because downtime and operating problems are not modelled — said in text.
+- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo (coupled prices, DM/VS ±20 %, lab BMP ±8 %,
+  stress-test wording, AgSTAR band); "how to check" per EVPI item with a pre-filled lab / supplier / buyer request
+  (en, uk; other locales get English) and the field to enter the answer; ensiling loss (KTBL 8 / 9.3 / 12 % DM) and a
+  clamp silo (60 €/m³ at 780 kg/m³) for energy crops; EU dairy cows at IPCC 2006 VS (W 5.1, E 4.5 kg/d) in 22
+  profiles + UA. compare-scenarios: 8 verdict changes, all us_dairy_rng in European countries (up, more manure);
+  de_nawaro −1.2 M€ (clamp + loss).
+- EU check (Danish Energy Agency, "Biogas plants in Denmark and Mexico", plant-reported): model ÷ reported CH₄ per
+  tonne 0.88 (Combigas, pie labels ambiguous), 0.90 (Kroghsminde, grass silage entered as maize), 0.61 (Madsen:
+  7 % pretreated straw at untreated yield, 85 d HRT). Per-tonne only: it does not test manure per head.
 
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
-2. Evidence loop (RFQ / sampling / grid-operator templates, re-run with evidence). 3. Silage clamp + ensiling loss
-   (KTBL ≈ 10–12 %, verify). 4. Bank pack: construction year, CIT + depreciation, equity IRR, yearly DSCR,
-   reinvestment, residual value (55 of 520 positive cases have IRR < discount + 2.5 pp, all already conditional).
-5. EU back-test; EU dairy VS per head (3.7 vs IPCC 5.1 kg/d). 6. Injection (350 k€, LOW) / grid connection by country.
-- EVPI "yield" item still ignores catalogue DM/VS (only BMP range); include it when the lab-test line is reworked.
-- Carried: UASB €/m³ judgement; labour > 1 MW extrapolated; lipid shares per fat-rich type; straw pretreatment;
-  Spain Canary gate, KZ gas ceilings, CA provincial gas, AR/KZ regional power.
+2. Maize-plant CAPEX vs the BMWK/IEE/DBFZ reference (Kurzfristanalyse 13.02.2024, Tab. 4-1: new 510 kW rated /
+   1 135 kWe flexible NawaRo + slurry, 7 521 €/kW = 3.84 M€ in 2023, 4.34 M€ in 2026): model 4.70 M€ (+22 %), +41 % if
+   the flexibility engine is added at the model's own curve; without the clamp (0.93 M€) +4…17 %. But total cost per
+   kWh is 5–12 % BELOW the report's 31.5 ct (model OPEX 0.88 M€ is ≈ 20 % lower than implied). Report does not say
+   whether silo and digestate storage are in the 7 521 €/kW → nothing retuned. Open: its scope (ask DBFZ/IEE).
+3. Bank pack: construction year, CIT + depreciation, equity IRR, yearly DSCR, reinvestment, residual value.
+4. Straw pretreatment yield (Madsen gap); grass silage type; other cattle / swine VS vs IPCC (swine back-test 0.80
+   argues against IPCC 0.30 kg/d). 5. Injection (350 k€, LOW) / grid connection by country. 6. Request templates in
+   more languages. EVPI "yield" item ignores catalogue DM/VS.
+- Carried: UASB €/m³; labour > 1 MW extrapolated; lipid shares; Canary gate, KZ gas ceilings, CA provincial gas,
+  AR/KZ regional power; Canada dairy still on the catalogue (IPCC N. America 5.4).
 
 ## Known weaknesses
 

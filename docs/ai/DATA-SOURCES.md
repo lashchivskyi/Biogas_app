@@ -40,6 +40,8 @@ of a number. A Wayback snapshot of an official page is acceptable; state its dat
 | Support schemes | legal texts listed in each scheme's `source` | before each release |
 | Back-test set | EPA AgSTAR Livestock AD Database xlsx: `python -I scripts/data/extract_agstar.py --write`, then `npx tsx scripts/backtest.ts --write` | when AgSTAR updates (≈ twice a year) |
 | US dairy manure per head | USDA NRCS AWMFH ch. 4 Table 4-5 (ASAE D384.2) in the US profile | on a new ASABE D384 edition |
+| EU dairy manure per head | IPCC 2006 GL Vol. 4 Table 10A-4 (VS); DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (volume); swap to the IPCC 2019 Refinement Table 10.13A when retrieved | on a new IPCC or DüV edition |
+| Silage loss / clamp | KTBL Ernte- und Silomanagement 2021; LfL density guide; clamp €/m³ LOW (no cost study found) | when KTBL publishes building costs |
 | RED climate defaults | Directive (EU) 2018/2001 Annex VI (legislation.gov.uk copy; EUR-Lex blocks scripts) in `src/core/ghg.ts` | when Annexes V–VI are revised |
 
 ## Blocked or missing (confidence LOW until fixed)
