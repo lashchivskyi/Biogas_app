@@ -52,3 +52,19 @@ of a number. A Wayback snapshot of an official page is acceptable; state its dat
 - KZ gas ceilings — adilet.zan.kz renders by JS only; open in a browser.
 - CA gas outside ON/BC/SK, MD ANRE tariffs, UA NEURC/Ukrenergo tariffs — sites unreachable.
 - Pending: Vietnam retail tariff cut announced for 1 Nov 2026 (check EVN decision).
+
+## Top-5 NPV drivers (tornado 2026-10-31: ±10 % per `econ.*`, mean |ΔNPV| over 39 examples, 33 countries)
+
+Frequency in the per-country top 5: discount rate 33, CAPEX factor CHP 33, CAPEX factor biomethane 24, FX 20,
+energy escalation 11, spot electricity 11, export haircut 9; biomethane price is top-3 in ~25 countries.
+Spot and export haircut dominate where biomethane is not the best route (RO, GR, BG, RS, MD, TH, KZ, US, AR).
+
+| Driver | Status | What would close it |
+|---|---|---|
+| FX | Official (ECB, NBU, NBM, NBK, BCRA, SBV), ≤ 2 days | nothing; VN is weekly by hand |
+| Spot electricity | EU/RS/BG: ENTSO-E (HIGH). MD OPEM, US EIA STEO MEDIUM. **LOW: TH** (ERC Ft, no spot market), **KZ** (single buyer, June missing), **AR** (Edenor wheeling proxy, Jun 2026; use Res. SE 109/2026 annex GUDI price next) | AR: read SE seasonal annex PDF; TH/KZ: no market exists |
+| Discount rate | Damodaran CRP Jul 2026 + λ 0.6 (assumption), range −1/+2 pp | bank term sheets; refresh Jan/Jul |
+| CAPEX factors | Engineering (DBFZ/KTBL split), LOW outside DE | supplier quotes per country |
+| Biomethane price | LOW everywhere: no official market series (EU formula 0.8 × gas + 20 €/MWh; national estimates elsewhere) | signed offtake; official green-gas tariffs only as support cases |
+| Export haircut 0.85 | Assumption, one value for 33 markets, swing = spot swing | marketer/balancing fee quotes; baseload CHP likely < 15 % |
+| Grid CO₂ factor | Ember via OWID (secondary; derived from official data); UA 2022 | EEA/IEA/national inventory per country; UA: Ukrenergo/MinEconomy |

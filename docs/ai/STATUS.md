@@ -1,19 +1,15 @@
 # Status
 
-Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
+Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
 - Model 0.6.1; data review 2026-10-30. Tests (1 069), lint, typecheck, build pass. Browser check pending for all
   2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
-- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests (en, uk); ensiling loss + clamp silo;
-  existing gas streams without the start-up year (3 verdict changes, only gas-stream examples moved).
-- Lender-style finance audit 2026-10-31: 3 examples recomputed by hand = code (max gap 3e-14); new
-  `finance-audit.test.ts` (50 tests); discounted payback replaces the mislabelled undiscounted one and is shown; discount
-  rate ±pp sensitivity (dk_cluster +2 pp: 6.5 → 4.2 M€); "pre-tax, nominal EUR, not bankable, DSCR = EBITDA ÷ annuity" in
-  UI (25 languages), export and methodology; process budget help says the model adds gas holder/flare/H₂S itself.
-- EU check (Danish Energy Agency): model ÷ reported CH₄ per tonne 0.88 / 0.90 / 0.61 (Madsen: pretreated straw).
+- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests; ensiling loss + clamp silo; gas streams.
+- Lender-style finance audit 2026-10-31: 3 examples recomputed by hand = code; `finance-audit.test.ts` (50 tests);
+  discounted payback; discount-rate ±pp sensitivity; "pre-tax, nominal EUR, not bankable" in UI, export, methodology.
 
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 

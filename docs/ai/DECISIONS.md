@@ -129,6 +129,10 @@ replace the line rather than adding a contradicting one.
   case, CAPEX/OPEX and assumptions; full plan adds scenarios, routes, sensitivities, support cases. Not in the
   free calculator. Money in EUR with the FX row; labels follow the model language (en/uk).
 
+- 2026-10-31 — `DATA_REVIEW_AS_OF` must be ≥ the newest `observedThrough` of any fetched row: a fetch dated after it
+  makes `assess` flag "price expired" and downgrade every verdict (560 of 1 287 cases in the first diff). Bump it with
+  each data refresh. Export haircut 0.85 is left unchanged: no official source, likely conservative for baseload CHP.
+
 ## AI workflow
 
 - 2026-10-30 — `AGENTS.md` is the single instruction file (Codex reads it, `CLAUDE.md` imports it),
