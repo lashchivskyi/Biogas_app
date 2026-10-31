@@ -71,6 +71,7 @@ describe.each(stores())("order repository (%s)", (_name, select) => {
     expect((await O.orders.update(o.id, { status: "pending", providerModifiedAt: "2026-10-29T09:00:00.000Z" }, "webhook"))?.status).toBe("paid");
     expect((await O.orders.update(o.id, { status: "reversed" }, "webhook"))?.status).toBe("reversed");
     expect((await O.orders.update(o.id, { status: "pending" }, "webhook"))?.status).toBe("reversed");
+    expect((await O.orders.update(o.id, { status: "paid" }, "webhook"))?.status).toBe("reversed");
     expect((await O.orders.update(o.id, { status: "paid" }, "admin"))?.status).toBe("paid");
     expect(await O.orders.update("missing", { status: "paid" }, "admin")).toBeNull();
   });

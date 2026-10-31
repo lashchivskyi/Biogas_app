@@ -46,12 +46,25 @@ export function pickLocale(req: NextRequest): Locale {
   return DEFAULT_LOCALE;
 }
 
+/** Sec-Fetch-Site where sent (all current browsers); otherwise the Origin host must equal the request host. */
+export function sameSite(request: NextRequest): boolean {
+  const site = request.headers.get("sec-fetch-site");
+  if (site) return site === "same-origin" || site === "none";
+  const origin = request.headers.get("origin");
+  if (!origin) return true; // Not a browser cross-site request (curl, scripts): credentials were supplied explicitly.
+  try { return new URL(origin).host === (request.headers.get("host") ?? request.nextUrl.host); } catch { return false; }
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     const res = checkBasicAuth(request.headers.get("authorization"));
-    if (res === "ok") return NextResponse.next();
+    if (res === "ok") {
+      // Browsers attach cached Basic credentials to cross-site requests, so state-changing admin calls must come from this site.
+      if (!["GET", "HEAD", "OPTIONS"].includes(request.method) && !sameSite(request)) return new NextResponse("Cross-site request refused", { status: 403 });
+      return NextResponse.next();
+    }
     if (res === "disabled") return new NextResponse("CRM disabled: set ADMIN_USER and ADMIN_PASSWORD.", { status: 503 });
     // Slow down password guessing (per instance; add a host firewall rule for a global limit).
     if (request.headers.has("authorization") && rateLimited(`admin-fail:${clientIp(request)}`, 20, 15 * 60_000)) return new NextResponse("Too many attempts", { status: 429 });

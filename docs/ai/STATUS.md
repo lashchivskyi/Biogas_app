@@ -35,3 +35,6 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
 - Only membrane upgrading; no odorisation, injection fees, flexible-CHP premium. Gas-stream support: "if eligible" only.
 - Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (DECISIONS). PL FIT modelled flat.
+- Security review 2026-11-01: 0 critical/high in code (npm audit prod 0). Open before launch, owner decides: seller entity + VAT/OSS
+  (Stripe Tax), full privacy policy + imprint page (terms §8 is one sentence and omits Vercel/DB/Resend/Sentry), retention
+  of orders/leads and report-link lifetime, DPAs, durable rate limit (WAF/Redis; in-memory is per instance), nonce CSP.

@@ -181,3 +181,5 @@ replace the line rather than adding a contradicting one.
 - 2026-11-01 — A sold report is the Assessment JSON saved at checkout, never recomputed; a model/data release must not
   change it. New Assessment fields must be optional and the renderer tolerant (`stored-snapshot.test.ts` enforces it).
   Rate-limit key = platform header, else the RIGHT-most X-Forwarded-For (left-most is client-controlled).
+- 2026-11-01 — Security review: a refunded order (`reversed`) is final for non-admin sources (a replayed `paid` webhook must not
+  restore the report); state-changing `/api/admin/*` calls need Sec-Fetch-Site same-origin (Basic credentials are sent cross-site).

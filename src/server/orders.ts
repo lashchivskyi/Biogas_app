@@ -88,6 +88,8 @@ export function applyOrderPatch(cur: Order, patch: OrderPatch, source: string): 
   let status = patch.status ?? cur.status;
   if (cur.status === "paid" && status !== "reversed" && status !== "paid" && source !== "admin") status = "paid";
   if (FINAL.includes(cur.status) && cur.status !== "paid" && status === "pending" && source !== "admin") status = cur.status;
+  // A refund is final: a replayed or late "paid" delivery must not restore access to a refunded report.
+  if (cur.status === "reversed" && status === "paid" && source !== "admin") status = "reversed";
   const now = new Date().toISOString();
   const next: Order = { ...cur, ...patch, status, updatedAt: now };
   if (status !== cur.status) next.history = [...cur.history, { at: now, status, source }];
