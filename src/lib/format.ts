@@ -21,7 +21,6 @@ export function sig2(v: number): number {
   return Math.round(v / m) * m;
 }
 
-export type Fmt = ReturnType<typeof makeFormat>;
 
 /** Display a EUR-based parameter in the chosen currency: EUR amounts are multiplied, local/EUR rates divided; other units unchanged. */
 export function displayUnit(value: number, unit: string, display: { currency: "EUR" | "USD"; rate: number }): { value: number; unit: string } {

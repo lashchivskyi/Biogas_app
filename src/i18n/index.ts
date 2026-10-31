@@ -62,23 +62,6 @@ export function fmt(s: string, vars: Record<string, string | number> = {}): stri
   return s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
 }
 
-/** Split a headline at [accent] markers into parts for rendering. */
-export function accentParts(s: string): Array<{ text: string; accent: boolean }> {
-  const out: Array<{ text: string; accent: boolean }> = [];
-  const re = /\[([^\]]+)\]/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(s))) {
-    if (m.index > last) out.push({ text: s.slice(last, m.index), accent: false });
-    out.push({ text: m[1], accent: true });
-    last = m.index + m[0].length;
-  }
-  if (last < s.length) out.push({ text: s.slice(last), accent: false });
-  return out;
-}
-
-export const intlTag = (l: Locale) => INTL_TAG[l];
-
 /** Localised country name via Intl (no manual translation of 33 names × 25 languages). */
 export function countryName(code: string, locale: Locale): string {
   try {

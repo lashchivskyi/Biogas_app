@@ -17,5 +17,3 @@ const NF: Record<CoreLang, Intl.NumberFormat> = {
 /** Integer formatting inside model sentences. */
 export const fmtInt = (lang: CoreLang) => (n: number) => NF[lang].format(Math.round(n));
 
-/** One-decimal formatting with the right decimal separator. */
-export const fmt1 = (lang: CoreLang) => (n: number) => (lang === "uk" ? n.toFixed(1).replace(".", ",") : n.toFixed(1));

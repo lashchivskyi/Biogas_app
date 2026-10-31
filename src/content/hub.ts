@@ -136,5 +136,3 @@ export const HUB: { en: HubContent; uk: HubContent } = {
   },
 };
 
-/** Content language for the long-form pages and the canonical locale for that content. */
-export const contentLang = (locale: string): "en" | "uk" => (locale === "uk" ? "uk" : "en");

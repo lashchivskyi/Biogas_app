@@ -66,7 +66,6 @@ export function processBounds(kind: ProcessKind, key: string) {
   const field = raw instanceof z.ZodOptional ? raw.unwrap() : raw;
   return field instanceof z.ZodNumber ? { low: field.minValue ?? 0, high: field.maxValue ?? Infinity } : { low: 0, high: Infinity };
 }
-export const PROCESS_KINDS: ProcessKind[] = ["residue", "wastewater", "landfill", "gas"];
 export interface ProcessResult {
   kind: ProcessKind;
   /** Missing costs/loads invalidate economic conclusions; zero is an explicit known zero. */

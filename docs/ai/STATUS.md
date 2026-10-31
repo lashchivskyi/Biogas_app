@@ -11,10 +11,7 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 - Offer audit 2026-11-01: pricing lists = report content; gas-stream reports got residues, methane, break-even, "if eligible"
   support; free/paid boundary, INSUFFICIENT_DATA not sold, withdrawal waiver, VAT note, no "Feasibility" in names
   (DECISIONS). Prices unchanged; plans independent, no upgrade (owner). NOT browser-tested.
-- UX follow-up 2026-11-01: INSUFFICIENT_DATA verdict lists the minimum fields (`minimumGapsForVerdict`); failed payment →
-  "try again" reopens checkout for the same project; inline localised checkout errors; helpful report-link 404; no Ukrainian-only
-  text in en reports (`ux-audit.test.ts`). Language-by-IP checked with geo headers: first visit only, explicit choice persists.
-  Left as is: no dark theme; 30 tiles + mandatory city on step 1.
+- UX follow-up 2026-11-01: INSUFFICIENT_DATA lists minimum fields; failed payment reopens checkout; localised errors; no dark theme.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
 - Competitor benchmark (PRODUCT.md › Market): 4 examples vs KTBL, Luke v3, WSU, LandGEM; gaps > 15 % explained, nothing retuned (`scripts/benchmark.ts`).

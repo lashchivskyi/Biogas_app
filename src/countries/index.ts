@@ -16,6 +16,4 @@ export function getCountry(code: string): CountryAdapter {
   return c;
 }
 
-export const isCountry = (code: string | undefined | null): code is string => !!code && code in COUNTRIES;
-
 export { UA };

@@ -177,3 +177,7 @@ replace the line rather than adding a contradicting one.
 - Withdrawal: separate unticked box, exact text stored on the order and repeated in the delivery email (CRD Art. 16(m)).
 - Gas streams (wastewater, landfill, existing gas): support cases computed but marked "if eligible", never eligible — scheme
   gas-source categories (e.g. Klär-/Deponiegas) are not modelled. Residue (BMP) inputs follow normal scheme rules.
+
+- 2026-11-01 — A sold report is the Assessment JSON saved at checkout, never recomputed; a model/data release must not
+  change it. New Assessment fields must be optional and the renderer tolerant (`stored-snapshot.test.ts` enforces it).
+  Rate-limit key = platform header, else the RIGHT-most X-Forwarded-For (left-most is client-controlled).
