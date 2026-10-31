@@ -133,6 +133,13 @@ replace the line rather than adding a contradicting one.
   makes `assess` flag "price expired" and downgrade every verdict (560 of 1 287 cases in the first diff). Bump it with
   each data refresh. Export haircut 0.85 is left unchanged: no official source, likely conservative for baseload CHP.
 
+- 2026-10-31 — Report consistency gate (`report-consistency.test.ts`): the Assessment is the single source; every number in
+  the verdict text, tiles, tables, charts, EVPI, Monte Carlo, export and translations is recomputed and compared. Display
+  ranges (CAPEX, payback, NPV) now always read low – high. Open owner decision: scenarios re-size the plant, so in ~17 % of
+  cases (mostly loss-making boiler/biomethane) "optimistic" has a lower NPV/EBITDA than "base" (e.g. a net electricity buyer
+  pays the higher "optimistic" power price). Not changed: needs a decision (size the plant once at base, or define
+  scenarios by outcome). The test ratchets the count (≤ 45 of 234); do not raise it, fix the cause.
+
 ## AI workflow
 
 - 2026-10-30 — `AGENTS.md` is the single instruction file (Codex reads it, `CLAUDE.md` imports it),

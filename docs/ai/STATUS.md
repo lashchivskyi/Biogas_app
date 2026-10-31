@@ -11,6 +11,10 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 - Lender-style finance audit 2026-10-31: 3 examples recomputed by hand = code; `finance-audit.test.ts` (50 tests);
   discounted payback; discount-rate ±pp sensitivity; "pre-tax, nominal EUR, not bankable" in UI, export, methodology.
 
+- Report consistency 2026-10-31: `components/__tests__/report-consistency.test.ts` (+ `report-audit*.ts`) renders 10 examples × free/
+  standard/full × en/uk/de, checks every figure against the model and between sections, plus export, translations, mutations.
+  0 contradictions in 30 reports. Open: in 39 of 234 sampled cases the "optimistic" scenario is worse than base (see DECISIONS).
+
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).

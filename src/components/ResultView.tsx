@@ -146,6 +146,10 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
   const r = a.ranges;
   const e = best.energy;
   const heatLost = Math.max(0, e.heatNetAvailableKwh - e.heatUsefulKwh);
+  // Scenario results are not guaranteed to be monotone (a bigger plant can lose more money): ranges always read low – high.
+  const capexLoHi = [Math.min(...r.capexEur), Math.max(...r.capexEur)];
+  const npvLoHi = [Math.min(...r.npvEur), Math.max(...r.npvEur)];
+  const paybackSorted = [...r.paybackYears].sort((x, y) => (x ?? Infinity) - (y ?? Infinity));
   const driver = keyDriver(a);
   const qualityGaps = qualityGapCopy(locale, d, currency);
   const full = access !== "free";
@@ -189,7 +193,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
                 heat: n0(sig2(e.heatUsefulKwh / 1000)),
                 share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
               })}{" "}
-          {f(R.summaryMoney, { capex: `${eur(r.capexEur[2])} – ${eur(r.capexEur[0])}`, payback: years(r.paybackYears[1]) })} {R.tone[a.verdict.id]}
+          {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })} {R.tone[a.verdict.id]}
         </p>
       </section>
 
@@ -204,9 +208,9 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
             note={route === "biomethane" ? R.energyBm : f(R.energyHeat, { v: range(r.heatUsefulMwh[0], r.heatUsefulMwh[2]) })}
           />
           <Stat label={R.capacity} value={<>{range(r.kwEl[0], r.kwEl[2])} {L.units.kwe}</>} note={L.plantClass[best.plantClass]} />
-          <Stat label={R.capex} value={<>{eur(r.capexEur[2])} – {eur(r.capexEur[0])}</>} note={currency !== "EUR" ? f(R.capexNote, { v: money(r.capexEur[1] * a.fx, currency) }) : undefined} />
-          <Stat label={R.payback} value={<>{years(r.paybackYears[2])} – {years(r.paybackYears[0])}</>} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
-          <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(r.npvEur[0]), hi: eur(r.npvEur[2]) })} />
+          <Stat label={R.capex} value={<>{eur(capexLoHi[0])} – {eur(capexLoHi[1])}</>} note={currency !== "EUR" ? f(R.capexNote, { v: money(r.capexEur[1] * a.fx, currency) }) : undefined} />
+          <Stat label={R.payback} value={<>{years(paybackSorted[0])} – {years(paybackSorted[2])}</>} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
+          <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(npvLoHi[0]), hi: eur(npvLoHi[1]) })} />
           <Stat label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
         </div>
         <DataConfidence a={a} d={d} locale={locale} currency={currency} />
@@ -608,7 +612,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
                     <td className="p-3 text-right">{eur(s.base.fin.ebitdaEurYear)}</td>
                     <td className="p-3 text-right">{years(s.base.fin.simplePaybackYears)}</td>
                     <td className="p-3 text-right font-semibold">{eur(s.base.fin.npvEur)}</td>
-                    <td className="p-3 text-right text-muted">{eur(s.conservative.fin.npvEur)} … {eur(s.optimistic.fin.npvEur)}</td>
+                    <td className="p-3 text-right text-muted">{eur(Math.min(s.conservative.fin.npvEur, s.optimistic.fin.npvEur))} … {eur(Math.max(s.conservative.fin.npvEur, s.optimistic.fin.npvEur))}</td>
                   </tr>
                 );
               })}
