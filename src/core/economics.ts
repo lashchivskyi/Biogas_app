@@ -1,4 +1,4 @@
-import { prepareProcess } from "./processes";
+import { existingPlant, prepareProcess } from "./processes";
 import { biomethaneOfftake, buildCapex, peakMonthlyHeatKw } from "./capex";
 import { HOURS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
@@ -29,9 +29,11 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const feed = prepared?.feed ?? analyseFeedstock(ctx);
   const design = prepared?.design ?? designDigester(feed, ctx);
   const demand = customerDemand(ctx);
-  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx, false, installed?.kw);
+  // A running plant's own engine fixes the CHP rating in every scenario.
+  const existingKw = route === "chp" ? existingPlant(input.process)?.existingChpKwEl : undefined;
+  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx, false, installed?.kw ?? existingKw);
   const energy = route === "biomethane" && biomethaneOfftake(ctx, energyBeforeOfftake).mode === "cng"
-    ? runEnergy(route, feed, design, demand, ctx, true, installed?.kw)
+    ? runEnergy(route, feed, design, demand, ctx, true, installed?.kw ?? existingKw)
     : energyBeforeOfftake;
   const peakKw = peakMonthlyHeatKw(design, HOURS_IN_MONTH);
   const gross = installed?.gross ?? buildCapex(route, feed, design, energy, ctx, peakKw, process);
@@ -97,7 +99,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * ((input.finance?.operatorWageLocalPerHour ?? 0) > 0 ? (input.finance!.operatorWageLocalPerHour as number) / ctx.fx : p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio")) * opexMult);
   ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
-  const chpCapex = gross.lines.filter((l) => l.id === "chp").reduce((a, l) => a + l.eur, 0);
+  const chpCapex = gross.lines.filter((l) => l.id === "chp" || l.id === "chp_overhaul").reduce((a, l) => a + l.eur, 0);
   const otherCapex = gross.totalEur - upgradingCapex - chpCapex - (process?.capexEur ?? 0);
   ox("maintenance", T("Plant maintenance", "Обслуговування обладнання"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
   ox("upgrading_maintenance", T("Upgrading unit maintenance", "Обслуговування установки очищення"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);

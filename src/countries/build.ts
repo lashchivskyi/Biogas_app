@@ -1,6 +1,6 @@
 import type { CountryAdapter, Region, RegulatoryRegime, SupportInfo } from "@/core/country";
 import { prov } from "@/core/params";
-import type { Confidence, ProjectInput, Provenance } from "@/core/types";
+import type { AnimalKind, Confidence, ProjectInput, Provenance } from "@/core/types";
 import { ENGINEERING_MAP } from "@/core/engineeringParams";
 import { regulatoryFor } from "./regulatory";
 import {
@@ -49,6 +49,8 @@ export interface CountryProfile {
   bmOverride?: boolean;
   /** Multiplier on world fertiliser prices (e.g. subsidised urea in India). */
   fertFactor?: number;
+  /** National as-excreted manure per head where an official standard differs from the catalogue default. */
+  manure?: Partial<Record<AnimalKind, { tonnesHeadYear: number; dryMatterPct: number; vsPctOfDm: number; source: string; date: string; confidence: Confidence }>>;
 }
 
 const SRC = "National estimate (project team, 2026-10) — no official series found for this item; your own price overrides it";
@@ -118,6 +120,14 @@ export function marketParams(c: CountryProfile, regionId?: string, energy?: Proj
     P("econ.grid_ef_t_mwh", "Grid emission factor", gridEfFor(c.code, regionId), c.ef, "tCO₂/MWh"),
   ];
   if (c.nitrateLimit !== undefined) out.push(prov("eng.nitrates_limit_kg_n_ha", "N application ceiling from organic fertiliser", c.nitrateLimit, "kgN/ha·a", "ASSUMPTION", "National rule / good practice", "MEDIUM", o));
+  for (const [animal, m] of Object.entries(c.manure ?? {})) {
+    const mo = { country: c.code, date: m.date };
+    out.push(
+      prov(`eng.animal.${animal}.t_head_year`, `Manure as excreted per ${animal.replace("_", " ")} and year`, m.tonnesHeadYear, "t/head·a", "FACT", m.source, m.confidence, mo),
+      prov(`eng.animal.${animal}.dm_pct`, `Dry matter of ${animal.replace("_", " ")} manure as excreted`, m.dryMatterPct, "% FM", "FACT", m.source, m.confidence, mo),
+      prov(`eng.animal.${animal}.vs_pct_dm`, `Volatile solids of ${animal.replace("_", " ")} manure`, m.vsPctOfDm, "% DM", "FACT", m.source, m.confidence, mo),
+    );
+  }
   if (c.storageMonths !== undefined) out.push(prov("eng.storage_months", "Digestate storage required (closed spreading season)", c.storageMonths, "months", "ASSUMPTION", "National closed-season rule / practice", L, o));
   return out;
 }

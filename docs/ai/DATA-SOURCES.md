@@ -38,6 +38,9 @@ of a number. A Wayback snapshot of an official page is acceptable; state its dat
 | BR / KZ / TR / MD spot | CCEE open data; RFC single purchaser; EPDK monthly reports; OPEM CSV | quarterly |
 | US / CA grid factor | EPA eGRID (state rates); ECCC NIR | yearly |
 | Support schemes | legal texts listed in each scheme's `source` | before each release |
+| Back-test set | EPA AgSTAR Livestock AD Database xlsx: `python -I scripts/data/extract_agstar.py --write`, then `npx tsx scripts/backtest.ts --write` | when AgSTAR updates (≈ twice a year) |
+| US dairy manure per head | USDA NRCS AWMFH ch. 4 Table 4-5 (ASAE D384.2) in the US profile | on a new ASABE D384 edition |
+| RED climate defaults | Directive (EU) 2018/2001 Annex VI (legislation.gov.uk copy; EUR-Lex blocks scripts) in `src/core/ghg.ts` | when Annexes V–VI are revised |
 
 ## Blocked or missing (confidence LOW until fixed)
 

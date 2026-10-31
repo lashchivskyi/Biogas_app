@@ -222,6 +222,9 @@ export const PROFILES: CountryProfile[] = [
   // ---------------- North America ----------------
   {
     code: "US", name: "United States", currency: "USD", fx: 1.1, tier: "A", regime: "US", inj: true,
+    // US Holsteins excrete about twice the catalogue (EU slurry) volatile solids; the AgSTAR back-test confirmed the gap.
+    manure: { dairy_cow: { tonnesHeadYear: 22.9, dryMatterPct: 12.8, vsPctOfDm: 84, confidence: "MEDIUM", date: "2008-03-01",
+      source: "USDA NRCS Agricultural Waste Management Field Handbook ch. 4 (210-VI-AWMFH, March 2008) Table 4-5(a), from ASAE D384.2 (2005): lactating cow at 75 lb milk/d 148 lb manure, 19 lb TS, 16 lb VS per day; dry cow 85/11/9.3 lb. Herd average with 15 % dry cows (60-day dry period in a ≈ 13-month calving interval, judgement): 22.9 t/a as excreted, 12.8 % TS, VS 84 % of TS (6.8 kg VS/cow·d)" } },
     elec: 0.1, exp: 0.04, gas: 12, labour: 30, capex: 1.1, disc: 0.075, debtRate: 0.065, tkm: 0.14, bm: [0.12, 0.2, 0.35], fertN: 1.1, ef: 0.37,
     regions: [region("wisconsin", "Wisconsin (dairy)", [-8.5, -6.5, -0.5, 7.0, 13.5, 19.0, 21.5, 20.5, 16.0, 9.0, 2.0, -5.0]), region("california", "California Central Valley", [8.0, 10.5, 13.0, 15.8, 20.3, 24.5, 27.8, 27.0, 24.0, 18.5, 11.8, 7.5]), region("iowa", "Iowa (swine)", [-6.0, -3.5, 3.0, 10.0, 16.3, 21.5, 23.5, 22.5, 18.0, 11.0, 3.5, -3.5])],
     support: sup("New RNG used as transport fuel earns federal RFS D3 RINs (realised ≈ $2.45–2.50 in Q2 2026, volatile); manure RNG piped into California can also earn LCFS credits (book-and-claim). The 45Z credit is not final; the biogas ITC and REAP digester support are closed.", "Новий RNG як моторне паливо отримує федеральні RIN D3 (реалізовано ≈ $2,45–2,50 у II кв. 2026 р., волатильно); RNG із гною, поставлений трубопроводом до Каліфорнії, може отримувати ще й кредити LCFS. Кредит 45Z не остаточний; ITC для біогазу та REAP для дигестерів закрито.", [

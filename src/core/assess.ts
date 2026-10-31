@@ -1,4 +1,4 @@
-import { processBounds, processSchema } from "./processes";
+import { existingPlant, processBounds, processSchema } from "./processes";
 import { modelsForBusiness } from "./businesses";
 import { climateSummary } from "./climate";
 import { projectRegion, type CityClimate } from "./location";
@@ -13,13 +13,14 @@ import { ENGINEERING_MAP } from "./engineeringParams";
 import { PLAUSIBLE_DISPOSAL_EUR_T, PLAUSIBLE_GATE_FEE_EUR_T, PLAUSIBLE_PURCHASE_EUR_T } from "./feedstock";
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
+import { ghgCase } from "./ghg";
 import { Params, prov, toMap } from "./params";
 import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
 import { assessQuality, capQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
-import type { Assessment, ProductBreakEven, QuoteCheck, RouteId, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
+import type { Assessment, ProductBreakEven, QuoteCheck, RouteId, ScalePoint, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
 import { decideVerdict } from "./verdict";
 import { BUSINESS_TYPES } from "./businesses";
 
@@ -81,6 +82,9 @@ function productValue(r: ScenarioResult, params: Params): { product: ProductBrea
   const lhv = params.get("eng.ch4_lhv_kwh_m3") * (e.biomethaneCh4Share ?? params.get("eng.biomethane_ch4_purity"));
   return e.biomethaneNm3 > 0 && eur > 0 ? { product: "biomethane", unit: "EUR/Nm3", unitEur: eur / e.biomethaneNm3, lhvKwhNm3: lhv } : null;
 }
+
+/** Plant sizes shown in the scale comparison, as multiples of the entered feedstock. */
+const SCALE_STEPS = [0.5, 0.75, 1, 1.5, 2, 3];
 
 /** Customer energy prices more than this factor above the national business price (or below it, for gas) are flagged as likely unit slips (judgement). */
 const PRICE_BAND = 3;
@@ -321,6 +325,18 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${ratio.toFixed(1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${ratio.toFixed(1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
     if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T(`Your supplier quote is for the ${routeName} route, but the model finds the ${bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.`, `Пропозиція постачальника стосується варіанта «${routeName}», але модель вважає вигіднішим «${bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.`));
   }
+  // Scale: the same mix at other sizes, re-sized from scratch (no quote, since a quote is for one size).
+  const scale: ScalePoint[] | undefined = input.process ? undefined : SCALE_STEPS.map((m) => {
+    // Delivered streams come from a supply area that grows with the quantity: haul distance × √size (uniform density).
+    const scaled = { ...input, feedstocks: input.feedstocks.map((f) => ({ ...f, quantity: f.quantity * m, ...(f.delivered && f.distanceKm ? { distanceKm: f.distanceKm * Math.sqrt(m) } : {}) })), finance: input.finance && { ...input.finance, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
+    const routes = {} as ScalePoint["routes"];
+    for (const rt of ROUTES) {
+      const x = runScenarioRoute(makeCtx(scaled, country, params.fork(), "base", NO_MODS, lang), rt);
+      routes[rt] = { npvEur: x.fin.npvEur, capexEur: x.capex.totalEur, kwEl: x.kwElEquivalent, irr: x.fin.irr };
+    }
+    return { multiplier: m, tonnesYear: base.feed.tonnesYear * m, routes };
+  });
+
   // The quote is compared with the model's own component estimate for the same route, without the quote, so the client
   // sees whether it sits inside the model's optimistic–conservative range and which items a complete scope contains.
   let quoteCheck: QuoteCheck | undefined;
@@ -448,6 +464,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   ];
   if (input.process) warnings.push(T("Upstream budgets must include pretreatment, logistics, storage and final treatment; they are not independently verified installed quotations.", "Бюджети мають включати підготовку, логістику, зберігання й кінцеву обробку; це не незалежно перевірені монтажні оферти."));
   if (input.process?.kind === "residue" || input.process?.kind === "wastewater") warnings.push(T("BMP/COD and retention time alone do not verify salinity, ammonia inhibition, toxic contaminants or treatment stability; confirm with representative analysis and continuous pilot/vendor data.", "BMP/COD і час утримання не підтверджують стійкість процесу за наявності солей, аміаку чи токсичних домішок; потрібні репрезентативні аналізи та дані безперервного пілота або виробника."));
+  if (existingPlant(input.process)) warnings.push(T("The CHP option keeps the existing engine: its overhaul budget must carry it through the whole 15-year horizon. A second overhaul, a shorter remaining life or a lost feed-in tariff is not modelled; enter it in the budget.", "Варіант когенерації залишає наявний двигун: бюджет капремонту має забезпечити його роботу всі 15 років. Другий капремонт, коротший ресурс чи втрату тарифу не моделюємо; включіть це в бюджет."));
   if (input.process?.kind === "gas" || input.process?.kind === "landfill") warnings.push(T("The treatment quotation and recovery must cover the actual H2S, siloxanes, moisture, N2 and O2. Entered product purity is a design requirement, not demonstrated gas-grid compliance.", "Оферта та recovery мають відповідати фактичним H2S, силоксанам, волозі, N2 та O2. Введена чистота продукту — проєктна вимога, а не доказ відповідності газовій мережі."));
   if (base.energy.heatExternalPurchasedKwh > 0) warnings.push(T("Own biogas is not enough to heat the digester in the coldest months — external heat is needed.", "Власного біогазу бракує для обігріву реактора в найхолодніші місяці — потрібне зовнішнє тепло."));
   const flareShare = Math.round((base.energy.flaredKwh / gasKwh) * 100);
@@ -490,6 +507,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     marketEvidence,
     breakEven,
     ...(quoteCheck ? { quoteCheck } : {}),
+    ...(scale ? { scale } : {}),
+    ...(input.process ? {} : { ghg: ghgCase(base, params) }),
     scores,
     overall,
     verdict,

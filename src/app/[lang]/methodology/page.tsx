@@ -15,6 +15,8 @@ import { readPreferenceCookie, resolvePreferences } from "@/lib/preferences";
 import { alternates } from "@/i18n/seo";
 import { methodologyCopy, methodologyTermHelp } from "@/i18n/methodology";
 import { processCopy } from "@/i18n/processes";
+import { validationCopy } from "@/i18n/validation";
+import { BACKTEST } from "@/countries/backtest";
 import "./methodology.css";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/methodology">): Promise<Metadata> {
@@ -72,6 +74,8 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
   const regionName = region?.names?.[locale] ?? region?.name ?? (selection.city ? [selection.city.name, selection.city.admin1].filter(Boolean).join(", ") : undefined);
   // A chosen city shows its state/province market data; signature is irrelevant for this read-only view.
   const all = allProvenance(country, selection.region, undefined, selection.city);
+  const V = validationCopy[locale];
+  const ratio = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 2 }).format(v);
   const registryHref = (code: string) => `/${locale}/methodology?${new URLSearchParams({ c: code })}#parameter-group-4`;
   return (
     <main>
@@ -115,6 +119,18 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
           </div>
           <p className="mt-4 text-sm text-muted">{processCopy(locale).inputHint} {processCopy(locale).costHint}</p>
           <p className="mt-2 text-sm"><a className="underline" href="https://www.epa.gov/system/files/documents/2021-07/pdh_chapter2.pdf">EPA LMOP · 2021</a> · <a className="underline" href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_6_Ch06_Wastewater.pdf">IPCC · 2019</a> · <a className="underline" href="https://www.ieabioenergy.com/blog/publications/implementation-of-anaerobic-digestion-facilities-in-the-food-and-beverage-industry/">IEA Bioenergy · 2025</a></p>
+        </section>
+
+        <section id="validation" className="methodology-section" aria-labelledby="validation-title">
+          <h2 id="validation-title" className="methodology-panelTitle">{V.title}</h2>
+          <p className="mt-2 text-sm text-ink2">{V.lead}</p>
+          <dl className="num mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="card p-4"><dt className="text-xs text-muted">{V.n}</dt><dd className="text-xl font-bold">{BACKTEST.electricity.n}</dd></div>
+            <div className="card p-4"><dt className="text-xs text-muted">{V.median}</dt><dd className="text-xl font-bold">{ratio(BACKTEST.electricity.median)}</dd></div>
+            <div className="card p-4"><dt className="text-xs text-muted">{V.band}</dt><dd className="text-xl font-bold">{ratio(BACKTEST.electricity.p10)} – {ratio(BACKTEST.electricity.p90)}</dd></div>
+            <div className="card p-4"><dt className="text-xs text-muted">{V.within}</dt><dd className="text-xl font-bold">{new Intl.NumberFormat(INTL_TAG[locale], { style: "percent" }).format(BACKTEST.electricity.within30)}</dd></div>
+          </dl>
+          <p className="mt-3 text-xs text-muted">{V.caveat} <a className="underline" href={BACKTEST.source}>EPA AgSTAR</a> · {BACKTEST.dataThrough} · model {BACKTEST.modelVersion}</p>
         </section>
 
         <section id="country-conditions" className="methodology-section" aria-labelledby="country-conditions-title">

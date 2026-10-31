@@ -9,6 +9,7 @@ import { displayUnit, makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
 import { decisionCopy } from "@/i18n/decision";
+import { climateCopy } from "@/i18n/climate";
 import { qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
 import { COUNTRIES } from "@/countries";
@@ -354,6 +355,66 @@ function BreakEvenPanel({ a, F, locale, unreachable }: { a: Assessment; F: Retur
   );
 }
 
+function ClimatePanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof makeFormat>; locale: Locale }) {
+  const g = a.ghg;
+  if (!g) return null;
+  const C = climateCopy[locale];
+  const unit = "g CO₂e/MJ";
+  const pctFmt = (v: number) => F.pct(v);
+  return (
+    <Section title={C.title} sub={C.sub}>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label={C.product} value={<>{F.n0(g.productGMJ)} <span className="text-sm font-normal">{unit}</span></>} note={g.digestate === "closed" ? C.closed : C.open} />
+        <Stat label={C.comparator} value={<>{F.n0(g.comparatorGMJ)} <span className="text-sm font-normal">{unit}</span></>} />
+        <Stat label={C.saving} value={<span className={g.meetsMinimum ? "text-good" : "text-warn"}>{pctFmt(g.saving)}</span>} note={`${C.minimum}: ${pctFmt(g.minSaving)}`} />
+        <Stat label={C.avoided} value={<>{F.n0(g.avoidedTco2eYear)} <span className="text-sm font-normal">t CO₂e</span></>} />
+      </div>
+      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink2">
+        <li className={g.meetsMinimum ? "" : "font-semibold text-warn"}>{g.meetsMinimum ? C.meets : C.below}</li>
+        <li>{g.criteriaApply ? C.applies : C.notApplies}</li>
+        {g.approximated && <li>{C.approximated}</li>}
+      </ul>
+    </Section>
+  );
+}
+
+function ScalePanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale }) {
+  if (!a.scale?.length) return null;
+  const S = decisionCopy[locale].scale;
+  const L = d.labels;
+  const best = (p: (typeof a.scale)[number]) => (["chp", "boiler", "biomethane"] as RouteId[]).reduce((x, y) => (p.routes[y].npvEur > p.routes[x].npvEur ? y : x));
+  const top = a.scale.reduce((x, y) => (y.routes[best(y)].npvEur > x.routes[best(x)].npvEur ? y : x));
+  return (
+    <Section title={S.title} sub={S.sub}>
+      <div className="card overflow-x-auto p-1">
+        <table className="num w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="text-left text-xs uppercase tracking-wide text-muted">
+              <th className="p-3">{S.size}</th><th className="p-3 text-right">{L.units.tYear}</th><th className="p-3">{S.best}</th><th className="p-3 text-right">{L.units.kwe}</th><th className="p-3 text-right">{d.result.colCapex}</th><th className="p-3 text-right">{d.result.colNpv}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {a.scale.map((p) => {
+              const r = best(p);
+              const v = p.routes[r];
+              return (
+                <tr key={p.multiplier} className={`border-t border-line ${p.multiplier === 1 ? "bg-brandsoft/60" : ""}`}>
+                  <td className="p-3 font-sans">× {p.multiplier.toLocaleString(INTL_TAG[locale])} {p.multiplier === 1 && <span className="chip ml-1">{S.current}</span>}</td>
+                  <td className="p-3 text-right">{F.n0(sig2(p.tonnesYear))}</td>
+                  <td className="p-3 font-sans">{L.route[r]}</td>
+                  <td className="p-3 text-right">{F.n0(v.kwEl)}</td>
+                  <td className="p-3 text-right">{F.eur(v.capexEur)}</td>
+                  <td className={`p-3 text-right ${p === top ? "font-bold" : ""} ${v.npvEur >= 0 ? "text-good" : "text-bad"}`}>{F.eur(v.npvEur)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+  );
+}
+
 function QuoteCheckPanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale }) {
   const q = a.quoteCheck!;
   const D = decisionCopy[locale];
@@ -550,6 +611,8 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
       {/* ---------- Details ---------- */}
       </>}
       <BreakEvenPanel a={a} F={F} locale={locale} unreachable={R.unreachable} />
+      <ScalePanel a={a} d={d} F={F} locale={locale} />
+      <ClimatePanel a={a} F={F} locale={locale} />
       <Section title={R.detailsTitle}>
         <div className="space-y-3">
           <Fold title={R.dFeed} open>

@@ -71,6 +71,15 @@ replace the line rather than adding a contradicting one.
 - 2026-10-31 — Supplier-quote position uses the model's own optimistic/conservative CAPEX for the same route as
   the band; no new judgement constant. The 2.5× unit-slip warning stays separate.
 
+- 2026-10-31 — Yield realisation stays a fixed scenario factor (0.85/0.90/0.95): no authoritative per-substrate
+  kinetic constants were found (first-order k values vary by test method); an HRT model would move every verdict
+  without better evidence. Scale is answered by the plant-size table instead.
+- 2026-10-31 — National manure per head lives in country profiles (`manure`); US dairy uses NRCS AWMFH ch. 4 /
+  ASAE D384.2 because the AgSTAR back-test showed the EU-style catalogue at half of reported US output.
+- 2026-10-31 — Climate case uses RED Annex VI default values only (no actual-value calculation, no carbon price);
+  credits are valued only inside support cases with an official mechanism (US RIN/LCFS). Heat in CHP is allocated by
+  the RED Carnot share at 150 °C.
+
 ## Product
 
 - 2026-10-30 — Keep country conditions as the existing table with six-decimal formatting.

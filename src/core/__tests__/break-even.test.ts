@@ -96,3 +96,23 @@ describe("supplier quote check", () => {
     expect(assess(input, country).quoteCheck).toBeUndefined();
   });
 });
+
+describe("plant size comparison", () => {
+  it("reproduces the entered size and re-sizes every route with the feedstock", () => {
+    const input = ex("dairy_400");
+    const a = assess(input, getCountry(input.countryCode));
+    const now = a.scale!.find((p) => p.multiplier === 1)!;
+    for (const r of ["chp", "boiler", "biomethane"] as const) {
+      expect(now.routes[r].npvEur, r).toBeCloseTo(a.routesBase[r].fin.npvEur, 3);
+      expect(now.routes[r].capexEur, r).toBeCloseTo(a.routesBase[r].capex.totalEur, 3);
+    }
+    const sizes = a.scale!.map((p) => p.routes.chp.kwEl);
+    expect([...sizes].sort((x, y) => x - y)).toEqual(sizes);
+    expect(a.scale!.at(-1)!.tonnesYear).toBeCloseTo(a.scenarios.base.feed.tonnesYear * 3, 6);
+  });
+
+  it("is absent for process inputs", () => {
+    const input = ex("ca_brewery_cod");
+    expect(assess(input, getCountry(input.countryCode)).scale).toBeUndefined();
+  });
+});

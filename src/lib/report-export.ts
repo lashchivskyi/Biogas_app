@@ -93,6 +93,33 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     { name: T("Assumptions", "Припущення"), rows: assumptions, widths: [50, 14, 14, 22, 12, 12, 90, 40] },
   ];
 
+  if (a.ghg) {
+    const g = a.ghg;
+    sheets.push({ name: T("Climate (RED)", "Клімат (RED)"), widths: [60, 18], rows: [
+      [T("Climate case, EU RED II Annex VI default values (separate from the verdict)", "Кліматичний сценарій, стандартні значення EU RED II, додаток VI (окремо від вердикту)"), ""],
+      [T("Product", "Продукт"), g.product],
+      [T("Digestate storage", "Зберігання дигестату"), g.digestate],
+      ...g.shares.map((s) => [T(`Energy share, ${s.substrate}`, `Енергетична частка, ${s.substrate}`), s.share] as Cell[]),
+      [T("Emissions per MJ biogas / biomethane, g CO2e", "Викиди на МДж біогазу / біометану, г CO2e"), g.feedGMJ],
+      [T("Emissions per MJ product, g CO2e", "Викиди на МДж продукту, г CO2e"), g.productGMJ],
+      [T("Fossil comparator, g CO2e/MJ", "Викопний еквівалент, г CO2e/МДж"), g.comparatorGMJ],
+      [T("Saving (share)", "Скорочення (частка)"), g.saving],
+      [T("RED minimum (share)", "Мінімум RED (частка)"), g.minSaving],
+      [T("Rated thermal input, MW", "Номінальна теплова потужність на вході, МВт"), g.ratedInputMw],
+      [T("Avoided emissions, t CO2e/year", "Уникнуті викиди, т CO2e/рік"), g.avoidedTco2eYear],
+    ] });
+  }
+
+  if (a.scale?.length) {
+    const routes: RouteId[] = ["chp", "boiler", "biomethane"];
+    sheets.push({ name: T("Plant size", "Розмір установки"), widths: [12, 16, ...routes.flatMap(() => [14, 16, 16])], rows: [
+      [T("Size (× your feedstock)", "Обсяг (× вашої сировини)"), T("Feedstock, t/year", "Сировина, т/рік"), ...routes.flatMap((r) => [`${route(r)}: kWe`, `${route(r)}: CAPEX, EUR`, `${route(r)}: NPV, EUR`])],
+      ...a.scale.map((p) => [p.multiplier, p.tonnesYear, ...routes.flatMap((r) => [p.routes[r].kwEl, p.routes[r].capexEur, p.routes[r].npvEur])] as Cell[]),
+      blank,
+      [T("Extra feedstock on the same terms (price, transport rate, disposal saving); delivered streams travel distance × √size. CAPEX is the model estimate, without a supplier quote.", "Додаткова сировина на тих самих умовах (ціна, тариф перевезення, економія на утилізації); привізна сировина їде на відстань × √обсягу. CAPEX — оцінка моделі без пропозиції постачальника.")],
+    ] });
+  }
+
   if (a.quoteCheck) {
     const q = a.quoteCheck;
     sheets.push({ name: T("Quote check", "Перевірка пропозиції"), widths: [60, 18], rows: [

@@ -34,7 +34,9 @@ export const processSchema = z.discriminatedUnion("kind", [
   z.object({ ...common, kind: z.literal("residue"), tonnesYear: positive(1e8), densityKgM3: z.number().min(50).max(1500), dmPct: positive(95), vsPct: positive(100), bmp: positive(1200), methanePct: z.number().min(40).max(80), nKgT: z.number().min(0).max(200), hrtDays: positive(200), olr: positive(15) }),
   z.object({ ...common, kind: z.literal("wastewater"), reactorTechnology: z.enum(["high_rate", "covered_lagoon"]).optional(), flowM3Day: positive(1e6), codMgL: positive(200000), removalPct: z.number().min(1).max(99), methanePct: z.number().min(40).max(85), methaneRecoveryPct: z.number().min(1).max(100), biomassCodPct: z.number().min(0).max(40), sludgeTsPct: positive(30), sludgeVsPct: positive(100), hrtDays: positive(60), olr: positive(40), inletTempC: z.number().min(0).max(60), heatRecoveryPct: fraction, avoidedTreatmentLocalM3: z.number().min(0).max(1e7) }),
   z.object({ ...common, ...gasTreatment, kind: z.literal("landfill"), annualWasteTonnes: positive(1e8), depositionYears: z.number().int().min(1).max(100), yearsSinceClosure: z.number().min(0).max(100), decayPerYear: z.number().min(0.005).max(0.5), potentialNm3T: positive(300), collectionPct: z.number().min(1).max(95), methanePct: z.number().min(30).max(65) }),
-  z.object({ ...common, ...gasTreatment, kind: z.literal("gas"), rawGasNm3Hour: positive(1e6), methanePct: z.number().min(30).max(95), availabilityPct: z.number().min(1).max(100), declinePctYear: z.number().min(0).max(40), gasPriceLocalNm3: z.number().min(0).max(1e6) }),
+  z.object({ ...common, ...gasTreatment, kind: z.literal("gas"), rawGasNm3Hour: positive(1e6), methanePct: z.number().min(30).max(95), availabilityPct: z.number().min(1).max(100), declinePctYear: z.number().min(0).max(40), gasPriceLocalNm3: z.number().min(0).max(1e6),
+    // Existing plant: the CHP already on site and the budget to keep it running replace a new engine in the CHP option.
+    existingChpKwEl: positive(1e5).optional(), chpOverhaulLocal: z.number().finite().min(0).max(1e15).optional() }),
 ]).superRefine((p, ctx) => {
   const days = Array.from({ length: p.monthsActive }, (_, n) => DAYS_IN_MONTH[(p.startMonth - 1 + n) % 12]).reduce((a,b) => a+b, 0);
   if (p.operatingDays > days) ctx.addIssue({ code: "custom", path: ["operatingDays"], message: "Operating days exceed the selected calendar period" });
@@ -52,7 +54,10 @@ export const processSchema = z.discriminatedUnion("kind", [
 export type ProcessInput = z.infer<typeof processSchema>;
 export type ProcessKind = ProcessInput["kind"];
 export const PROCESS_COST_FIELDS = ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "auxiliaryKwhYear", "auxiliaryHeatKwhYear"] as const;
-export const missingProcessInputs = (p: ProcessInput): string[] => [...PROCESS_COST_FIELDS.filter(key => p[key] === undefined), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : [])];
+export const missingProcessInputs = (p: ProcessInput): string[] => [...PROCESS_COST_FIELDS.filter(key => p[key] === undefined), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : []),
+  ...(p.kind === "gas" && p.existingChpKwEl !== undefined && p.chpOverhaulLocal === undefined ? ["chpOverhaulLocal"] : [])];
+/** Existing biogas plant with its own CHP: the gas system, grid connection and engine are reused. */
+export const existingPlant = (p: ProcessInput | undefined) => (p?.kind === "gas" && (p.existingChpKwEl ?? 0) > 0 ? p : undefined);
 export function processBounds(kind: ProcessKind, key: string) {
   const shape = processSchema.options.find(s => s.shape.kind.value === kind)!.shape;
   const raw = (shape as unknown as Record<string,z.ZodType>)[key];
@@ -105,7 +110,7 @@ export const PROCESS_UNITS: Record<string, string> = {
   operatingDays: "d/a", processCapexLocal: "local", processOpexLocalYear: "local/a", residualCostLocalT: "local/t", auxiliaryKwhYear: "kWh/a", auxiliaryHeatKwhYear: "kWh_th/a", uncertaintyPct: "%",
   tonnesYear: "t/a", densityKgM3: "kg/m³", dmPct: "% FM", vsPct: "% DM", bmp: "L CH₄/kg VS", methanePct: "% vol", nKgT: "kg N/t FM", hrtDays: "d", olr: "kg/(m³·d)", sludgeVsPct: "% VS/TS",
   flowM3Day: "m³/d", codMgL: "mg COD/L", removalPct: "% COD", methaneRecoveryPct: "% CH₄", biomassCodPct: "% COD", sludgeTsPct: "% TS", inletTempC: "°C", heatRecoveryPct: "%", avoidedTreatmentLocalM3: "local/m³",
-  annualWasteTonnes: "t/a", depositionYears: "a", yearsSinceClosure: "a", decayPerYear: "1/a", potentialNm3T: "Nm³ CH₄/t", collectionPct: "%", rawGasNm3Hour: "Nm³/h", availabilityPct: "%", declinePctYear: "%/a", gasPriceLocalNm3: "local/Nm³",
+  annualWasteTonnes: "t/a", depositionYears: "a", yearsSinceClosure: "a", decayPerYear: "1/a", potentialNm3T: "Nm³ CH₄/t", collectionPct: "%", rawGasNm3Hour: "Nm³/h", availabilityPct: "%", declinePctYear: "%/a", gasPriceLocalNm3: "local/Nm³", existingChpKwEl: "kWe", chpOverhaulLocal: "local",
 };
 
 export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSummary; design: DigesterDesign; process: ProcessResult } {

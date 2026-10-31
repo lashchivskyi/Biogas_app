@@ -1,6 +1,7 @@
 import { DATA_REVIEW_AS_OF } from "./modelAudit";
 import { prov, toMap } from "./params";
 import type { Provenance } from "./types";
+import { GHG_PARAMS } from "./ghg";
 
 /**
  * Country-independent engineering parameters.
@@ -152,6 +153,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.methane_loss_high", "Methane loss share that cancels most climate benefit", 0.05, "of production", "ASSUMPTION", "IEA Bioenergy Task 37, 2017, pp. 41–44 (biowaste plants lose the benefit at ≈ 3.5–5.5 %)", "MEDIUM", { date: "2017-12-31" }),
   prov("eng.dry_digestion_dm_pct", "DM above which high-solids digestion is considered", 22, "%", "ASSUMPTION", `${FNR10}, §3.1.1, p. 33; Table 8.4 (wet ≤ 12 % in digester; dry 20–30 % feed)`, "MEDIUM", { date: FNR10_DATE }),
   prov("eng.wet_solids_feeding_dm_pct", "DM above which a solids feeder / recirculation is needed", 12, "%", "ASSUMPTION", `${FNR10}, §2.2.1, p. 23 (pumpable up to ≈ 12 % DM)`, "MEDIUM", { date: FNR10_DATE }),
+  ...GHG_PARAMS,
 ];
 
 export const ENGINEERING_MAP = toMap(ENGINEERING_PARAMS);

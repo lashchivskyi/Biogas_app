@@ -1,6 +1,7 @@
 import { activeMonths, DAYS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import { ANIMALS, FEEDSTOCKS, isEffluentLike, PAID_HANDLING } from "./feedstockData";
+import type { Params } from "./params";
 import type { FeedstockLineInput, FeedstockLineResult, FeedstockSummary } from "./types";
 
 /**
@@ -20,16 +21,25 @@ export const PLAUSIBLE_GATE_FEE_EUR_T = 250;
 export const PLAUSIBLE_PURCHASE_EUR_T = 150;
 const zeros = () => new Array(12).fill(0) as number[];
 
-export function resolveLine(line: FeedstockLineInput) {
+/** National as-excreted manure (country params `eng.animal.<kind>.*`) replaces the catalogue default for that animal. */
+function nationalManure(line: FeedstockLineInput, params?: Params) {
+  const key = (k: string) => `eng.animal.${line.animal}.${k}`;
+  if (!line.animal || !params?.has(key("t_head_year"))) return undefined;
+  return { tonnes: params.get(key("t_head_year")), dm: params.get(key("dm_pct")), vs: params.get(key("vs_pct_dm")) };
+}
+
+export function resolveLine(line: FeedstockLineInput, params?: Params) {
   if (line.animal) {
     const a = ANIMALS[line.animal];
     const t = FEEDSTOCKS[a.feedstock];
     const collect = line.housing === "seasonal" ? a.collectSeasonal : a.collectYearRound;
-    return { typeDef: t, tonnesBase: line.quantity * a.tonnesPerHeadYear * collect, isAnimal: true, animalLabel: a.name.en };
+    const national = nationalManure(line, params);
+    const typeDef = national ? { ...t, dryMatterPct: national.dm, vsPctOfDm: national.vs } : t;
+    return { typeDef, nutrientDm: t.dryMatterPct, tonnesBase: line.quantity * (national?.tonnes ?? a.tonnesPerHeadYear) * collect, isAnimal: true, animalLabel: a.name.en };
   }
   if (!line.type) throw new Error(`Feedstock line ${line.id} has neither animal nor type`);
   const t = FEEDSTOCKS[line.type];
-  return { typeDef: t, tonnesBase: line.quantity, isAnimal: false, animalLabel: undefined };
+  return { typeDef: t, nutrientDm: t.dryMatterPct, tonnesBase: line.quantity, isAnimal: false, animalLabel: undefined };
 }
 
 export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
@@ -56,7 +66,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
 
   for (const line of input.feedstocks) {
     if (!(line.quantity > 0)) continue;
-    const { typeDef: t, tonnesBase, isAnimal } = resolveLine(line);
+    const { typeDef: t, nutrientDm, tonnesBase, isAnimal } = resolveLine(line, params);
     const tonnes = tonnesBase * scenario.feedstockAvailability * mods.feedstock;
     const dm = line.dryMatterPct ?? t.dryMatterPct;
     const months = isAnimal ? 12 : line.monthsActive ?? t.defaultMonths;
@@ -73,7 +83,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     const ch4 = vsT * yieldL * mods.methaneYield;
     const ch4Fraction = t.ch4Fraction;
 
-    const nutrientScale = dm / t.dryMatterPct; // diluted slurry carries proportionally less nutrient
+    const nutrientScale = dm / nutrientDm; // catalogue nutrients are per tonne at catalogue dry matter; thinner slurry carries less
     const nKg = tonnes * t.nKgT * nutrientScale;
     const pKg = tonnes * t.p2o5KgT * nutrientScale;
     const kKg = tonnes * t.k2oKgT * nutrientScale;

@@ -1,5 +1,5 @@
 import { FEEDSTOCKS } from "./feedstockData";
-import { processCalendar } from "./processes";
+import { existingPlant, processCalendar } from "./processes";
 import { DAYS_IN_MONTH, HOURS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
@@ -91,9 +91,20 @@ export function buildCapex(
 
   }
   const quotedUpgrade = ctx.input.process?.kind === "gas" || ctx.input.process?.kind === "landfill" ? ctx.input.process : undefined;
+  const existing = existingPlant(ctx.input.process);
+  if (existing && route === "chp") {
+    // Keep-CHP option of a running plant: the engine, gas system, heat main and grid connection already exist. The overhaul
+    // budget carries the client's uncertainty band in the scenarios, like the upgrading quote, not the country factor.
+    const band = 1 + (ctx.scenario.id === "conservative" ? 1 : ctx.scenario.id === "optimistic" ? -1 : 0) * existing.uncertaintyPct / 100;
+    const kept = [
+      ...(process ? [{ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)", "Технологічна частина: бюджет монтажу (без перетворення газу)"), eur: process.capexEur }] : []),
+      { id: "chp_overhaul", label: T(`Existing CHP ${Math.round(existing.existingChpKwEl!)} kWe: overhaul / replacement budget`, `Наявна КГУ ${Math.round(existing.existingChpKwEl!)} кВт ел.: бюджет капремонту / заміни`), eur: (existing.chpOverhaulLocal ?? 0) / ctx.fx * ctx.mods.capex * band },
+    ];
+    return { lines: kept, totalEur: kept.reduce((a, l) => a + l.eur, 0) };
+  }
   // Gas system
   const rawNm3h = Math.max(energy.rawBiogasDesignNm3PerHour, 1);
-  add("gas_system", T("Gas holder, flare, H₂S removal, gas lines", "Газгольдер, факел, очищення (H₂S), газові лінії"), p.get("eng.capex.gas_system_fixed") + p.get("eng.capex.gas_system_per_nm3h") * rawNm3h);
+  if (!existing) add("gas_system", T("Gas holder, flare, H₂S removal, gas lines", "Газгольдер, факел, очищення (H₂S), газові лінії"), p.get("eng.capex.gas_system_fixed") + p.get("eng.capex.gas_system_per_nm3h") * rawNm3h);
 
   if (route === "boiler") peakHeatKw = Math.max(peakHeatKw, ...feed.monthlyCh4M3.map((v, m) => v * (1 - ctx.scenario.leakShare) * p.get("eng.ch4_lhv_kwh_m3") * p.get("eng.boiler_efficiency") / HOURS_IN_MONTH[m] * (ctx.input.process ? processCalendar(ctx.input.process).days / ctx.input.process.operatingDays : 1)));
   // Conversion equipment
@@ -128,7 +139,9 @@ export function buildCapex(
   add("electrical", T("Electrical, I&C and SCADA", "Електрика, КВП і автоматика (SCADA)"), equipment * p.get("eng.capex.electrical_share"));
   add("piping", T("Substrate and gas piping", "Трубопроводи субстрату та газу"), equipment * p.get("eng.capex.piping_share"));
   add("civil", T("Civil works, site, roads", "Будівельні роботи, майданчик, дороги"), equipment * p.get("eng.capex.civil_share"));
-  if (route === "chp") {
+  if (existing) {
+    // A running plant already has its grid connection.
+  } else if (route === "chp") {
     add("grid", T("Grid connection", "Приєднання до електромережі"), p.get("eng.capex.grid_connection_fixed") + p.get("eng.capex.grid_connection_per_kw") * energy.chpKwEl);
   } else {
     add("grid", T("Grid connection", "Приєднання до електромережі"), p.get("eng.capex.grid_connection_fixed") * 0.5);

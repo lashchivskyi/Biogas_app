@@ -20,6 +20,7 @@ export interface DecisionCopy {
   position: { below: string; within: string; above: string };
   scope: string;
   exportXlsx: string;
+  scale: { title: string; sub: string; size: string; best: string; current: string };
   units: { kwh: string; kwhTh: string; nm3: string; mwh: string; t: string; kwe: string; nm3hRaw: string };
 }
 
@@ -39,6 +40,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Above the model's conservative estimate: ask for an itemised breakdown and a second quote.",
     },
     scope: "A complete quote should cover (model estimate per item)", exportXlsx: "Download Excel",
+    scale: { title: "Plant size", sub: "The same feedstock mix at other sizes, each option re-sized by the model. Extra feedstock is assumed on your terms (price, transport, disposal saving); CAPEX is the model's estimate, not your quote.", size: "Size", best: "Best option", current: "your input" },
     units: LATIN_UNITS,
   },
   uk: {
@@ -54,6 +56,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Вище за консервативну оцінку моделі: попросіть кошторис за позиціями та другу пропозицію.",
     },
     scope: "Повна пропозиція має охоплювати (оцінка моделі за позиціями)", exportXlsx: "Завантажити Excel",
+    scale: { title: "Розмір установки", sub: "Та сама суміш сировини в інших обсягах; модель заново підбирає кожен варіант. Додаткова сировина — на ваших умовах (ціна, перевезення, економія на утилізації); CAPEX — оцінка моделі, а не ваша пропозиція.", size: "Обсяг", best: "Найкращий варіант", current: "ваші дані" },
     units: { kwh: "кВт·год", kwhTh: "кВт·год тепла", nm3: "Нм³", mwh: "МВт·год", t: "т", kwe: "кВт ел.", nm3hRaw: "Нм³/год сирого біогазу" },
   },
   pl: {
@@ -69,6 +72,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Powyżej ostrożnego szacunku modelu: poproś o kosztorys pozycjami i drugą ofertę.",
     },
     scope: "Kompletna oferta powinna obejmować (szacunek modelu dla pozycji)", exportXlsx: "Pobierz Excel",
+    scale: { title: "Wielkość instalacji", sub: "Ta sama mieszanka substratów w innych ilościach; model dobiera każdy wariant od nowa. Dodatkowe substraty na Twoich warunkach (cena, transport, oszczędność na utylizacji); CAPEX to szacunek modelu, nie Twoja oferta.", size: "Skala", best: "Najlepszy wariant", current: "Twoje dane" },
     units: LATIN_UNITS,
   },
   de: {
@@ -84,6 +88,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Über der vorsichtigen Modellschätzung: aufgeschlüsselte Kosten und ein zweites Angebot anfordern.",
     },
     scope: "Ein vollständiges Angebot umfasst (Modellschätzung je Position)", exportXlsx: "Excel herunterladen",
+    scale: { title: "Anlagengröße", sub: "Dieselbe Substratmischung in anderen Mengen; das Modell legt jede Variante neu aus. Zusätzliches Substrat zu Ihren Bedingungen (Preis, Transport, ersparte Entsorgung); CAPEX ist die Modellschätzung, nicht Ihr Angebot.", size: "Größe", best: "Beste Variante", current: "Ihre Eingabe" },
     units: LATIN_UNITS,
   },
   fr: {
@@ -99,6 +104,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Au-dessus de l’estimation prudente du modèle : demandez un détail poste par poste et un second devis.",
     },
     scope: "Un devis complet doit couvrir (estimation du modèle par poste)", exportXlsx: "Télécharger Excel",
+    scale: { title: "Taille de l’unité", sub: "Le même mélange d’intrants à d’autres tailles ; le modèle redimensionne chaque option. Les intrants supplémentaires sont supposés à vos conditions (prix, transport, coût d’élimination évité) ; le CAPEX est l’estimation du modèle, pas votre devis.", size: "Taille", best: "Meilleure option", current: "votre saisie" },
     units: LATIN_UNITS,
   },
   it: {
@@ -114,6 +120,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Sopra la stima prudente del modello: chiedi un computo per voci e una seconda offerta.",
     },
     scope: "Un’offerta completa deve comprendere (stima del modello per voce)", exportXlsx: "Scarica Excel",
+    scale: { title: "Taglia dell’impianto", sub: "La stessa miscela di matrici in altre quantità; il modello ridimensiona ogni opzione. Le matrici aggiuntive sono alle tue condizioni (prezzo, trasporto, smaltimento evitato); il CAPEX è la stima del modello, non la tua offerta.", size: "Taglia", best: "Opzione migliore", current: "tuo dato" },
     units: LATIN_UNITS,
   },
   es: {
@@ -129,6 +136,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Por encima de la estimación prudente del modelo: pida un desglose por partidas y una segunda oferta.",
     },
     scope: "Una oferta completa debe incluir (estimación del modelo por partida)", exportXlsx: "Descargar Excel",
+    scale: { title: "Tamaño de la planta", sub: "La misma mezcla de materias primas en otros tamaños; el modelo redimensiona cada opción. La materia prima adicional se supone en sus condiciones (precio, transporte, ahorro de eliminación); el CAPEX es la estimación del modelo, no su oferta.", size: "Tamaño", best: "Mejor opción", current: "su dato" },
     units: LATIN_UNITS,
   },
   pt: {
@@ -144,6 +152,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Acima da estimativa conservadora do modelo: peça um orçamento detalhado por item e uma segunda proposta.",
     },
     scope: "Uma proposta completa deve cobrir (estimativa do modelo por item)", exportXlsx: "Baixar Excel",
+    scale: { title: "Porte da planta", sub: "A mesma mistura de matérias-primas em outros portes; o modelo redimensiona cada opção. A matéria-prima extra é suposta nas suas condições (preço, transporte, descarte evitado); o CAPEX é a estimativa do modelo, não a sua proposta.", size: "Porte", best: "Melhor opção", current: "seu dado" },
     units: LATIN_UNITS,
   },
   nl: {
@@ -159,6 +168,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Boven de voorzichtige modelschatting: vraag een gespecificeerde begroting en een tweede offerte.",
     },
     scope: "Een volledige offerte omvat (modelschatting per post)", exportXlsx: "Excel downloaden",
+    scale: { title: "Installatiegrootte", sub: "Dezelfde grondstofmix in andere hoeveelheden; het model dimensioneert elke optie opnieuw. Extra grondstof op uw voorwaarden (prijs, transport, vermeden afvoer); CAPEX is de modelschatting, niet uw offerte.", size: "Omvang", best: "Beste optie", current: "uw invoer" },
     units: LATIN_UNITS,
   },
   cs: {
@@ -174,6 +184,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Nad opatrným odhadem modelu: vyžádejte si rozpočet po položkách a druhou nabídku.",
     },
     scope: "Úplná nabídka má zahrnovat (odhad modelu po položkách)", exportXlsx: "Stáhnout Excel",
+    scale: { title: "Velikost stanice", sub: "Stejná směs vstupů v jiném množství; model každou variantu znovu nadimenzuje. Další vstupy za vašich podmínek (cena, doprava, úspora za likvidaci); CAPEX je odhad modelu, ne vaše nabídka.", size: "Velikost", best: "Nejlepší varianta", current: "vaše zadání" },
     units: LATIN_UNITS,
   },
   sk: {
@@ -189,6 +200,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Nad opatrným odhadom modelu: vyžiadajte si rozpočet po položkách a druhú ponuku.",
     },
     scope: "Úplná ponuka má zahŕňať (odhad modelu po položkách)", exportXlsx: "Stiahnuť Excel",
+    scale: { title: "Veľkosť stanice", sub: "Rovnaká zmes vstupov v inom množstve; model každú variantu znova nadimenzuje. Ďalšie vstupy za vašich podmienok (cena, doprava, úspora na likvidácii); CAPEX je odhad modelu, nie vaša ponuka.", size: "Veľkosť", best: "Najlepšia varianta", current: "vaše zadanie" },
     units: LATIN_UNITS,
   },
   hu: {
@@ -204,6 +216,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Az óvatos modellbecslés felett: kérjen tételes költségvetést és második ajánlatot.",
     },
     scope: "A teljes ajánlatnak tartalmaznia kell (modellbecslés tételenként)", exportXlsx: "Excel letöltése",
+    scale: { title: "Üzemméret", sub: "Ugyanaz az alapanyag-keverék más mennyiségben; a modell minden változatot újraméretez. A többlet alapanyag az Ön feltételeivel (ár, szállítás, megtakarított ártalmatlanítás); a CAPEX modellbecslés, nem az Ön ajánlata.", size: "Méret", best: "Legjobb változat", current: "az Ön adata" },
     units: LATIN_UNITS,
   },
   ro: {
@@ -219,6 +232,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Peste estimarea prudentă a modelului: cereți un deviz pe poziții și o a doua ofertă.",
     },
     scope: "O ofertă completă trebuie să cuprindă (estimarea modelului pe poziții)", exportXlsx: "Descarcă Excel",
+    scale: { title: "Mărimea instalației", sub: "Același amestec de materii prime în alte cantități; modelul redimensionează fiecare variantă. Materia primă suplimentară este presupusă în condițiile dvs. (preț, transport, economie la eliminare); CAPEX este estimarea modelului, nu oferta dvs.", size: "Mărime", best: "Cea mai bună variantă", current: "datele dvs." },
     units: LATIN_UNITS,
   },
   bg: {
@@ -234,6 +248,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Над предпазливата оценка на модела: поискайте подробна сметка по позиции и втора оферта.",
     },
     scope: "Пълната оферта трябва да включва (оценка на модела по позиции)", exportXlsx: "Изтегляне на Excel",
+    scale: { title: "Размер на инсталацията", sub: "Същата смес суровини в други количества; моделът преоразмерява всеки вариант. Допълнителната суровина е при вашите условия (цена, транспорт, спестено обезвреждане); CAPEX е оценка на модела, а не вашата оферта.", size: "Размер", best: "Най-добър вариант", current: "вашите данни" },
     units: LATIN_UNITS,
   },
   sr: {
@@ -249,6 +264,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Iznad oprezne procene modela: tražite predračun po stavkama i drugu ponudu.",
     },
     scope: "Potpuna ponuda treba da obuhvati (procena modela po stavkama)", exportXlsx: "Preuzmi Excel",
+    scale: { title: "Veličina postrojenja", sub: "Ista mešavina sirovina u drugim količinama; model iznova dimenzioniše svaku varijantu. Dodatna sirovina je pod vašim uslovima (cena, prevoz, ušteda na odlaganju); CAPEX je procena modela, a ne vaša ponuda.", size: "Veličina", best: "Najbolja varijanta", current: "vaši podaci" },
     units: LATIN_UNITS,
   },
   el: {
@@ -264,6 +280,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Πάνω από τη συντηρητική εκτίμηση του μοντέλου: ζητήστε αναλυτικό προϋπολογισμό και δεύτερη προσφορά.",
     },
     scope: "Μια πλήρης προσφορά πρέπει να καλύπτει (εκτίμηση μοντέλου ανά είδος)", exportXlsx: "Λήψη Excel",
+    scale: { title: "Μέγεθος μονάδας", sub: "Το ίδιο μείγμα πρώτων υλών σε άλλα μεγέθη· το μοντέλο διαστασιολογεί ξανά κάθε επιλογή. Η επιπλέον πρώτη ύλη θεωρείται με τους δικούς σας όρους (τιμή, μεταφορά, αποφυγή διάθεσης)· το CAPEX είναι εκτίμηση του μοντέλου, όχι η προσφορά σας.", size: "Μέγεθος", best: "Καλύτερη επιλογή", current: "τα δεδομένα σας" },
     units: LATIN_UNITS,
   },
   tr: {
@@ -279,6 +296,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Modelin temkinli tahmininin üstünde: kalem kalem döküm ve ikinci bir teklif isteyin.",
     },
     scope: "Eksiksiz bir teklif şunları kapsamalıdır (kalem başına model tahmini)", exportXlsx: "Excel indir",
+    scale: { title: "Tesis büyüklüğü", sub: "Aynı hammadde karışımı farklı miktarlarda; model her seçeneği yeniden boyutlandırır. Ek hammadde sizin koşullarınızda varsayılır (fiyat, nakliye, bertaraf tasarrufu); CAPEX modelin tahminidir, teklifiniz değil.", size: "Büyüklük", best: "En iyi seçenek", current: "sizin girdiniz" },
     units: LATIN_UNITS,
   },
   lt: {
@@ -294,6 +312,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Virš atsargaus modelio įverčio: paprašykite išskaidytos sąmatos ir antro pasiūlymo.",
     },
     scope: "Pilnas pasiūlymas turi apimti (modelio įvertis pagal pozicijas)", exportXlsx: "Atsisiųsti Excel",
+    scale: { title: "Jėgainės dydis", sub: "Tas pats žaliavų mišinys kitais kiekiais; modelis kiekvieną variantą perskaičiuoja iš naujo. Papildoma žaliava – jūsų sąlygomis (kaina, transportas, sutaupytas šalinimas); CAPEX – modelio įvertis, ne jūsų pasiūlymas.", size: "Dydis", best: "Geriausias variantas", current: "jūsų duomenys" },
     units: LATIN_UNITS,
   },
   lv: {
@@ -309,6 +328,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Virs modeļa piesardzīgās aplēses: lūdziet tāmi pa pozīcijām un otru piedāvājumu.",
     },
     scope: "Pilnīgam piedāvājumam jāietver (modeļa aplēse pa pozīcijām)", exportXlsx: "Lejupielādēt Excel",
+    scale: { title: "Stacijas izmērs", sub: "Tas pats izejvielu maisījums citos apjomos; modelis katru variantu pārrēķina no jauna. Papildu izejvielas — ar jūsu nosacījumiem (cena, transports, ietaupītā utilizācija); CAPEX ir modeļa aplēse, nevis jūsu piedāvājums.", size: "Izmērs", best: "Labākais variants", current: "jūsu dati" },
     units: LATIN_UNITS,
   },
   et: {
@@ -324,6 +344,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Üle mudeli ettevaatliku hinnangu: küsige kirjete kaupa eelarvet ja teist pakkumist.",
     },
     scope: "Täielik pakkumine peab sisaldama (mudeli hinnang kirjete kaupa)", exportXlsx: "Laadi alla Excel",
+    scale: { title: "Jaama suurus", sub: "Sama toorainesegu muus koguses; mudel arvutab iga variandi uuesti. Lisatooraine on teie tingimustel (hind, vedu, säästetud käitlus); CAPEX on mudeli hinnang, mitte teie pakkumine.", size: "Suurus", best: "Parim variant", current: "teie andmed" },
     units: LATIN_UNITS,
   },
   da: {
@@ -339,6 +360,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Over modellens forsigtige skøn: bed om et specificeret budget og et tilbud mere.",
     },
     scope: "Et komplet tilbud bør omfatte (modellens skøn pr. post)", exportXlsx: "Download Excel",
+    scale: { title: "Anlæggets størrelse", sub: "Samme råvareblanding i andre mængder; modellen dimensionerer hver løsning på ny. Ekstra råvarer antages på dine vilkår (pris, transport, sparet bortskaffelse); CAPEX er modellens skøn, ikke dit tilbud.", size: "Størrelse", best: "Bedste løsning", current: "dine data" },
     units: LATIN_UNITS,
   },
   sv: {
@@ -354,6 +376,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Över modellens försiktiga uppskattning: be om en specificerad kalkyl och en andra offert.",
     },
     scope: "En komplett offert bör omfatta (modellens uppskattning per post)", exportXlsx: "Ladda ner Excel",
+    scale: { title: "Anläggningens storlek", sub: "Samma råvarublandning i andra mängder; modellen dimensionerar om varje alternativ. Extra råvara antas på dina villkor (pris, transport, sparad bortskaffning); CAPEX är modellens uppskattning, inte din offert.", size: "Storlek", best: "Bästa alternativ", current: "dina uppgifter" },
     units: LATIN_UNITS,
   },
   fi: {
@@ -369,6 +392,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Yli mallin varovaisen arvion: pyydä eritelty kustannusarvio ja toinen tarjous.",
     },
     scope: "Täydellisen tarjouksen tulee kattaa (mallin arvio eriteltynä)", exportXlsx: "Lataa Excel",
+    scale: { title: "Laitoksen koko", sub: "Sama syöteseos muina määrinä; malli mitoittaa jokaisen vaihtoehdon uudelleen. Lisäsyöte oletetaan sinun ehdoillasi (hinta, kuljetus, säästetty käsittely); CAPEX on mallin arvio, ei tarjouksesi.", size: "Koko", best: "Paras vaihtoehto", current: "sinun tietosi" },
     units: LATIN_UNITS,
   },
   vi: {
@@ -384,6 +408,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "Cao hơn ước tính thận trọng của mô hình: yêu cầu dự toán chi tiết theo hạng mục và một báo giá thứ hai.",
     },
     scope: "Một báo giá đầy đủ cần bao gồm (ước tính của mô hình theo hạng mục)", exportXlsx: "Tải Excel",
+    scale: { title: "Quy mô nhà máy", sub: "Cùng hỗn hợp nguyên liệu ở các quy mô khác; mô hình tính lại từng phương án. Nguyên liệu thêm được giả định theo điều kiện của bạn (giá, vận chuyển, chi phí xử lý tiết kiệm); CAPEX là ước tính của mô hình, không phải báo giá của bạn.", size: "Quy mô", best: "Phương án tốt nhất", current: "dữ liệu của bạn" },
     units: LATIN_UNITS,
   },
   th: {
@@ -399,6 +424,7 @@ export const decisionCopy: Record<Locale, DecisionCopy> = {
       above: "สูงกว่าค่าประมาณแบบระมัดระวังของแบบจำลอง: ขอรายละเอียดราคาแยกรายการและใบเสนอราคาที่สอง",
     },
     scope: "ใบเสนอราคาที่ครบถ้วนควรรวม (ค่าประมาณของแบบจำลองแยกรายการ)", exportXlsx: "ดาวน์โหลด Excel",
+    scale: { title: "ขนาดโรงงาน", sub: "ส่วนผสมวัตถุดิบเดิมในปริมาณอื่น แบบจำลองออกแบบแต่ละทางเลือกใหม่ วัตถุดิบส่วนเพิ่มคิดตามเงื่อนไขของคุณ (ราคา ขนส่ง ค่ากำจัดที่ประหยัดได้) CAPEX เป็นค่าประมาณของแบบจำลอง ไม่ใช่ใบเสนอราคาของคุณ", size: "ขนาด", best: "ทางเลือกที่ดีที่สุด", current: "ข้อมูลของคุณ" },
     units: LATIN_UNITS,
   },
 };

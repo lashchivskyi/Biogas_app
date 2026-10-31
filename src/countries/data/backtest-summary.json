@@ -1,0 +1,13 @@
+{
+ "modelVersion": "0.6.1",
+ "dataThrough": "2024-06",
+ "retrievedOn": "2026-10-31",
+ "source": "https://www.epa.gov/agstar/livestock-anaerobic-digester-database",
+ "electricity": {
+  "n": 79,
+  "median": 0.937,
+  "p10": 0.461,
+  "p90": 2.425,
+  "within30": 0.443
+ }
+}

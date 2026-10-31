@@ -55,8 +55,8 @@ describe("report export", () => {
   it("matches the report's numbers and keeps the plan split", () => {
     const standard = reportSheets(a, { currency: "EUR", access: "standard" });
     const full = reportSheets(a, { currency: "EUR", access: "full" });
-    expect(standard.map((s) => s.name)).toEqual(["Summary", "Cash flow", "CAPEX and OPEX", "Assumptions"]);
-    expect(full.map((s) => s.name)).toEqual(["Summary", "Cash flow", "CAPEX and OPEX", "Assumptions", "Routes", "Sensitivity", "Support cases"]);
+    expect(standard.map((s) => s.name)).toEqual(["Summary", "Cash flow", "CAPEX and OPEX", "Assumptions", "Climate (RED)", "Plant size"]);
+    expect(full.map((s) => s.name)).toEqual(["Summary", "Cash flow", "CAPEX and OPEX", "Assumptions", "Climate (RED)", "Plant size", "Routes", "Sensitivity", "Support cases"]);
     const flows = standard[1].rows.slice(1, a.scenarios.base.fin.cashFlows.length + 1).map((r) => r[1]);
     expect(flows).toEqual(a.scenarios.base.fin.cashFlows);
     expect(standard[0].rows.find((r) => r[0] === "NPV")?.[1]).toBe(a.scenarios.base.fin.npvEur);

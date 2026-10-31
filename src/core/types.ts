@@ -435,6 +435,10 @@ export interface Assessment {
   };
   /** Supplier quote compared with the model's own estimate for the same route and capacity. */
   quoteCheck?: QuoteCheck;
+  /** Climate case with EU RED default values for the chosen route; never part of the verdict. Absent for process inputs and older reports. */
+  ghg?: import("./ghg").GhgCase | null;
+  /** Same feedstock mix at other plant sizes (base case, every route re-sized); absent for process inputs and older reports. */
+  scale?: ScalePoint[];
   scores: Score[];
   overall: { value: number; explanation: string[] };
   verdict: { id: VerdictId; reasons: string[]; whatWouldChange: string[] };
@@ -487,6 +491,13 @@ export interface ProductBreakEven {
   /** Biomethane only: the same values per MWh of product, LHV basis. */
   currentEurMwh?: number;
   breakEvenEurMwh?: number;
+}
+
+export interface ScalePoint {
+  /** Feedstock quantity relative to the entered one; extra tonnes come on the same terms (price, logistics, disposal saving). */
+  multiplier: number;
+  tonnesYear: number;
+  routes: Record<RouteId, { npvEur: number; capexEur: number; kwEl: number; irr: number | null }>;
 }
 
 export interface QuoteCheck {
