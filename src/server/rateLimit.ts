@@ -18,6 +18,30 @@ export function rateLimited(key: string, max: number, windowMs = 3_600_000): boo
 }
 
 /**
+ * The in-memory check first, then a counter shared by every instance when Postgres is configured
+ * (serverless instances each hold their own memory). Fixed windows, so a burst at a boundary may
+ * reach 2 × max. Fails open: a limiter outage must not stop sales.
+ */
+export async function rateLimitedShared(key: string, max: number, windowMs = 3_600_000): Promise<boolean> {
+  if (rateLimited(key, max, windowMs)) return true;
+  const { database } = await import("./db");
+  const pending = database();
+  if (!pending) return false;
+  try {
+    const db = await pending;
+    const windowStart = new Date(Math.floor(Date.now() / windowMs) * windowMs).toISOString();
+    const { rows } = await db.query<{ hits: number }>(
+      "INSERT INTO rate_limits (key, window_start, hits) VALUES ($1, $2, 1) ON CONFLICT (key, window_start) DO UPDATE SET hits = rate_limits.hits + 1 RETURNING hits",
+      [key, windowStart],
+    );
+    if (Math.random() < 0.01) await db.query("DELETE FROM rate_limits WHERE window_start < now() - interval '1 day'");
+    return Number(rows[0]?.hits) > max;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Caller address for rate limiting. The LEFT-most X-Forwarded-For entry is whatever the client sent,
  * so a script could rotate it to dodge every limit (including admin password guessing). Platform
  * headers are set by the edge itself; otherwise the RIGHT-most entry is the one our proxy appended.

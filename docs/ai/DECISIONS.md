@@ -183,3 +183,6 @@ replace the line rather than adding a contradicting one.
   Rate-limit key = platform header, else the RIGHT-most X-Forwarded-For (left-most is client-controlled).
 - 2026-11-01 — Security review: a refunded order (`reversed`) is final for non-admin sources (a replayed `paid` webhook must not
   restore the report); state-changing `/api/admin/*` calls need Sec-Fetch-Site same-origin (Basic credentials are sent cross-site).
+  A failed report-link email makes `applyProviderStatus` throw (webhook 500 → Stripe re-delivers); a 200 is never retried.
+  CSP keeps `'unsafe-inline'` scripts on purpose: nonces force all pages dynamic and Next's inline RSC payload has no build hash;
+  the gain is `script-src`/`connect-src 'self'`. Rate limits on checkout/quote/leads are shared via Postgres and fail open.

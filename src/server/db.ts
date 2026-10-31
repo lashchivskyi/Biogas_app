@@ -32,6 +32,12 @@ export const MIGRATIONS: readonly string[] = [
      created_at timestamptz NOT NULL,
      record jsonb NOT NULL
    );`,
+  `CREATE TABLE rate_limits (
+     key text NOT NULL,
+     window_start timestamptz NOT NULL,
+     hits integer NOT NULL,
+     PRIMARY KEY (key, window_start)
+   );`,
 ];
 
 const MIGRATION_LOCK = 724_001;

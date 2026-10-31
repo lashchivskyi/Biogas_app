@@ -21,11 +21,12 @@ const money = (o: Order) => `${(o.amountMinor / 100).toFixed(2)} ${o.currency}`;
 
 /**
  * Emails the private report link once per paid order (webhook, poll, cron or admin may all call
- * this). The claim is released when sending fails, so the next status check retries.
+ * this). The claim is released when sending fails and false is returned, so the caller can make the
+ * provider re-deliver (a webhook answered 200 is never retried).
  */
-export async function deliverPaidReport(order: Order): Promise<void> {
-  if (order.status !== "paid" || order.customerNotifiedAt || !emailConfigured()) return;
-  if (!(await orders.claimCustomerNotice(order.id))) return;
+export async function deliverPaidReport(order: Order): Promise<boolean> {
+  if (order.status !== "paid" || order.customerNotifiedAt || !emailConfigured()) return true;
+  if (!(await orders.claimCustomerNotice(order.id))) return true;
   const lang = isLocale(order.lang) ? order.lang : "en";
   const [subject, paid, open, keep, help] = deliveryCopy[lang];
   const url = absoluteUrl(`/${lang}/report/${order.reportToken}`);
@@ -44,11 +45,12 @@ export async function deliverPaidReport(order: Order): Promise<void> {
   } catch (error) {
     await orders.update(order.id, { customerNotifiedAt: undefined }, "email");
     await reportError(error, { where: "deliverPaidReport", orderId: order.id });
-    return;
+    return false;
   }
   await notifyOwner(`Paid: ${order.plan} · ${money(order)}`, [
     `Order ${order.id} · ${order.plan} · ${money(order)} · project ${order.input.countryCode} · billing ${order.billingCountry ?? "—"}`,
     `Customer: ${order.customer.company ?? order.customer.name ?? "—"} <${order.customer.email}>`,
     `Admin: ${absoluteUrl("/admin")}`,
   ]);
+  return true;
 }

@@ -5,10 +5,10 @@ import { absoluteUrl } from "@/config/site";
 import { leads } from "@/server/leads";
 import { notifyOwner } from "@/server/notify";
 import { leadSchema } from "@/server/validate";
-import { clientIp, rateLimited } from "@/server/rateLimit";
+import { clientIp, rateLimitedShared } from "@/server/rateLimit";
 
 export async function POST(request: Request) {
-  if (rateLimited(`lead:${clientIp(request)}`, 8)) return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
+  if (await rateLimitedShared(`lead:${clientIp(request)}`, 8)) return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
 
   let body: unknown;
   try {

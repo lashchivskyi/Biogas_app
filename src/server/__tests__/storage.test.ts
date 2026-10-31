@@ -127,4 +127,16 @@ describe("postgres schema", () => {
     expect(paid?.paymentRef).toBe("pi_pg");
     expect(JSON.stringify((await O.orders.byToken(order.reportToken))?.assessmentSnapshot)).toBe(before);
   });
+
+  it("counts rate-limit hits across instances and fails open when the database is down", async () => {
+    D.useDatabase(pg);
+    const R = await import("../rateLimit");
+    expect(await R.rateLimitedShared("t:shared", 3)).toBe(false);
+    // Hits recorded by other instances are invisible to this process's memory but must still count.
+    await pg.query("UPDATE rate_limits SET hits = 3 WHERE key = 't:shared'");
+    expect(await R.rateLimitedShared("t:shared", 3)).toBe(true);
+    D.useDatabase({ query: () => Promise.reject(new Error("down")), transaction: () => Promise.reject(new Error("down")) });
+    expect(await R.rateLimitedShared("t:down", 3)).toBe(false);
+    D.useDatabase(pg);
+  });
 });

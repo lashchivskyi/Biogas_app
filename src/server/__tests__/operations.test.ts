@@ -121,13 +121,15 @@ describe("report delivery", () => {
     expect(customer[0].text).toContain(`/de/report/${order.reportToken}`);
     expect(mails.filter((m) => m.to[0] === "owner@example.com")).toHaveLength(1);
   });
-  it("releases the claim when sending fails so the next status check retries", async () => {
+  it("releases the claim and fails the call when sending fails, so the provider re-delivers", async () => {
     mailer().mockResolvedValueOnce(new Response("down", { status: 503 }));
     vi.spyOn(console, "error").mockImplementation(() => undefined);
     const { order } = await checkout("en");
     const paid = { status: "paid" as const, amountMinor: order.amountMinor, currency: order.currency };
-    await S.applyProviderStatus(order, paid, "webhook");
-    expect((await O.orders.get(order.id))?.customerNotifiedAt).toBeUndefined();
+    await expect(S.applyProviderStatus(order, paid, "webhook")).rejects.toThrow(/email failed/);
+    const stored = await O.orders.get(order.id);
+    expect(stored?.status).toBe("paid");
+    expect(stored?.customerNotifiedAt).toBeUndefined();
     await S.applyProviderStatus(order, paid, "poll");
     expect((await O.orders.get(order.id))?.customerNotifiedAt).toBeTruthy();
   });

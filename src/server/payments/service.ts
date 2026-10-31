@@ -98,7 +98,8 @@ export async function applyProviderStatus(order: Order, s: StatusResult, source:
     return flagged;
   }
   const updated = await orders.update(order.id, { ...paymentRef, status: s.status, providerModifiedAt: s.modifiedAt, ...(s.billingCountry ? { billingCountry: s.billingCountry } : {}) }, source);
-  if (updated?.status === "paid") await deliverPaidReport(updated);
+  // Throwing turns the webhook answer into a 500, so Stripe re-delivers until the link email goes out.
+  if (updated?.status === "paid" && !(await deliverPaidReport(updated))) throw new Error(`Report link email failed for order ${order.id}`);
   return updated;
 }
 
@@ -112,6 +113,7 @@ export async function refreshOrder(order: Order): Promise<Order> {
     if (!s) return order;
     return (await applyProviderStatus(order, s, "poll")) ?? order;
   } catch {
-    return order;
+    // The status may have been saved before the link email failed; show what is stored.
+    return (await orders.get(order.id).catch(() => null)) ?? order;
   }
 }
