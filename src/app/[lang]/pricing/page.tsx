@@ -9,6 +9,7 @@ import { SITE, absoluteUrl } from "@/config/site";
 import { getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 import { paymentsMode } from "@/server/payments/providers";
+import { offerCopy } from "@/i18n/offer";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/pricing">): Promise<Metadata> {
   const { lang } = await params;
@@ -31,6 +32,8 @@ export default async function PricingPage({ params }: PageProps<"/[lang]/pricing
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted">
           {P.trust.map((t) => <span key={t} className="flex items-center gap-2"><Icon name="shield" size={18} className="text-brand" />{t}</span>)}
         </div>
+        {/* STRIPE_TAX=1 charges VAT on top (tax_behavior "exclusive"); otherwise the shown price is the whole charge. */}
+        <p className="mx-auto mt-4 max-w-3xl text-center text-xs text-muted">{process.env.STRIPE_TAX === "1" ? offerCopy[locale].vatExclusive : offerCopy[locale].vatFinal} {offerCopy[locale].processNote}</p>
         <div className="mt-6 text-center"><Link href={`/${locale}/samples`} className="font-semibold text-brand underline underline-offset-4">{P.sampleCta}</Link></div>
       </section>
       <section className="border-t border-line bg-surface py-16">

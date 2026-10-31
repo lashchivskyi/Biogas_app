@@ -5,7 +5,8 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { fxFor } from "@/countries/sources";
 import { convertedPlanPrice, PLAN_PRICES_EUR_CENTS, type PlanId } from "@/config/plans";
 import { EXAMPLES } from "@/core/examples";
-import { MODEL_VERSION } from "@/core/modelAudit";
+import { DATA_REVIEW_AS_OF, MODEL_VERSION } from "@/core/modelAudit";
+import { offerCopy } from "@/i18n/offer";
 import { signCity } from "../cities";
 import { cityRegionId } from "@/core/location";
 
@@ -34,7 +35,7 @@ afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); vi.restoreAllMocks(); 
 afterAll(() => rmSync(dir, { recursive: true, force: true })); // Only this test's mkdtemp directory.
 
 const input = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
-const req = (plan: PlanId, exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, input: input(exampleId) });
+const req = (plan: PlanId, exampleId = "slaughter_5000") => ({ plan, lang: "en" as const, email: "t@example.com", consent: true as const, withdrawalWaiver: true as const, input: input(exampleId) });
 
 describe("stripe", () => {
   it("passes the confirmed currency and subtotal without automatic FX and collects billing country", async () => {
@@ -97,7 +98,9 @@ describe("checkout", () => {
     }
   });
   it("binds the exact dated USD quote to the plan, language and project before creating an order", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(`${fxFor("USD")!.date}T12:00:00Z`));
+    // A day before the data review would make every price "expired" → INSUFFICIENT_DATA, which is not sold.
+    const day = [fxFor("USD")!.date, DATA_REVIEW_AS_OF].sort()[1];
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(new Date(`${day}T12:00:00Z`));
     const request = { ...req("report"), paymentCurrency: "USD" as const };
     const quote = Q.createPaymentQuote(request);
     expect(quote.currency).toBe("USD");
@@ -116,7 +119,7 @@ describe("checkout", () => {
     expect(after?.billingCountry).toBe("CA");
     expect(after?.input.countryCode).toBe("UA");
     expect(after?.priceTier).toBe("C");
-    vi.setSystemTime(new Date(`${fxFor("USD")!.date}T12:31:00Z`));
+    vi.setSystemTime(new Date(`${day}T12:31:00Z`));
     expect(() => Q.verifyPaymentQuote(quote.token, request)).toThrow();
   });
   it("falls back to EUR for stale conversion rates", () => {
@@ -186,6 +189,28 @@ describe("checkout", () => {
     expect(late?.status).toBe("paid");
     const refund = await O.orders.update(order.id, { status: "reversed" }, "webhook");
     expect(refund?.status).toBe("reversed");
+  });
+
+  it("records the exact withdrawal-waiver text the customer ticked and requires the box", async () => {
+    expect(S.checkoutSchema.safeParse({ ...req("report"), withdrawalWaiver: undefined }).success).toBe(false);
+    const { order } = await S.startCheckout({ ...req("report"), lang: "de" });
+    expect(order.withdrawalWaiver?.text).toBe(offerCopy.de.waiver);
+    expect(Date.parse(order.withdrawalWaiver!.at)).toBeGreaterThan(0);
+  });
+
+  it("does not sell a report on an INSUFFICIENT_DATA verdict", async () => {
+    const before = (await O.orders.list()).length;
+    await expect(S.startCheckout(req("report", "gb_fish_residues"))).rejects.toMatchObject({ status: 422, message: "insufficient_data" });
+    expect((await O.orders.list()).length).toBe(before);
+  });
+
+  it("sells the two reports independently: no upgrade path from a paid Standard order", async () => {
+    const { order: std } = await S.startCheckout(req("standard", "de_nawaro"));
+    await S.applyProviderStatus(std, { status: "paid", amountMinor: std.amountMinor, currency: "EUR" }, "test");
+    const parsed = S.checkoutSchema.safeParse({ ...req("report", "de_nawaro"), upgradeFrom: std.reportToken });
+    expect(parsed.success && "upgradeFrom" in parsed.data).toBe(false); // unknown field is stripped
+    const { order: ext } = await S.startCheckout(req("report", "de_nawaro"));
+    expect(ext.priceEurCents).toBe(PLAN_PRICES_EUR_CENTS.report.A); // full price, no credit for the Standard order
   });
 
   it("validates input", () => {

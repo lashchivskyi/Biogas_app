@@ -223,3 +223,35 @@ describe("process localisation and draft compatibility", () => {
     expect(processIssues(f)).toContain("gasPriceLocalNm3");
   });
 });
+
+describe("gas-stream support cases and paid sections", () => {
+  it("computes support for an existing gas source only as 'if eligible', never as eligible, and never in the verdict", () => {
+    const e = EXAMPLES.find(x => x.id === "de_existing_biogas")!;
+    const a = assess(e.input,COUNTRIES.DE);
+    const cases = a.supportCases.filter(s => s.unconfirmed);
+    expect(cases.length).toBeGreaterThan(0);
+    for (const s of cases) {
+      expect(s.eligible).toBe(false);
+      expect(s.reason).toMatch(/not modelled/);
+      expect(s.npvEur - s.deltaNpvEur).toBeCloseTo(a.scenarios.base.fin.npvEur, 0);
+    }
+    expect(a.verdict.id).toBe(assess(e.input,{ ...COUNTRIES.DE, support: { ...COUNTRIES.DE.support, schemes: [] } }).verdict.id);
+  });
+  it("renders residues and methane in the standard report, support cases only in the extended one", async () => {
+    const d = await getDictionary("en");
+    const { offerCopy } = await import("@/i18n/offer");
+    for (const id of ["ca_brewery_cod","us_closed_landfill","de_existing_biogas","se_ras_sludge"]) {
+      const e = EXAMPLES.find(x => x.id === id)!;
+      const a = assess(e.input,COUNTRIES[e.input.countryCode]);
+      const render = (access: "standard" | "full") => renderToStaticMarkup(createElement(ProcessReport,{ a,d,locale:"en",currency:"EUR",access,methodologyHref:"/en/methodology" }));
+      const std = render("standard"), full = render("full");
+      for (const html of [std, full]) {
+        expect(html,id).toContain(offerCopy.en.residualsTitle);
+        expect(html,id).toContain(d.result.dMethane.replaceAll("&","&amp;"));
+        expect(html,id).not.toMatch(/undefined|NaN/);
+      }
+      expect(std,id).not.toContain(d.result.supportTitle);
+      expect(full,id).toContain(d.result.supportTitle);
+    }
+  });
+});

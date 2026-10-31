@@ -1,5 +1,7 @@
 import type { Assessment } from "@/core";
 import type { Dict, Locale } from "@/i18n";
+import { decisionCopy } from "@/i18n/decision";
+import { offerCopy } from "@/i18n/offer";
 import { h2Chunks, near, norm, statsOf, txt, WS, type Access, type Finding } from "./report-audit";
 
 /**
@@ -57,6 +59,13 @@ export function auditTiers(a: Assessment, html: Record<Access, string>, ctx: { d
     return [order[0], R.robust.title, R.summaryTitle, R.keyTitle, R.flowTitle].map((n) => (n !== undefined && map.has(norm(n)) ? txt(map.get(norm(n))!.split("<section")[0]) : ""));
   };
   const free = blocks(html.free), std = blocks(html.standard), full = blocks(html.full);
+  // Robustness: the free view keeps the statement, the NPVs and the driver names; the driver amounts and the
+  // Monte Carlo sentence are paid detail (replaced by one note). Compare what both tiers must share.
+  const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const stress = decisionCopy[ctx.locale].monteCarlo.stress;
+  const mc = new RegExp(`${esc(stress.split("{n}")[0].trim())}.*?${esc(stress.split("{p}")[1].trim())}`, "s");
+  const shared = (x: string) => x.replace(offerCopy[ctx.locale].driversLocked, "").replace(mc, "").replace(/\s?\([^()]*\)/g, "").replace(/\s+/g, " ").trim();
+  free[1] = shared(free[1]); std[1] = shared(std[1]); full[1] = shared(full[1]);
   ["verdict", "robustness", "summary", "key numbers", "energy flow"].forEach((name, i) => {
     // A paid report adds model warnings and market checks after the key-number tiles.
     const same = (x: string, y: string) => (i === 3 ? x.startsWith(y) || y.startsWith(x) : x === y);

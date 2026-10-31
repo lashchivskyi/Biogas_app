@@ -15,7 +15,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   en: {
     headings: ["Provider", "Service", "Prices", "Payment", "Delivery", "Refunds", "Liability", "Personal data"],
     automation: "Both paid reports are generated automatically. Engineer review and consultations are not included. Results do not guarantee income and are not a safety assessment.",
-    vat: "Prices are in euro and exclude VAT where applicable. Checkout shows the final amount and may display it in your currency.",
+    vat: "Prices are set in euro. Checkout shows the final amount, including any VAT, in EUR or USD before you pay.",
     cards: "We do not receive or store card details. A receipt or invoice is sent by email.",
     withdrawal: "EU and UK consumers retain their statutory rights. By requesting immediate access to digital content, you acknowledge that the right of withdrawal ends when the report is delivered.",
     liability: "Investment decisions remain your responsibility. Our liability is limited to the price paid, except where the law does not permit this limitation.",
@@ -24,7 +24,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   uk: {
     headings: ["Надавач послуг", "Послуга", "Ціни", "Оплата", "Надання звіту", "Повернення коштів", "Відповідальність", "Персональні дані"],
     automation: "Обидва платні звіти формуються автоматично. Перевірка інженером і консультації до послуги не входять. Результат не гарантує доходу й не є оцінкою промислової безпеки.",
-    vat: "Ціни наведено в євро без ПДВ, якщо він застосовується. Остаточну суму показано під час оплати; вона може відображатися у вашій валюті.",
+    vat: "Ціни встановлено в євро. Остаточну суму, разом із ПДВ, якщо він є, показано в EUR або USD до оплати.",
     cards: "Ми не отримуємо й не зберігаємо дані картки. Квитанцію або рахунок надсилаємо електронною поштою.",
     withdrawal: "Споживачі в ЄС і Великій Британії зберігають права, передбачені законом. Замовляючи негайний доступ до цифрового вмісту, ви підтверджуєте, що право на відмову припиняється після надання звіту.",
     liability: "Рішення про інвестування ви приймаєте самостійно. Наша відповідальність обмежена сплаченою сумою, крім випадків, коли закон забороняє таке обмеження.",
@@ -33,7 +33,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   pl: {
     headings: ["Usługodawca", "Usługa", "Ceny", "Płatność", "Udostępnienie raportu", "Zwroty", "Odpowiedzialność", "Dane osobowe"],
     automation: "Oba płatne raporty są generowane automatycznie. Usługa nie obejmuje weryfikacji przez inżyniera ani konsultacji. Wyniki nie gwarantują dochodu i nie stanowią oceny bezpieczeństwa.",
-    vat: "Ceny są podane w euro i nie obejmują VAT, jeśli ma zastosowanie. Ostateczna kwota jest widoczna przy płatności i może być wyświetlana w Twojej walucie.",
+    vat: "Ceny ustalono w euro. Przed zapłatą zobaczysz ostateczną kwotę, wraz z ewentualnym VAT, w EUR lub USD.",
     cards: "Nie otrzymujemy ani nie przechowujemy danych karty. Potwierdzenie płatności lub fakturę wysyłamy e-mailem.",
     withdrawal: "Konsumenci w UE i Wielkiej Brytanii zachowują ustawowe prawa. Żądając natychmiastowego dostępu do treści cyfrowej, przyjmujesz do wiadomości, że prawo odstąpienia wygasa z chwilą dostarczenia raportu.",
     liability: "Decyzje inwestycyjne podejmujesz na własną odpowiedzialność. Nasza odpowiedzialność ogranicza się do zapłaconej kwoty, z wyjątkiem przypadków, w których prawo zabrania takiego ograniczenia.",
@@ -42,7 +42,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   de: {
     headings: ["Anbieter", "Leistung", "Preise", "Zahlung", "Bereitstellung", "Erstattungen", "Haftung", "Personenbezogene Daten"],
     automation: "Beide kostenpflichtigen Berichte werden automatisch erstellt. Eine Prüfung durch Ingenieure und Beratungen sind nicht enthalten. Die Ergebnisse garantieren keine Erträge und ersetzen keine Sicherheitsbewertung.",
-    vat: "Die Preise sind in Euro angegeben und verstehen sich gegebenenfalls zuzüglich Mehrwertsteuer. Der endgültige Betrag wird beim Bezahlen angezeigt, gegebenenfalls in Ihrer Währung.",
+    vat: "Die Preise sind in Euro festgelegt. Vor der Zahlung sehen Sie den Endbetrag einschließlich etwaiger USt in EUR oder USD.",
     cards: "Wir erhalten und speichern keine Kartendaten. Zahlungsbelege oder Rechnungen werden per E-Mail versandt.",
     withdrawal: "Verbraucher in der EU und im Vereinigten Königreich behalten ihre gesetzlichen Rechte. Wenn Sie den sofortigen Zugriff auf digitale Inhalte verlangen, bestätigen Sie, dass das Widerrufsrecht mit der Bereitstellung des Berichts erlischt.",
     liability: "Investitionsentscheidungen treffen Sie in eigener Verantwortung. Unsere Haftung ist auf den gezahlten Preis begrenzt, soweit gesetzlich zulässig.",
@@ -51,7 +51,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   fr: {
     headings: ["Prestataire", "Service", "Tarifs", "Paiement", "Mise à disposition", "Remboursements", "Responsabilité", "Données personnelles"],
     automation: "Les deux rapports payants sont générés automatiquement. Ils ne comprennent ni vérification par un ingénieur ni consultation. Les résultats ne garantissent aucun revenu et ne constituent pas une évaluation de sécurité.",
-    vat: "Les prix sont indiqués en euros, hors TVA lorsqu’elle s’applique. Le montant final est affiché lors du paiement et peut apparaître dans votre devise.",
+    vat: "Les prix sont fixés en euros. Le montant final, TVA éventuelle comprise, est affiché en EUR ou en USD avant le paiement.",
     cards: "Nous ne recevons ni ne conservons les données de carte bancaire. Un reçu ou une facture est envoyé par e-mail.",
     withdrawal: "Les consommateurs de l’UE et du Royaume-Uni conservent leurs droits légaux. En demandant l’accès immédiat au contenu numérique, vous reconnaissez que le droit de rétractation prend fin à la livraison du rapport.",
     liability: "Les décisions d’investissement relèvent de votre responsabilité. Notre responsabilité est limitée au prix payé, sauf lorsque la loi interdit cette limitation.",
@@ -60,7 +60,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   it: {
     headings: ["Fornitore", "Servizio", "Prezzi", "Pagamento", "Consegna", "Rimborsi", "Responsabilità", "Dati personali"],
     automation: "Entrambi i rapporti a pagamento sono generati automaticamente. Non comprendono la verifica di un ingegnere né consulenze. I risultati non garantiscono ricavi e non costituiscono una valutazione della sicurezza.",
-    vat: "I prezzi sono espressi in euro, IVA esclusa ove applicabile. L’importo finale è indicato al pagamento e può essere mostrato nella vostra valuta.",
+    vat: "I prezzi sono fissati in euro. Prima del pagamento vedi l’importo finale, IVA eventuale compresa, in EUR o USD.",
     cards: "Non riceviamo né conserviamo i dati delle carte. La ricevuta o la fattura viene inviata per e-mail.",
     withdrawal: "I consumatori dell’UE e del Regno Unito mantengono i diritti previsti dalla legge. Richiedendo l’accesso immediato al contenuto digitale, prendete atto che il diritto di recesso termina con la consegna del rapporto.",
     liability: "Le decisioni d’investimento restano sotto la vostra responsabilità. La nostra responsabilità è limitata al prezzo pagato, salvo i casi in cui la legge non consenta tale limitazione.",
@@ -69,7 +69,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   es: {
     headings: ["Prestador", "Servicio", "Precios", "Pago", "Entrega", "Reembolsos", "Responsabilidad", "Datos personales"],
     automation: "Los dos informes de pago se generan automáticamente. No incluyen revisión por un ingeniero ni consultas. Los resultados no garantizan ingresos ni constituyen una evaluación de seguridad.",
-    vat: "Los precios se indican en euros y no incluyen el IVA cuando corresponda. El importe final se muestra al pagar y puede aparecer en su moneda.",
+    vat: "Los precios se fijan en euros. Antes de pagar ves el importe final, con el IVA si corresponde, en EUR o USD.",
     cards: "No recibimos ni almacenamos datos de tarjetas. El recibo o la factura se envía por correo electrónico.",
     withdrawal: "Los consumidores de la UE y del Reino Unido conservan sus derechos legales. Al solicitar acceso inmediato al contenido digital, reconoce que el derecho de desistimiento termina al entregarse el informe.",
     liability: "Las decisiones de inversión son responsabilidad suya. Nuestra responsabilidad se limita al precio pagado, salvo cuando la ley no permita esta limitación.",
@@ -78,7 +78,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   pt: {
     headings: ["Prestador", "Serviço", "Preços", "Pagamento", "Entrega", "Reembolsos", "Responsabilidade", "Dados pessoais"],
     automation: "Os dois relatórios pagos são gerados automaticamente. Não incluem revisão por engenheiro nem consultoria. Os resultados não garantem receita e não constituem uma avaliação de segurança.",
-    vat: "Os preços são em euros e não incluem IVA quando aplicável. O valor final aparece no pagamento e pode ser exibido na sua moeda.",
+    vat: "Os preços são definidos em euros. Antes de pagar, você vê o valor final, com IVA quando houver, em EUR ou USD.",
     cards: "Não recebemos nem armazenamos dados de cartão. O comprovante ou a fatura é enviado por e-mail.",
     withdrawal: "Consumidores da UE e do Reino Unido mantêm seus direitos legais. Ao solicitar acesso imediato ao conteúdo digital, você reconhece que o direito de desistência termina quando o relatório é entregue.",
     liability: "As decisões de investimento são de sua responsabilidade. Nossa responsabilidade fica limitada ao valor pago, exceto quando a lei não permitir essa limitação.",
@@ -87,7 +87,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   nl: {
     headings: ["Aanbieder", "Dienst", "Prijzen", "Betaling", "Levering", "Terugbetaling", "Aansprakelijkheid", "Persoonsgegevens"],
     automation: "Beide betaalde rapporten worden automatisch gegenereerd. Beoordeling door een ingenieur en adviesgesprekken zijn niet inbegrepen. De resultaten garanderen geen inkomsten en vormen geen veiligheidsbeoordeling.",
-    vat: "De prijzen zijn in euro en exclusief btw indien van toepassing. Het definitieve bedrag staat bij het afrekenen en kan in uw valuta worden weergegeven.",
+    vat: "Prijzen zijn vastgesteld in euro. Vóór de betaling ziet u het eindbedrag, inclusief eventuele btw, in EUR of USD.",
     cards: "Wij ontvangen of bewaren geen kaartgegevens. U ontvangt een betaalbewijs of factuur per e-mail.",
     withdrawal: "Consumenten in de EU en het Verenigd Koninkrijk behouden hun wettelijke rechten. Door onmiddellijke toegang tot digitale inhoud te vragen, erkent u dat het herroepingsrecht eindigt zodra het rapport is geleverd.",
     liability: "U blijft verantwoordelijk voor investeringsbeslissingen. Onze aansprakelijkheid is beperkt tot de betaalde prijs, tenzij de wet deze beperking niet toestaat.",
@@ -96,7 +96,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   cs: {
     headings: ["Poskytovatel", "Služba", "Ceny", "Platba", "Dodání", "Vrácení peněz", "Odpovědnost", "Osobní údaje"],
     automation: "Oba placené přehledy se vytvářejí automaticky. Nezahrnují kontrolu inženýrem ani konzultace. Výsledky nezaručují příjem a nejsou posouzením bezpečnosti.",
-    vat: "Ceny jsou uvedeny v eurech bez DPH, pokud se uplatňuje. Konečnou částku uvidíte při platbě; může být zobrazena ve vaší měně.",
+    vat: "Ceny jsou stanoveny v eurech. Před platbou uvidíte konečnou částku včetně případné DPH v EUR nebo USD.",
     cards: "Údaje o kartách nepřijímáme ani neukládáme. Potvrzení nebo fakturu zasíláme e-mailem.",
     withdrawal: "Spotřebitelům v EU a Spojeném království zůstávají zákonná práva. Požádáte-li o okamžitý přístup k digitálnímu obsahu, berete na vědomí, že právo na odstoupení zaniká dodáním přehledu.",
     liability: "Za investiční rozhodnutí odpovídáte sami. Naše odpovědnost je omezena na zaplacenou cenu, pokud zákon takové omezení nezakazuje.",
@@ -105,7 +105,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   sk: {
     headings: ["Poskytovateľ", "Služba", "Ceny", "Platba", "Dodanie", "Vrátenie peňazí", "Zodpovednosť", "Osobné údaje"],
     automation: "Oba platené prehľady sa vytvárajú automaticky. Nezahŕňajú kontrolu inžinierom ani konzultácie. Výsledky nezaručujú príjem a nie sú posúdením bezpečnosti.",
-    vat: "Ceny sú uvedené v eurách bez DPH, ak sa uplatňuje. Konečnú sumu uvidíte pri platbe; môže byť zobrazená vo vašej mene.",
+    vat: "Ceny sú stanovené v eurách. Pred platbou uvidíte konečnú sumu vrátane prípadnej DPH v EUR alebo USD.",
     cards: "Údaje o kartách neprijímame ani neukladáme. Potvrdenie alebo faktúru posielame e-mailom.",
     withdrawal: "Spotrebiteľom v EÚ a Spojenom kráľovstve zostávajú zákonné práva. Ak požiadate o okamžitý prístup k digitálnemu obsahu, beriete na vedomie, že právo na odstúpenie zaniká dodaním prehľadu.",
     liability: "Za investičné rozhodnutia zodpovedáte sami. Naša zodpovednosť je obmedzená na zaplatenú cenu, pokiaľ zákon takéto obmedzenie nezakazuje.",
@@ -114,7 +114,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   hu: {
     headings: ["Szolgáltató", "Szolgáltatás", "Árak", "Fizetés", "Átadás", "Visszatérítés", "Felelősség", "Személyes adatok"],
     automation: "Mindkét fizetős jelentés automatikusan készül. Mérnöki ellenőrzést és konzultációt nem tartalmaznak. Az eredmények nem garantálnak bevételt, és nem minősülnek biztonsági értékelésnek.",
-    vat: "Az árak euróban értendők, az esetlegesen felszámítandó áfa nélkül. A végleges összeg a fizetéskor jelenik meg, akár az Ön pénznemében.",
+    vat: "Az árak euróban vannak megadva. Fizetés előtt látja a végösszeget, az esetleges ÁFÁ-val együtt, EUR-ban vagy USD-ben.",
     cards: "Bankkártyaadatokat nem kapunk meg és nem tárolunk. A bizonylatot vagy számlát e-mailben küldjük.",
     withdrawal: "Az EU és az Egyesült Királyság fogyasztóinak törvényes jogai megmaradnak. Azonnali hozzáférést kérve a digitális tartalomhoz Ön tudomásul veszi, hogy az elállási jog a jelentés átadásakor megszűnik.",
     liability: "A befektetési döntésekért Ön felel. Felelősségünk a kifizetett díjra korlátozódik, kivéve, ha ezt a jogszabály nem engedi meg.",
@@ -123,7 +123,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   ro: {
     headings: ["Furnizor", "Serviciu", "Prețuri", "Plată", "Livrare", "Rambursări", "Răspundere", "Date personale"],
     automation: "Ambele rapoarte plătite sunt generate automat. Nu includ verificarea de către un inginer sau consultanță. Rezultatele nu garantează venituri și nu reprezintă o evaluare de siguranță.",
-    vat: "Prețurile sunt în euro, fără TVA acolo unde se aplică. Suma finală este afișată la plată și poate apărea în moneda dumneavoastră.",
+    vat: "Prețurile sunt stabilite în euro. Înainte de plată vedeți suma finală, inclusiv eventuala TVA, în EUR sau USD.",
     cards: "Nu primim și nu stocăm datele cardului. Chitanța sau factura este trimisă prin e-mail.",
     withdrawal: "Consumatorii din UE și Regatul Unit își păstrează drepturile legale. Solicitând acces imediat la conținutul digital, confirmați că dreptul de retragere încetează la livrarea raportului.",
     liability: "Deciziile de investiție vă aparțin. Răspunderea noastră este limitată la prețul plătit, cu excepția cazurilor în care legea nu permite această limitare.",
@@ -132,7 +132,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   bg: {
     headings: ["Доставчик", "Услуга", "Цени", "Плащане", "Предоставяне", "Възстановяване на суми", "Отговорност", "Лични данни"],
     automation: "И двата платени доклада се генерират автоматично. Не включват проверка от инженер или консултации. Резултатите не гарантират приходи и не са оценка на безопасността.",
-    vat: "Цените са в евро без ДДС, когато е приложим. Окончателната сума се показва при плащане и може да е във вашата валута.",
+    vat: "Цените са определени в евро. Преди плащане виждате крайната сума, включително евентуален ДДС, в EUR или USD.",
     cards: "Не получаваме и не съхраняваме данни за карти. Разписката или фактурата се изпраща по имейл.",
     withdrawal: "Потребителите в ЕС и Обединеното кралство запазват законовите си права. Като поискате незабавен достъп до цифровото съдържание, потвърждавате, че правото на отказ приключва с предоставянето на доклада.",
     liability: "Инвестиционните решения са ваша отговорност. Нашата отговорност е ограничена до платената цена, освен когато законът не допуска такова ограничение.",
@@ -141,7 +141,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   sr: {
     headings: ["Pružalac usluge", "Usluga", "Cene", "Plaćanje", "Isporuka", "Povraćaj novca", "Odgovornost", "Podaci o ličnosti"],
     automation: "Oba plaćena izveštaja generišu se automatski. Ne uključuju proveru inženjera ni konsultacije. Rezultati ne garantuju prihod i ne predstavljaju procenu bezbednosti.",
-    vat: "Cene su u evrima, bez PDV-a ako je primenljiv. Konačan iznos prikazuje se pri plaćanju i može biti iskazan u vašoj valuti.",
+    vat: "Cene su utvrđene u evrima. Pre plaćanja vidite konačan iznos, uključujući eventualni PDV, u EUR ili USD.",
     cards: "Ne primamo niti čuvamo podatke o karticama. Potvrdu ili račun šaljemo e-poštom.",
     withdrawal: "Potrošači u EU i Ujedinjenom Kraljevstvu zadržavaju zakonska prava. Zahtevom za neposredan pristup digitalnom sadržaju potvrđujete da pravo na odustanak prestaje isporukom izveštaja.",
     liability: "Investicione odluke donosite na sopstvenu odgovornost. Naša odgovornost ograničena je na plaćenu cenu, osim kada zakon ne dozvoljava takvo ograničenje.",
@@ -150,7 +150,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   el: {
     headings: ["Πάροχος", "Υπηρεσία", "Τιμές", "Πληρωμή", "Παράδοση", "Επιστροφές χρημάτων", "Ευθύνη", "Προσωπικά δεδομένα"],
     automation: "Και οι δύο επί πληρωμή αναφορές δημιουργούνται αυτόματα. Δεν περιλαμβάνουν έλεγχο από μηχανικό ή συμβουλευτικές υπηρεσίες. Τα αποτελέσματα δεν εγγυώνται έσοδα και δεν αποτελούν αξιολόγηση ασφάλειας.",
-    vat: "Οι τιμές αναγράφονται σε ευρώ, χωρίς ΦΠΑ όπου εφαρμόζεται. Το τελικό ποσό εμφανίζεται κατά την πληρωμή και μπορεί να αναγράφεται στο νόμισμά σας.",
+    vat: "Οι τιμές ορίζονται σε ευρώ. Πριν από την πληρωμή βλέπετε το τελικό ποσό, μαζί με τυχόν ΦΠΑ, σε EUR ή USD.",
     cards: "Δεν λαμβάνουμε ούτε αποθηκεύουμε στοιχεία καρτών. Η απόδειξη ή το τιμολόγιο αποστέλλεται με email.",
     withdrawal: "Οι καταναλωτές στην ΕΕ και το Ηνωμένο Βασίλειο διατηρούν τα νόμιμα δικαιώματά τους. Ζητώντας άμεση πρόσβαση στο ψηφιακό περιεχόμενο, αναγνωρίζετε ότι το δικαίωμα υπαναχώρησης λήγει με την παράδοση της αναφοράς.",
     liability: "Οι επενδυτικές αποφάσεις παραμένουν δική σας ευθύνη. Η ευθύνη μας περιορίζεται στην καταβληθείσα τιμή, εκτός αν ο νόμος απαγορεύει αυτόν τον περιορισμό.",
@@ -159,7 +159,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   tr: {
     headings: ["Hizmet sağlayıcı", "Hizmet", "Fiyatlar", "Ödeme", "Teslimat", "İadeler", "Sorumluluk", "Kişisel veriler"],
     automation: "Her iki ücretli rapor da otomatik oluşturulur. Mühendis incelemesi ve danışmanlık dahil değildir. Sonuçlar gelir garantisi vermez ve bir güvenlik değerlendirmesi niteliği taşımaz.",
-    vat: "Fiyatlar avro cinsindedir ve uygulanması halinde KDV hariçtir. Son tutar ödeme sırasında gösterilir ve kendi para biriminizde görüntülenebilir.",
+    vat: "Fiyatlar euro olarak belirlenir. Ödemeden önce, varsa KDV dahil son tutarı EUR veya USD olarak görürsünüz.",
     cards: "Kart bilgilerini almaz veya saklamayız. Makbuz ya da fatura e-postayla gönderilir.",
     withdrawal: "AB ve Birleşik Krallık’taki tüketicilerin yasal hakları saklıdır. Dijital içeriğe hemen erişim talep ederek rapor teslim edildiğinde cayma hakkının sona ereceğini kabul edersiniz.",
     liability: "Yatırım kararlarının sorumluluğu size aittir. Sorumluluğumuz, kanunun bu sınırlamaya izin vermediği durumlar dışında, ödenen bedelle sınırlıdır.",
@@ -168,7 +168,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   lt: {
     headings: ["Paslaugos teikėjas", "Paslauga", "Kainos", "Mokėjimas", "Pateikimas", "Pinigų grąžinimas", "Atsakomybė", "Asmens duomenys"],
     automation: "Abi mokamos ataskaitos parengiamos automatiškai. Inžinieriaus patikra ir konsultacijos neįtrauktos. Rezultatai negarantuoja pajamų ir nėra saugos vertinimas.",
-    vat: "Kainos nurodytos eurais, be PVM, jei jis taikomas. Galutinė suma rodoma mokant ir gali būti pateikta jūsų valiuta.",
+    vat: "Kainos nustatytos eurais. Prieš mokėdami matote galutinę sumą, įskaitant galimą PVM, EUR arba USD.",
     cards: "Kortelių duomenų negauname ir nesaugome. Kvitą arba sąskaitą siunčiame el. paštu.",
     withdrawal: "ES ir Jungtinės Karalystės vartotojai išsaugo įstatymuose numatytas teises. Prašydami nedelsiant suteikti prieigą prie skaitmeninio turinio, patvirtinate, kad teisė atsisakyti sutarties pasibaigia pateikus ataskaitą.",
     liability: "Už investicinius sprendimus atsakote patys. Mūsų atsakomybė ribojama sumokėta kaina, išskyrus atvejus, kai įstatymai tokio ribojimo neleidžia.",
@@ -177,7 +177,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   lv: {
     headings: ["Pakalpojuma sniedzējs", "Pakalpojums", "Cenas", "Maksājums", "Piegāde", "Naudas atmaksa", "Atbildība", "Personas dati"],
     automation: "Abi maksas pārskati tiek izveidoti automātiski. Inženiera pārbaude un konsultācijas nav iekļautas. Rezultāti negarantē ienākumus un nav drošības novērtējums.",
-    vat: "Cenas norādītas eiro bez PVN, ja tas ir piemērojams. Galīgā summa redzama maksājuma laikā un var tikt parādīta jūsu valūtā.",
+    vat: "Cenas noteiktas eiro. Pirms maksājuma redzat galīgo summu, ieskaitot iespējamo PVN, EUR vai USD.",
     cards: "Mēs nesaņemam un neglabājam karšu datus. Kvīti vai rēķinu nosūtām pa e-pastu.",
     withdrawal: "Patērētāji ES un Apvienotajā Karalistē saglabā likumā noteiktās tiesības. Pieprasot tūlītēju piekļuvi digitālajam saturam, jūs apliecināt, ka atteikuma tiesības beidzas līdz ar pārskata piegādi.",
     liability: "Par investīciju lēmumiem atbildat jūs. Mūsu atbildība nepārsniedz samaksāto cenu, izņemot gadījumus, kad likums šādu ierobežojumu nepieļauj.",
@@ -186,7 +186,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   et: {
     headings: ["Teenuseosutaja", "Teenus", "Hinnad", "Makse", "Üleandmine", "Tagasimaksed", "Vastutus", "Isikuandmed"],
     automation: "Mõlemad tasulised aruanded koostatakse automaatselt. Inseneri ülevaatus ja nõustamine ei kuulu teenuse hulka. Tulemused ei taga tulu ega ole ohutushinnang.",
-    vat: "Hinnad on eurodes ega sisalda kohaldatavat käibemaksu. Lõplik summa kuvatakse maksmisel ja see võidakse esitada teie valuutas.",
+    vat: "Hinnad on määratud eurodes. Enne maksmist näete lõppsummat koos võimaliku käibemaksuga eurodes või dollarites.",
     cards: "Me ei saa ega säilita kaardiandmeid. Kviitung või arve saadetakse e-postiga.",
     withdrawal: "ELi ja Ühendkuningriigi tarbijatele jäävad seadusest tulenevad õigused. Digisisule viivitamatut juurdepääsu taotledes kinnitate, et taganemisõigus lõpeb aruande üleandmisel.",
     liability: "Investeerimisotsuste eest vastutate ise. Meie vastutus piirdub tasutud hinnaga, välja arvatud juhul, kui seadus seda piirangut ei luba.",
@@ -195,7 +195,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   da: {
     headings: ["Udbyder", "Ydelse", "Priser", "Betaling", "Levering", "Tilbagebetaling", "Ansvar", "Personoplysninger"],
     automation: "Begge betalte rapporter udarbejdes automatisk. Ingeniørgennemgang og rådgivning er ikke inkluderet. Resultaterne garanterer ikke indtægter og udgør ikke en sikkerhedsvurdering.",
-    vat: "Priserne er i euro og eksklusive moms, hvor den finder anvendelse. Det endelige beløb vises ved betaling og kan blive vist i din valuta.",
+    vat: "Priserne er fastsat i euro. Før betaling ser du det endelige beløb, inklusive eventuel moms, i EUR eller USD.",
     cards: "Vi modtager eller opbevarer ikke kortoplysninger. Kvittering eller faktura sendes med e-mail.",
     withdrawal: "Forbrugere i EU og Storbritannien beholder deres lovbestemte rettigheder. Når du anmoder om øjeblikkelig adgang til digitalt indhold, anerkender du, at fortrydelsesretten ophører ved levering af rapporten.",
     liability: "Du er selv ansvarlig for investeringsbeslutninger. Vores ansvar er begrænset til den betalte pris, medmindre loven ikke tillader denne begrænsning.",
@@ -204,7 +204,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   sv: {
     headings: ["Leverantör", "Tjänst", "Priser", "Betalning", "Leverans", "Återbetalning", "Ansvar", "Personuppgifter"],
     automation: "Båda betalrapporterna skapas automatiskt. Granskning av ingenjör och rådgivning ingår inte. Resultaten garanterar inga intäkter och utgör ingen säkerhetsbedömning.",
-    vat: "Priserna anges i euro och exklusive moms där den är tillämplig. Slutbeloppet visas vid betalningen och kan visas i din valuta.",
+    vat: "Priserna är satta i euro. Innan du betalar ser du slutbeloppet, inklusive eventuell moms, i EUR eller USD.",
     cards: "Vi tar inte emot eller lagrar kortuppgifter. Kvitto eller faktura skickas via e-post.",
     withdrawal: "Konsumenter i EU och Storbritannien behåller sina lagstadgade rättigheter. När du begär omedelbar tillgång till digitalt innehåll bekräftar du att ångerrätten upphör när rapporten levereras.",
     liability: "Du ansvarar själv för investeringsbeslut. Vårt ansvar är begränsat till det betalda priset, utom när lagen inte tillåter denna begränsning.",
@@ -213,7 +213,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   fi: {
     headings: ["Palveluntarjoaja", "Palvelu", "Hinnat", "Maksaminen", "Toimitus", "Palautukset", "Vastuu", "Henkilötiedot"],
     automation: "Molemmat maksulliset raportit laaditaan automaattisesti. Insinöörin tarkastus tai neuvonta ei sisälly palveluun. Tulokset eivät takaa tuloja eivätkä ole turvallisuusarvio.",
-    vat: "Hinnat ovat euroina ilman mahdollista arvonlisäveroa. Lopullinen summa näkyy maksuvaiheessa, tarvittaessa omassa valuutassasi.",
+    vat: "Hinnat on määritetty euroissa. Ennen maksua näet loppusumman mahdollisine arvonlisäveroineen euroissa tai dollareissa.",
     cards: "Emme vastaanota tai tallenna korttitietoja. Kuitti tai lasku lähetetään sähköpostitse.",
     withdrawal: "EU:n ja Yhdistyneen kuningaskunnan kuluttajat säilyttävät lakisääteiset oikeutensa. Pyytämällä välitöntä pääsyä digitaaliseen sisältöön vahvistat, että peruuttamisoikeus päättyy raportin toimitukseen.",
     liability: "Vastaat itse investointipäätöksistä. Vastuumme rajoittuu maksettuun hintaan, paitsi jos laki ei salli tällaista rajoitusta.",
@@ -222,7 +222,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   vi: {
     headings: ["Đơn vị cung cấp", "Dịch vụ", "Giá", "Thanh toán", "Bàn giao", "Hoàn tiền", "Trách nhiệm", "Dữ liệu cá nhân"],
     automation: "Cả hai báo cáo trả phí đều được tạo tự động. Dịch vụ không bao gồm kỹ sư thẩm định hoặc tư vấn. Kết quả không bảo đảm doanh thu và không phải là đánh giá an toàn.",
-    vat: "Giá được niêm yết bằng euro, chưa bao gồm VAT nếu có. Số tiền cuối cùng hiển thị khi thanh toán và có thể được quy đổi sang đơn vị tiền tệ của bạn.",
+    vat: "Giá được định bằng euro. Trước khi thanh toán, bạn thấy số tiền cuối cùng, gồm VAT nếu có, bằng EUR hoặc USD.",
     cards: "Chúng tôi không tiếp nhận hoặc lưu trữ thông tin thẻ. Biên nhận hoặc hóa đơn được gửi qua email.",
     withdrawal: "Người tiêu dùng tại EU và Vương quốc Anh vẫn có các quyền theo luật định. Khi yêu cầu truy cập ngay nội dung số, bạn xác nhận quyền rút khỏi giao dịch chấm dứt khi báo cáo được bàn giao.",
     liability: "Bạn chịu trách nhiệm về quyết định đầu tư. Trách nhiệm của chúng tôi được giới hạn ở số tiền đã thanh toán, trừ khi pháp luật không cho phép giới hạn này.",
@@ -231,7 +231,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
   th: {
     headings: ["ผู้ให้บริการ", "บริการ", "ราคา", "การชำระเงิน", "การส่งมอบ", "การคืนเงิน", "ความรับผิด", "ข้อมูลส่วนบุคคล"],
     automation: "รายงานแบบชำระเงินทั้งสองประเภทจัดทำโดยอัตโนมัติ ไม่รวมการตรวจสอบโดยวิศวกรหรือการให้คำปรึกษา ผลลัพธ์ไม่รับประกันรายได้และไม่ใช่การประเมินความปลอดภัย",
-    vat: "ราคาเป็นสกุลยูโรและยังไม่รวม VAT ในกรณีที่ต้องเรียกเก็บ ยอดสุทธิจะแสดงในขั้นตอนชำระเงิน และอาจแสดงเป็นสกุลเงินของคุณ",
+    vat: "ราคากำหนดเป็นยูโร ก่อนชำระคุณจะเห็นยอดสุดท้ายรวม VAT (ถ้ามี) เป็น EUR หรือ USD",
     cards: "เราไม่ได้รับหรือจัดเก็บข้อมูลบัตร ใบเสร็จหรือใบแจ้งหนี้จะส่งทางอีเมล",
     withdrawal: "ผู้บริโภคในสหภาพยุโรปและสหราชอาณาจักรยังคงมีสิทธิตามกฎหมาย เมื่อขอเข้าถึงเนื้อหาดิจิทัลทันที คุณรับทราบว่าสิทธิในการถอนตัวจากสัญญาจะสิ้นสุดเมื่อส่งมอบรายงาน",
     liability: "คุณเป็นผู้รับผิดชอบการตัดสินใจลงทุน ความรับผิดของเราจำกัดอยู่ที่จำนวนเงินที่ชำระ เว้นแต่กฎหมายจะไม่อนุญาตให้จำกัดความรับผิดดังกล่าว",

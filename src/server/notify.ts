@@ -1,6 +1,7 @@
 import { absoluteUrl, SITE } from "@/config/site";
 import { isLocale } from "@/i18n/config";
 import { deliveryCopy } from "@/i18n/delivery";
+import { offerCopy } from "@/i18n/offer";
 import { emailConfigured, escapeHtml, sendMail } from "./email";
 import { reportError } from "./monitoring";
 import { orders, type Order } from "./orders";
@@ -29,14 +30,16 @@ export async function deliverPaidReport(order: Order): Promise<void> {
   const [subject, paid, open, keep, help] = deliveryCopy[lang];
   const url = absoluteUrl(`/${lang}/report/${order.reportToken}`);
   const title = subject.replace("{site}", SITE.name);
+  // Confirmation on a durable medium of the waiver the customer ticked (CRD Art. 16(m)).
+  const waiver = order.withdrawalWaiver ? offerCopy[lang].waiverMail.replace("{date}", order.withdrawalWaiver.at.slice(0, 10)).replace("{text}", order.withdrawalWaiver.text) : "";
   try {
     await sendMail({
       to: order.customer.email,
       replyTo: SITE.supportEmail,
       idempotencyKey: `report-link/${order.id}`,
       subject: title,
-      text: `${paid}\n\n${open}: ${url}\n\n${keep}\n${help}\n\n${SITE.name} · ${SITE.url}`,
-      html: `<p>${escapeHtml(paid)}</p><p><a href="${escapeHtml(url)}">${escapeHtml(open)}</a></p><p>${escapeHtml(keep)}<br>${escapeHtml(help)}</p><p style="color:#666">${escapeHtml(SITE.name)} · ${escapeHtml(SITE.url)}</p>`,
+      text: `${paid}\n\n${open}: ${url}\n\n${keep}\n${help}${waiver ? `\n\n${waiver}` : ""}\n\n${SITE.name} · ${SITE.url}`,
+      html: `<p>${escapeHtml(paid)}</p><p><a href="${escapeHtml(url)}">${escapeHtml(open)}</a></p><p>${escapeHtml(keep)}<br>${escapeHtml(help)}</p>${waiver ? `<p style="color:#444">${escapeHtml(waiver)}</p>` : ""}<p style="color:#666">${escapeHtml(SITE.name)} · ${escapeHtml(SITE.url)}</p>`,
     });
   } catch (error) {
     await orders.update(order.id, { customerNotifiedAt: undefined }, "email");

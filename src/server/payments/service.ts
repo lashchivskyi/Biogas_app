@@ -3,7 +3,8 @@ import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { absoluteUrl } from "@/config/site";
 import { getCountry } from "@/countries";
 import { assess } from "@/core";
-import { isLocale } from "@/i18n/config";
+import { isLocale, type Locale } from "@/i18n/config";
+import { offerCopy } from "@/i18n/offer";
 import { deliverPaidReport, notifyOwner } from "../notify";
 import { orders, type Order } from "../orders";
 import { inputSchema } from "../validate";
@@ -19,6 +20,8 @@ export const checkoutSchema = z.object({
   company: z.string().trim().max(160).optional().or(z.literal("")),
   vatId: z.string().trim().max(40).optional().or(z.literal("")),
   consent: z.literal(true),
+  /** Separate, unticked box: express request for immediate delivery + acknowledgement of losing withdrawal. */
+  withdrawalWaiver: z.literal(true),
   paymentCurrency: z.enum(["EUR", "USD"]).optional(),
   quoteToken: z.string().max(4096).optional(),
   input: inputSchema,
@@ -26,9 +29,14 @@ export const checkoutSchema = z.object({
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 
 const PRODUCT: Record<PlanId, { name: string; description: string }> = {
-  standard: { name: "Standard Feasibility Report", description: "Automated base-case biogas report: design, CAPEX/OPEX and cash flow for one project site" },
-  report: { name: "Extended Feasibility Report", description: "Automated report with scenario and route comparisons, stress tests and support cases for one project site" },
+  standard: { name: "Standard Report — preliminary biogas project screening", description: "Automated pre-feasibility screening, not a feasibility study: base-case design, CAPEX/OPEX and cash flow for one project site" },
+  report: { name: "Extended Report — preliminary biogas project screening", description: "Automated pre-feasibility screening, not a feasibility study: scenario and route comparisons, stress tests and support cases for one project site" },
 };
+
+/** A report on an INSUFFICIENT_DATA verdict would not answer the client's question, so it is not sold. */
+export function assertSellable(a: Pick<ReturnType<typeof assess>, "verdict">) {
+  if (a.verdict.id === "INSUFFICIENT_DATA") throw new CheckoutError("insufficient_data", 422);
+}
 
 /**
  * Creates the order (price from the plan table × the PROJECT country's tier, never from the client)
@@ -39,9 +47,13 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
   const tier = country.priceTier;
   const provider = activeProvider();
   if (!provider) throw new CheckoutError("Online payment is not available", 503);
+  const reportLang = input.lang === "uk" ? "uk" : "en";
+  const assessmentSnapshot = assess({ ...input.input, lang: reportLang }, country, { asOfDate: new Date().toISOString().slice(0, 10) });
+  assertSellable(assessmentSnapshot);
 
   const quote = input.quoteToken ? verifyPaymentQuote(input.quoteToken, input) : createPaymentQuote(input);
   const { amountMinor, priceEurCents } = quote;
+  const locale = (isLocale(input.lang) ? input.lang : "en") as Locale;
 
   const order = await orders.create({
     plan: input.plan,
@@ -54,8 +66,9 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
     status: "created",
     lang: input.lang,
     customer: { email: input.email, name: input.name || undefined, company: input.company || undefined, vatId: input.vatId || undefined },
-    input: { ...input.input, lang: input.lang === "uk" ? "uk" : "en" },
-    assessmentSnapshot: assess({ ...input.input, lang: input.lang === "uk" ? "uk" : "en" }, country, { asOfDate: new Date().toISOString().slice(0, 10) }),
+    input: { ...input.input, lang: reportLang },
+    assessmentSnapshot,
+    withdrawalWaiver: { at: new Date().toISOString(), text: offerCopy[locale].waiver },
   });
   const reportPath = `/${input.lang}/report/${order.reportToken}`;
   let session;

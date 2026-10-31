@@ -10,6 +10,7 @@ import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
 import { usePreferences } from "../LocaleProvider";
 import { preferenceCopy } from "@/i18n/preferences";
+import { offerCopy } from "@/i18n/offer";
 import type { PublicPaymentQuote } from "@/server/payments/quote";
 import type { CurrencyPreference } from "@/lib/preferences";
 import { CountryFlag, CURRENCY_FLAGS } from "../CountryFlag";
@@ -33,6 +34,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
   const ref = useRef<HTMLDialogElement>(null);
   const id = useId();
   const [plan, setPlan] = useState<PlanId>(initialPlan);
+  const O = offerCopy[locale];
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -57,11 +59,11 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
     fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json" }, signal: controller.signal,
       body: JSON.stringify({ plan, lang: locale, input, paymentCurrency }),
     }).then(async (response) => {
-      if (!response.ok) throw new Error(response.status === 503 ? C.unavailable : C.error);
+      if (!response.ok) throw new Error(response.status === 503 ? C.unavailable : response.status === 422 ? O.insufficient : C.error);
       return response.json() as Promise<PublicPaymentQuote>;
     }).then((value) => { if (!controller.signal.aborted) setQuote(value); }).catch((error: Error) => { if (error.name !== "AbortError") setError(error.message); });
     return () => controller.abort();
-  }, [isOpen, input, plan, locale, paymentCurrency, quoteRevision, C.unavailable, C.error]);
+  }, [isOpen, input, plan, locale, paymentCurrency, quoteRevision, C.unavailable, C.error, O.insufficient]);
 
   function open() {
     setError("");
@@ -81,12 +83,12 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ plan, lang: locale, email: fd.get("email"), name: fd.get("name"), company: fd.get("company"), vatId: fd.get("vatId"), consent: fd.get("consent") === "on", input, paymentCurrency, quoteToken: quote.token }),
+        body: JSON.stringify({ plan, lang: locale, email: fd.get("email"), name: fd.get("name"), company: fd.get("company"), vatId: fd.get("vatId"), consent: fd.get("consent") === "on", withdrawalWaiver: fd.get("withdrawalWaiver") === "on", input, paymentCurrency, quoteToken: quote.token }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.redirectUrl) {
         if (res.status === 409) setQuoteRevision((version) => version + 1);
-        setError(res.status === 503 ? C.unavailable : C.error);
+        setError(res.status === 503 ? C.unavailable : data.error === "insufficient_data" ? O.insufficient : C.error);
         setState("error");
         return;
       }
@@ -148,6 +150,11 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
                   <Link href={`/${locale}/terms`} target="_blank" className="font-semibold text-brand underline">{C.terms}</Link>
                   {C.consent.split("{terms}")[1]}
                 </span>
+              </label>
+              {/* EU/UK digital content: separate, unticked, express request + acknowledgement (CRD Art. 16(m)). */}
+              <label className="flex items-start gap-3 text-sm text-ink2">
+                <input type="checkbox" name="withdrawalWaiver" required className="mt-1 h-4 w-4" />
+                <span>{O.waiver}</span>
               </label>
               {coreLang(locale) !== locale && <p className="hint">{d.common.reportLangNote}</p>}
               {demo && <p className="hint text-warn">{C.demo}</p>}

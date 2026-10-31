@@ -608,6 +608,8 @@ export interface SupportCase {
   name: string;
   status: "open" | "competitive" | "closing" | "closed" | "uncertain";
   eligible: boolean;
+  /** Gas-stream projects: computed as "if eligible"; the scheme's gas-source rules are not modelled. */
+  unconfirmed?: boolean;
   reason: string;
   npvEur: number;
   paybackYears: number | null;

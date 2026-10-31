@@ -1,30 +1,30 @@
 # Status
 
-Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
+Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 363), lint, typecheck, build pass.
+- Model 0.6.1; data review 2026-10-30. Tests (1 371), lint, typecheck, build pass.
 - UX audit 2026-10-31 (Chrome, prod build, demo payments; en/uk/de, desktop+390 px; axe WCAG 2.2 AA, Lighthouse): fixed CLS
   (skeleton heights), contrast, DE/NL/FI mobile overflow, report re-render on client, three.js loaded late, font preload,
   scroll-region focus, 24 px footer targets. Lighthouse after: desktop 99/100/100/100; mobile a11y/SEO 100, perf home/pricing
   ≈ 89–91, calculator/report ≈ 79 (model bundle ≈ 135 kB gz runs at hydration). NOT tested: real Stripe test checkout, real email.
-- UX open: "Insufficient data" verdict after "Calculate now" yet paid report is sold; failed payment loses the project; /en link
+- Offer audit 2026-11-01: pricing lists = report content; gas-stream reports got residues, methane, break-even, "if eligible"
+  support; free/paid boundary, INSUFFICIENT_DATA not sold, withdrawal waiver, VAT note, no "Feasibility" in names
+  (DECISIONS). Prices unchanged; plans independent, no upgrade (owner). NOT browser-tested.
+- UX open: failed payment loses the project; /en link
   overridden by IP-country language; Ukrainian source notes in en/de reports; no dark theme; native validation text not localised.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
 - Competitor benchmark (PRODUCT.md › Market): 4 examples vs KTBL, Luke v3, WSU, LandGEM; gaps > 15 % explained, nothing retuned (`scripts/benchmark.ts`).
-- Finance audit: 3 examples recomputed by hand = code (`finance-audit.test.ts`); "pre-tax, not bankable" in UI/export.
 - Scenario sweep (`scenario-matrix.ts`, `scenario-sweep.test.ts`, `properties.test.ts`, `hostile-input.test.ts`): 13 464 assessments,
   0 throws/NaN, balances close (`MATRIX=full`, ≈ 8 min). Report consistency (`report-consistency.test.ts`): 30 reports, 0 contradictions.
   One plant per project. Open: purchased energy at the "optimistic" price → 54 of 1 287 cases unordered.
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
-2. Maize-plant CAPEX vs the BMWK/IEE/DBFZ reference (Kurzfristanalyse 13.02.2024, Tab. 4-1: new 510 kW rated /
-   1 135 kWe flexible NawaRo + slurry, 7 521 €/kW = 3.84 M€ in 2023, 4.34 M€ in 2026): model 4.70 M€ (+22 %), +41 % if
-   the flexibility engine is added at the model's own curve; without the clamp (0.93 M€) +4…17 %. But total cost per
-   kWh is 5–12 % BELOW the report's 31.5 ct (model OPEX 0.88 M€ is ≈ 20 % lower than implied). Report does not say
-   whether silo and digestate storage are in the 7 521 €/kW → nothing retuned. Open: its scope (ask DBFZ/IEE).
+2. Maize-plant CAPEX vs BMWK/IEE/DBFZ Kurzfristanalyse 13.02.2024 Tab. 4-1 (7 521 €/kW → 4.34 M€ in 2026): model 4.70 M€
+   (+22 %; +41 % with flex engine; +4…17 % without clamp), yet cost/kWh 5–12 % below its 31.5 ct (model OPEX ≈ 20 % lower).
+   Silo/digestate storage scope unknown → nothing retuned; ask DBFZ/IEE.
 3. Bank pack: construction year + IDC, CIT + depreciation (then after-tax WACC), equity IRR, yearly DSCR,
    reinvestment, residual value. Landfill/process budgets: confirm scope vs model gas system with a real quote.
 4. Straw pretreatment yield (Madsen gap); grass silage type; other cattle / swine VS vs IPCC (swine back-test 0.80
@@ -35,6 +35,6 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
-- Only membrane upgrading; no odorisation, injection fees, flexible-CHP premium. Gas streams get no support cases.
+- Only membrane upgrading; no odorisation, injection fees, flexible-CHP premium. Gas-stream support: "if eligible" only.
 - Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (see DECISIONS).
 - PL FIT is CPI-indexed but modelled flat (conservative).

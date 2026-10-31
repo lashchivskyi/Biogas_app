@@ -4,6 +4,7 @@ import { PLAN_PRICES_EUR_CENTS } from "@/config/plans";
 import { SITE } from "@/config/site";
 import { getDictionary, INTL_TAG, type Locale } from "@/i18n";
 import { legalCopy } from "@/i18n/legal";
+import { offerCopy } from "@/i18n/offer";
 import { alternates } from "@/i18n/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/terms">): Promise<Metadata> {
@@ -38,7 +39,7 @@ export default async function TermsPage({ params }: PageProps<"/[lang]/terms">) 
               <li>{d.pricing.plans.standard.name}: {eur(PLAN_PRICES_EUR_CENTS.standard.A)} / {eur(PLAN_PRICES_EUR_CENTS.standard.B)} / {eur(PLAN_PRICES_EUR_CENTS.standard.C)} · {d.pricing.perProject}.</li>
               <li>{d.pricing.plans.report.name}: {eur(PLAN_PRICES_EUR_CENTS.report.A)} / {eur(PLAN_PRICES_EUR_CENTS.report.B)} / {eur(PLAN_PRICES_EUR_CENTS.report.C)} · {d.pricing.perProject}.</li>
             </ul>
-            <p className="mt-2">{copy.vat}</p>
+            <p className="mt-2">{copy.vat} {process.env.STRIPE_TAX === "1" ? offerCopy[lang as Locale].vatExclusive : offerCopy[lang as Locale].vatFinal}</p>
           </section>
           <section><h2 className="text-xl font-bold text-ink">4. {copy.headings[3]}</h2><p className="mt-2">{d.pricing.faq[0].a} {copy.cards}</p></section>
           <section><h2 className="text-xl font-bold text-ink">5. {copy.headings[4]}</h2><p className="mt-2">{d.pricing.faq[1].a}</p></section>

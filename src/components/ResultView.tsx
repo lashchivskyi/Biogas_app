@@ -21,6 +21,9 @@ import { preferenceCopy } from "@/i18n/preferences";
 import { locationCopy } from "@/i18n/location";
 import { FlowDiagram } from "./FlowDiagram";
 import { DataConfidence } from "./DataConfidence";
+import { PaidTeaser } from "./PaidTeaser";
+import { SupportTable } from "./SupportTable";
+import { offerCopy } from "@/i18n/offer";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
@@ -76,7 +79,8 @@ const ROBUST_STYLE = {
 /** A finite Monte Carlo cannot show certainty: 160 of 160 positive draws is "> 99 %", none is "< 1 %". */
 const probText = (p: number, F: ReturnType<typeof makeFormat>) => p >= 1 ? `> ${F.pct(0.99)}` : p <= 0 ? `< ${F.pct(0.01)}` : F.pct(p);
 
-function Robustness({ a, R, eur, stressNote }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string; stressNote?: string }) {
+/** `lockedNote`: free view — driver names stay (what to check), their NPV amounts and the Monte Carlo certainty are paid detail. */
+function Robustness({ a, R, eur, stressNote, lockedNote }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string; stressNote?: string; lockedNote?: string }) {
   const status = a.robustness as keyof typeof ROBUST_STYLE;
   const S = ROBUST_STYLE[status];
   const drivers = a.drivers.map((id) => a.sensitivity.find((s) => s.id === id)).filter((s) => s !== undefined);
@@ -93,8 +97,9 @@ function Robustness({ a, R, eur, stressNote }: { a: Assessment; R: ResultDict["r
         <div className="mt-3">
           {status === "clear_go" && <div className="text-sm font-semibold">{R.robust.drivers}</div>}
           <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-sm">
-            {drivers.map((s) => <li key={s.id}>{s.label} <span className="num text-muted">({eur(s.deltaNpvEur)})</span></li>)}
+            {drivers.map((s) => <li key={s.id}>{s.label}{!lockedNote && <> <span className="num text-muted">({eur(s.deltaNpvEur)})</span></>}</li>)}
           </ol>
+          {lockedNote && <p className="mt-1 text-xs text-muted">{lockedNote}</p>}
         </div>
       )}
       <p className="mt-4 text-xs text-ink2">{R.robust.accuracy}</p>
@@ -179,7 +184,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
         <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
       </div>
 
-      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} stressNote={a.monteCarlo && f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) })} />}
+      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} stressNote={access !== "free" && a.monteCarlo ? f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) }) : undefined} lockedNote={access === "free" ? offerCopy[locale].driversLocked : undefined} />}
 
       {/* ---------- Plain summary ---------- */}
       <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
@@ -267,45 +272,13 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
       )}
 
       {!full ? (
-        <LockedTeaser R={R} unlockSlot={unlockSlot} samplesHref={samplesHref} />
+        <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} samplesHref={samplesHref} />
       ) : (
         <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} />
       )}
 
       {afterSlot}
     </div>
-  );
-}
-
-function LockedTeaser({ R, unlockSlot, samplesHref }: { R: ResultDict["result"]; unlockSlot?: ReactNode; samplesHref?: string }) {
-  return (
-    <section className="no-print relative mt-10 overflow-hidden rounded-3xl border border-line bg-surface" aria-labelledby="locked-h">
-      <div className="pointer-events-none select-none p-6 opacity-60 blur-[3px]" aria-hidden>
-        <div className="grid gap-3 md:grid-cols-3">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="rounded-2xl bg-surface2 p-4">
-              <div className="h-3 w-24 rounded bg-line" />
-              <div className="mt-3 h-6 w-32 rounded bg-line" />
-              <div className="mt-4 space-y-2">{[0, 1, 2, 3].map((k) => <div key={k} className="h-2.5 rounded bg-line" style={{ width: `${90 - k * 12}%` }} />)}</div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 h-40 rounded-2xl bg-gradient-to-r from-brandsoft via-surface2 to-amber-50" />
-      </div>
-      <div className="absolute inset-0 grid place-items-center bg-gradient-to-b from-white/40 via-white/85 to-white p-6">
-        <div className="max-w-xl text-center">
-          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-night text-signal" aria-hidden>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-          </span>
-          <h3 id="locked-h" className="font-display mt-4 text-2xl font-semibold">{R.lockedTitle}</h3>
-          <p className="mt-2 text-ink2">{R.lockedText}</p>
-          <div className="mt-5 flex flex-wrap justify-center gap-3">
-            {unlockSlot}
-            {samplesHref && <Link href={samplesHref} className="btn btn-ghost">{R.seeSample}</Link>}
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -627,35 +600,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
       {/* ---------- Support cases ---------- */}
       <Section title={R.supportTitle} sub={R.supportSub}>
-        {a.supportCases.length === 0 ? (
-          <p className="card p-4 text-sm text-ink2">{R.supportNone}</p>
-        ) : (
-          <div className="card overflow-x-auto p-1" tabIndex={0}>
-            <table className="w-full min-w-[640px] text-sm">
-              <thead>
-                <tr className="text-left text-xs uppercase tracking-wide text-muted">
-                  <th className="p-3">{R.colScheme}</th><th className="p-3">{R.colStatus}</th><th className="p-3">{R.colEligible}</th><th className="p-3 text-right">{R.colNpv}</th><th className="p-3 text-right">{R.colPayback}</th><th className="p-3 text-right">{R.colDelta}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {a.supportCases.map((s) => (
-                  <tr key={s.schemeId} className="border-t border-line align-top">
-                    <td className="p-3">
-                      <div className="font-semibold">{s.name}</div>
-                      <div lang={a.lang} className="mt-0.5 text-xs text-muted">{s.note}</div>
-                      <div className="mt-0.5 text-[11px] text-muted"><span lang="en">{s.source}</span> · {L.confidence[s.confidence]}</div>
-                    </td>
-                    <td className="p-3"><span className="chip">{R.status[s.status]}</span></td>
-                    <td className="p-3">{s.eligible ? d.common.yes : <span className="text-bad">{d.common.no}</span>}{s.reason && <div lang={a.lang} className="mt-0.5 max-w-[220px] text-xs text-muted">{s.reason}</div>}</td>
-                    <td className="num p-3 text-right font-semibold">{s.eligible || s.status === "closed" ? eur(s.npvEur) : "—"}</td>
-                    <td className="num p-3 text-right">{s.eligible || s.status === "closed" ? years(s.paybackYears) : "—"}</td>
-                    <td className={`num p-3 text-right ${s.deltaNpvEur >= 0 ? "text-good" : "text-bad"}`}>{s.eligible || s.status === "closed" ? eur(s.deltaNpvEur) : "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <SupportTable a={a} d={d} locale={locale} eur={eur} years={years} />
       </Section>
 
       {/* ---------- Scores ---------- */}
@@ -737,6 +682,8 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
             {best.design.tech.alternatives.length > 0 && <><div className="mt-3 text-sm font-semibold">{R.alternatives}</div><ul lang={a.lang} className="list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.alternatives.map((x) => <li key={x}>{x}</li>)}</ul></>}
             <p className="mt-3 text-xs text-muted">{f(R.climate, { region: a.climate.regionName, t: n1(a.climate.meanTempC), hdd: n0(a.climate.hdd), list: a.climate.analogues.map((x) => `${x.name} (Δ ${n1(x.distance)} °C)`).join(", ") })}</p>
           </Fold>
+
+          <MonthlyBalance a={a} locale={locale} n0={n0} />
 
           <Fold title={R.dMoney}>
             <div className="grid gap-6 md:grid-cols-3">
@@ -832,6 +779,32 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
         </div>
       </Section>
     </>
+  );
+}
+
+/** Base case, chosen route: the monthly arrays the energy model already balances (gas, digester heat, useful heat, power). */
+function MonthlyBalance({ a, locale, n0 }: { a: Assessment; locale: Locale; n0: (v: number) => string }) {
+  const b = a.scenarios.base;
+  const m = b.energy.monthly;
+  if (!m?.gasKwh?.length) return null;
+  const O = offerCopy[locale];
+  const month = new Intl.DateTimeFormat(INTL_TAG[locale], { month: "short", timeZone: "UTC" });
+  const mwh = (v: number) => n0(v / 1000);
+  const rows = m.gasKwh.map((gas, i) => [month.format(Date.UTC(2025, i, 1)), n0(b.feed.monthlyTonnes[i] ?? 0), mwh(gas), mwh(m.heatDigesterKwh[i]), mwh(m.heatUsefulKwh[i]), mwh(m.elNetKwh[i])]);
+  const sum = (x: number[]) => x.reduce((s, v) => s + v, 0);
+  return (
+    <Fold title={O.monthlyTitle}>
+      <p className="text-xs text-muted">{O.monthlySub}</p>
+      <div className="mt-2 overflow-x-auto" tabIndex={0}>
+        <table className="num w-full min-w-[640px] text-sm">
+          <thead><tr className="text-left text-xs uppercase tracking-wide text-muted">{O.monthlyCols.map((c, i) => <th key={c} className={`py-2 ${i ? "text-right" : ""}`}>{c}</th>)}</tr></thead>
+          <tbody>
+            {rows.map((r) => <tr key={r[0]} className="border-t border-line">{r.map((v, i) => <td key={i} className={`py-1.5 ${i ? "text-right" : "font-sans"}`}>{v}</td>)}</tr>)}
+            <tr className="border-t-2 border-line font-semibold"><td className="py-1.5 font-sans">Σ</td>{[n0(sum(b.feed.monthlyTonnes)), mwh(sum(m.gasKwh)), mwh(sum(m.heatDigesterKwh)), mwh(sum(m.heatUsefulKwh)), mwh(sum(m.elNetKwh))].map((v, i) => <td key={i} className="py-1.5 text-right">{v}</td>)}</tr>
+          </tbody>
+        </table>
+      </div>
+    </Fold>
   );
 }
 

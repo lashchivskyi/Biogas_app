@@ -8,6 +8,7 @@ import { fmtInt } from "@/core/i18n";
 import { getCountry } from "@/countries";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { decisionCopy } from "@/i18n/decision";
+import { offerCopy } from "@/i18n/offer";
 import { climateCopy } from "@/i18n/climate";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { makeFormat, sig2 } from "@/lib/format";
@@ -353,10 +354,14 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
     has(txt(rb), expected, "robustness statement");
     for (const other of [R.robust.go, R.robust.no, R.robust.grey]) if (other !== expected) absent(txt(rb), other, "robustness statement (other)");
     has(txt(rb), f(R.robust.npv, { lo: eur(cons.fin.npvEur), base: eur(base.fin.npvEur), hi: eur(opt.fin.npvEur) }), "robustness NPVs");
-    if (a.monteCarlo) has(txt(rb), f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: a.monteCarlo.probPositive >= 1 ? `> ${pct(0.99)}` : a.monteCarlo.probPositive <= 0 ? `< ${pct(0.01)}` : pct(a.monteCarlo.probPositive) }), "robustness Monte Carlo sentence");
+    // Free tier: driver names stay, their NPV amounts and the Monte Carlo certainty are paid detail.
+    if (!full && a.robustness !== "clear_no" && a.drivers.length) has(txt(rb), offerCopy[locale].driversLocked, "robustness: paid-detail note");
+    if (a.monteCarlo && !full) absent(txt(rb), decisionCopy[locale].monteCarlo.stress.split("{n}")[0].trim(), "robustness Monte Carlo sentence in the free result");
+    if (a.monteCarlo && full) has(txt(rb), f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: a.monteCarlo.probPositive >= 1 ? `> ${pct(0.99)}` : a.monteCarlo.probPositive <= 0 ? `< ${pct(0.01)}` : pct(a.monteCarlo.probPositive) }), "robustness Monte Carlo sentence");
     if (a.robustness !== "clear_no") for (const id of a.drivers) {
       const s = a.sensitivity.find((x) => x.id === id)!;
-      has(txt(rb), `(${eur(s.deltaNpvEur)})`, `robustness driver ${id}`);
+      if (full) has(txt(rb), `(${eur(s.deltaNpvEur)})`, `robustness driver ${id}`);
+      else absent(txt(rb), `(${eur(s.deltaNpvEur)})`, `robustness driver ${id} amount in the free result`);
     }
   } else absent(text, R.robust.title, "robustness hidden when data is insufficient");
 

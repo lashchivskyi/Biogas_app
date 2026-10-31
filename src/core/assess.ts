@@ -522,7 +522,11 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
 
   // ---- national support: separate cases, never in the verdict ----
   const manureMass = base.feed.tonnesYear > 0 ? base.feed.lines.filter((l) => l.category === "manure").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear : 0;
-  const supportCases: SupportCase[] = (input.process ? [] : country.support.schemes).map((sc) => {
+  // Scheme rules are written for digesters fed with farm or organic-waste feedstock. For an existing gas source the
+  // case is computed as "if eligible", never shown as eligible: the scheme's own gas-source category must confirm it.
+  const gasSource = input.process && input.process.kind !== "residue" ? input.process.kind : undefined;
+  const gasSourceName = gasSource === "wastewater" ? T("wastewater (sewage) gas", "газ зі стічних вод") : gasSource === "landfill" ? T("landfill gas", "звалищний газ") : T("an existing biogas stream", "наявний потік біогазу");
+  const supportCases: SupportCase[] = country.support.schemes.map((sc) => {
     const route = sc.routes.includes(bestRoute) ? bestRoute : sc.routes[0];
     const ref = matrix[route].base;
     const kw = ref.kwElEquivalent;
@@ -533,13 +537,16 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     if (route === "chp" && ref.energy.chpKwEl < minChp && sc.electricityTariffEurKwh) reason = T("Too small for a CHP plant.", "Замало для когенерації.");
     if (route === "biomethane" && ref.energy.rawBiogasNm3PerHour < minBio) reason = T(`Raw biogas ≈ ${Math.round(ref.energy.rawBiogasNm3PerHour)} Nm³/h is below the practical upgrading minimum (${minBio} Nm³/h) — consider a cluster.`, `Сирого біогазу ≈ ${Math.round(ref.energy.rawBiogasNm3PerHour)} Нм³/год — менше практичного мінімуму для очищення (${minBio} Нм³/год); розгляньте кластер.`);
     if (sc.status === "closed" && reason === "") reason = T("Call closed — shown for reference only.", "Прийом заявок закрито — лише для довідки.");
-    const computable = reason === "" || sc.status === "closed";
+    const unconfirmed = gasSource !== undefined && reason === "";
+    if (unconfirmed) reason = T(`Eligibility of ${gasSourceName} is not modelled: shown "if eligible". Confirm the gas-source category, tariff and any existing support with the scheme operator.`, `Право на підтримку для джерела «${gasSourceName}» не моделюємо: показано «якщо схема застосовна». Підтвердьте категорію джерела газу, тариф і наявну підтримку в адміністратора схеми.`);
+    const computable = reason === "" || sc.status === "closed" || unconfirmed;
     const r = computable ? run(route, "base", NO_MODS, sc) : ref;
     return {
       schemeId: sc.id,
       name: sc.name,
       status: sc.status,
       eligible: reason === "",
+      ...(unconfirmed ? { unconfirmed } : {}),
       reason,
       npvEur: r.fin.npvEur,
       paybackYears: r.fin.simplePaybackYears,

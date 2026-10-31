@@ -5,6 +5,7 @@ import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
 import en from "@/i18n/dict/en";
+import { offerCopy } from "@/i18n/offer";
 import { ResultView, type ResultViewProps } from "../ResultView";
 
 const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
@@ -43,5 +44,27 @@ describe("paid report contents", () => {
     expect(titles(html)).not.toContain(en.result.dMoney);
     expect(titles(html)).not.toContain(en.result.scenariosTitle);
     expect(titles(html)).not.toContain(en.result.sensTitle);
+  });
+
+  it("keeps every pricing-page promise for the standard report visible in it", () => {
+    const headings = titles(render("standard"));
+    expect(headings).toContain(offerCopy.en.monthlyTitle);
+    for (const t of [en.result.dDigestate, en.result.dMethane, en.result.dReg, en.result.dSafety]) expect(headings).toContain(t);
+  });
+
+  it("lists, in the free result, what each plan adds for this project", () => {
+    const html = render("free").replace(/&amp;/g, "&");
+    const O = offerCopy.en;
+    expect(html).toContain(O.teaserStandard);
+    expect(html).toContain(O.teaserExtended);
+    expect(html).toContain(O.tStress.replace("{n}", String(a.sensitivity.length)));
+    expect(html).toContain(O.tMonthly);
+    if (a.measureFirst?.length) expect(html).toContain(O.tChecks.replace("{n}", String(a.measureFirst.length)));
+  });
+
+  it("blocks the purchase on an INSUFFICIENT_DATA verdict", () => {
+    const html = renderToStaticMarkup(createElement(ResultView, { a: { ...a, verdict: { ...a.verdict, id: "INSUFFICIENT_DATA" } }, d: en, locale: "en", currency: "EUR", access: "free", methodologyHref: "/en/methodology", unlockSlot: createElement("button", null, "BUY") }));
+    expect(html).toContain(offerCopy.en.insufficient);
+    expect(html).not.toContain("BUY");
   });
 });

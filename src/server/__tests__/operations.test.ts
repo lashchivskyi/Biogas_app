@@ -31,7 +31,7 @@ afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); vi.restoreAllMocks(); 
 afterAll(() => rmSync(dir, { recursive: true, force: true })); // Only this test's mkdtemp directory.
 
 const input = EXAMPLES.find((e) => e.id === "slaughter_5000")!.input;
-const checkout = (lang: Locale = "de") => S.startCheckout({ plan: "report", lang, email: "buyer@example.com", consent: true, input });
+const checkout = (lang: Locale = "de") => S.startCheckout({ plan: "report", lang, email: "buyer@example.com", consent: true, withdrawalWaiver: true, input });
 const mailer = () => {
   vi.stubEnv("RESEND_API_KEY", "re_test");
   vi.stubEnv("EMAIL_FROM", "Methalytics <reports@mail.example.com>");

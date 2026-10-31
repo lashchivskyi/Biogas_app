@@ -166,3 +166,14 @@ replace the line rather than adding a contradicting one.
 - Do not render `ResultView` on the client for EUR (`CurrencyResultView` keeps the server view): it re-ran ~2 s of main-thread work on phones.
 - three.js (hero scene, bottom emblem) loads on first interaction / viewport proximity, never at hydration; keep skeleton heights ≥ final content (CLS).
 - Lighthouse locally: build with `NEXT_PUBLIC_LOCAL_IP_GEO=0` (the ipapi.co call delays `ready`); first run per batch is cold, discard it.
+
+## 2026-11-01 — Offer boundary and payments
+- Free view = the answer (verdict, robustness class, ranges incl. 3 NPVs, driver NAMES); paid = the work behind it (driver NPV
+  amounts, Monte Carlo, line items, request letters, Excel). The free → paid block lists THIS project's counts per plan. A clear
+  no says the report will not change it. — Freemium practice: give the conclusion, sell the detail; honesty keeps trust.
+- INSUFFICIENT_DATA is never sold (quote 422 + checkout guard). — A paid "fill in more fields" invites refunds.
+- Standard and Extended are independent purchases: no upgrade, no credit; the client chooses before paying (owner,
+  2026-11-01; an upgrade was built and removed). Prices unchanged: owner declined the proposed Standard cut.
+- Withdrawal: separate unticked box, exact text stored on the order and repeated in the delivery email (CRD Art. 16(m)).
+- Gas streams (wastewater, landfill, existing gas): support cases computed but marked "if eligible", never eligible — scheme
+  gas-source categories (e.g. Klär-/Deponiegas) are not modelled. Residue (BMP) inputs follow normal scheme rules.

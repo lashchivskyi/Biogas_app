@@ -35,6 +35,8 @@ export interface Order {
   status: OrderStatus;
   lang: string;
   customer: { email: string; name?: string; company?: string; vatId?: string };
+  /** EU/UK digital-content waiver: the exact text the customer ticked, and when (CRD Art. 16(m)). */
+  withdrawalWaiver?: { at: string; text: string };
   /** Project input and immutable calculation saved at checkout. Legacy orders have no snapshot. */
   input: ProjectInput;
   assessmentSnapshot?: Assessment;

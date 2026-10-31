@@ -118,7 +118,7 @@ describe("postgres schema", () => {
   it("runs a full checkout against Postgres with the immutable assessment snapshot", async () => {
     D.useDatabase(pg);
     const S = await import("../payments/service");
-    const { order } = await S.startCheckout({ plan: "report", lang: "en", email: "t@example.com", consent: true, input });
+    const { order } = await S.startCheckout({ plan: "report", lang: "en", email: "t@example.com", consent: true, withdrawalWaiver: true, input });
     const before = JSON.stringify(order.assessmentSnapshot);
     expect(before.length).toBeGreaterThan(10_000);
     const paid = await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: order.currency, paymentRef: "pi_pg" }, "test");

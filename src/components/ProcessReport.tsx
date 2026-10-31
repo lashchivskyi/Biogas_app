@@ -6,12 +6,16 @@ import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { processCopy, processFieldLabels } from "@/i18n/processes";
 import { CashFlowChart } from "./Charts";
 import { DataConfidence } from "./DataConfidence";
+import { PaidTeaser } from "./PaidTeaser";
+import { SupportTable } from "./SupportTable";
+import { fmt } from "@/i18n";
+import { offerCopy } from "@/i18n/offer";
 
 /** A gas inlet and a COD reactor must never render an AD feedstock/digestate diagram. */
 export function ProcessReport({ a, d, locale, currency, display, access, unlockSlot, afterSlot, methodologyHref }: ResultViewProps) {
   const b = a.scenarios.base, process = b.process!;
   const economicsAvailable = a.financialsAvailable ?? !process.missingInputs?.length;
-  const R = d.result, L = d.labels, c = processCopy(locale), fields = processFieldLabels(locale);
+  const R = d.result, L = d.labels, c = processCopy(locale), fields = processFieldLabels(locale), O = offerCopy[locale];
   const F = makeFormat(locale, L.units, display);
   const number = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 6 }).format;
   const moneyLabels: Record<string,string> = { ...financialLabels(locale,d), process: c.models[process.kind], process_operation: fields.processOpexLocalYear, residual_disposal: fields.residualCostLocalT, gas_supply: fields.gasPriceLocalNm3, treatment: fields.avoidedTreatmentLocalM3 };
@@ -36,11 +40,22 @@ export function ProcessReport({ a, d, locale, currency, display, access, unlockS
       </dl>
     </section>
     {!economicsAvailable && <section className="card p-5"><h3 className="font-bold">{R.whatWouldChange}</h3><p className="mt-2">{c.costHint}</p><ul className="mt-3 list-disc pl-5">{process.missingInputs.map(key => <li key={key}>{fields[key]}: —</li>)}</ul></section>}
-    {access === "free" ? economicsAvailable && <section className="card p-5"><h3 className="font-bold">{R.lockedTitle}</h3><p className="mt-2">{R.lockedText}</p>{unlockSlot}</section> : <>
+    {access === "free" ? economicsAvailable && <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} /> : <>
       <section className="card p-5"><h3 className="font-bold">{R.detailsTitle}</h3>
         <p className="mt-2 text-sm">{c.inputHint}</p>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(process.metrics).map(([id,m]) => <div key={id}><dt className="text-sm text-muted">{metricLabels[id] ?? fields[id]}</dt><dd className="num">{number(m.value)} {m.unit}</dd></div>)}</dl>
         <p className="mt-4 text-sm">{c.costHint}</p>
+      </section>
+      <section className="card p-5"><h3 className="font-bold">{O.residualsTitle}</h3>
+        <p className="mt-2 text-sm">{process.kind === "residue" ? fmt(O.resResidue, { t: F.n0(a.digestate.tonnesYear), n: F.n0(a.digestate.nKgYear) })
+          : process.kind === "wastewater" ? fmt(O.resWastewater, { t: F.n0(process.metrics.sludge?.value ?? 0), cod: F.n0(process.metrics.effluentCod?.value ?? 0) })
+          : O.resNone}</p>
+      </section>
+      <section className="card p-5"><h3 className="font-bold">{R.dMethane}</h3>
+        <p className="mt-2 text-sm">{fmt(R.mLine, { v: F.pct(a.methane.lossShare, 1), lo: F.pct(a.methane.lossShareRange[0], 1), hi: F.pct(a.methane.lossShareRange[1], 1), co2: F.n0(a.methane.co2eTonnesYear), disp: F.n0(a.methane.displacedCo2eTonnesYear) })} {a.methane.ratio !== null ? fmt(R.mRatio, { v: F.pct(a.methane.ratio) }) : ""}</p>
+        {(process.metrics.uncapturedCh4?.value ?? 0) > 0 && <p className="mt-2 text-sm">{fmt(O.methaneUncaptured, { v: F.n0(process.metrics.uncapturedCh4.value) })}</p>}
+        <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
+        <p className="mt-2 text-xs text-muted">{R.mNote}</p>
       </section>
       {economicsAvailable && <>
       <section className="card p-5"><h3 className="font-bold">{R.capacity}</h3><p className="mt-2 num">CHP: {F.n0(b.energy.chpKwEl)} kWe · {R.biogas}: {F.n1(b.energy.rawBiogasDesignNm3PerHour)} Nm³/h</p><p className="mt-2">{R.elSplit}: {F.n0(b.energy.elSelfConsumedKwh / 1000)} / {F.n0(b.energy.elExportedKwh / 1000)} MWh/a</p><p>{moneyLabels.el_purchased}: {F.n0(b.energy.elPurchasedKwh / 1000)} MWh/a · {moneyLabels.heat_external}: {F.n0(b.energy.heatExternalPurchasedKwh / 1000)} MWh/a</p><p>{d.flow.electricity} · E_aux: {F.n0(b.energy.elParasiticKwh / 1000)} MWh/a</p><p>CH₄ → CHP / Boiler / Upgrading / Flare: {[b.energy.ch4ToChpM3,b.energy.ch4ToBoilerM3,b.energy.ch4ToUpgraderM3,b.energy.ch4FlaredM3].map(F.n0).join(" / ")} Nm³/a</p></section>
@@ -55,6 +70,8 @@ export function ProcessReport({ a, d, locale, currency, display, access, unlockS
       {access === "full" && <>
         <section className="space-y-3"><h3 className="font-bold">{R.routesTitle}</h3><div className="overflow-x-auto" tabIndex={0}><table className="w-full min-w-[650px] text-left text-sm"><thead><tr>{[R.colRoute,R.scenariosTitle,"CAPEX","EBITDA","NPV","DSCR"].map(t => <th className="p-3" key={t}>{t}</th>)}</tr></thead><tbody>{routes.flatMap(route => scenarios.map(s => { const r = a.routeMatrix[route][s]; return <tr key={`${route}-${s}`} className="border-t border-line"><th className="p-3">{L.route[route]}{route === a.bestRoute && <span className="chip ml-1">{R.chosen}</span>}</th><td className="p-3">{L.scenario[s]}</td>{[F.eur(r.capex.totalEur),F.eur(r.fin.ebitdaEurYear),F.eur(r.fin.npvEur),r.fin.dscrMin === null ? "—" : F.n1(r.fin.dscrMin)].map((v,i) => <td className="num p-3" key={i}>{v}</td>)}</tr>; }))}</tbody></table></div></section>
         <section className="card p-5"><h3 className="font-bold">{R.robust.drivers}</h3><ul className="mt-3 space-y-2">{a.parameterSensitivity?.filter(s => s.parameterId.startsWith("process.")).map(s => <li key={s.parameterId}>{fields[s.parameterId.slice(8)]}: {number(s.lowInput)}–{number(s.highInput)} → NPV {F.range(s.lowNpvEur,s.highNpvEur,F.eur)}</li>)}</ul></section>
+        <section className="card p-5"><h3 className="font-bold">{R.beCapex} · {R.bePrice}</h3><dl className="mt-3 grid gap-3 sm:grid-cols-2">{[[R.beCapex, a.breakEven.capexReductionPct, R.beCapexNote], [R.bePrice, a.breakEven.energyPriceIncreasePct, R.bePriceNote]].map(([label, v, note]) => <div key={label as string}><dt className="text-sm text-muted">{label as string}</dt><dd className="num font-semibold">{v === null ? R.unreachable : v === 0 ? R.alreadyPositive : `${Math.round(v as number)} %`}</dd><dd className="text-xs text-muted">{note as string}</dd></div>)}</dl></section>
+        <section className="space-y-3"><h3 className="font-bold">{R.supportTitle}</h3><p className="text-sm text-muted">{R.supportSub}</p><SupportTable a={a} d={d} locale={locale} eur={F.eur} years={F.years} /></section>
         <section className="card p-5"><h3 className="font-bold">{R.robust.drivers}</h3><ul className="mt-3 space-y-2">{a.sensitivity.map(s => <li className="flex justify-between gap-4" key={s.id}><span>{sensitivityLabels(locale,d)[s.id] ?? s.label}</span><span className="num">Δ NPV {F.eur(s.deltaNpvEur)}</span></li>)}</ul></section>
       </>}
       </>}
