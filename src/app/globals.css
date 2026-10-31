@@ -19,7 +19,7 @@
   --digestate: #9a7448;
   --feed: #6aa84f;
   --good: #0b6b4b;
-  --warn: #a8690f;
+  --warn: #96590a;
   --bad: #c0392b;
   --night: #050d0a;
   --night-2: #0b1813;
@@ -368,13 +368,20 @@ body {
 }
 
 /* ---------- accessibility ---------- */
+/* WCAG 2.2 target size (2.5.8): list links in the footer reach 24 px. */
+footer li > a,
+footer summary {
+  display: inline-block;
+  padding-block: 3px;
+}
 .btn:focus-visible,
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
-summary:focus-visible {
+summary:focus-visible,
+[tabindex="0"]:focus-visible {
   outline: 3px solid var(--signal);
   outline-offset: 3px;
 }

@@ -10,6 +10,7 @@ const subscribe = () => () => {};
 export function CurrencyResultView({ serverView, ...props }: ResultViewProps & { serverView?: ReactNode }) {
   const hydrated = useSyncExternalStore(subscribe, () => true, () => false);
   const p = usePreferences();
-  if (!hydrated && serverView) return serverView;
+  // Server markup already shows EUR with rate 1: re-rendering the whole report on the client is only needed for USD.
+  if (serverView && (!hydrated || p.currency === "EUR")) return serverView;
   return <ResultView {...props} display={{ currency: p.currency, rate: p.currency === "USD" ? p.usd.value : 1, date: p.currency === "USD" ? p.usd.date : props.a.dataAudit?.asOfDate ?? "—" }} />;
 }

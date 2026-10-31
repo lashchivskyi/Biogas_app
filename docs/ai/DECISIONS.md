@@ -161,3 +161,8 @@ replace the line rather than adding a contradicting one.
 - 2026-10-30 — `AGENTS.md` is the single instruction file (Codex reads it, `CLAUDE.md` imports it),
   written in English to save tokens; replies to the owner stay in Ukrainian.
 - 2026-10-30 — Knowledge lives in code, tests and four files in `docs/ai/`; no dated reports.
+
+## 2026-10-31 — UX audit: performance guards
+- Do not render `ResultView` on the client for EUR (`CurrencyResultView` keeps the server view): it re-ran ~2 s of main-thread work on phones.
+- three.js (hero scene, bottom emblem) loads on first interaction / viewport proximity, never at hydration; keep skeleton heights ≥ final content (CLS).
+- Lighthouse locally: build with `NEXT_PUBLIC_LOCAL_IP_GEO=0` (the ipapi.co call delays `ready`); first run per batch is cold, discard it.

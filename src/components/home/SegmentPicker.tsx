@@ -33,7 +33,7 @@ export function SegmentPicker({ segments, t, base }: { segments: SegmentCard[]; 
   const number = (v: number) => new Intl.NumberFormat(INTL_TAG[locale]).format(v);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[320px_1fr]">
       <div role="tablist" aria-label={t.ariaLabel} className="flex gap-2 overflow-x-auto pb-1 lg:max-h-[38rem] lg:flex-col lg:overflow-y-auto lg:pr-2">
         {segments.map((x) => (
           <button
@@ -92,7 +92,7 @@ export function SegmentPicker({ segments, t, base }: { segments: SegmentCard[]; 
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
             {definition.scope !== "outside_model" && <Link href={`${base}/calculator?b=${s.businessType}`} className="btn btn-signal">{t.cta} <Icon name="arrow" size={18} /></Link>}
-            <Link href={businessHref(s.businessType, base)} className="text-sm font-semibold text-white/75 underline-offset-4 hover:text-white hover:underline">{t.more}</Link>
+            <Link href={businessHref(s.businessType, base)} className="inline-block py-1 text-sm font-semibold text-white/75 underline-offset-4 hover:text-white hover:underline">{t.more}</Link>
           </div>
         </div>
       </div>

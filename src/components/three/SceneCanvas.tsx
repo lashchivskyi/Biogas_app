@@ -25,6 +25,17 @@ export function SceneCanvas({ chapter, active }: { chapter: ChapterId; active: b
   const sceneRef = useRef<ProcessScene | null>(null);
   const activeRef = useRef(active);
   const [ready, setReady] = useState(false);
+  // three.js starts on the first interaction (or after 5 s on capable desktops): the CSS poster covers the wait,
+  // so hydration and the first paint are not blocked by shader compilation (~1.6 s of main thread on a phone).
+  const [wanted, setWanted] = useState(false);
+  useEffect(() => {
+    const go = () => setWanted(true);
+    const events = ["pointerdown", "pointermove", "touchstart", "scroll", "keydown"] as const;
+    events.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
+    const weak = window.innerWidth < 768 || (navigator.hardwareConcurrency ?? 8) <= 4;
+    const timer = weak ? undefined : window.setTimeout(go, 5000);
+    return () => { events.forEach((e) => window.removeEventListener(e, go)); window.clearTimeout(timer); };
+  }, []);
 
   useEffect(() => {
     activeRef.current = active;
@@ -40,7 +51,7 @@ export function SceneCanvas({ chapter, active }: { chapter: ChapterId; active: b
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !webglAvailable()) return;
+    if (!canvas || !wanted || !webglAvailable()) return;
     let cancelled = false;
     let cleanup = () => {};
 
@@ -94,7 +105,7 @@ export function SceneCanvas({ chapter, active }: { chapter: ChapterId; active: b
       cancelled = true;
       cleanup();
     };
-  }, []);
+  }, [wanted]);
 
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden>

@@ -131,7 +131,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
               <div className="rounded-xl border border-line bg-surface2 p-3">
                 <label className="label" htmlFor={`${id}-currency`}>{copy.payment}</label>
                 {quote && quote.availableCurrencies.length > 1 ? <FlagSelect id={`${id}-currency`} value={quote.currency} onChange={(currency) => preferences.setPaymentCurrency(currency as CurrencyPreference)} disabled={state === "sending"} options={quote.availableCurrencies.map((currency) => ({ value: currency, label: currency, flag: CURRENCY_FLAGS[currency] }))} /> : <p id={`${id}-currency`} className="num flex items-center gap-2 font-semibold">{quote && CURRENCY_FLAGS[quote.currency] && <CountryFlag code={CURRENCY_FLAGS[quote.currency]} />}{quote?.currency ?? "—"}</p>}
-                {quote && <p className="num mt-2 text-xs text-muted">EUR → {quote.currency}: {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(quote.rate)} · {quote.rateDate}</p>}
+                {quote && quote.currency !== "EUR" && <p className="num mt-2 text-xs text-muted">EUR → {quote.currency}: {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 6 }).format(quote.rate)} · {quote.rateDate}</p>}
                 <p className="mt-2 text-xs text-muted">{copy.billing}</p>
                 <p className="mt-2 text-xs text-muted">{copy.tax}</p>
               </div>

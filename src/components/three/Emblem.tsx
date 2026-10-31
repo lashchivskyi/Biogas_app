@@ -10,10 +10,20 @@ import { LogoMark } from "../brand/Logo";
 export function Emblem({ size = 160, className = "" }: { size?: number; className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
+  // The emblem sits at the bottom of the page: three.js is fetched and compiled only when it nears the viewport.
+  const [near, setNear] = useState(false);
 
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } }, { rootMargin: "300px" });
+    io.observe(canvas);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas || !near) return;
     let cleanup = () => {};
     let cancelled = false;
     (async () => {
@@ -48,7 +58,7 @@ export function Emblem({ size = 160, className = "" }: { size?: number; classNam
       cancelled = true;
       cleanup();
     };
-  }, []);
+  }, [near]);
 
   return (
     <div className={`relative ${className}`} style={{ width: size, height: size }} aria-hidden>

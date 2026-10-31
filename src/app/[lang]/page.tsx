@@ -153,7 +153,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           </Reveal>
           <Reveal delay={120}>
             <figure className="relative">
-              <div className="absolute -inset-4 -z-10 rounded-[32px] bg-gradient-to-br from-brandsoft via-transparent to-amber-100 blur-2xl" aria-hidden />
+              <div className="absolute inset-x-0 -inset-y-4 -z-10 sm:-inset-4 rounded-[32px] bg-gradient-to-br from-brandsoft via-transparent to-amber-100 blur-2xl" aria-hidden />
               <Link href={`${base}/samples/slaughter_5000`} className="card block overflow-hidden shadow-[0_30px_80px_-30px_rgba(11,23,18,0.35)] transition hover:-translate-y-0.5">
                 <div className="flex items-center justify-between border-b border-line bg-surface2 px-5 py-3 text-xs text-muted">
                   <span className="font-semibold">{d.get.reportLabel} · {d.examples.slaughter_5000}</span>
@@ -222,7 +222,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               </li>
             ))}
           </ol>
-          <div className="mt-8"><Link href={`${base}/pricing`} className="font-semibold text-brand underline underline-offset-4">{d.nav.pricing} →</Link></div>
+          <div className="mt-8"><Link href={`${base}/pricing`} className="inline-block py-1 font-semibold text-brand underline underline-offset-4">{d.nav.pricing} →</Link></div>
         </div>
       </section>
 

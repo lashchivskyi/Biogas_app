@@ -239,7 +239,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
     setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
-  if (!formReady) return <div className="card min-h-64 animate-pulse p-8" role="status" aria-label={preferenceCopy(locale).detecting}><div className="h-6 w-2/3 rounded bg-surface2" /><div className="mt-6 h-12 rounded bg-surface2" /></div>;
+  if (!formReady) return <div className="card min-h-[90vh] animate-pulse p-8" role="status" aria-label={preferenceCopy(locale).detecting}><div className="h-6 w-2/3 rounded bg-surface2" /><div className="mt-6 h-12 rounded bg-surface2" /></div>;
 
   return (
     <div>

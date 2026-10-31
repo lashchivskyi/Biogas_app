@@ -2,6 +2,7 @@ import { businessGroupLabel } from "@/i18n/businesses";
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { preload } from "react-dom";
 import "@fontsource-variable/unbounded";
 import "@fontsource-variable/manrope";
 import "../globals.css";
@@ -17,6 +18,19 @@ import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
 import { fxFor } from "@/countries/sources";
 
 export const dynamicParams = false;
+
+/** Same hashed file the @fontsource @font-face rule uses: preloading it takes the font off the critical request chain (LCP is hero text). */
+const FONT_FILES = {
+  latin: [
+    new URL("../../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2", import.meta.url).toString(),
+    new URL("../../../node_modules/@fontsource-variable/unbounded/files/unbounded-latin-wght-normal.woff2", import.meta.url).toString(),
+  ],
+  cyrillic: [
+    new URL("../../../node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2", import.meta.url).toString(),
+    new URL("../../../node_modules/@fontsource-variable/unbounded/files/unbounded-cyrillic-wght-normal.woff2", import.meta.url).toString(),
+  ],
+};
+const CYRILLIC_LOCALES = new Set<string>(["uk", "bg", "sr"]);
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -46,6 +60,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   const d = await getDictionary(lang);
   const f = d.footer;
   const base = `/${lang}`;
+  for (const href of FONT_FILES[CYRILLIC_LOCALES.has(lang) ? "cyrillic" : "latin"]) preload(href, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
   return (
     <html lang={INTL_TAG[lang]}>
       {/* Extensions such as Grammarly add body attributes before hydration; descendant checks stay active. */}

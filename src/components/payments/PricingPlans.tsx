@@ -49,7 +49,7 @@ export function PricingPlans({ locale, d, demo }: { locale: Locale; d: Pick<Dict
   const base = `/${locale}`;
   const activeInput = input?.countryCode === country && (!preferences.region || input.regionId === preferences.region) && (!preferences.city || input.city?.signature === preferences.city.signature) ? input : null;
 
-  if (!preferences.ready) return <div className="mx-auto h-64 max-w-4xl animate-pulse rounded-2xl bg-surface2" role="status" aria-label={preferenceCopy(locale).detecting} />;
+  if (!preferences.ready) return <div className="mx-auto h-[28rem] max-w-4xl animate-pulse rounded-2xl bg-surface2" role="status" aria-label={preferenceCopy(locale).detecting} />;
 
   return (
     <div>

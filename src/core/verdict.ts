@@ -33,7 +33,7 @@ export function decideVerdict(args: {
   }
   if ((confidence.clientScore ?? confidence.score) < 35) {
     reasons.push(T(`Not enough data for a conclusion (data quality ${confidence.score}/100).`, `Недостатньо даних для висновку (якість даних ${confidence.score}/100).`));
-    return { id: "INSUFFICIENT_DATA", reasons, whatWouldChange: [T("Fill in the items listed under “What to clarify”.", "Заповніть пропущені дані зі списку «Що потрібно уточнити».")] };
+    return { id: "INSUFFICIENT_DATA", reasons, whatWouldChange: [T("Add the items listed under “What you can add” below.", "Додайте дані зі списку «Що можете додати ви» нижче.")] };
   }
 
   const kw = base.kwElEquivalent;

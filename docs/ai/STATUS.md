@@ -3,20 +3,20 @@
 Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 321), lint, typecheck, build pass. Browser check pending for all
-  2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
+- Model 0.6.1; data review 2026-10-30. Tests (1 363), lint, typecheck, build pass.
+- UX audit 2026-10-31 (Chrome, prod build, demo payments; en/uk/de, desktop+390 px; axe WCAG 2.2 AA, Lighthouse): fixed CLS
+  (skeleton heights), contrast, DE/NL/FI mobile overflow, report re-render on client, three.js loaded late, font preload,
+  scroll-region focus, 24 px footer targets. Lighthouse after: desktop 99/100/100/100; mobile a11y/SEO 100, perf home/pricing
+  ≈ 89–91, calculator/report ≈ 79 (model bundle ≈ 135 kB gz runs at hydration). NOT tested: real Stripe test checkout, real email.
+- UX open: "Insufficient data" verdict after "Calculate now" yet paid report is sold; failed payment loses the project; /en link
+  overridden by IP-country language; Ukrainian source notes in en/de reports; no dark theme; native validation text not localised.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
-- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI requests; ensiling loss + clamp silo; gas streams.
-- Competitor benchmark 2026-10-31 (PRODUCT.md › Market): 4 examples run through KTBL, Luke v3, WSU, LandGEM; every gap
-  > 15 % explained, nothing retuned; recorded outputs re-checked by `scripts/benchmark.ts`, LandGEM in `processes.test.ts`.
-- Finance audit 2026-10-31: 3 examples recomputed by hand = code (`finance-audit.test.ts`); "pre-tax, not bankable" in UI/export.
-- Scenario sweep 2026-10-31 (`scenario-matrix.ts`, `scenario-sweep.test.ts`, `properties.test.ts` fast-check,
-  `hostile-input.test.ts`, `regressions-sweep.test.ts`): 7 segments × 6 sizes × 17 mixes × 2 data levels × 33 countries × 2
-  climates = 13 464 assessments, 0 throws, 0 NaN, balances close (`MATRIX=full`, ≈ 8 min; `FC_RUNS=2000` for a deeper hunt).
-- Report consistency 2026-10-31: `components/__tests__/report-consistency.test.ts` (+ `report-audit*.ts`) renders 10 examples × free/
-  standard/full × en/uk/de, checks every figure against the model and between sections, plus export, translations, mutations.
-  0 contradictions in 30 reports. One plant per project (sized at base). Open: purchased energy at the "optimistic" price → 54 of 1 287 cases unordered.
+- Competitor benchmark (PRODUCT.md › Market): 4 examples vs KTBL, Luke v3, WSU, LandGEM; gaps > 15 % explained, nothing retuned (`scripts/benchmark.ts`).
+- Finance audit: 3 examples recomputed by hand = code (`finance-audit.test.ts`); "pre-tax, not bankable" in UI/export.
+- Scenario sweep (`scenario-matrix.ts`, `scenario-sweep.test.ts`, `properties.test.ts`, `hostile-input.test.ts`): 13 464 assessments,
+  0 throws/NaN, balances close (`MATRIX=full`, ≈ 8 min). Report consistency (`report-consistency.test.ts`): 30 reports, 0 contradictions.
+  One plant per project. Open: purchased energy at the "optimistic" price → 54 of 1 287 cases unordered.
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
@@ -29,12 +29,12 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
    reinvestment, residual value. Landfill/process budgets: confirm scope vs model gas system with a real quote.
 4. Straw pretreatment yield (Madsen gap); grass silage type; other cattle / swine VS vs IPCC (swine back-test 0.80
    argues against IPCC 0.30 kg/d). 5. Injection (350 k€ LOW; WSU $1.02 M 2013) / grid connection by country.
-   6. Line-item cost overrides. Request templates in more languages. EVPI "yield" item ignores catalogue DM/VS.
-- Carried: UASB €/m³; labour > 1 MW; lipid shares; Canary gate; KZ gas; CA provincial gas; AR/KZ power; CA dairy VS.
+   6. Line-item cost overrides; request templates in more languages; EVPI "yield" ignores catalogue DM/VS.
+- Carried: UASB €/m³; labour > 1 MW; lipid shares; Canary gate; KZ/CA gas; AR/KZ power; CA dairy VS.
 ## Known weaknesses
 
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
-- Only membrane upgrading; no propane/odorisation, injection fees, flexible-CHP premium.
+- Only membrane upgrading; no odorisation, injection fees, flexible-CHP premium. Gas streams get no support cases.
 - Boiler with no heat buyer can be "best" when all routes lose (warned). Discount base 6 % may be after-tax (see DECISIONS).
-- Gas streams (`process`) get no support cases; PL FIT is CPI-indexed but modelled flat (conservative).
+- PL FIT is CPI-indexed but modelled flat (conservative).

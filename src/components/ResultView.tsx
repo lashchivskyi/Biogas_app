@@ -372,7 +372,7 @@ function MeasureFirstPanel({ a, F, locale }: { a: Assessment; F: ReturnType<type
   const M = decisionCopy[locale].measure;
   return (
     <Section title={M.title} sub={M.sub}>
-      <div className="card overflow-x-auto p-1">
+      <div className="card overflow-x-auto p-1" tabIndex={0}>
         <table className="num w-full min-w-[560px] text-sm">
           <thead>
             <tr className="text-left text-xs uppercase tracking-wide text-muted">
@@ -468,7 +468,7 @@ function ScalePanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: Retu
   const top = a.scale.reduce((x, y) => (y.routes[best(y)].npvEur > x.routes[best(x)].npvEur ? y : x));
   return (
     <Section title={S.title} sub={S.sub}>
-      <div className="card overflow-x-auto p-1">
+      <div className="card overflow-x-auto p-1" tabIndex={0}>
         <table className="num w-full min-w-[560px] text-sm">
           <thead>
             <tr className="text-left text-xs uppercase tracking-wide text-muted">
@@ -556,11 +556,11 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
       {/* ---------- Scenarios ---------- */}
       <Section title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
         <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
-          <div className="card overflow-x-auto p-1">
+          <div className="card overflow-x-auto p-1" tabIndex={0}>
             <table className="w-full min-w-[460px] text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wide text-muted">
-                  <th className="p-3 font-semibold" />
+                  <th className="p-3 font-semibold"><span className="sr-only">{R.scenariosTitle}</span></th>
                   {SCN.map((s) => <th key={s} className="p-3 text-right font-semibold">{L.scenario[s]}</th>)}
                 </tr>
               </thead>
@@ -595,7 +595,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
       {/* ---------- Routes ---------- */}
       <Section title={R.routesTitle} sub={R.routesSub}>
-        <div className="card overflow-x-auto p-1">
+        <div className="card overflow-x-auto p-1" tabIndex={0}>
           <table className="num w-full min-w-[560px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wide text-muted">
@@ -630,7 +630,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
         {a.supportCases.length === 0 ? (
           <p className="card p-4 text-sm text-ink2">{R.supportNone}</p>
         ) : (
-          <div className="card overflow-x-auto p-1">
+          <div className="card overflow-x-auto p-1" tabIndex={0}>
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wide text-muted">
@@ -701,7 +701,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
       <Section title={R.detailsTitle}>
         <div className="space-y-3">
           <Fold title={R.dFeed} open>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0}>
               <table className="num w-full min-w-[640px] text-sm">
                 <thead><tr className="text-left text-xs uppercase tracking-wide text-muted"><th className="py-2">{R.colStream}</th><th className="py-2 text-right">{R.colTonnes}</th><th className="py-2 text-right">{R.colDm}</th><th className="py-2 text-right">{R.colCh4}</th><th className="py-2 text-right">{R.colLogistics}</th><th className="py-2 text-right">{R.colMaxDist}</th></tr></thead>
                 <tbody>
