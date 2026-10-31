@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/PageHero";
 import { PrintButton } from "@/components/PrintButton";
+import { ExportButton } from "@/components/ExportButton";
+import { decisionCopy } from "@/i18n/decision";
 import { ResultView, type ResultViewProps } from "@/components/ResultView";
 import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { SampleCaseBrief } from "@/components/SampleCaseBrief";
@@ -48,7 +50,10 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
       <div className="container-x py-8">
         <div className="no-print mb-4 flex flex-wrap justify-between gap-3">
           <Link href={`/${locale}/calculator`} className="btn btn-primary">{d.samples.run}</Link>
-          <PrintButton label={d.report.print} />
+          <div className="flex flex-wrap gap-3">
+            <ExportButton a={a} currency={country.currency} access="full" label={decisionCopy[locale].exportXlsx} />
+            <PrintButton label={d.report.print} />
+          </div>
         </div>
         <SampleCaseBrief id={ex.id} locale={locale} d={d} />
         <CurrencyResultView {...report} serverView={<ResultView {...report} />} />

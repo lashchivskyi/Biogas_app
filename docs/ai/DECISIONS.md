@@ -65,6 +65,12 @@ replace the line rather than adding a contradicting one.
   conservative/optimistic multipliers (1.2 / 0.9) still apply; process inputs ignore it; > 2.5× from the model → unit-slip
   warning and LOW confidence. — One total for all three routes would have made biomethane look as cheap as a CHP plant.
 
+- 2026-10-31 — Absolute break-even (max CAPEX, product value, feedstock €/t) uses the exact linear root from two
+  runs: NPV is linear in CAPEX, main-product price and a per-tonne feedstock cost. Any non-linear term (tax with
+  loss carry-forward, price-dependent sizing) must switch these to bisection. Covered by `break-even.test.ts`.
+- 2026-10-31 — Supplier-quote position uses the model's own optimistic/conservative CAPEX for the same route as
+  the band; no new judgement constant. The 2.5× unit-slip warning stays separate.
+
 ## Product
 
 - 2026-10-30 — Keep country conditions as the existing table with six-decimal formatting.
@@ -78,6 +84,10 @@ replace the line rather than adding a contradicting one.
 - 2026-10-31 — Reference examples show prepared clients (lab analysis, metered manure, existing
   storage, sourced tipping fees/surcharges); each lever is named in the case text. No market or
   model parameter was changed for them. — Owner asked for more realistic, less pessimistic samples.
+
+- 2026-10-31 — Excel export (in-browser XLSX, no dependency) is a paid-report feature: standard plan gets base
+  case, CAPEX/OPEX and assumptions; full plan adds scenarios, routes, sensitivities, support cases. Not in the
+  free calculator. Money in EUR with the FX row; labels follow the model language (en/uk).
 
 ## AI workflow
 

@@ -47,6 +47,8 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"], displ
   const monetaryCompact = (v: number) => cmp.format(sig2(v * display.rate));
   const money = (v: number, code: string) => cur(code).format(sig2(v));
   const price = (v: number, code: string) => curFull(code).format(v);
+  /** Small unit prices (per kWh, per Nm³) in the display currency, three significant digits. */
+  const unitPrice = (v: number) => new Intl.NumberFormat(tag, { style: "currency", currency: display.currency, maximumSignificantDigits: 3 }).format(v * display.rate);
   const years = (v: number | null) => (v === null || !Number.isFinite(v) ? units.never : v > 25 ? units.over25 : `${n1(v)} ${units.years}`);
   const pct = (v: number, digits = 0) => new Intl.NumberFormat(tag, { style: "percent", maximumFractionDigits: digits }).format(v);
   const range = (a: number, b: number, f: (v: number) => string = (v) => n0(sig2(v))) => {
@@ -56,5 +58,5 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"], displ
     const fh = f(hi);
     return fl === fh ? fl : `${fl} – ${fh}`;
   };
-  return { n0, n1, compact, monetaryCompact, currency: display.currency, exchangeRate: display.rate, eur, money, price, years, pct, range, sig2 };
+  return { n0, n1, compact, monetaryCompact, currency: display.currency, exchangeRate: display.rate, eur, money, price, unitPrice, years, pct, range, sig2 };
 }

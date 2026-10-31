@@ -57,8 +57,9 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
     revenueAll += eur;
     if (Math.abs(eur) > 0.5) revenue.push({ id, label, eur });
   };
-  let selfEur = energy.elSelfConsumedKwh * demand.electricityPriceEurKwh * selfShare;
-  let exportEur = energy.elExportedKwh * exportPrice;
+  const elProduct = route === "chp" ? mods.productPrice : 1;
+  let selfEur = energy.elSelfConsumedKwh * demand.electricityPriceEurKwh * selfShare * elProduct;
+  let exportEur = energy.elExportedKwh * exportPrice * elProduct;
   let tariffEur = 0;
   const tariff = route === "chp" && input.energy.hasGridConnection ? sup?.electricityTariffEurKwh : undefined;
   if (tariff !== undefined) {
@@ -72,8 +73,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
       exportEur = 0;
     }
   }
-  const heatEur = energy.heatUsefulKwh * demand.heatValueEurKwh;
-  const bmEur = energy.biomethaneNm3 * bmPrice;
+  const heatEur = energy.heatUsefulKwh * demand.heatValueEurKwh * (route === "boiler" ? mods.productPrice : 1);
+  const bmEur = energy.biomethaneNm3 * bmPrice * (route === "biomethane" ? mods.productPrice : 1);
   const disposalEur = feed.lines.reduce((a, l) => a + l.disposalSavingEurYear, 0);
   const supportEur = 0; // Uncontracted legacy subsidies must not change the base verdict.
 
@@ -102,7 +103,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   ox("upgrading_maintenance", T("Upgrading unit maintenance", "Обслуговування установки очищення"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
   ox("insurance", T("Insurance", "Страхування"), gross.totalEur * p.get("eng.opex.insurance_share"));
   ox("monitoring", T("Lab tests, safety inspections, leak monitoring", "Лабораторія, інспекції безпеки, моніторинг витоків"), p.get("eng.opex.monitoring_fixed") * opexMult);
-  ox("feedstock", T("Feedstock purchase (net of gate fees)", "Закупівля сировини (за вирахуванням плати за прийом)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0));
+  ox("feedstock", T("Feedstock purchase (net of gate fees)", "Закупівля сировини (за вирахуванням плати за прийом)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0) + feed.tonnesYear * mods.feedstockEurT);
   ox("opportunity", T("Lost revenue from alternative feedstock use", "Втрачений дохід від альтернативного використання сировини"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
   ox("transport", T("Feedstock logistics (and digestate return)", "Логістика сировини (та повернення дигестату)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
   // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled.

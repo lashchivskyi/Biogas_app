@@ -19,7 +19,7 @@ import { assessQuality, capQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
-import type { Assessment, RouteId, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
+import type { Assessment, ProductBreakEven, QuoteCheck, RouteId, ScenarioId, ScenarioResult, SensitivityItem, SupportCase } from "./types";
 import { decideVerdict } from "./verdict";
 import { BUSINESS_TYPES } from "./businesses";
 
@@ -56,6 +56,30 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
     else a = m;
   }
   return (a + b) / 2;
+}
+
+/** Root of a straight line through (x1, n1) and (x2, n2); null when the line is flat. */
+function zeroAt(x1: number, n1: number, x2: number, n2: number): number | null {
+  if (!Number.isFinite(n1) || !Number.isFinite(n2) || Math.abs(n2 - n1) < 1e-6) return null;
+  return x1 - (n1 * (x2 - x1)) / (n2 - n1);
+}
+
+/** Average realised value of the route's main product in a result; null when the route sells none of it. */
+function productValue(r: ScenarioResult, params: Params): { product: ProductBreakEven["product"]; unit: ProductBreakEven["unit"]; unitEur: number; lhvKwhNm3?: number } | null {
+  const line = (...ids: string[]) => r.opexRev.revenue.filter((x) => ids.includes(x.id)).reduce((a, x) => a + x.eur, 0);
+  const e = r.energy;
+  if (r.route === "chp") {
+    const kwh = e.elSelfConsumedKwh + e.elExportedKwh;
+    const eur = line("el_self", "el_export");
+    return kwh > 0 && eur > 0 ? { product: "electricity", unit: "EUR/kWh", unitEur: eur / kwh } : null;
+  }
+  if (r.route === "boiler") {
+    const eur = line("heat");
+    return e.heatUsefulKwh > 0 && eur > 0 ? { product: "heat", unit: "EUR/kWh th", unitEur: eur / e.heatUsefulKwh } : null;
+  }
+  const eur = line("biomethane");
+  const lhv = params.get("eng.ch4_lhv_kwh_m3") * (e.biomethaneCh4Share ?? params.get("eng.biomethane_ch4_purity"));
+  return e.biomethaneNm3 > 0 && eur > 0 ? { product: "biomethane", unit: "EUR/Nm3", unitEur: eur / e.biomethaneNm3, lhvKwhNm3: lhv } : null;
 }
 
 /** Customer energy prices more than this factor above the national business price (or below it, for gas) are flagged as likely unit slips (judgement). */
@@ -209,7 +233,26 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const y = bisect((k) => run(bestRoute, "base", { ...NO_MODS, energyPrice: k }).fin.npvEur, 1, 4);
     priceInc = y === null ? null : (y - 1) * 100;
   }
-  const breakEven = { capexReductionPct: capexRed, energyPriceIncreasePct: priceInc };
+  // Absolute break-even values. NPV is linear in CAPEX, in the product price and in a per-tonne feedstock cost, so two
+  // runs give the exact root (no search tolerance).
+  const npv0 = base.fin.npvEur;
+  const capexK = zeroAt(1, npv0, 2, run(bestRoute, "base", { ...NO_MODS, capex: 2 }).fin.npvEur);
+  const product = productValue(base, params);
+  const productK = product ? zeroAt(1, npv0, 2, run(bestRoute, "base", { ...NO_MODS, productPrice: 2 }).fin.npvEur) : null;
+  const feedT = !input.process && base.feed.tonnesYear > 0 ? zeroAt(0, npv0, 10, run(bestRoute, "base", { ...NO_MODS, feedstockEurT: 10 }).fin.npvEur) : null;
+  const breakEven: Assessment["breakEven"] = {
+    capexReductionPct: capexRed,
+    energyPriceIncreasePct: priceInc,
+    maxCapexEur: capexK !== null && capexK > 0 ? base.capex.totalEur * capexK : null,
+    product: product && productK !== null ? {
+      product: product.product,
+      unit: product.unit,
+      currentEur: product.unitEur,
+      breakEvenEur: product.unitEur * productK,
+      ...(product.lhvKwhNm3 ? { currentEurMwh: (product.unitEur / product.lhvKwhNm3) * 1000, breakEvenEurMwh: (product.unitEur * productK / product.lhvKwhNm3) * 1000 } : {}),
+    } : null,
+    feedstockEurT: feedT,
+  };
 
   // ---- cross-cutting assessments ----
   const gasKwh = base.energy.gasEnergyKwh || 1;
@@ -277,6 +320,27 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const routeName = { chp: "CHP", boiler: "boiler", biomethane: "biomethane" }[qIn.capexQuoteRoute];
     if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${ratio.toFixed(1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${ratio.toFixed(1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
     if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T(`Your supplier quote is for the ${routeName} route, but the model finds the ${bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.`, `Пропозиція постачальника стосується варіанта «${routeName}», але модель вважає вигіднішим «${bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.`));
+  }
+  // The quote is compared with the model's own component estimate for the same route, without the quote, so the client
+  // sees whether it sits inside the model's optimistic–conservative range and which items a complete scope contains.
+  let quoteCheck: QuoteCheck | undefined;
+  if (!input.process && qIn?.capexQuoteRoute && (qIn.capexQuoteLocal ?? 0) > 0) {
+    const qr = qIn.capexQuoteRoute;
+    const quoted = matrix[qr].base;
+    const noQuote = { ...input, finance: { ...qIn, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
+    const modelled = (scn: ScenarioId) => runScenarioRoute(makeCtx(noQuote, country, params.fork(), scn, NO_MODS, lang), qr).capex;
+    const [mOpt, mBase, mCons] = (["optimistic", "base", "conservative"] as const).map(modelled);
+    const k = zeroAt(1, quoted.fin.npvEur, 2, run(qr, "base", { ...NO_MODS, capex: 2 }).fin.npvEur);
+    quoteCheck = {
+      route: qr,
+      quoteEur: quoted.capex.totalEur,
+      modelledEur: mBase.totalEur,
+      modelRangeEur: [mOpt.totalEur, mCons.totalEur],
+      position: quoted.capex.totalEur < mOpt.totalEur ? "below" : quoted.capex.totalEur > mCons.totalEur ? "above" : "within",
+      capacity: qr === "chp" ? { value: quoted.energy.chpKwEl, unit: "kWe" } : qr === "biomethane" ? { value: quoted.energy.rawBiogasDesignNm3PerHour, unit: "Nm3/h" } : null,
+      maxCapexEur: k !== null && k > 0 ? quoted.capex.totalEur * k : null,
+      scope: mBase.lines,
+    };
   }
   const feedSlips = input.feedstocks.some((f) => (f.currentDisposalCostPerTonneLocal ?? 0) / fx > PLAUSIBLE_DISPOSAL_EUR_T || -(f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_GATE_FEE_EUR_T || (f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_PURCHASE_EUR_T);
   const quality = assessQuality(input, base, demand, T, { currency: country.currency, priceSlips: priceSlips.length + (feedSlips ? 1 : 0), profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: !quoteApplies && params.prov(capexId).confidence === "LOW" });
@@ -425,6 +489,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     financialsAvailable: !base.process?.missingInputs?.length,
     marketEvidence,
     breakEven,
+    ...(quoteCheck ? { quoteCheck } : {}),
     scores,
     overall,
     verdict,

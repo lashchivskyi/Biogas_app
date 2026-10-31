@@ -8,6 +8,7 @@ import { INTL_TAG } from "@/i18n/config";
 import { displayUnit, makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
+import { decisionCopy } from "@/i18n/decision";
 import { qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
 import { COUNTRIES } from "@/countries";
@@ -214,6 +215,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
           </div>
         )}
         {full && <MarketCheck a={a} R={R} F={F} locale={locale} />}
+        {full && a.quoteCheck && <QuoteCheckPanel a={a} d={d} F={F} locale={locale} />}
       </Section>
 
       {/* ---------- Energy flow ---------- */}
@@ -320,6 +322,63 @@ function MarketCheck({ a, R, F, locale }: { a: Assessment; R: ResultDict["result
         })}
       </ul>
       <p className="mt-2 text-xs text-muted">{R.marketNote}</p>
+    </div>
+  );
+}
+
+function BreakEvenPanel({ a, F, locale, unreachable }: { a: Assessment; F: ReturnType<typeof makeFormat>; locale: Locale; unreachable: string }) {
+  const be = a.breakEven;
+  // Reports saved before these fields existed show only the percentage break-even in the sensitivity section.
+  if (be.maxCapexEur === undefined && be.product === undefined && be.feedstockEurT === undefined) return null;
+  const D = decisionCopy[locale];
+  const U = D.units;
+  const capex = a.scenarios.base.capex.totalEur;
+  const p = be.product;
+  const per = p ? (p.unit === "EUR/kWh" ? U.kwh : p.unit === "EUR/kWh th" ? U.kwhTh : U.nm3) : "";
+  const productValue = (v: number) => `${F.unitPrice(v)}/${per}`;
+  const feed = be.feedstockEurT;
+  return (
+    <Section title={D.title} sub={D.sub}>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {p && (
+          <Stat
+            label={D.product[p.product]}
+            value={p.breakEvenEur <= 0 ? <span className="text-base md:text-lg">{D.free}</span> : <>{productValue(p.breakEvenEur)}{p.breakEvenEurMwh !== undefined && <span className="block text-sm font-normal text-muted">{F.unitPrice(p.breakEvenEurMwh)}/{U.mwh}</span>}</>}
+            note={f(D.now, { v: productValue(p.currentEur) + (p.currentEurMwh !== undefined ? ` · ${F.unitPrice(p.currentEurMwh)}/${U.mwh}` : "") })}
+          />
+        )}
+        {be.maxCapexEur !== undefined && <Stat label={D.maxCapex} value={be.maxCapexEur === null ? <span className="text-base md:text-lg">{unreachable}</span> : F.eur(be.maxCapexEur)} note={f(D.now, { v: F.eur(capex) })} />}
+        {feed != null && <Stat label={D.feed} value={`${F.unitPrice(Math.abs(feed))}/${U.t}`} note={f(feed >= 0 ? D.feedPay : D.feedFee, { v: F.unitPrice(Math.abs(feed)) })} />}
+      </div>
+    </Section>
+  );
+}
+
+function QuoteCheckPanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale }) {
+  const q = a.quoteCheck!;
+  const D = decisionCopy[locale];
+  const labels = financialLabels(locale, d);
+  const cap = q.capacity && q.capacity.value > 0 ? q.capacity : null;
+  const unit = cap ? (cap.unit === "kWe" ? D.units.kwe : D.units.nm3hRaw) : "";
+  const specific = (eur: number) => (cap ? ` · ${F.eur(eur / cap.value)}/${unit}` : "");
+  const tone = q.position === "within" ? "text-good" : "text-warn";
+  return (
+    <div className="card mt-4 p-4">
+      <div className="font-semibold">{D.quoteTitle} · {d.labels.route[q.route]}</div>
+      <p className="mt-1 text-xs text-muted">{D.quoteSub}</p>
+      <dl className="num mt-3 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+        <div><dt className="text-muted">{D.quote}</dt><dd className="font-semibold">{F.eur(q.quoteEur)}{specific(q.quoteEur)}</dd></div>
+        <div><dt className="text-muted">{D.model}</dt><dd className="font-semibold">{F.eur(q.modelledEur)}{specific(q.modelledEur)}</dd></div>
+        <div><dt className="text-muted">{D.range}</dt><dd className="font-semibold">{F.eur(q.modelRangeEur[0])} – {F.eur(q.modelRangeEur[1])}</dd></div>
+        <div><dt className="text-muted">{D.maxPrice}</dt><dd className="font-semibold">{q.maxCapexEur === null ? d.result.unreachable : F.eur(q.maxCapexEur)}</dd></div>
+      </dl>
+      <p className={`mt-3 text-sm font-semibold ${tone}`}>{D.position[q.position]}</p>
+      <details className="mt-2 text-sm">
+        <summary className="cursor-pointer text-ink2">{D.scope}</summary>
+        <ul className="num mt-2 space-y-1">
+          {q.scope.map((l) => <li key={l.id} className="flex justify-between gap-3 border-t border-line pt-1 first:border-0"><span className="font-sans">{labels[l.id] ?? l.label}</span><span>{F.eur(l.eur)}</span></li>)}
+        </ul>
+      </details>
     </div>
   );
 }
@@ -490,6 +549,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
       {/* ---------- Details ---------- */}
       </>}
+      <BreakEvenPanel a={a} F={F} locale={locale} unreachable={R.unreachable} />
       <Section title={R.detailsTitle}>
         <div className="space-y-3">
           <Fold title={R.dFeed} open>

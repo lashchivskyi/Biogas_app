@@ -423,7 +423,18 @@ export interface Assessment {
   breakEven: {
     capexReductionPct: number | null;
     energyPriceIncreasePct: number | null;
+    /** Installed CAPEX (EUR) of the chosen route at which the base NPV is 0; null when no positive CAPEX reaches it. Absent on older reports. */
+    maxCapexEur?: number | null;
+    /** Value of the chosen route's main product at NPV = 0, other prices unchanged. Absent on older reports. */
+    product?: ProductBreakEven | null;
+    /**
+     * Change in the net feedstock price, EUR per tonne of every input stream, at which NPV = 0:
+     * positive = the project could pay this much more per tonne; negative = it needs this much less cost or a gate fee.
+     */
+    feedstockEurT?: number | null;
   };
+  /** Supplier quote compared with the model's own estimate for the same route and capacity. */
+  quoteCheck?: QuoteCheck;
   scores: Score[];
   overall: { value: number; explanation: string[] };
   verdict: { id: VerdictId; reasons: string[]; whatWouldChange: string[] };
@@ -463,6 +474,35 @@ export interface Assessment {
   supportCases: SupportCase[];
   notes: string[];
   lang: "en" | "uk";
+}
+
+export interface ProductBreakEven {
+  product: "electricity" | "heat" | "biomethane";
+  /** EUR/kWh for electricity, EUR/kWh th for heat, EUR/Nm³ for biomethane. */
+  unit: "EUR/kWh" | "EUR/kWh th" | "EUR/Nm3";
+  /** Average value realised in the base case (electricity: self-use savings and export together). */
+  currentEur: number;
+  /** Value at which NPV = 0; zero or negative means the project stays positive even if the product earns nothing. */
+  breakEvenEur: number;
+  /** Biomethane only: the same values per MWh of product, LHV basis. */
+  currentEurMwh?: number;
+  breakEvenEurMwh?: number;
+}
+
+export interface QuoteCheck {
+  route: RouteId;
+  /** Quoted installed price converted to EUR (base case, no scenario multiplier). */
+  quoteEur: number;
+  /** Model's component estimate for the same route without the quote, base case. */
+  modelledEur: number;
+  /** Model's estimate in the optimistic and conservative scenarios: the model's own CAPEX range. */
+  modelRangeEur: [number, number];
+  position: "below" | "within" | "above";
+  capacity: { value: number; unit: "kWe" | "Nm3/h" } | null;
+  /** Installed price of this route at which its base NPV is 0, with the quote's scope; null if unreachable. */
+  maxCapexEur: number | null;
+  /** What a complete quotation should cover, with the model's estimate per item (base case). */
+  scope: { id: string; label: string; eur: number }[];
 }
 
 export interface SafetyItem {

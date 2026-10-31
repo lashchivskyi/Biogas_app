@@ -16,6 +16,10 @@ export interface Modifiers {
   opex: number;
   /** Additional CHP downtime, percentage points of 8 760 h. */
   extraDowntimePp: number;
+  /** Value of the route's main product only (CHP electricity, boiler heat, biomethane); used for break-even prices. */
+  productPrice: number;
+  /** Added net feedstock cost, EUR per tonne of every input stream (negative = gate fee); used for break-even feedstock prices. */
+  feedstockEurT: number;
 }
 
 export const NO_MODS: Modifiers = {
@@ -28,6 +32,8 @@ export const NO_MODS: Modifiers = {
   transport: 1,
   opex: 1,
   extraDowntimePp: 0,
+  productPrice: 1,
+  feedstockEurT: 0,
 };
 
 export interface RunContext {

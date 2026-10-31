@@ -50,18 +50,22 @@ as a separate case. Market data per country and, where official data exist, per 
   terms, vendor quotes) would improve accuracy enough to justify a longer form.
 - Regional (admin1) market data matter enough beyond US, CA, BR, IN, MX, IT.
 
-## Market position (benchmark 2026-10-31; re-check yearly)
+## Market position (competitor audit 2026-10-31; re-check yearly)
 
-No public tool combines multi-country official market data, three routes, verdict and provenance.
-Nearest rivals by group: free single-country screeners (KTBL, Méthasim FR, EPA/GMI AD Screening
-Tool, LFGcost-Web, Luke FI, RETScreen generic); enterprise SaaS (Anessa AD•A: mass/energy, GHG,
-finance, scenarios; sales-led price); process simulators (SIMBA#, BioWin: ADM1, no market data);
-carbon calculators (CARB Tier 1, GREET, ABC Biogas CAT); Excel finance templates; consultants.
-Gaps that matter most for paying clients, in order:
-1. GHG / carbon intensity and its revenue (LCFS, RIN, RED III/GoO, ETS) as a separate case:
-   for US/EU biomethane this is often the largest revenue line; today only a methane-loss check.
-2. Back-test against real plants (AgSTAR database, DBFZ data) with a published error band.
-3. Editable export (cash flow to Excel) and a bank-style case: equity IRR, debt sculpting, tax.
-4. P10/P50/P90 (Monte Carlo) instead of three fixed scenarios.
-5. Portfolio screening of many sites for developers.
-Not a goal: dynamic ADM1 simulation (design stage, not screening).
+No public tool combines official market data for many countries, route comparison, a verdict and
+per-parameter provenance. Closest: Anessa AD•A (enterprise, sales-led, CI-focused), Luke Biogas tool
+(FI, free, Chen–Hashimoto HRT kinetics, itemised parasitics, CSV/PDF), KTBL (DE, free, incl. existing
+plants post-EEG), LFGcost-Web v3.6 (US landfill, after-tax, loan, credits, break-even price solver),
+RETScreen (generic, Monte Carlo), Bioflux (free, 10 languages, scenario compare, no NPV/method).
+Roadmap by Impact × Differentiation ÷ Complexity. Done 2026-10-31: absolute break-even (product price, max CAPEX,
+feedstock €/t), supplier-quote check vs the model's own range and scope, XLSX export of the paid report.
+Next, highest first:
+1. Back-test on real plants (AgSTAR, DBFZ) and publish the error band on /methodology.
+2. HRT-dependent yield (realisation is a fixed 0.85/0.90/0.95 today) and a size/config sweep
+   (CHP kWe, upgrading Nm³/h, co-substrate share) to answer "what scale is optimal".
+3. Existing-plant flow: keep CHP vs convert to biomethane vs flex (post-subsidy EU market).
+4. Carbon case kept separate from the base verdict: CI (RED III defaults, CA-GREET Tier 1 logic) and
+   credit value (LCFS, RIN D3, THG-Quote, GoO) with policy-risk haircut.
+5. "Measure first" ranking: which lab test or quote moves the verdict most (value of information).
+6. P10/P50/P90 Monte Carlo; 7. portfolio and cross-country comparison of one project;
+8. after-tax/equity IRR (only if banks ask). Not a goal: dynamic ADM1 simulation.

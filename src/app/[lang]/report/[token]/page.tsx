@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/PageHero";
 import { PrintButton } from "@/components/PrintButton";
+import { ExportButton } from "@/components/ExportButton";
+import { decisionCopy } from "@/i18n/decision";
 import { ResultView, type ResultViewProps } from "@/components/ResultView";
 import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { ReportPending } from "@/components/payments/ReportPending";
@@ -47,7 +49,7 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
       <PageHero eyebrow={d.report.eyebrow} title={`${d.labels.business[order.input.businessType].label} · ${countryName(order.input.countryCode, locale)}`} lead={fmt(d.report.paidFor, { who, date })} />
       <div className="container-x py-8">
         {!order.assessmentSnapshot && <p lang={cl} className="mb-4 rounded-lg bg-amber-50 p-3 text-sm">{cl === "uk" ? "Історичну версію розрахунку для цього замовлення не збережено. Нижче наведено повторну оцінку за поточною версією моделі та наявними даними." : "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data."}</p>}
-        <div className="no-print mb-4 flex justify-end"><PrintButton label={d.report.print} /></div>
+        <div className="no-print mb-4 flex flex-wrap justify-end gap-3"><ExportButton a={a} currency={country.currency} access={report.access === "full" ? "full" : "standard"} label={decisionCopy[locale].exportXlsx} /><PrintButton label={d.report.print} /></div>
         <CurrencyResultView {...report} serverView={<ResultView {...report} />} />
       </div>
     </main>

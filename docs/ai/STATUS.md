@@ -3,18 +3,16 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (885), lint, typecheck, build pass.
+- Model 0.6.1; data review 2026-10-30. Tests (995), lint, typecheck, build pass.
 - Market data: official sources for 33 countries except LOW items in DATA-SOURCES.md. Regional data: US, CA, BR,
   IN, MX, IT via admin1 codes. CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
-- Stress tests 2026-10-31, three passes (~300 cases) fixed: own-slurry storage, dilute effluent ≤ 1 month,
-  yield sensitivity as built, grease never STRONG, warm climates 3 months, unit-slip warnings (LOW confidence),
-  delivered manure's digestate returned to suppliers, logistics = cash-flow haulage.
-- Follow-ups (same day): whey / pot ale / residues ≤ 6 % DM count as effluent (no 6–9 month digestate store);
-  operator time 22.5·kWe^0.72 (Walla & Schneeberger 2008); optional client inputs (export price, heat price,
-  operator cost, loan share/rate/term; loan moves DSCR only); straw milling electricity 66.6 kWh/t (Dell'Omo 2025);
-  server validation bounds raised for weak currencies (VN could not submit its own electricity price);
-  compare-scenarios converts example prices by FX abroad (new baseline: 1 287 runs, 0 errors); supplier quote
-  (installed price + technology) replaces the CAPEX of that route only, scenarios ±20/10 % still apply.
+- Stress tests 2026-10-31 (~300 cases) fixed storage, effluent, yield-as-built, grease, warm climates, unit slips,
+  manure digestate return, haulage. Follow-ups: low-DM residues as effluent; operator time 22.5·kWe^0.72;
+  optional client inputs (export/heat price, operator cost, loan); straw milling 66.6 kWh/t; weak-currency
+  validation bounds; supplier quote replaces one route's CAPEX (scenarios still apply). Baseline 1 287 runs.
+- Decision tools (2026-10-31, competitor audit items 1–3): break-even product price / max CAPEX / feedstock €/t,
+  supplier-quote check with scope list, XLSX export on paid report and sample pages. compare-scenarios: 0 changes.
+  Not yet seen in a browser; the calculator form has no new inputs (quote fields already existed).
 
 ## Next (highest value first)
 
