@@ -84,6 +84,9 @@ replace the line rather than adding a contradicting one.
   haulage are paid on it, DM loss 9.3 % base / 12 % cons. / 8 % opt. (KTBL 2021 Tab. 1) reduces what is digested,
   nutrients stay. A clamp holding the full annual harvest is costed at 60 €/m³ (LfL 2015/16 escalated; fee tables are
   the upper check) and 780 kg FM/m³ (LfL). Checked against the BMWK/IEE/DBFZ 510 kW reference (`scripts/benchmark.ts`): CAPEX +15 % vs the 2023–2026 range, cost per kWh 5–12 % below it, reference scope (silo, storage) undisclosed → not retuned.
+- 2026-10-31 — Year-1 start-up share (`eng.rampup_year1`, FNR: new digester reaches target load ≈ day 110) applies only
+  to new digesters; existing gas streams (`gas`, `landfill`) start at full output. — A running digester was charged
+  25 % of its first-year revenue (−0.2…−0.5 M€ NPV). Commissioning of new CHP/upgrader is not modelled (weeks).
 - 2026-10-31 — Climate case uses RED Annex VI default values only (no actual-value calculation, no carbon price);
   credits are valued only inside support cases with an official mechanism (US RIN/LCFS). Heat in CHP is allocated by
   the RED Carnot share at 150 °C.

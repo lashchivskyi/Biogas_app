@@ -29,8 +29,9 @@ export function irr(flows: number[]): number | null {
 }
 
 export interface CashFlowInput {
-  /** Year-specific operating values before inflation/ramp; fixed equipment, changing gas supply. */
-  annualOperating?: { revenue: number; opex: number }[];
+  /** Year-specific operating values before inflation/ramp; fixed equipment, changing gas supply. `revenue` is the
+   * total; its `otherRevenue` part escalates with opex and its `fixedRevenue` part (tariff) is not escalated. */
+  annualOperating?: { revenue: number; otherRevenue?: number; fixedRevenue?: number; opex: number }[];
   capexEur: number;
   /** Year-1-basis amounts (EUR) */
   energyRevenue: number; // escalates with energy prices
@@ -56,8 +57,12 @@ export function buildFinancials(i: CashFlowInput): FinancialResult {
     const eEsc = Math.pow(1 + i.energyEsc, t - 1);
     const oEsc = Math.pow(1 + i.opexEsc, t - 1);
     const ramp = t === 1 ? i.rampYear1 : 1;
-    const rev = i.annualOperating ? i.annualOperating[t - 1].revenue * eEsc * ramp : (i.energyRevenue * eEsc + i.otherRevenue * oEsc + (i.fixedRevenue ?? 0)) * ramp;
-    const opex = (i.annualOperating?.[t - 1].opex ?? i.opexEur) * oEsc;
+    const y = i.annualOperating?.[t - 1];
+    const fixed = y ? y.fixedRevenue ?? 0 : i.fixedRevenue ?? 0;
+    const other = y ? y.otherRevenue ?? 0 : i.otherRevenue;
+    const energy = y ? y.revenue - fixed - other : i.energyRevenue;
+    const rev = (energy * eEsc + other * oEsc + fixed) * ramp;
+    const opex = (y?.opex ?? i.opexEur) * oEsc;
     const e = rev - opex;
     ebitda.push(e);
     flows.push(e);

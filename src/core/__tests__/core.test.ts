@@ -3,7 +3,7 @@ import { assess } from "../assess";
 import { ENGINEERING_PARAMS } from "../engineeringParams";
 import { EXAMPLES } from "../examples";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS } from "../feedstockData";
-import { npv, irr } from "../finance";
+import { buildFinancials, npv, irr } from "../finance";
 import { QUALITY_START } from "../quality";
 import { decideVerdict } from "../verdict";
 import type { Assessment, ProjectInput } from "../types";
@@ -117,6 +117,18 @@ describe("energy balance", () => {
 });
 
 describe("economics", () => {
+  it("an existing gas stream has no biological start-up year (eng.rampup_year1 is for a new digester)", () => {
+    const ex = EXAMPLES.find((e) => e.id === "de_existing_biogas")!;
+    const flows = assess(ex.input, getCountry(ex.input.countryCode), { uncertainty: false }).scenarios.base.fin.cashFlows;
+    expect(flows[1]).toBeGreaterThan(0.95 * flows[2]);
+  });
+  it("a year-by-year gas forecast escalates a tariff like the steady case: fixed nominal, other revenue with opex", () => {
+    const base = { capexEur: 1e6, energyRevenue: 0, otherRevenue: 50_000, fixedRevenue: 200_000, opexEur: 100_000, horizon: 15, discount: 0.07, energyEsc: 0.02, opexEsc: 0.025, rampYear1: 1, debtShare: 0, debtRate: 0, debtTenor: 0 };
+    const steady = buildFinancials(base);
+    const yearly = buildFinancials({ ...base, annualOperating: Array.from({ length: 15 }, () => ({ revenue: 250_000, otherRevenue: 50_000, fixedRevenue: 200_000, opex: 100_000 })) });
+    expect(yearly.cashFlows).toEqual(steady.cashFlows);
+  });
+
   const dairyProc = assess(ex("ua_sugar"), UA);
   const base = dairyProc.scenarios.base;
 

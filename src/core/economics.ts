@@ -142,10 +142,14 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const otherRevenue = disposalEur + dig.fertiliserValueEurYear + (process?.avoidedTreatmentEurYear ?? 0);
   const horizon = Math.round(p.get("econ.horizon_years"));
   const debtShare = input.finance?.debtShare ?? p.get("econ.debt_share");
-  const annualOperating = !installed && process && (process.kind === "landfill" || process.kind === "gas")
+  // An existing gas stream (running digester, landfill): year-by-year supply, no biological start-up of a new digester.
+  const existingGas = process?.kind === "landfill" || process?.kind === "gas";
+  const annualOperating = !installed && existingGas
     ? Array.from({ length: horizon }, (_, y) => {
       const op = y === 0 ? opexRev : runScenarioRoute(ctx, route, y, { gross, kw: energy.chpKwEl }).opexRev;
-      return { revenue: op.revenueEur, opex: op.opexEur };
+      const line = (ids: string[]) => op.revenue.filter((l) => ids.includes(l.id)).reduce((a, l) => a + l.eur, 0);
+      // Same escalation split as the steady case: tariff fixed, disposal/digestate/treatment with opex.
+      return { revenue: op.revenueEur, otherRevenue: line(["disposal", "digestate", "treatment"]), fixedRevenue: line(["el_tariff"]), opex: op.opexEur };
     }) : undefined;
   const fin = buildFinancials({
     annualOperating,
@@ -158,7 +162,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
     discount: p.get("econ.discount_rate"),
     energyEsc: p.get("econ.energy_escalation"),
     opexEsc: p.get("econ.opex_escalation"),
-    rampYear1: p.get("eng.rampup_year1"),
+    rampYear1: existingGas ? 1 : p.get("eng.rampup_year1"),
     debtShare,
     debtRate: input.finance?.debtRate ?? p.get("econ.debt_interest"),
     debtTenor: input.finance?.debtTenorYears ?? p.get("econ.debt_tenor_years"),

@@ -41,7 +41,7 @@ describe("engineering and financial reconciliation", () => {
         expect(sum(opexRev.opex.map((l) => l.eur)), `${id}: OPEX`).toBeCloseTo(opexRev.opexEur, 6);
         expect(opexRev.revenueEur - opexRev.opexEur, `${id}: EBITDA`).toBeCloseTo(fin.ebitdaEurYear, 6);
         expect(fin.cashFlows[0], `${id}: initial investment`).toBeCloseTo(-fin.capexEur, 6);
-        expect(fin.cashFlows[1], `${id}: year-one cash`).toBeCloseTo(fin.revenueEurYear * buildParams(getCountry(input.countryCode)).get("eng.rampup_year1") - fin.opexEurYear, 6);
+        expect(fin.cashFlows[1], `${id}: year-one cash`).toBeCloseTo(fin.revenueEurYear * (r.process?.kind === "landfill" || r.process?.kind === "gas" ? 1 : buildParams(getCountry(input.countryCode)).get("eng.rampup_year1")) - fin.opexEurYear, 6);
       }
     }
   });

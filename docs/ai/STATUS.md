@@ -3,16 +3,15 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 017), lint, typecheck, build pass. Browser check pending for all
+- Model 0.6.1; data review 2026-10-30. Tests (1 019), lint, typecheck, build pass. Browser check pending for all
   2026-10-31 UI work (biomethane-offer field, risk texts, "how to check" request templates).
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
   BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
-- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo (coupled prices, DM/VS ±20 %, lab BMP ±8 %,
-  stress-test wording, AgSTAR band); "how to check" per EVPI item with a pre-filled lab / supplier / buyer request
-  (en, uk; other locales get English) and the field to enter the answer; ensiling loss (KTBL 8 / 9.3 / 12 % DM) and a
-  clamp silo (60 €/m³ at 780 kg/m³) for energy crops; EU dairy cows at IPCC 2006 VS (W 5.1, E 4.5 kg/d) in 22
-  profiles + UA. compare-scenarios: 8 verdict changes, all us_dairy_rng in European countries (up, more manure);
-  de_nawaro −1.2 M€ (clamp + loss).
+- Done 2026-10-31: buyer's biomethane offer; honest Monte Carlo; EVPI "how to check" requests (en, uk); ensiling
+  loss + clamp silo for energy crops; EU dairy cows at IPCC 2006 VS. Expert pass: existing gas streams (`gas`,
+  `landfill`) no longer get the new-digester start-up year (0.75); year-by-year gas forecasts escalate like the
+  steady case. compare-scenarios: 3 verdict changes (us_closed_landfill ES/FI WEAK → POSSIBLE, still NPV < 0;
+  de_existing_biogas LV POSSIBLE → STRONG), max NPV +0.75 M€ (NL), only the 3 gas-stream examples moved.
 - EU check (Danish Energy Agency, "Biogas plants in Denmark and Mexico", plant-reported): model ÷ reported CH₄ per
   tonne 0.88 (Combigas, pie labels ambiguous), 0.90 (Kroghsminde, grass silage entered as maize), 0.61 (Madsen:
   7 % pretreated straw at untreated yield, 85 d HRT). Per-tonne only: it does not test manure per head.
@@ -37,4 +36,5 @@ Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
 - Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
 - Only membrane upgrading; no propane/odorisation, injection fees, flexible-CHP premium.
-- Boiler with no heat buyer can be "best" when all routes lose (warned). `dynamicPaybackYears` undiscounted.
+- Boiler with no heat buyer can be "best" when all routes lose (warned). `dynamicPaybackYears` undiscounted (not shown).
+- Gas streams (`process`) get no support cases; PL FIT is CPI-indexed but modelled flat (conservative).
