@@ -64,3 +64,52 @@ it("locates invalid numbers before partial projects can be submitted", () => {
   form.landHa = "unknown";
   expect(invalidNumberStep(form)).toBe(3);
 });
+
+describe.each(LOCALES)("optional contract and financing inputs %s", (locale) => {
+  it("round-trips export/heat price, operator cost and loan terms, and drops nonsense values", () => {
+    const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
+    const withTerms = { ...input, energy: { ...input.energy, exportPriceLocalPerKwh: 0.123456, heatPriceLocalPerKwh: 0.045, heatNeed: "year_round_process" as const }, finance: { debtShare: 0.55, debtRate: 0.0725, debtTenorYears: 12, operatorWageLocalPerHour: 31.5 } };
+    const form = inputToForm(withTerms, locale);
+    expect(invalidNumberStep(form)).toBeNull();
+    const back = formToInput(form, getCountry(input.countryCode), "en");
+    expect(back.energy.exportPriceLocalPerKwh).toBeCloseTo(0.123456, 6);
+    expect(back.energy.heatPriceLocalPerKwh).toBeCloseTo(0.045, 6);
+    expect(back.finance).toMatchObject({ debtShare: expect.closeTo(0.55, 6), debtRate: expect.closeTo(0.0725, 6), debtTenorYears: 12, operatorWageLocalPerHour: 31.5 });
+    const bad = { ...form, debtSharePct: "95", debtRatePct: "-3", debtTenorYears: "40", operatorWage: "0" };
+    expect(formToInput(bad, getCountry(input.countryCode), "en").finance).toBeUndefined();
+    expect(formToInput({ ...inputToForm(input, locale) }, getCountry(input.countryCode), "en").finance).toBeUndefined();
+    expect(invalidNumberStep({ ...form, debtRatePct: "8abc" })).toBe(3);
+  });
+});
+
+describe.each(LOCALES)("supplier quote form fields %s", (locale) => {
+  it("needs both the price and the technology, and round-trips them", () => {
+    const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
+    const withQuote = { ...input, finance: { capexQuoteLocal: 3_250_000.5, capexQuoteRoute: "biomethane" as const } };
+    const form = inputToForm(withQuote, locale);
+    expect(invalidNumberStep(form)).toBeNull();
+    expect(formToInput(form, getCountry(input.countryCode), "en").finance).toMatchObject({ capexQuoteLocal: expect.closeTo(3_250_000.5, 3), capexQuoteRoute: "biomethane" });
+    expect(formToInput({ ...form, capexQuoteRoute: "" }, getCountry(input.countryCode), "en").finance).toBeUndefined();
+    expect(formToInput({ ...form, capexQuote: "" }, getCountry(input.countryCode), "en").finance).toBeUndefined();
+    expect(invalidNumberStep({ ...form, capexQuote: "3 million" })).toBe(3);
+  });
+});
+
+describe("financing section checkbox", () => {
+  const input = EXAMPLES.find((e) => e.id === "de_starch")!.input;
+  const country = getCountry(input.countryCode);
+  const terms = { ...input, finance: { debtRate: 0.07, operatorWageLocalPerHour: 30, capexQuoteLocal: 2e6, capexQuoteRoute: "chp" as const } };
+
+  it("is ticked for an input that already has terms, unticked for one that has none", () => {
+    expect(inputToForm(terms).refineOpen).toBe(true);
+    expect(inputToForm(input).refineOpen).toBe(false);
+  });
+  it("ignores typed terms, and their typos, while unticked (like the natural-gas toggle)", () => {
+    const form = inputToForm(terms);
+    expect(formToInput(form, country, "en").finance).toMatchObject({ debtRate: 0.07, operatorWageLocalPerHour: 30 });
+    const closed = { ...form, refineOpen: false };
+    expect(formToInput(closed, country, "en").finance).toBeUndefined();
+    expect(invalidNumberStep({ ...closed, debtRatePct: "8abc" })).toBeNull();
+    expect(invalidNumberStep({ ...form, debtRatePct: "8abc" })).toBe(3);
+  });
+});

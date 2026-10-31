@@ -155,6 +155,8 @@ const tr: Translation = {
     q6: "6–8. Ne kadar enerji tüketiyorsunuz?",
     elecBill: "Aylık elektrik faturası", elecBillHint: "Ya da aşağıya yıllık kWh girin. Fiyat bilinmiyorsa kWh başına ≈ {price} alırız.",
     elecKwh: "…veya yıllık tüketim", elecPrice: "Faturadaki elektrik fiyatı (biliniyorsa)", elecPriceHint: "KDV hariç, dağıtım dahil. Güveni artırır.",
+    refineTitle: "İsteğe bağlı: sözleşmeler ve finansman", refineHint: "Ulusal tahminleri kullanmak için boş bırakın. Girdiğiniz değerler raporda kendi verileriniz olarak işaretlenir.", exportPrice: "Sattığınız elektriğin fiyatı (sözleşme / tarife)", heatPrice: "Isı alıcısının kWh ısı başına ödediği fiyat", operatorWage: "Vergiler ve yan haklar dahil operatör saat maliyeti", debtShare: "Yatırımın krediyle finanse edilen payı", debtRate: "Yıllık kredi faiz oranı", debtTenor: "Kredi vadesi",
+    capexQuote: "Tedarikçi teklifine göre tesisin anahtar teslim toplam fiyatı", capexQuoteRoute: "Teklif bu teknoloji içindir",
     grid: "Şebeke bağlantısı?", gridToggle: "Evet, bağlıyız (fazlası satılabilir)",
     gasToggle: "7. Doğal gaz kullanıyoruz", gasBill: "Aylık doğal gaz faturası", gasBillHint: "Fiyat bilinmiyorsa m³ başına ≈ {price} alırız.", gasM3: "…veya yıllık gaz", gasPrice: "Gaz fiyatı (biliniyorsa)",
     heatQ: "8. Isıya ihtiyacınız var mı?", heatQhint: "Isı yalnızca gerçekten kullanıldığı yerde sayılır.", heatKwh: "Yıllık ısı ihtiyacı (biliniyorsa)", heatKwhHint: "Boşsa ve gaz girildiyse, gazdan türetiriz. Isı ihtiyacı miktar olarak belirtilmediyse tasarruf hesaplamayız.",

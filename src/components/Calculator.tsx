@@ -4,7 +4,7 @@ import { calendarDateAt } from "@/lib/format";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
-import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput } from "@/core";
+import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES } from "@/countries";
 import { PLAN_IDS, type PlanId } from "@/config/plans";
@@ -340,6 +340,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               <Field label={C.grid}>
                 <Toggle checked={form.hasGrid} onChange={(v) => set("hasGrid", v)} label={C.gridToggle} />
               </Field>
+              {form.hasGrid && (
+                <Field label={C.exportPrice} htmlFor="c-xp">
+                  <Num id="c-xp" value={form.exportPrice ?? ""} onChange={(v) => set("exportPrice", v)} unit={`${cur}/${L.units.kwh}`} />
+                </Field>
+              )}
             </div>
             <div className="grid gap-5 md:grid-cols-2">
               <div className="md:col-span-2"><Toggle checked={form.gasUsed} onChange={(v) => set("gasUsed", v)} label={C.gasToggle} /></div>
@@ -362,6 +367,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               {form.heatNeed !== "none" && (
                 <Field label={C.heatKwh} htmlFor="c-hk" hint={C.heatKwhHint}><Num id="c-hk" value={form.heatKwhYear} onChange={(v) => set("heatKwhYear", v)} unit={L.units.kwh} /></Field>
               )}
+              {form.heatNeed !== "none" && (
+                <Field label={C.heatPrice} htmlFor="c-hp"><Num id="c-hp" value={form.heatPrice ?? ""} onChange={(v) => set("heatPrice", v)} unit={`${cur}/${L.units.kwh}`} /></Field>
+              )}
             </div>
           </div>
         )}
@@ -379,6 +387,24 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
                 <Toggle checked={form.protectedArea} onChange={(v) => set("protectedArea", v)} label={C.protected} />
               </div>
             </div>
+            <Toggle checked={!!form.refineOpen} onChange={(v) => set("refineOpen", v)} label={C.refineTitle} />
+            {form.refineOpen && <>
+            <p className="-mt-3 text-sm text-muted">{C.refineHint}</p>
+            <div className="grid gap-5 md:grid-cols-2">
+              <Field label={C.operatorWage} htmlFor="c-ow"><Num id="c-ow" value={form.operatorWage ?? ""} onChange={(v) => set("operatorWage", v)} unit={`${cur}/h`} /></Field>
+              {!input.process && <>
+                <Field label={C.capexQuote} htmlFor="c-cq"><Num id="c-cq" value={form.capexQuote ?? ""} onChange={(v) => set("capexQuote", v)} unit={cur} /></Field>
+                <Field label={C.capexQuoteRoute} htmlFor="c-cr">
+                  <select id="c-cr" className="field" value={form.capexQuoteRoute ?? ""} onChange={(e) => set("capexQuoteRoute", e.target.value as "" | RouteId)}>
+                    <option value="">—</option>
+                    {(["chp", "boiler", "biomethane"] as RouteId[]).map((r) => <option key={r} value={r}>{L.route[r]}</option>)}
+                  </select>
+                </Field>
+              </>}
+              <Field label={C.debtShare} htmlFor="c-ds"><Num id="c-ds" value={form.debtSharePct ?? ""} onChange={(v) => set("debtSharePct", v)} unit={L.units.pct} /></Field>
+              <Field label={C.debtRate} htmlFor="c-dr"><Num id="c-dr" value={form.debtRatePct ?? ""} onChange={(v) => set("debtRatePct", v)} unit={L.units.pct} /></Field>
+              <Field label={C.debtTenor} htmlFor="c-dt"><Num id="c-dt" value={form.debtTenorYears ?? ""} onChange={(v) => set("debtTenorYears", v)} unit={L.units.years} /></Field>
+            </div></>}
           </div>
         )}
 

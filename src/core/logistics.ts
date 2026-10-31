@@ -1,5 +1,6 @@
 import type { RunContext } from "./context";
 import { FEEDSTOCKS } from "./feedstockData";
+import { MANURE_RETURN_HAUL } from "./feedstock";
 import type { FeedstockSummary, LogisticsAssessment } from "./types";
 
 /**
@@ -17,11 +18,12 @@ export function assessLogistics(feed: FeedstockSummary, ctx: RunContext, energyV
   const perLine = feed.lines.map((l) => {
     const ch4PerT = l.tonnesYear > 0 ? l.ch4M3Year / l.tonnesYear : 0;
     const value = ch4PerT * lhv * energyValueEurPerKwh; // gross energy value per tonne, before conversion losses
-    const returnFactor = l.delivered && l.category === "manure" ? 1.5 : 1;
+    // Same per-tonne cost as charged in feedstock.ts.
+    const returnFactor = l.delivered && l.category === "manure" ? MANURE_RETURN_HAUL : 1;
     const dist = l.distanceKm;
-    const cost = l.delivered ? fixed + dist * rate * returnFactor : 0;
+    const cost = l.delivered ? (fixed + dist * rate) * returnFactor : 0;
     const share = value > 0 ? cost / value : 0;
-    const breakEven = value > 0 ? Math.max(0, (0.5 * value - fixed) / (rate * (l.category === "manure" ? 1.5 : 1))) : 0;
+    const breakEven = value > 0 ? Math.max(0, (0.5 * value / returnFactor - fixed) / rate) : 0;
     let level: "OK" | "WARNING" | "CRITICAL" = "OK";
     if (l.delivered) {
       if (share >= 0.5) level = "CRITICAL";

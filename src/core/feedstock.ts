@@ -1,6 +1,6 @@
 import { activeMonths, DAYS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
-import { ANIMALS, FEEDSTOCKS, PAID_HANDLING } from "./feedstockData";
+import { ANIMALS, FEEDSTOCKS, isEffluentLike, PAID_HANDLING } from "./feedstockData";
 import type { FeedstockLineInput, FeedstockLineResult, FeedstockSummary } from "./types";
 
 /**
@@ -8,6 +8,16 @@ import type { FeedstockLineInput, FeedstockLineResult, FeedstockSummary } from "
  * Gas is computed as  VS [t] × specific yield [L CH₄/kg VS] — so a customer's real dry matter matters.
  */
 const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
+/**
+ * Delivered manure: the truck takes the digestate back to the supplying farm on the otherwise empty return leg,
+ * so hauling costs 1.5× a one-way load (second loading/unloading, longer turnaround). Judgement, LOW confidence.
+ * Because of this return, that digestate is not a new burden for the plant (see digestate.ts).
+ */
+export const MANURE_RETURN_HAUL = 1.5;
+/** Screening plausibility bounds, EUR/t (judgement): above them the entered value is more likely a unit slip than a market price. */
+export const PLAUSIBLE_DISPOSAL_EUR_T = 400;
+export const PLAUSIBLE_GATE_FEE_EUR_T = 250;
+export const PLAUSIBLE_PURCHASE_EUR_T = 150;
 const zeros = () => new Array(12).fill(0) as number[];
 
 export function resolveLine(line: FeedstockLineInput) {
@@ -39,6 +49,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   let biogasRaw = 0;
   let poultryVs = 0;
   let fatVs = 0;
+  let fatDominantVs = 0;
   let manureVs = 0;
   let abpT = 0;
   const warnings: string[] = [];
@@ -69,7 +80,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
 
     const delivered = !!line.delivered;
     const distance = delivered ? Math.max(0, line.distanceKm ?? 0) : 0;
-    const returnFactor = delivered && t.category === "manure" ? 1.5 : 1;
+    const returnFactor = delivered && t.category === "manure" ? MANURE_RETURN_HAUL : 1;
     const transportCost = delivered ? tonnes * (transportFixed + distance * transportRate) * returnFactor : 0;
     const purchasePrice = line.purchasePricePerTonneLocal ?? 0;
     const purchaseCost = (purchasePrice / fx) * tonnes;
@@ -86,10 +97,19 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (delivered && (line.currentDisposalCostPerTonneLocal ?? 0) > 0) w.push(T("Avoided disposal costs for delivered feedstock are excluded: prove the plant owner captures this saving in a supply agreement.", "Економію на утилізації привізної сировини не враховано: право власника установки на цю економію потрібно підтвердити договором."));
     if (delivered && (line.opportunityValuePerTonneLocal ?? 0) > 0) w.push(T("Alternative sale value belongs to the external supplier and is not charged to this project.", "Дохід від альтернативного продажу належить зовнішньому постачальнику й не є витратою цього проєкту."));
     if (!delivered && purchasePrice > 0 && (line.opportunityValuePerTonneLocal ?? 0) > 0) w.push(T("Purchase cost and foregone sale value overlap; the model uses the larger amount only.", "Вартість закупівлі й втрачений дохід від продажу перекриваються; модель бере лише більшу суму."));
+    // Entered lab values far from the type's range usually mean a basis mix-up (dry vs fresh, biogas vs CH₄, per kg FM).
+    if (line.dryMatterPct !== undefined && (dm > 2 * t.dryMatterPct || dm < 0.4 * t.dryMatterPct)) w.push(T(`Entered dry matter ${dm} % is far from the typical ${t.dryMatterPct} % for "${nm}": check that it is % of fresh mass.`, `Введена сухість ${dm} % далека від типових ${t.dryMatterPct} % для «${nm}»: перевірте, що це % від сирої маси.`));
+    if (line.methaneYieldLPerKgVs !== undefined && (yieldL > 1.3 * t.yieldHigh || yieldL < 0.7 * t.yieldLow)) w.push(T(`Entered BMP ${yieldL} L/kg VS is outside the usual ${t.yieldLow}–${t.yieldHigh} for "${nm}": check that it is methane (not biogas) per kg VS (not per kg fresh mass).`, `Введений BMP ${yieldL} л/кг VS поза звичним діапазоном ${t.yieldLow}–${t.yieldHigh} для «${nm}»: перевірте, що це метан (не біогаз) на кг VS (не на кг сирої маси).`));
     if (t.confidence === "LOW") w.push(T(`Parameters for "${nm}" have low confidence — a laboratory analysis (BMP) is needed.`, `Параметри «${nm}» мають низьку довіру — потрібен лабораторний аналіз (BMP).`));
     if (t.flags.includes("competing_use") && opportunity === 0) w.push(T(`"${nm}" often has an alternative use (e.g. animal feed) — enter its sale price.`, `«${nm}» часто має альтернативне використання (корм) — вкажіть його ціну.`));
+    if (t.flags.includes("pretreatment")) w.push(T(`"${nm}": pretreatment (steam explosion, extrusion, milling) is not in the CAPEX of this screening (milling electricity, ${Math.round(params.get("eng.pretreatment_milling_kwh_t"))} kWh/t, is counted; steam, alkali or extrusion steps are not), and the catalogue yield assumes it is done — obtain a pretreatment quotation and a delivered straw price before relying on the result.`, `«${nm}»: попередня обробка (паровий вибух, екструзія, подрібнення) не входить у CAPEX цього скринінгу (електроенергію на подрібнення, ${Math.round(params.get("eng.pretreatment_milling_kwh_t"))} кВт·год/т, враховано; парову, лужну чи екструзійну обробку — ні), а каталожний вихід її передбачає — перед рішенням отримайте оферту на обробку та ціну соломи з доставкою.`));
     if (t.flags.includes("seasonal") && months < 9) w.push(T(`Seasonal stream (${months} months): equipment sits idle for the rest of the year.`, `Сезонний потік (${months} міс.): обладнання простоюватиме решту року.`));
-    if (t.flags.includes("dilute")) w.push(T(`"${nm}" is very dilute: consider a high-rate reactor (UASB / covered lagoon) instead of a CSTR — the model's CSTR costing is conservative here.`, `«${nm}» дуже розбавлений: розгляньте високонавантажений реактор (UASB / накрита лагуна) замість CSTR — оцінка CAPEX тут консервативна.`));
+    // A stream the catalogue treats as year-round but the client enters as seasonal sizes the plant for the peak month.
+    else if (months < 9 && t.defaultMonths >= 12) w.push(T(`"${nm}" is entered for ${months} months only: the digester is sized for that peak and sits idle the rest of the year. If the stream can be stored (e.g. ensiled), feeding it year-round needs a plant about ${Math.round(12 / months)}× smaller.`, `«${nm}» вказано лише на ${months} міс.: реактор розраховано на цей пік, решту року він простоює. Якщо потік можна зберігати (напр. силосувати), рівномірна подача протягом року потребує установки приблизно в ${Math.round(12 / months)} раз меншої.`));
+    const eurT = (local: number | undefined) => (local ?? 0) / fx;
+    if (eurT(line.currentDisposalCostPerTonneLocal) > PLAUSIBLE_DISPOSAL_EUR_T || -eurT(line.purchasePricePerTonneLocal) > PLAUSIBLE_GATE_FEE_EUR_T || eurT(line.purchasePricePerTonneLocal) > PLAUSIBLE_PURCHASE_EUR_T)
+      w.push(T(`"${nm}": the entered price per tonne is far above usual market levels (disposal > ${PLAUSIBLE_DISPOSAL_EUR_T}, gate fee > ${PLAUSIBLE_GATE_FEE_EUR_T}, purchase > ${PLAUSIBLE_PURCHASE_EUR_T} €/t equivalent): check the unit (per tonne, local currency) — the result depends on it directly.`, `«${nm}»: введена ціна за тонну значно вища за звичний ринковий рівень (утилізація > ${PLAUSIBLE_DISPOSAL_EUR_T}, плата за приймання > ${PLAUSIBLE_GATE_FEE_EUR_T}, закупівля > ${PLAUSIBLE_PURCHASE_EUR_T} €/т в еквіваленті): перевірте одиниці (за тонну, у місцевій валюті) — результат прямо від неї залежить.`));
+    if (isEffluentLike(t, dm)) w.push(T(`"${nm}" is very dilute: consider a high-rate reactor (UASB / covered lagoon) instead of a CSTR — the model's CSTR costing is conservative here.`, `«${nm}» дуже розбавлений: розгляньте високонавантажений реактор (UASB / накрита лагуна) замість CSTR — оцінка CAPEX тут консервативна.`));
     if (t.flags.includes("energy_crop") && !((line.purchasePricePerTonneLocal ?? 0) > 0) && opportunity === 0) w.push(T(`"${nm}" is a purchased or own-grown crop — enter its cost per tonne (typically 30–45 €/t delivered), otherwise the gas is counted as free.`, `«${nm}» — покупна або власна культура: вкажіть її вартість за тонну (зазвичай 30–45 €/т з доставкою), інакше газ рахується як безкоштовний.`));
     if (t.flags.includes("energy_crop")) w.push(T("Energy-crop share is capped in many support schemes (e.g. EEG maize cap, RED III sustainability criteria) — check before relying on it.", "Частка енергетичних культур обмежена в багатьох схемах підтримки (напр. ліміт кукурудзи в EEG, критерії сталості RED III) — перевірте заздалегідь."));
     if (t.abp !== "none") w.push(T(`Animal by-products (${t.abp === "cat3" ? "Cat. 3" : "Cat. 2"}) → pasteurisation and veterinary approval required.`, `Побічні продукти тваринного походження (${t.abp === "cat3" ? "кат. 3" : "кат. 2"}) → потрібна пастеризація та ветеринарне узгодження.`));
@@ -113,6 +133,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     biogasRaw += ch4 / ch4Fraction;
     if (t.flags.includes("poultry")) poultryVs += vsT;
     if (t.flags.includes("fat")) fatVs += vsT;
+    if (t.flags.includes("fat_dominant")) fatDominantVs += vsT;
     if (t.category === "manure") manureVs += vsT;
     if (t.abp !== "none") abpT += tonnes;
   }
@@ -164,6 +185,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     manureShareVs: manureShare,
     poultryShareVs: poultryShare,
     fatShareVs: fatShare,
+    fatDominantShareVs: vsTotal > 0 ? fatDominantVs / vsTotal : 0,
     abpTonnesYear: abpT,
     inhibitionFactor: inhibition,
     warnings,

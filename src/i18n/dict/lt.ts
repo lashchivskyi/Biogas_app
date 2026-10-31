@@ -155,6 +155,8 @@ const lt: Translation = {
     q6: "6–8. Kiek energijos suvartojate?",
     elecBill: "Mėnesio sąskaita už elektrą", elecBillHint: "Arba žemiau įveskite kWh per metus. Jei kainos nežinote, skaičiuojame ≈ {price} už kWh.",
     elecKwh: "…arba metinis suvartojimas", elecPrice: "Elektros kaina sąskaitoje (jei žinoma)", elecPriceHint: "Be PVM, su skirstymu. Didina patikimumą.",
+    refineTitle: "Neprivaloma: sutartys ir finansavimas", refineHint: "Palikite tuščią, jei norite naudoti nacionalinius įverčius. Įvestos reikšmės ataskaitoje pažymimos kaip jūsų duomenys.", exportPrice: "Parduodamos elektros kaina (sutartis / tarifas)", heatPrice: "Kaina, kurią šilumos pirkėjas moka už kWh šilumos", operatorWage: "Operatoriaus valandos kaina su mokesčiais", debtShare: "Investicijų dalis, finansuojama paskola", debtRate: "Metinė paskolos palūkanų norma", debtTenor: "Paskolos terminas",
+    capexQuote: "Visos įrangos „po raktu“ kaina pagal tiekėjo pasiūlymą", capexQuoteRoute: "Pasiūlymas skirtas šiai technologijai",
     grid: "Prijungimas prie tinklo?", gridToggle: "Taip, prijungta (perteklių galima parduoti)",
     gasToggle: "7. Naudojame gamtines dujas", gasBill: "Mėnesio sąskaita už dujas", gasBillHint: "Jei kainos nežinote, skaičiuojame ≈ {price} už m³.", gasM3: "…arba dujos per metus", gasPrice: "Dujų kaina (jei žinoma)",
     heatQ: "8. Ar jums reikia šilumos?", heatQhint: "Šiluma skaičiuojama tik ten, kur ji tikrai naudojama.", heatKwh: "Metinis šilumos poreikis (jei žinomas)", heatKwhHint: "Jei laukas tuščias, o dujos nurodytos, apskaičiuosime pagal dujas. Nenurodžius šilumos poreikio, sutaupymo neskaičiuojame.",

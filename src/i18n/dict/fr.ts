@@ -155,6 +155,8 @@ const fr: Translation = {
     q6: "6–8. Combien d'énergie consommez-vous ?",
     elecBill: "Facture d'électricité mensuelle", elecBillHint: "Ou indiquez les kWh par an ci-dessous. Sans prix connu, nous retenons ≈ {price} par kWh.",
     elecKwh: "…ou consommation annuelle", elecPrice: "Prix de l'électricité sur votre facture (si connu)", elecPriceHint: "HT, acheminement compris. Améliore la confiance.",
+    refineTitle: "Facultatif : contrats et financement", refineHint: "Laissez vide pour utiliser les estimations nationales. Vos valeurs sont signalées comme vos données dans le rapport.", exportPrice: "Prix obtenu pour l'électricité vendue (contrat / tarif)", heatPrice: "Prix payé par l'acheteur de chaleur par kWh de chaleur", operatorWage: "Coût horaire de l'opérateur, charges comprises", debtShare: "Part de l'investissement financée par un prêt", debtRate: "Taux d'intérêt annuel du prêt", debtTenor: "Durée du prêt",
+    capexQuote: "Prix total installé de l'installation selon l'offre du fournisseur", capexQuoteRoute: "L'offre concerne cette technologie",
     grid: "Raccordement au réseau ?", gridToggle: "Oui, raccordé (le surplus peut être vendu)",
     gasToggle: "7. Nous utilisons du gaz naturel", gasBill: "Facture de gaz mensuelle", gasBillHint: "Sans prix connu, nous retenons ≈ {price} par m³.", gasM3: "…ou gaz par an", gasPrice: "Prix du gaz (si connu)",
     heatQ: "8. Avez-vous besoin de chaleur ?", heatQhint: "La chaleur ne compte que là où elle est réellement utilisée.", heatKwh: "Besoin de chaleur annuel (si connu)", heatKwhHint: "Si vide et gaz renseigné, nous le déduisons du gaz. Sans besoin chiffré, aucune économie de chaleur n’est comptabilisée.",

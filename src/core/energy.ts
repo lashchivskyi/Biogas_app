@@ -3,6 +3,7 @@ import { HOURS_IN_MONTH, HOURS_PER_YEAR } from "./climate";
 import type { RunContext } from "./context";
 import type { CustomerDemand } from "./demand";
 import { CHP_REFERENCE } from "./engineeringParams";
+import { FEEDSTOCKS } from "./feedstockData";
 import type { DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
 
 const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
@@ -51,6 +52,7 @@ export function runEnergy(
   const coincidence = p.get("eng.self_consumption_coincidence");
   const parBase = p.get("eng.parasitic_base_kwh_t");
   const parShare = p.get("eng.parasitic_share_gas_energy");
+  const pretreatKwh = p.get("eng.pretreatment_milling_kwh_t");
   const leak = scenario.leakShare;
 
   const ch4Prod = feed.ch4M3Year;
@@ -90,7 +92,7 @@ export function runEnergy(
 
   const parasiticMonth = (i: number) => input.process
     ? (input.process.auxiliaryKwhYear ?? 0) * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
-    : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare);
+    : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare) + pretreatKwh * feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.monthlyTonnes[i], 0);
 
   if (route === "chp") {
     // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.

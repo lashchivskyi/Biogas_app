@@ -9,6 +9,8 @@ import { cityRegionId, type CityClimate } from "@/core/location";
 const key = <T extends Record<string, unknown>>(o: T) => Object.keys(o) as [keyof T & string, ...(keyof T & string)[]];
 
 const optNum = (max: number, min = 0) => z.number().min(min).max(max).optional();
+/** Upper bound for any amount in local currency per unit: only guards against nonsense, so it must clear the weakest currency (VND ≈ 28 500 per €). */
+const LOCAL_UNIT_MAX = 1e8;
 
 export const lineSchema = z
   .object({
@@ -24,10 +26,10 @@ export const lineSchema = z
     startMonth: z.number().min(1).max(12).optional(),
     delivered: z.boolean().optional(),
     distanceKm: optNum(2000),
-    purchasePricePerTonneLocal: z.number().min(-1e6).max(1e6).optional(),
+    purchasePricePerTonneLocal: z.number().min(-LOCAL_UNIT_MAX).max(LOCAL_UNIT_MAX).optional(),
     handling: z.enum(HANDLING_IDS as [HandlingId, ...HandlingId[]]).optional(),
-    currentDisposalCostPerTonneLocal: optNum(1e6),
-    opportunityValuePerTonneLocal: optNum(1e6),
+    currentDisposalCostPerTonneLocal: optNum(LOCAL_UNIT_MAX),
+    opportunityValuePerTonneLocal: optNum(LOCAL_UNIT_MAX),
   })
   .refine((l) => (l.animal ? !l.type : !!l.type), { message: "exactly one of animal/type" });
 
@@ -42,12 +44,14 @@ export const inputSchema = z.object({
   feedstocks: z.array(lineSchema).max(16),
   energy: z.object({
     electricityKwhYear: optNum(1e10),
-    electricityPriceLocalPerKwh: optNum(1000),
+    electricityPriceLocalPerKwh: optNum(LOCAL_UNIT_MAX),
     gasM3Year: optNum(1e9),
-    gasPriceLocalPerM3: optNum(1000),
+    gasPriceLocalPerM3: optNum(LOCAL_UNIT_MAX),
     heatNeed: z.enum(["none", "seasonal_buildings", "year_round_process", "greenhouse"]),
     heatKwhYear: optNum(1e10),
     hasGridConnection: z.boolean(),
+    exportPriceLocalPerKwh: optNum(LOCAL_UNIT_MAX),
+    heatPriceLocalPerKwh: optNum(LOCAL_UNIT_MAX),
   }),
   site: z.object({
     landHa: optNum(1e6),
@@ -56,7 +60,14 @@ export const inputSchema = z.object({
     neighboursWithin300m: z.boolean().optional(),
     nearProtectedOrWaterArea: z.boolean().optional(),
   }),
-  finance: z.object({ debtShare: optNum(0.9) }).optional(),
+  finance: z.object({
+    debtShare: optNum(0.9),
+    debtRate: optNum(0.6),
+    debtTenorYears: z.number().int().min(1).max(30).optional(),
+    operatorWageLocalPerHour: optNum(LOCAL_UNIT_MAX),
+    capexQuoteLocal: optNum(1e15),
+    capexQuoteRoute: z.enum(["chp", "boiler", "biomethane"]).optional(),
+  }).refine((f) => (f.capexQuoteLocal === undefined) === (f.capexQuoteRoute === undefined), { message: "A supplier quote needs its technology (CHP, boiler or biomethane), and the technology needs a quote" }).optional(),
   labAnalysisAvailable: z.boolean().optional(),
   assumedSupportEurPerKwh: optNum(1).optional(),
 }).superRefine((input, ctx) => {

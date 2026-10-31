@@ -155,6 +155,8 @@ const fi: Translation = {
     q6: "6–8. Paljonko käytät energiaa?",
     elecBill: "Sähkölasku kuukaudessa", elecBillHint: "Tai syötä kWh vuodessa alle. Jos hintaa ei tiedetä, käytämme ≈ {price} / kWh.",
     elecKwh: "…tai vuosikulutus", elecPrice: "Sähkön hinta laskulla (jos tiedossa)", elecPriceHint: "Ilman ALV:tä, siirto mukaan lukien. Parantaa luotettavuutta.",
+    refineTitle: "Valinnainen: sopimukset ja rahoitus", refineHint: "Jätä tyhjäksi, jos haluat käyttää kansallisia arvioita. Antamasi arvot merkitään raportissa omiksi tiedoiksesi.", exportPrice: "Myydyn sähkön hinta (sopimus / tariffi)", heatPrice: "Hinta, jonka lämmönostaja maksaa lämmön kilowattitunnilta", operatorWage: "Käyttäjän tuntikustannus veroineen ja sivukuluineen", debtShare: "Lainalla rahoitettava osuus investoinnista", debtRate: "Lainan vuosikorko", debtTenor: "Lainan laina-aika",
+    capexQuote: "Laitoksen kokonaishinta avaimet käteen toimittajan tarjouksen mukaan", capexQuoteRoute: "Tarjous koskee tätä tekniikkaa",
     grid: "Verkkoliittymä?", gridToggle: "Kyllä, liitetty (ylijäämää voi myydä)",
     gasToggle: "7. Käytämme maakaasua", gasBill: "Kaasulasku kuukaudessa", gasBillHint: "Jos hintaa ei tiedetä, käytämme ≈ {price} / m³.", gasM3: "…tai kaasu vuodessa", gasPrice: "Kaasun hinta (jos tiedossa)",
     heatQ: "8. Tarvitsetko lämpöä?", heatQhint: "Lämpö lasketaan vain siellä, missä sitä todella käytetään.", heatKwh: "Vuotuinen lämmöntarve (jos tiedossa)", heatKwhHint: "Jos kenttä on tyhjä ja kaasu on annettu, johdamme sen kaasusta. Ilman ilmoitettua lämmöntarvetta emme laske lämpösäästöjä.",

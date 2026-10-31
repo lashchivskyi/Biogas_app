@@ -140,11 +140,17 @@ export function buildCapex(
 
   // Country, scenario and sensitivity multipliers act on the whole stack (they are cost levels).
   const routeFactor = `econ.capex_factor_${route}`;
-  const mult = p.get(p.has(routeFactor) ? routeFactor : "econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex;
+  const modelledMult = p.get(p.has(routeFactor) ? routeFactor : "econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex;
+  // A supplier quote for this route replaces the country-level estimate; the scenario and sensitivity multipliers still
+  // apply, because a quote is a budget, not a contract (scope changes, escalation).
+  const fin = ctx.input.finance;
+  const quoteEur = !process && fin?.capexQuoteRoute === route && (fin.capexQuoteLocal ?? 0) > 0 ? (fin.capexQuoteLocal as number) / ctx.fx : undefined;
+  const unscaled = lines.reduce((a, l) => a + l.eur, 0);
+  const mult = quoteEur !== undefined && unscaled > 0 ? quoteEur * ctx.scenario.capexMult * ctx.mods.capex / unscaled : modelledMult;
   const scaled = lines.map((l) => ({ ...l, eur: l.eur * mult }));
   if (quotedUpgrade && route === "biomethane") scaled.push({ id: "upgrading", label: "Upgrading", eur: (quotedUpgrade.upgradingCapexLocal ?? 0) / ctx.fx * ctx.mods.capex * (1 + (ctx.scenario.id === "conservative" ? 1 : ctx.scenario.id === "optimistic" ? -1 : 0) * quotedUpgrade.uncertaintyPct / 100) });
   if (process) scaled.unshift({ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)", "Технологічна частина: бюджет монтажу (без перетворення газу)"), eur: process.capexEur });
-  return { lines: scaled, totalEur: scaled.reduce((a, l) => a + l.eur, 0) };
+  return { lines: scaled, totalEur: scaled.reduce((a, l) => a + l.eur, 0), ...(mult !== modelledMult ? { modelledEur: unscaled * modelledMult } : {}) };
 }
 
 export function peakMonthlyHeatKw(design: DigesterDesign, hoursInMonth: number[]): number {

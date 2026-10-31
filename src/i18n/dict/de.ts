@@ -155,6 +155,8 @@ const de: Translation = {
     q6: "6–8. Wie viel Energie verbrauchen Sie?",
     elecBill: "Stromrechnung pro Monat", elecBillHint: "Oder unten kWh pro Jahr eingeben. Ohne Preis rechnen wir mit ≈ {price} pro kWh.",
     elecKwh: "…oder Jahresverbrauch", elecPrice: "Strompreis laut Rechnung (falls bekannt)", elecPriceHint: "Netto, inkl. Netzentgelte. Erhöht das Vertrauensniveau.",
+    refineTitle: "Optional: Verträge und Finanzierung", refineHint: "Leer lassen, um nationale Schätzwerte zu verwenden. Eigene Angaben werden im Bericht als Ihre Daten gekennzeichnet.", exportPrice: "Preis für verkauften Strom (Vertrag / Tarif)", heatPrice: "Preis, den der Wärmeabnehmer pro kWh Wärme zahlt", operatorWage: "Kosten pro Betreiberstunde inkl. Steuern und Abgaben", debtShare: "Anteil der Investition, der per Kredit finanziert wird", debtRate: "Kreditzins pro Jahr", debtTenor: "Kreditlaufzeit",
+    capexQuote: "Gesamtpreis der Anlage laut Lieferantenangebot (schlüsselfertig)", capexQuoteRoute: "Das Angebot gilt für diese Technik",
     grid: "Netzanschluss?", gridToggle: "Ja, angeschlossen (Überschuss kann eingespeist werden)",
     gasToggle: "7. Wir nutzen Erdgas", gasBill: "Gasrechnung pro Monat", gasBillHint: "Ohne Preis rechnen wir mit ≈ {price} pro m³.", gasM3: "…oder Gas pro Jahr", gasPrice: "Gaspreis (falls bekannt)",
     heatQ: "8. Brauchen Sie Wärme?", heatQhint: "Wärme zählt nur dort, wo sie tatsächlich genutzt wird.", heatKwh: "Wärmebedarf pro Jahr (falls bekannt)", heatKwhHint: "Leer und Gas angegeben? Dann leiten wir ihn aus dem Gas ab. Ohne bezifferten Wärmebedarf rechnen wir keine Wärmeersparnis an.",

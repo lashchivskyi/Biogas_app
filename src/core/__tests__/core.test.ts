@@ -5,6 +5,7 @@ import { EXAMPLES } from "../examples";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS } from "../feedstockData";
 import { npv, irr } from "../finance";
 import { QUALITY_START } from "../quality";
+import { decideVerdict } from "../verdict";
 import type { Assessment, ProjectInput } from "../types";
 import { COUNTRIES, getCountry, UA } from "@/countries";
 
@@ -370,5 +371,291 @@ describe("international model", () => {
   it("English is the default model language", () => {
     const a = assess(ex("layers_200k"), UA);
     expect(a.warnings.join(" ")).toMatch(/ammonia/i);
+  });
+});
+
+describe("stress-test regressions (2026-10-31)", () => {
+  const hens: ProjectInput = {
+    countryCode: "UA", regionId: UA.regions[0].id, businessType: "poultry_farm",
+    feedstocks: [{ id: "a", animal: "layer_hen", quantity: 1500000 }],
+    energy: { electricityKwhYear: 4500000, heatNeed: "none", hasGridConnection: true },
+    site: { landHa: 1500, gasGridKm: 3 },
+  };
+
+  it("model-side evidence gaps lower confidence but never turn a client form into 'insufficient data'", () => {
+    const a = run(hens);
+    const client = (a.confidence.factors ?? []).filter((f) => f.owner === "client").reduce((s, f) => s + f.points, 0);
+    expect((a.confidence.factors ?? []).some((f) => f.owner === "model")).toBe(true);
+    expect(a.confidence.score).toBeLessThan(35);
+    expect(QUALITY_START - client).toBeGreaterThanOrEqual(35);
+    expect(a.verdict.id).not.toBe("INSUFFICIENT_DATA");
+  });
+
+  it("a methane-yield shortfall never improves NPV of a profitable project (plant stays as built)", () => {
+    for (const e of EXAMPLES) {
+      const a = assess(e.input, getCountry(e.input.countryCode));
+      // A project that loses money on each extra kW (cheap power, fixed labour per kW) can look better with less gas.
+      if (a.bestRoute === "boiler" || a.scenarios.base.fin.npvEur <= 0) continue;
+      expect(a.sensitivity.find((s) => s.id === "yield")!.deltaNpvEur, e.id).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("assumes a farm's own slurry is already stored when no storage volume is entered, and says so", () => {
+    const dairy: ProjectInput = { ...PIG_UA, businessType: "dairy_farm", feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 3000 }], site: { landHa: 4500, gasGridKm: 3 } };
+    const unknown = run(dairy).scenarios.base.design;
+    const none = run({ ...dairy, site: { ...dairy.site, existingStorageM3: 0 } }).scenarios.base.design;
+    expect(unknown.storageNew + unknown.storageOpenNew).toBeLessThan(1);
+    expect(unknown.storageCovered).toBeGreaterThan(0);
+    expect(none.storageNew).toBeGreaterThan(0);
+    expect(run(dairy).warnings.join(" ")).toMatch(/Existing storage volume not entered/);
+    // Delivered or solid manure is not the farm's existing slurry store.
+    const bought = run({ ...dairy, feedstocks: [{ id: "a", type: "dairy_slurry", quantity: 54000, delivered: true, distanceKm: 5 }] }).scenarios.base.design;
+    expect(bought.storageNew).toBeGreaterThan(0);
+  });
+
+  it("stores dilute effluent for at most a month even in a heated tank", () => {
+    const vinasse: ProjectInput = { countryCode: "PL", regionId: getCountry("PL").regions[0].id, businessType: "sugar_ethanol",
+      feedstocks: [{ id: "a", type: "vinasse", quantity: 200000, handling: "field_spreading" }],
+      energy: { electricityKwhYear: 0, heatNeed: "none", hasGridConnection: true }, site: { landHa: 5000, gasGridKm: 5 } };
+    const d = run(vinasse).scenarios.base;
+    expect(d.design.tech.digestion).not.toBe("covered_lagoon");
+    expect(d.design.storageVolumeM3).toBeLessThanOrEqual(d.feed.tonnesYear / 12);
+  });
+
+  it("flags lab values that look like a basis or unit mix-up", () => {
+    const a = run({ ...PIG_UA, businessType: "dairy_processor", feedstocks: [{ id: "a", type: "dairy_whey", quantity: 20000, dryMatterPct: 50, methaneYieldLPerKgVs: 700 }] });
+    const w = a.scenarios.base.feed.lines[0].warnings.join(" ");
+    expect(w).toMatch(/dry matter 50 %/);
+    expect(w).toMatch(/BMP 700/);
+  });
+
+  it("credits no export without a grid connection, so a small off-grid site is steered away from CHP", () => {
+    const a = run({ ...ex("slaughter_5000"), energy: { ...ex("slaughter_5000").energy, electricityKwhYear: 100000, hasGridConnection: false } });
+    expect(a.routesBase.chp.energy.elExportedKwh).toBe(0);
+    expect(a.bestRoute).not.toBe("chp");
+  });
+  it("a feed that is mostly grease is never 'strong' and says why", () => {
+    const fog: ProjectInput = { countryCode: "PL", regionId: getCountry("PL").regions[0].id, businessType: "food_business",
+      feedstocks: [{ id: "a", type: "grease_trap_fat", quantity: 8000, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 200 }],
+      energy: { electricityKwhYear: 3000000, electricityPriceLocalPerKwh: 0.85, heatNeed: "year_round_process", gasM3Year: 600000, hasGridConnection: true },
+      site: { landHa: 500, gasGridKm: 2 } };
+    const a = run(fog);
+    expect(a.scenarios.base.feed.fatDominantShareVs).toBeGreaterThan(0.9);
+    expect(a.verdict.id).not.toBe("STRONG_CANDIDATE");
+    expect(a.verdict.reasons.join(" ") + a.verdict.whatWouldChange.join(" ")).toMatch(/30 %/);
+    // Fat-containing residues are not fat-dominant streams.
+    expect(run({ ...fog, feedstocks: [{ id: "a", type: "slaughter_residues", quantity: 8000 }] }).scenarios.base.feed.fatDominantShareVs).toBe(0);
+  });
+
+  it("straw carries an unmodelled-pretreatment warning and a model-side confidence deduction", () => {
+    const straw: ProjectInput = { countryCode: "UA", regionId: UA.regions[0].id, businessType: "crop_farm",
+      feedstocks: [{ id: "a", type: "crop_straw", quantity: 10000 }],
+      energy: { electricityKwhYear: 500000, heatNeed: "none", hasGridConnection: true }, site: { landHa: 3000, gasGridKm: 5 } };
+    const a = run(straw);
+    expect(a.scenarios.base.feed.lines[0].warnings.join(" ")).toMatch(/pretreatment/);
+    expect(a.scenarios.base.feed.lines[0].warnings.join(" ")).toMatch(/alternative use/);
+    expect((a.confidence.factors ?? []).find((f) => f.id === "pretreatment_unmodelled")?.owner).toBe("model");
+  });
+
+  it("warm climates use a short digestate buffer instead of the German closed season", () => {
+    const pigs = (cc: string): ProjectInput => ({ countryCode: cc, regionId: getCountry(cc).regions[0].id, businessType: "dairy_farm",
+      feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 3000 }],
+      energy: { electricityKwhYear: 3000000, heatNeed: "none", hasGridConnection: true }, site: { landHa: 3000, gasGridKm: 3 } });
+    const th = run(pigs("TH")).scenarios.base.design, de = run(pigs("DE")).scenarios.base.design;
+    const monthsOf = (d: typeof th, cc: string) => d.storageVolumeM3 * 12 / run(pigs(cc)).digestate.tonnesYear;
+    expect(monthsOf(th, "TH")).toBeCloseTo(3, 1);
+    expect(monthsOf(de, "DE")).toBeCloseTo(9, 1);
+  });
+});
+
+describe("stress-test regressions, third pass (2026-10-31)", () => {
+  const central: ProjectInput = {
+    countryCode: "DE", regionId: DE.regions[0].id, businessType: "central_biogas_plant",
+    feedstocks: [{ id: "a", type: "dairy_slurry", quantity: 40000, delivered: true, distanceKm: 8 }, { id: "b", type: "food_waste", quantity: 8000, delivered: true, distanceKm: 30 }],
+    energy: { electricityKwhYear: 0, heatNeed: "none", hasGridConnection: true }, site: { landHa: 0, gasGridKm: 3 },
+  };
+
+  it("returns digestate of delivered manure to the supplying farms instead of paying for its disposal a second time", () => {
+    const a = run(central);
+    const d = a.digestate;
+    const fw = a.scenarios.base.feed.lines.find((l) => l.typeId === "food_waste")!;
+    // Only the food waste's nutrients need the plant's own outlet; the slurry's go back where they came from.
+    expect(d.landRequiredHa).toBeCloseTo(fw.nKgYear * 0.95 / 170, 0);
+    const slurryOnly = run({ ...central, feedstocks: [central.feedstocks[0]] });
+    expect(slurryOnly.digestate.handlingCostEurYear).toBe(0);
+    expect(slurryOnly.digestate.landRequiredHa).toBe(0);
+    expect(slurryOnly.digestate.advice.join(" ")).toMatch(/supplying farms/);
+  });
+
+  it("charges the logistics table the same per-tonne haulage as the cash flow", () => {
+    const a = run(central);
+    for (const l of a.scenarios.base.feed.lines) {
+      const row = a.logistics.perLine.find((r) => r.id === l.id)!;
+      expect(row.transportCostEurPerTonne * l.tonnesYear).toBeCloseTo(l.transportCostEurYear, 0);
+    }
+  });
+
+  it("does not call a positive NPV 'below zero' when only the payback is too long", () => {
+    // A positive NPV with a > 10-year payback is a narrow window in real inputs, so the verdict rule is tested directly.
+    const sc = (npv: number, pb: number | null) => ({ kwElEquivalent: 300, feed: { tonnesYear: 1000, fatDominantShareVs: 0 }, fin: { npvEur: npv, simplePaybackYears: pb, capexEur: 3e6, dscrMin: 1.4 } }) as unknown as Parameters<typeof decideVerdict>[0]["base"];
+    const v = decideVerdict({ base: sc(40_000, 10.5), cons: sc(-400_000, 14), opt: sc(500_000, 7), confidence: { level: "MEDIUM", score: 60 }, minKwEl: 20, breakEven: { capexReductionPct: 2, energyPriceIncreasePct: 3 }, lang: "en" });
+    expect(v.id).toBe("WEAK_ECONOMICS");
+    expect(v.reasons[0]).toMatch(/marginally positive/);
+    expect(v.reasons[0]).not.toMatch(/below zero/);
+  });
+
+  it("treats a dilute industrial effluent (whey, pot ale) like vinasse: no closed-season digestate store", () => {
+    const whey: ProjectInput = { countryCode: "DE", regionId: DE.regions[0].id, businessType: "dairy_processor",
+      feedstocks: [{ id: "a", type: "dairy_whey", quantity: 30000, handling: "paid_disposal" }],
+      energy: { electricityKwhYear: 5e6, heatNeed: "year_round_process", heatKwhYear: 10e6, hasGridConnection: true }, site: { gasGridKm: 3 } };
+    const d = run(whey).scenarios.base.design;
+    expect(d.storageVolumeM3).toBeLessThanOrEqual(30000 / 12 + 1);
+    // Same stream with a dry matter above the effluent limit is stored for the legal closed season.
+    const thick = run({ ...whey, feedstocks: [{ ...whey.feedstocks[0], dryMatterPct: 12 }] }).scenarios.base.design;
+    expect(thick.storageVolumeM3).toBeGreaterThan(30000 / 12 * 3);
+    expect(run(whey).warnings.join(" ")).toMatch(/very dilute/);
+  });
+
+  it("scales operator time with plant size like the published Austrian survey (Walla & Schneeberger 2008)", () => {
+    const val = (id: string) => ENGINEERING_PARAMS.find((p) => p.id === id)!.value;
+    const hours = (kw: number) => val("eng.opex.labour_hours_coef") * Math.pow(kw, val("eng.opex.labour_hours_exp"));
+    for (const [kw, published] of [[100, 620], [250, 1164], [500, 1978]] as const) expect(Math.abs(hours(kw) / published - 1), `${kw} kW`).toBeLessThan(0.03);
+    expect(hours(5000) / 5000).toBeLessThan(hours(500) / 500); // less than proportional
+  });
+
+  it("flags prices that look like unit slips and lowers client-owned confidence", () => {
+    const dairy: ProjectInput = { countryCode: "DE", regionId: DE.regions[0].id, businessType: "dairy_farm", feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 1000 }],
+      energy: { electricityKwhYear: 300000, electricityPriceLocalPerKwh: 0.22, heatNeed: "none", hasGridConnection: true }, site: { landHa: 1000 } };
+    const ok = run(dairy);
+    const cents = run({ ...dairy, energy: { ...dairy.energy, electricityPriceLocalPerKwh: 22 } });
+    expect(ok.warnings.join(" ")).not.toMatch(/check the unit/);
+    expect(cents.warnings.join(" ")).toMatch(/electricity price .* check the unit/);
+    expect(cents.confidence.factors?.find((f) => f.id === "price_units")?.owner).toBe("client");
+    expect(cents.verdict.id).not.toBe("STRONG_CANDIDATE");
+    const fee = run({ ...dairy, businessType: "food_business", feedstocks: [{ id: "a", type: "food_waste", quantity: 5000, handling: "paid_disposal", currentDisposalCostPerTonneLocal: 2000 }] });
+    expect(fee.warnings.join(" ")).toMatch(/price per tonne .* check the unit/);
+    expect(fee.verdict.id).not.toBe("STRONG_CANDIDATE");
+  });
+
+  it("warns that a year-round stream entered as seasonal sizes the plant for its peak", () => {
+    const pulp: ProjectInput = { countryCode: "PL", regionId: getCountry("PL").regions[0].id, businessType: "sugar_beet_factory",
+      feedstocks: [{ id: "a", type: "sugar_beet_pulp_pressed", quantity: 60000, monthsActive: 3, startMonth: 9 }],
+      energy: { electricityKwhYear: 2e7, heatNeed: "year_round_process", heatKwhYear: 3e7, hasGridConnection: true }, site: { landHa: 3000 } };
+    expect(run(pulp).scenarios.base.feed.lines[0].warnings.join(" ")).toMatch(/entered for 3 months only.*4× smaller/);
+  });
+
+  describe("client-supplied contract and financing inputs", () => {
+    const base: ProjectInput = {
+      countryCode: "DE", regionId: DE.regions[0].id, businessType: "dairy_farm", feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 1500 }],
+      energy: { electricityKwhYear: 200000, electricityPriceLocalPerKwh: 0.22, heatNeed: "year_round_process", heatKwhYear: 400000, hasGridConnection: true }, site: { landHa: 2000, existingStorageM3: 25000, gasGridKm: 3 },
+    };
+    const rev = (a: Assessment, id: string) => a.scenarios.base.opexRev.revenue.find((l) => l.id === id)?.eur ?? 0;
+    const opex = (a: Assessment, id: string) => a.scenarios.base.opexRev.opex.find((l) => l.id === id)?.eur ?? 0;
+
+    it("uses a contracted export price instead of wholesale × haircut, and marks it as the client's own data", () => {
+      const market = run({ ...base, energy: { ...base.energy } });
+      const ppa = run({ ...base, energy: { ...base.energy, exportPriceLocalPerKwh: 0.30 } });
+      const exported = ppa.scenarios.base.energy.elExportedKwh;
+      expect(exported).toBeGreaterThan(0);
+      expect(rev(ppa, "el_export")).toBeCloseTo(exported * 0.30, 0);
+      expect(rev(ppa, "el_export")).toBeGreaterThan(rev(market, "el_export"));
+      expect(ppa.marketEvidence!.find((p) => p.id === "econ.electricity_spot_eur_kwh")?.origin).toBe("USER_INPUT");
+    });
+
+    it("uses the heat price the buyer pays, and the client's operator cost per hour", () => {
+      const dear = run({ ...base, energy: { ...base.energy, heatPriceLocalPerKwh: 0.20 } });
+      const cheap = run({ ...base, energy: { ...base.energy, heatPriceLocalPerKwh: 0.02 } });
+      expect(rev(dear, "heat")).toBeGreaterThan(rev(cheap, "heat") * 5);
+      const w = run({ ...base, finance: { operatorWageLocalPerHour: 40 } });
+      const hours = opex(w, "labour") / 40;
+      const hoursDefault = ENGINEERING_PARAMS.find((p) => p.id === "eng.opex.labour_min_hours")!.value;
+      expect(hours).toBeGreaterThanOrEqual(hoursDefault - 1);
+      expect(opex(run({ ...base, finance: { operatorWageLocalPerHour: 80 } }), "labour")).toBeCloseTo(2 * opex(w, "labour"), 0);
+    });
+
+    it("loan terms change DSCR but never NPV or the verdict", () => {
+      const a = run({ ...base, finance: { debtShare: 0.6, debtRate: 0.05, debtTenorYears: 15 } });
+      const b = run({ ...base, finance: { debtShare: 0.6, debtRate: 0.12, debtTenorYears: 5 } });
+      expect(b.scenarios.base.fin.dscrMin!).toBeLessThan(a.scenarios.base.fin.dscrMin!);
+      expect(b.scenarios.base.fin.npvEur).toBeCloseTo(a.scenarios.base.fin.npvEur, 6);
+      expect(b.verdict.id).toBe(a.verdict.id);
+    });
+
+    it("flags an export price or operator cost entered in the wrong unit", () => {
+      const slip = run({ ...base, energy: { ...base.energy, exportPriceLocalPerKwh: 250 }, finance: { operatorWageLocalPerHour: 4000 } });
+      expect(slip.warnings.join(" ")).toMatch(/export price/);
+      expect(slip.warnings.join(" ")).toMatch(/operator cost/);
+      expect(slip.confidence.factors?.some((f) => f.id === "price_units")).toBe(true);
+      expect(run({ ...base, energy: { ...base.energy, exportPriceLocalPerKwh: 0.12 }, finance: { operatorWageLocalPerHour: 25 } }).warnings.join(" ")).not.toMatch(/check the unit/);
+    });
+  });
+});
+
+describe("straw pretreatment energy", () => {
+  it("counts mechanical milling electricity (Dell'Omo et al. 2025) for straw and nothing for other feedstocks", () => {
+    const mk = (type: "crop_straw" | "maize_silage"): ProjectInput => ({
+      countryCode: "DE", regionId: DE.regions[0].id, businessType: "crop_farm", feedstocks: [{ id: "a", type, quantity: 10000, purchasePricePerTonneLocal: 40 }],
+      energy: { electricityKwhYear: 1e6, heatNeed: "none", hasGridConnection: true }, site: { landHa: 2000, gasGridKm: 3 },
+    });
+    const straw = run(mk("crop_straw")).scenarios.base;
+    const milling = ENGINEERING_PARAMS.find((p) => p.id === "eng.pretreatment_milling_kwh_t")!.value;
+    expect(straw.energy.elParasiticKwh).toBeGreaterThanOrEqual(10000 * milling * 0.99);
+    expect(run(mk("maize_silage")).scenarios.base.energy.elParasiticKwh).toBeLessThan(10000 * milling);
+    expect(run(mk("crop_straw")).scenarios.base.feed.lines[0].warnings.join(" ")).toMatch(/milling electricity/);
+  });
+});
+
+describe("supplier CAPEX quote", () => {
+  const base: ProjectInput = {
+    countryCode: "DE", regionId: DE.regions[0].id, businessType: "dairy_farm", feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 1500 }],
+    energy: { electricityKwhYear: 800000, electricityPriceLocalPerKwh: 0.22, heatNeed: "year_round_process", heatKwhYear: 400000, hasGridConnection: true }, site: { landHa: 2000, existingStorageM3: 25000, gasGridKm: 3 },
+  };
+  const plain = run(base);
+  const modelledChp = plain.routeMatrix.chp.base.capex.totalEur;
+
+  it("replaces the CAPEX of the quoted route only and leaves the other routes modelled", () => {
+    const a = run({ ...base, finance: { capexQuoteLocal: modelledChp * 0.8, capexQuoteRoute: "chp" } });
+    expect(a.routeMatrix.chp.base.capex.totalEur).toBeCloseTo(modelledChp * 0.8, 0);
+    expect(a.routeMatrix.chp.base.capex.modelledEur).toBeCloseTo(modelledChp, 0);
+    expect(a.routeMatrix.boiler.base.capex.totalEur).toBeCloseTo(plain.routeMatrix.boiler.base.capex.totalEur, 6);
+    expect(a.routeMatrix.biomethane.base.capex.totalEur).toBeCloseTo(plain.routeMatrix.biomethane.base.capex.totalEur, 6);
+    // Lines keep their proportions; scenarios still move around the quote.
+    expect(a.routeMatrix.chp.conservative.capex.totalEur).toBeCloseTo(modelledChp * 0.8 * 1.2, 0);
+    expect(a.routeMatrix.chp.optimistic.capex.totalEur).toBeCloseTo(modelledChp * 0.8 * 0.9, 0);
+  });
+
+  it("a cheaper quote raises NPV, is shown as the client's evidence and removes the 'unvalidated CAPEX' deduction", () => {
+    const quoted = run({ ...base, finance: { capexQuoteLocal: modelledChp * 0.7, capexQuoteRoute: "chp" } });
+    expect(quoted.bestRoute).toBe("chp");
+    expect(quoted.scenarios.base.fin.npvEur).toBeGreaterThan(plain.scenarios.base.fin.npvEur);
+    expect(quoted.marketEvidence!.find((p) => p.id === "econ.capex_quote_eur")?.origin).toBe("USER_INPUT");
+    // Ukraine's CHP CAPEX has no local validation (LOW), so the model deducts points; a quote for the winning route replaces that estimate.
+    const ua: ProjectInput = { ...base, countryCode: "UA", regionId: UA.regions[0].id, energy: { ...base.energy, electricityPriceLocalPerKwh: 8.3 } };
+    const uaPlain = run(ua);
+    expect(uaPlain.bestRoute).toBe("chp");
+    expect((uaPlain.confidence.factors ?? []).some((f) => f.id === "capex_unvalidated")).toBe(true);
+    const uaQuoted = run({ ...ua, finance: { capexQuoteLocal: uaPlain.routeMatrix.chp.base.capex.totalEur * UA_FX * 0.9, capexQuoteRoute: "chp" } });
+    expect((uaQuoted.confidence.factors ?? []).some((f) => f.id === "capex_unvalidated")).toBe(false);
+    expect(uaQuoted.confidence.score).toBeGreaterThan(uaPlain.confidence.score);
+  });
+
+  it("does not let a CHP quote price the biomethane route, and says so when another route wins", () => {
+    const a = run({ ...base, finance: { capexQuoteLocal: modelledChp * 3, capexQuoteRoute: "chp" } });
+    expect(a.bestRoute).not.toBe("chp");
+    expect(a.routeMatrix.biomethane.base.capex.modelledEur).toBeUndefined();
+    expect(a.warnings.join(" ")).toMatch(/quote is for the CHP route/);
+  });
+
+  it("flags a quote far from the model as a likely currency or scope slip", () => {
+    const slip = run({ ...base, finance: { capexQuoteLocal: modelledChp * 0.05, capexQuoteRoute: "chp" } });
+    expect(slip.warnings.join(" ")).toMatch(/supplier quote .* check the currency/);
+    expect(slip.confidence.factors?.some((f) => f.id === "price_units")).toBe(true);
+    expect(run({ ...base, finance: { capexQuoteLocal: modelledChp * 1.3, capexQuoteRoute: "chp" } }).warnings.join(" ")).not.toMatch(/check the currency/);
+  });
+
+  it("is ignored for process-based inputs", () => {
+    const wastewater = EXAMPLES.find((e) => e.id === "ca_brewery_cod")!.input;
+    const a = run({ ...wastewater, finance: { capexQuoteLocal: 1, capexQuoteRoute: "chp" } });
+    expect(a.scenarios.base.capex.modelledEur).toBeUndefined();
   });
 });

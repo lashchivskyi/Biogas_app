@@ -155,6 +155,8 @@ const et: Translation = {
     q6: "6–8. Kui palju energiat te tarbite?",
     elecBill: "Kuu elektriarve", elecBillHint: "Või sisestage allpool kWh aastas. Kui hind pole teada, arvestame ≈ {price} kWh kohta.",
     elecKwh: "…või aastane tarbimine", elecPrice: "Elektri hind arvel (kui teada)", elecPriceHint: "Käibemaksuta, koos võrgutasuga. Tõstab usaldusväärsust.",
+    refineTitle: "Valikuline: lepingud ja rahastamine", refineHint: "Jätke tühjaks, et kasutada riiklikke hinnanguid. Sisestatud väärtused märgitakse aruandes teie enda andmeteks.", exportPrice: "Müüdava elektri hind (leping / tariif)", heatPrice: "Hind, mida soojuse ostja maksab kWh soojuse eest", operatorWage: "Operaatori tunnikulu koos maksudega", debtShare: "Laenuga rahastatav osa investeeringust", debtRate: "Laenu aastane intressimäär", debtTenor: "Laenu tähtaeg",
+    capexQuote: "Seadme võtmed-kätte koguhind tarnija pakkumise järgi", capexQuoteRoute: "Pakkumine kehtib selle tehnoloogia kohta",
     grid: "Võrguühendus?", gridToggle: "Jah, ühendatud (ülejääki saab müüa)",
     gasToggle: "7. Kasutame maagaasi", gasBill: "Kuu gaasiarve", gasBillHint: "Kui hind pole teada, arvestame ≈ {price} m³ kohta.", gasM3: "…või gaas aastas", gasPrice: "Gaasi hind (kui teada)",
     heatQ: "8. Kas vajate soojust?", heatQhint: "Soojust arvestatakse ainult seal, kus seda tegelikult kasutatakse.", heatKwh: "Aastane soojusvajadus (kui teada)", heatKwhHint: "Kui väli on tühi ja gaas on sisestatud, tuletame selle gaasist. Ilma teadaoleva soojusvajaduseta me soojussäästu ei arvesta.",

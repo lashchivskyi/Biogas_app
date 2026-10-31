@@ -146,6 +146,10 @@ export interface EnergyInput {
   heatNeed: HeatNeed;
   heatKwhYear?: number;
   hasGridConnection: boolean;
+  /** Contracted or expected price for exported power (PPA, feed-in), local currency per kWh. Replaces the wholesale price. */
+  exportPriceLocalPerKwh?: number;
+  /** Price the heat buyer pays, local currency per kWh thermal. Replaces the gas-parity value of heat. */
+  heatPriceLocalPerKwh?: number;
 }
 
 export interface SiteInput {
@@ -161,6 +165,17 @@ export interface SiteInput {
 export interface FinanceInput {
   /** Share of CAPEX financed by debt; default from country adapter. */
   debtShare?: number;
+  /** Annual loan interest rate as a fraction (0.08 = 8 %), nominal in the project currency. */
+  debtRate?: number;
+  debtTenorYears?: number;
+  /** Fully loaded cost of one plant-operator hour, local currency. Replaces the national wage estimate. */
+  operatorWageLocalPerHour?: number;
+  /**
+   * Supplier's total installed price for ONE technology, local currency (digester, gas use, grid connection, engineering,
+   * contingency; no grants). Replaces the modelled CAPEX of that route only; the other routes stay modelled.
+   */
+  capexQuoteLocal?: number;
+  capexQuoteRoute?: RouteId;
 }
 
 export interface ProjectInput {
@@ -229,6 +244,8 @@ export interface FeedstockSummary {
   manureShareVs: number;
   poultryShareVs: number;
   fatShareVs: number;
+  /** Share of VS from streams that are fat/grease themselves (grease-trap fat, DAF sludge), not merely fat-containing residues. */
+  fatDominantShareVs: number;
   abpTonnesYear: number;
   inhibitionFactor: number;
   warnings: string[];
@@ -309,6 +326,8 @@ export interface EnergyBalance {
 export interface CapexBreakdown {
   lines: { id: string; label: string; eur: number }[];
   totalEur: number;
+  /** Set when the total comes from the client's supplier quote: what the model alone would have estimated (same scenario). */
+  modelledEur?: number;
 }
 
 export interface OpexAndRevenue {

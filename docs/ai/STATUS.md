@@ -1,37 +1,40 @@
 # Status
 
-Updated 2026-10-31. Rewrite this file at the end of a task; keep it under 40 lines.
-
+Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.0; data review date 2026-10-30. Tests, lint, typecheck, build pass.
-- Market data: official sources for all 33 countries except the LOW items in DATA-SOURCES.md.
-- Regional data: US (51), CA (13), BR (27), IN (34), MX (32), IT (7 price zones); cities carry admin1 codes.
-- CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
-- Methodology tab: USD display; country-table numeric widths include six decimal places and a non-shrinking confidence dot; original table layout retained.
-- Data-confidence score is itemised (`confidence.factors`, client vs model) and explained in a
-  report panel with points per missing input; the score formula and verdicts are unchanged.
-- Reference examples (39): 9 strong, 11 possible, 9 weak, 6 too small, 4 insufficient. Most
-  model a prepared client: lab DM/VS/BMP at catalogue-typical values, metered manure, reused storage.
-- AI knowledge architecture: AGENTS.md + CLAUDE.md + docs/ai + rules + skills.
+- Model 0.6.1; data review 2026-10-30. Tests (885), lint, typecheck, build pass.
+- Market data: official sources for 33 countries except LOW items in DATA-SOURCES.md. Regional data: US, CA, BR,
+  IN, MX, IT via admin1 codes. CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
+- Stress tests 2026-10-31, three passes (~300 cases) fixed: own-slurry storage, dilute effluent ≤ 1 month,
+  yield sensitivity as built, grease never STRONG, warm climates 3 months, unit-slip warnings (LOW confidence),
+  delivered manure's digestate returned to suppliers, logistics = cash-flow haulage.
+- Follow-ups (same day): whey / pot ale / residues ≤ 6 % DM count as effluent (no 6–9 month digestate store);
+  operator time 22.5·kWe^0.72 (Walla & Schneeberger 2008); optional client inputs (export price, heat price,
+  operator cost, loan share/rate/term; loan moves DSCR only); straw milling electricity 66.6 kWh/t (Dell'Omo 2025);
+  server validation bounds raised for weak currencies (VN could not submit its own electricity price);
+  compare-scenarios converts example prices by FX abroad (new baseline: 1 287 runs, 0 errors); supplier quote
+  (installed price + technology) replaces the CAPEX of that route only, scenarios ±20/10 % still apply.
 
 ## Next (highest value first)
 
-1. Client inputs that the model now takes from defaults: export price / PPA, operator wage,
-   heat price and buyer, vendor CAPEX quote, loan rate and tenor, lab BMP.
-2. Spain: gate biomethane grid injection for the Canary Islands (no gas grid; verify).
-3. Kazakhstan gas ceilings and Canadian provincial gas from official texts (browser access).
-4. Heat value in provinces/regions without a gas grid (oil/propane parity instead of gas).
-5. Argentina and Kazakhstan regional electricity by distributor.
+1. Dilute streams use CSTR sizing in cool regions (HRT 25 d); UASB 650 €/m³ is judgement, only −20 % CAPEX.
+   Needs a sourced UASB/lagoon €/m³ (none found twice).
+2. Labour curve is checked against FNR 2008 (3–7 h/kWe) up to 1 MW only; above that and for waste plants with
+   reception/pasteurisation it is extrapolated. DBFZ EEG-Monitoring 2023 Tab. 5-4 not retrievable by search.
+3. Lipid share per fat-rich type (slaughter, fish, olive): not found. Try full texts: Hejnfelt & Angelidaki 2009,
+   Biomass Bioenergy 33:1046; Alburquerque et al. 2004, Bioresour Technol 91:195 (Table 1). Whole-stream flag stays.
+4. Straw: mill CAPEX, steam/alkali steps and a delivered straw price are not modelled (only milling kWh).
+   Press quotes 130–150 €/t (Lower Saxony 2025) are not an accepted source; Zenodo "Straw supply costs for
+   Germany NUTS3 2010–2020" might be.
+5. Spain Canary injection gate; KZ gas ceilings; CA provincial gas; off-grid heat parity; AR/KZ regional power.
 
 ## Known weaknesses
 
-- India: base CBG value is gas parity and CAPEX is high for small dung plants, so the Punjab
-  cooperative stays weak; only the GOBARdhan support case changes it. Check Indian CAPEX at < 1 MW.
-- Process examples with `basisDate` after the market-data date fall to INSUFFICIENT_DATA silently.
-
-- Small manure-only plants: CAPEX 20–35 % above DBFZ (gas-tight storage assumed).
-- Open digestate storage costed as concrete; earthen lagoons are cheaper.
-- Model-side confidence deductions (price proxy −6, unvalidated CAPEX −8, scale −8) still count
-  toward the verdict gate (LOW blocks STRONG); decide whether the gate should use client data only.
-- Canada electricity is the 2025 Hydro-Québec comparison (2026 edition not published).
+- Judgement values (LOW): warm-climate 3-month store, `MANURE_RETURN_HAUL` 1.5, price plausibility bands.
+- Biomethane price in RO, GR, RS, MD, BG, MX, TH, VN, TR is a LOW local estimate (0.40 €/Nm³).
+- Catalogue yields ≈ KTBL reference (cattle slurry 209 vs 200 L CH₄/kg VS); not confirmed from Faustzahlen.
+- Best route can be a boiler with no heat buyer when all routes lose (US/CA dairies); warned, but its
+  sensitivities look odd (yield −20 % raises NPV because unsold gas only costs money).
+- `dynamicPaybackYears` is undiscounted (not in the UI). India CBG = gas parity; Canada power 2025 edition.
+- Model-side confidence deductions still lower the level (LOW blocks STRONG): decide if that stays.

@@ -155,6 +155,8 @@ const vi: Translation = {
     q6: "6–8. Bạn dùng bao nhiêu năng lượng?",
     elecBill: "Hóa đơn tiền điện mỗi tháng", elecBillHint: "Hoặc nhập số kWh mỗi năm bên dưới. Nếu không rõ giá, chúng tôi dùng ≈ {price}/kWh để quy đổi.",
     elecKwh: "…hoặc lượng điện tiêu thụ mỗi năm", elecPrice: "Giá điện trên hóa đơn (nếu biết)", elecPriceHint: "Chưa VAT, đã gồm phí truyền tải. Giúp tăng độ tin cậy.",
+    refineTitle: "Tùy chọn: hợp đồng và tài chính", refineHint: "Để trống để dùng ước tính quốc gia. Giá trị bạn nhập sẽ được đánh dấu là dữ liệu của bạn trong báo cáo.", exportPrice: "Giá điện bạn bán (hợp đồng / biểu giá)", heatPrice: "Giá bên mua nhiệt trả cho mỗi kWh nhiệt", operatorWage: "Chi phí mỗi giờ của người vận hành, gồm thuế và phụ cấp", debtShare: "Tỷ lệ vốn đầu tư được vay", debtRate: "Lãi suất vay mỗi năm", debtTenor: "Thời hạn vay",
+    capexQuote: "Tổng giá trọn gói của nhà máy theo báo giá nhà cung cấp", capexQuoteRoute: "Báo giá này dành cho công nghệ",
     grid: "Có đấu nối lưới điện?", gridToggle: "Có, đã đấu nối (có thể bán điện dư)",
     gasToggle: "7. Chúng tôi dùng khí đốt / gas", gasBill: "Hóa đơn gas mỗi tháng", gasBillHint: "Nếu không rõ giá, chúng tôi dùng ≈ {price}/m³ để quy đổi.", gasM3: "…hoặc lượng gas mỗi năm", gasPrice: "Giá gas (nếu biết)",
     heatQ: "8. Bạn có cần nhiệt không?", heatQhint: "Nhiệt chỉ được tính ở nơi thực sự sử dụng.", heatKwh: "Nhu cầu nhiệt mỗi năm (nếu biết)", heatKwhHint: "Nếu để trống mà có nhập gas, chúng tôi suy ra từ lượng gas. Nếu không có số liệu về nhu cầu nhiệt, chúng tôi không tính khoản tiết kiệm này.",

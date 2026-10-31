@@ -2,21 +2,49 @@
  * Before/after evidence for any data or formula change: every example in every country.
  * Usage: npx tsx scripts/compare-scenarios.ts --save <file.json>
  *        npx tsx scripts/compare-scenarios.ts --diff <before.json> <after.json>
+ * Prices in an example are converted from its home currency, so a foreign run keeps the same EUR value.
  * Keep snapshots in the system temp folder, not in the repository.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { assess } from "../src/core";
 import { EXAMPLES } from "../src/core/examples";
 import { COUNTRIES, COUNTRY_ORDER } from "../src/countries";
+import type { ProjectInput } from "../src/core/types";
 
 type Row = { route?: string; npv?: number; irr?: number | null; capex?: number; verdict?: string; confidence?: number; error?: string };
+
+const fxOf = (code: string) => COUNTRIES[code].params.find((p) => p.id === "econ.fx_local_per_eur")!.value;
+const PRICE_FIELDS = {
+  energy: ["electricityPriceLocalPerKwh", "gasPriceLocalPerM3", "exportPriceLocalPerKwh", "heatPriceLocalPerKwh"],
+  finance: ["operatorWageLocalPerHour"],
+  line: ["purchasePricePerTonneLocal", "currentDisposalCostPerTonneLocal", "opportunityValuePerTonneLocal"],
+  process: ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "upgradingCapexLocal", "gasPriceLocalNm3", "avoidedTreatmentLocalM3"],
+} as const;
+
+/** An example written in its home currency, run in another country: money fields keep their EUR value, not their number. */
+function inCountry(input: ProjectInput, code: string): ProjectInput {
+  const k = fxOf(code) / fxOf(input.countryCode);
+  const scale = <T extends object>(o: T | undefined, keys: readonly string[]): T | undefined => {
+    if (!o) return o;
+    const out = { ...o } as Record<string, unknown>;
+    for (const key of keys) if (typeof out[key] === "number") out[key] = (out[key] as number) * k;
+    return out as T;
+  };
+  return {
+    ...input,
+    energy: scale(input.energy, PRICE_FIELDS.energy)!,
+    finance: scale(input.finance, PRICE_FIELDS.finance),
+    feedstocks: input.feedstocks.map((f) => scale(f, PRICE_FIELDS.line)!),
+    process: scale(input.process, PRICE_FIELDS.process),
+  };
+}
 
 function snapshot(): Record<string, Row> {
   const out: Record<string, Row> = {};
   for (const e of EXAMPLES) for (const code of COUNTRY_ORDER) {
     const c = COUNTRIES[code];
     try {
-      const a = assess({ ...e.input, countryCode: code, regionId: c.regions[0]?.id }, c);
+      const a = assess({ ...inCountry(e.input, code), countryCode: code, regionId: c.regions[0]?.id }, c);
       const f = a.scenarios.base.fin;
       out[`${e.id}|${code}`] = { route: a.bestRoute, npv: Math.round(f.npvEur), irr: f.irr === null ? null : +f.irr.toFixed(4), capex: Math.round(f.capexEur), verdict: a.verdict.id, confidence: a.confidence.score };
     } catch (err) {

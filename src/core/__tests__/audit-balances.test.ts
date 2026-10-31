@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { assess, buildParams } from "../assess";
 import { HOURS_IN_MONTH } from "../climate";
 import { EXAMPLES } from "../examples";
+import { digestateStorageMonths } from "../digester";
+import { projectRegion } from "../location";
 import { dryBiogasMassKg } from "../massBalance";
 import { SCENARIOS } from "../scenarios";
 import { getCountry, UA } from "@/countries";
@@ -20,8 +22,7 @@ describe("engineering and financial reconciliation", () => {
         expect(sum(feed.monthlyVsTonnes), `${id}: VS`).toBeCloseTo(feed.vsTonnesYear, 6);
         expect(sum(feed.monthlyCh4M3), `${id}: methane`).toBeCloseTo(feed.ch4M3Year, 6);
         const params = buildParams(getCountry(input.countryCode));
-        const storageMonths = params.get("eng.storage_months");
-        const months = r.design.tech.digestion === "high_rate" || r.design.tech.digestion === "covered_lagoon" ? Math.min(storageMonths, 1) : storageMonths;
+        const months = digestateStorageMonths({ params, region: projectRegion(input, getCountry(input.countryCode)) }, feed, r.design.tech.digestion);
         if (!r.process) expect(feed.tonnesYear - dryBiogasMassKg(feed, params) / 1000, `${id}: dry-gas mass balance`)
           .toBeCloseTo(r.design.storageVolumeM3 * 12 / months, 4);
         else if (r.process.kind === "wastewater" || r.process.kind === "residue") {

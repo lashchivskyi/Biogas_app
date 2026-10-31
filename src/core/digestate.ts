@@ -1,4 +1,5 @@
 import type { RunContext } from "./context";
+import { storageMonthsFor } from "./digester";
 import { digestateTonnes } from "./massBalance";
 import type { DigestateAssessment, FeedstockSummary } from "./types";
 
@@ -6,6 +7,8 @@ import type { DigestateAssessment, FeedstockSummary } from "./types";
  * Digestate is an asset only when there is land to take its nutrients and the farm would otherwise
  * buy mineral fertiliser. The model credits only INCREMENTAL value: own manure was already spread
  * before digestion, so only the better N availability counts; imported waste brings new nutrients.
+ * Delivered manure counts as returned: its digestate goes back to the supplying farms on the return leg
+ * (already in the haulage cost, `MANURE_RETURN_HAUL`) and onto the land that took that manure before.
  */
 export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): DigestateAssessment {
   if (ctx.input.process) return { basis: ctx.input.process.kind === "residue" ? "process_residuals" : "not_applicable", tonnesYear: ctx.input.process.kind === "residue" ? digestateTonnes(feed,ctx.params) : 0, nKgYear: ctx.input.process.kind === "residue" ? feed.nKgYear : 0, landRequiredHa: 0, landAvailableHa: null, adequacy: "UNKNOWN", excessShare: 0, fertiliserValueEurYear: 0, handlingCostEurYear: 0, netValueEurYear: 0, storageMonthsRequired: 0, advice: [], status: "NEUTRAL" }; // Disposal costs live in the process module; no fertiliser credit or land-spreading claim.
@@ -20,11 +23,13 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const pK = p.get("econ.fert_k2o_eur_kg");
   const handling = p.get("econ.digestate_handling_eur_t");
   const excessCost = p.get("econ.digestate_excess_eur_t");
-  const storageMonths = p.get("eng.storage_months");
+  const storageMonths = storageMonthsFor(ctx);
 
   const tonnes = digestateTonnes(feed, p);
   const nRet = feed.nKgYear * retention;
-  const required = nRet / nLimit;
+  const returned = (l: FeedstockSummary["lines"][number]) => l.delivered && l.category === "manure";
+  const nPlaced = feed.lines.filter((l) => !returned(l)).reduce((a, l) => a + l.nKgYear, 0) * retention;
+  const required = nPlaced / nLimit;
   const land = ctx.input.site.landHa;
   const known = land !== undefined && land >= 0;
 
@@ -43,7 +48,7 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   // is not an additional handling burden: digestion changes its form, not where it goes.
   const ownSpread = new Set(ctx.input.feedstocks.filter((f) => !f.delivered && f.handling === "field_spreading").map((f) => f.id));
   for (const l of feed.lines) {
-    const imported = l.delivered || (l.category !== "manure" && !ownSpread.has(l.id));
+    const imported = !returned(l) && (l.delivered || (l.category !== "manure" && !ownSpread.has(l.id)));
     if (imported) {
       importedTonnes += l.tonnesYear;
       valueImported += l.nKgYear * retention * nCredit * pN + l.p2o5KgYear * pkCredit * pP + l.k2oKgYear * pkCredit * pK;
@@ -62,6 +67,7 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const advice: string[] = [];
   if (adequacy === "UNKNOWN") advice.push(T("Enter the land area available for spreading: without it digestate is a potential liability.", "Вкажіть площу полів, на які можна вносити дигестат: без цього вартість дигестату — потенційний борг."));
   if (adequacy === "SHORT") advice.push(T(`Not enough land: ≈ ${req} ha needed at ${nLimit} kg N/ha. Surplus digestate is a cost (agreements with neighbours, separation, pelletising).`, `Земель недостатньо: потрібно ≈ ${req} га за лімітом ${nLimit} кг N/га. Надлишок дигестату — витрата (договори з сусідніми господарствами, сепарація, гранулювання).`));
+  if (feed.lines.some(returned)) advice.push(T("Digestate from delivered manure is assumed to go back to the supplying farms (return haul is in the transport cost). Fix this in the supply contracts; if farms refuse it, the plant needs its own outlet.", "Дигестат із привізного гною повертається господарствам-постачальникам (зворотний рейс враховано у вартості перевезення). Закріпіть це в договорах постачання; якщо господарства відмовляться, установці потрібен власний збут."));
   advice.push(T(`Digestate storage for ${storageMonths} months for the closed spreading season; keep ≈ 150 days (incl. the digester) gas-tight, otherwise methane and N are lost.`, `Сховище дигестату на ${storageMonths} міс. на період заборони внесення; ≈ 150 діб (разом із реактором) — газонепроникно, інакше втрачаються метан і азот.`));
   advice.push(T("Spread by injection or trailing hose (not splash plate): less odour and ammonia loss.", "Внесення — інжектором або стрічкове (не розкидання): менше запаху та втрат аміаку."));
 

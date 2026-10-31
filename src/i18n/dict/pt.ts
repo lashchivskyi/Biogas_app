@@ -155,6 +155,8 @@ const pt: Translation = {
     q6: "6–8. Quanta energia você consome?",
     elecBill: "Conta de luz por mês", elecBillHint: "Ou informe os kWh por ano abaixo. Sem o preço, usamos ≈ {price} por kWh.",
     elecKwh: "…ou consumo anual", elecPrice: "Tarifa de energia na fatura (se souber)", elecPriceHint: "Sem impostos, com distribuição. Aumenta a confiança.",
+    refineTitle: "Opcional: contratos e financiamento", refineHint: "Deixe em branco para usar as estimativas nacionais. O que indicar é assinalado como dado seu no relatório.", exportPrice: "Preço que recebe pela eletricidade vendida (contrato / tarifa)", heatPrice: "Preço que o comprador de calor paga por kWh de calor", operatorWage: "Custo por hora do operador, com impostos e encargos", debtShare: "Parte do investimento financiada por empréstimo", debtRate: "Taxa de juro anual do empréstimo", debtTenor: "Prazo do empréstimo",
+    capexQuote: "Preço total da instalação chave na mão, segundo a proposta do fornecedor", capexQuoteRoute: "A proposta refere-se a esta tecnologia",
     grid: "Conexão à rede?", gridToggle: "Sim, conectados (o excedente pode ser vendido)",
     gasToggle: "7. Usamos gás natural", gasBill: "Conta de gás por mês", gasBillHint: "Sem o preço, usamos ≈ {price} por m³.", gasM3: "…ou gás por ano", gasPrice: "Preço do gás (se souber)",
     heatQ: "8. Você precisa de calor?", heatQhint: "O calor só conta onde é realmente usado.", heatKwh: "Demanda de calor por ano (se souber)", heatKwhHint: "Se vazio e houver gás, estimamos pelo gás. Sem uma demanda quantificada, não contabilizamos economia com calor.",

@@ -155,6 +155,8 @@ const it: Translation = {
     q6: "6–8. Quanta energia consumate?",
     elecBill: "Bolletta elettrica mensile", elecBillHint: "Oppure indicate i kWh annui qui sotto. Se non conoscete il prezzo, usiamo ≈ {price} per kWh.",
     elecKwh: "…oppure consumo annuo", elecPrice: "Prezzo dell'elettricità in bolletta (se noto)", elecPriceHint: "IVA esclusa, oneri di rete inclusi. Migliora l'affidabilità.",
+    refineTitle: "Facoltativo: contratti e finanziamento", refineHint: "Lasciare vuoto per usare le stime nazionali. I valori inseriti sono indicati come vostri dati nel rapporto.", exportPrice: "Prezzo ottenuto per l'energia elettrica venduta (contratto / tariffa)", heatPrice: "Prezzo pagato dall'acquirente del calore per kWh di calore", operatorWage: "Costo orario dell'operatore, comprensivo di oneri", debtShare: "Quota dell'investimento finanziata con un prestito", debtRate: "Tasso di interesse annuo del prestito", debtTenor: "Durata del prestito",
+    capexQuote: "Prezzo totale chiavi in mano dell'impianto da offerta del fornitore", capexQuoteRoute: "L'offerta riguarda questa tecnologia",
     grid: "Allacciamento alla rete?", gridToggle: "Sì, allacciati (l'eccedenza si può vendere)",
     gasToggle: "7. Usiamo gas naturale", gasBill: "Bolletta del gas mensile", gasBillHint: "Se non conoscete il prezzo, usiamo ≈ {price} per m³.", gasM3: "…oppure gas all'anno", gasPrice: "Prezzo del gas (se noto)",
     heatQ: "8. Vi serve calore?", heatQhint: "Il calore conta solo dove viene davvero utilizzato.", heatKwh: "Fabbisogno di calore annuo (se noto)", heatKwhHint: "Se vuoto e il gas è indicato, lo ricaviamo dal gas. Senza un fabbisogno quantificato, non conteggiamo risparmi sul calore.",

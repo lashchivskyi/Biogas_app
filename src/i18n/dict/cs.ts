@@ -155,6 +155,8 @@ const cs: Translation = {
     q6: "6–8. Kolik energie spotřebujete?",
     elecBill: "Měsíční účet za elektřinu", elecBillHint: "Nebo níže zadejte kWh za rok. Neznáte-li cenu, počítáme s ≈ {price} za kWh.",
     elecKwh: "…nebo roční spotřeba", elecPrice: "Cena elektřiny z faktury (je-li známa)", elecPriceHint: "Bez DPH, včetně distribuce. Zvyšuje spolehlivost.",
+    refineTitle: "Volitelné: smlouvy a financování", refineHint: "Nechte prázdné pro použití národních odhadů. Zadané hodnoty jsou ve zprávě označeny jako vaše údaje.", exportPrice: "Cena za prodanou elektřinu (smlouva / tarif)", heatPrice: "Cena, kterou platí odběratel tepla za kWh tepla", operatorWage: "Náklady na hodinu operátora včetně daní a odvodů", debtShare: "Podíl investice financovaný úvěrem", debtRate: "Roční úroková sazba úvěru", debtTenor: "Doba splácení úvěru",
+    capexQuote: "Celková cena zařízení na klíč podle nabídky dodavatele", capexQuoteRoute: "Nabídka se týká této technologie",
     grid: "Připojení k síti?", gridToggle: "Ano, připojeno (přebytek lze prodat)",
     gasToggle: "7. Používáme zemní plyn", gasBill: "Měsíční účet za plyn", gasBillHint: "Neznáte-li cenu, počítáme s ≈ {price} za m³.", gasM3: "…nebo plyn za rok", gasPrice: "Cena plynu (je-li známa)",
     heatQ: "8. Potřebujete teplo?", heatQhint: "Teplo se počítá jen tam, kde se skutečně využije.", heatKwh: "Roční potřeba tepla (je-li známa)", heatKwhHint: "Pokud je prázdné a plyn je zadán, odvodíme ji z plynu. Bez vyčíslené potřeby tepla nezapočítáme úsporu.",

@@ -1,6 +1,6 @@
 import { DAYS_IN_MONTH, HOURS_IN_MONTH, meanTemp, substrateTempC } from "./climate";
 import type { RunContext } from "./context";
-import { FEEDSTOCKS } from "./feedstockData";
+import { FEEDSTOCKS, isEffluentLike } from "./feedstockData";
 import { digestateTonnes } from "./massBalance";
 import type { DigesterDesign, FeedstockSummary, TechnologyRecommendation } from "./types";
 
@@ -14,6 +14,19 @@ import type { DigesterDesign, FeedstockSummary, TechnologyRecommendation } from 
  * (UASB/EGSB-type) reactors.
  */
 type Kind = TechnologyRecommendation["digestion"];
+
+/** Closed-season storage: the national rule, but only an operational buffer where the climate allows spreading all year. */
+export function storageMonthsFor(ctx: Pick<RunContext, "params" | "region">): number {
+  const months = ctx.params.get("eng.storage_months");
+  return meanTemp(ctx.region.monthlyTempC) >= 20 ? Math.min(months, ctx.params.get("eng.storage_months_warm")) : months;
+}
+
+/** Months of digestate held on site: dilute effluent (vinasse, POME, whey) is treated or irrigated, so at most one month. */
+export function digestateStorageMonths(ctx: Pick<RunContext, "params" | "region">, feed: FeedstockSummary, digestion: Kind): number {
+  const diluteT = feed.lines.filter((l) => isEffluentLike(FEEDSTOCKS[l.typeId], l.dryMatterPct)).reduce((a, l) => a + l.tonnesYear, 0);
+  const effluent = digestion === "high_rate" || digestion === "covered_lagoon" || (feed.tonnesYear > 0 && diluteT / feed.tonnesYear > 0.5);
+  return effluent ? Math.min(storageMonthsFor(ctx), 1) : storageMonthsFor(ctx);
+}
 
 export function chooseDigestion(feed: FeedstockSummary, ctx: RunContext): Kind {
   const p = ctx.params;
@@ -101,7 +114,7 @@ export function recommendTechnology(feed: FeedstockSummary, ctx: RunContext, hrt
   );
 
   if (feed.poultryShareVs > 0.35) warnings.push(T("Poultry manure: limit its share, dilute, or use ammonia stripping — otherwise the process is inhibited.", "Птахівничий послід: обмежте частку, розводьте, або застосуйте відгонку аміаку — інакше процес гальмується."));
-  if (feed.fatShareVs > 0.25) warnings.push(T("Fat fraction above 25 % of organic matter — high risk of process failure.", "Жирова фракція > 25 % органічної речовини — високий ризик збою процесу."));
+  if (feed.fatShareVs > 0.25) warnings.push(T("Fat-rich residues (grease, slaughter, fish, olive streams) make up over 25 % of the organic matter. Their lipid share is not catalogued — measure ether extract: above ≈ 30 % of VS the process is at high risk of failure.", "Жиромісткі залишки (жири, відходи забою, риби, оливок) становлять понад 25 % органічної речовини. Частка ліпідів у каталозі не задана — виміряйте вміст жиру (ефірний екстракт): понад ≈ 30 % VS ризик збою процесу високий."));
   if (feed.lines.some((l) => l.typeId === "crop_straw")) warnings.push(T("Straw needs pretreatment; without it the yields are unrealistic.", "Солома потребує попередньої обробки; без неї виходи нереалістичні."));
 
   return { primary, digestion, temperature, stages, mode, reactor, hrtDays: hrt, reasons, warnings, alternatives };
@@ -117,7 +130,6 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   const headspace = p.get("eng.headspace_factor");
   const olrStd = p.get("eng.olr_max_kgvs_m3d");
   const olrHard = p.get("eng.olr_max_poultry_kgvs_m3d");
-  const storageMonths = p.get("eng.storage_months");
   const heatRecovery = p.get("eng.pasteurisation_heat_recovery");
   const pasteurTemp = p.get("eng.pasteurisation_temp_c");
 
@@ -181,19 +193,34 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   }
 
   const digestateT = digestateTonnes(feed, p);
-  // Dilute industrial effluent is typically treated & discharged/irrigated, not stored 6 months.
-  const months = digestion === "high_rate" || digestion === "covered_lagoon" ? Math.min(storageMonths, 1) : storageMonths;
+  // Dilute industrial effluent (vinasse, POME) is treated & discharged/irrigated, not stored for a closed season,
+  // whichever reactor digests it.
+  const months = digestateStorageMonths(ctx, feed, digestion);
   const storageRequired = (digestateT * months) / 12; // m³ (density ≈ 1)
   // Only the first (150 d − HRT) of digestate must stay gas-tight (TA Luft 2021 / VDI 3475); the rest of the
   // closed season can use open storage. Existing storage is covered first, then serves the open part.
   const hrtActual = qMax > 0 ? working / qMax : hrt;
   const gasTight = Math.min(storageRequired, (digestateT * Math.max(0, p.get("eng.gastight_retention_days") - hrtActual)) / 365);
-  const existing = Math.max(0, ctx.input.site.existingStorageM3 ?? 0);
+  // A farm's own liquid manure is already stored today (closed-season storage is a legal duty under the Nitrates
+  // Directive and national equivalents). Without an entered volume, that store is assumed to exist and only its
+  // gas-tight cover is costed; new storage is costed for the rest of the digestate.
+  const solidsDm = p.get("eng.wet_solids_feeding_dm_pct");
+  const ownSlurryT = feed.lines.filter((l) => l.category === "manure" && !l.delivered && l.dryMatterPct < solidsDm).reduce((a, l) => a + l.tonnesYear, 0);
+  const entered = ctx.input.site.existingStorageM3;
+  const assumedExisting = entered === undefined && feed.tonnesYear > 0 ? storageRequired * ownSlurryT / feed.tonnesYear : 0;
+  const existing = Math.max(0, entered ?? assumedExisting);
   const covered = Math.min(existing, gasTight);
   const newStorage = gasTight - covered;
   const openNew = Math.max(0, storageRequired - gasTight - (existing - covered));
 
   const tech = recommendTechnology(feed, ctx, hrt, digestion);
+  if (assumedExisting > 0) {
+    const m3 = Math.round(assumedExisting).toLocaleString("en-US");
+    tech.warnings.push(ctx.t(
+      `Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ ${m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about ${Math.round(p.get("eng.capex.storage_new_eur_m3"))} € per missing m³ before overheads.`,
+      `Обсяг наявного сховища не вказано: вважаємо, що теперішнє сховище гноївки вміщує власний гній ферми (≈ ${m3} м³), і рахуємо лише його газонепроникне накриття. Вкажіть реальний обсяг; якщо він менший, CAPEX зросте приблизно на ${Math.round(p.get("eng.capex.storage_new_eur_m3"))} € за кожен відсутній м³ до накладних витрат.`,
+    ));
+  }
 
   return {
     workingVolumeM3: working,

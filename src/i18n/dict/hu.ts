@@ -155,6 +155,8 @@ const hu: Translation = {
     q6: "6–8. Mennyi energiát használ?",
     elecBill: "Havi villanyszámla", elecBillHint: "Vagy adja meg alább az éves kWh-t. Ha az ár ismeretlen, ≈ {price}/kWh-val számolunk.",
     elecKwh: "…vagy éves fogyasztás", elecPrice: "Áramár a számlán (ha ismert)", elecPriceHint: "ÁFA nélkül, rendszerhasználati díjjal. Növeli a megbízhatóságot.",
+    refineTitle: "Opcionális: szerződések és finanszírozás", refineHint: "Hagyja üresen a nemzeti becslések használatához. A megadott értékeket a jelentés saját adatként jelöli.", exportPrice: "Az eladott villamos energia ára (szerződés / tarifa)", heatPrice: "A hővásárló által fizetett ár kWh hőenergiánként", operatorWage: "Üzemeltetői óradíj adókkal és járulékokkal együtt", debtShare: "A beruházás hitelből finanszírozott aránya", debtRate: "A hitel éves kamata", debtTenor: "A hitel futamideje",
+    capexQuote: "A létesítmény teljes kulcsrakész ára a szállítói ajánlat szerint", capexQuoteRoute: "Az ajánlat erre a technológiára vonatkozik",
     grid: "Hálózati csatlakozás?", gridToggle: "Igen, csatlakozunk (a többlet értékesíthető)",
     gasToggle: "7. Földgázt használunk", gasBill: "Havi gázszámla", gasBillHint: "Ha az ár ismeretlen, ≈ {price}/m³-rel számolunk.", gasM3: "…vagy éves gázfogyasztás", gasPrice: "Gázár (ha ismert)",
     heatQ: "8. Szüksége van hőre?", heatQhint: "A hő csak ott számít, ahol ténylegesen hasznosítják.", heatKwh: "Éves hőigény (ha ismert)", heatKwhHint: "Ha üres és van gázadat, abból származtatjuk. Számszerűsített hőigény nélkül nem számolunk hőmegtakarítással.",

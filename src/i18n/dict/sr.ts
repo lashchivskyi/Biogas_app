@@ -155,6 +155,8 @@ const sr: Translation = {
     q6: "6–8. Koliko energije trošite?",
     elecBill: "Mesečni račun za struju", elecBillHint: "Ili ispod unesite kWh godišnje. Ako ne znate cenu, računamo sa ≈ {price} po kWh.",
     elecKwh: "…ili godišnja potrošnja", elecPrice: "Cena struje sa računa (ako je poznata)", elecPriceHint: "Bez PDV-a, sa mrežnim troškovima. Povećava pouzdanost.",
+    refineTitle: "Opciono: ugovori i finansiranje", refineHint: "Ostavite prazno da se koriste nacionalne procene. Uneto se u izveštaju označava kao vaši podaci.", exportPrice: "Cena prodate električne energije (ugovor / tarifa)", heatPrice: "Cena koju kupac toplote plaća po kWh toplote", operatorWage: "Trošak sata operatera sa porezima i doprinosima", debtShare: "Udeo investicije finansiran kreditom", debtRate: "Godišnja kamatna stopa kredita", debtTenor: "Rok otplate kredita",
+    capexQuote: "Ukupna cena postrojenja „ključ u ruke“ prema ponudi dobavljača", capexQuoteRoute: "Ponuda se odnosi na ovu tehnologiju",
     grid: "Priključak na mrežu?", gridToggle: "Da, priključeni smo (višak se može prodati)",
     gasToggle: "7. Koristimo prirodni gas", gasBill: "Mesečni račun za gas", gasBillHint: "Ako ne znate cenu, računamo sa ≈ {price} po m³.", gasM3: "…ili gas godišnje", gasPrice: "Cena gasa (ako je poznata)",
     heatQ: "8. Da li vam treba toplota?", heatQhint: "Toplota se računa samo tamo gde se zaista koristi.", heatKwh: "Godišnja potreba za toplotom (ako je poznata)", heatKwhHint: "Ako je prazno, a gas je unet, izvodimo je iz gasa. Bez iskazane potrebe za toplotom ne računamo uštedu.",

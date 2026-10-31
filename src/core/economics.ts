@@ -40,7 +40,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const kwEq = route === "chp" ? energy.chpKwEl : (energy.gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
 
   const selfShare = demand.electricityPriceKnown ? p.get("eng.invoice_variable_share") : p.get("econ.self_consumption_variable_share");
-  const exportPrice = p.get("econ.electricity_spot_eur_kwh") * p.get("econ.export_haircut") * scenario.energyPriceMult * mods.energyPrice;
+  // A contracted export price replaces wholesale × haircut (the haircut models selling at the market).
+  const exportPrice = ((input.energy.exportPriceLocalPerKwh ?? 0) > 0 ? (input.energy.exportPriceLocalPerKwh as number) / ctx.fx : p.get("econ.electricity_spot_eur_kwh") * p.get("econ.export_haircut")) * scenario.energyPriceMult * mods.energyPrice;
   const bmKey = scenario.biomethanePriceKey;
   // Preserve the registry energy price when a custom treatment train has a different product purity.
   const marketBm = p.get(`econ.biomethane_price_${bmKey}_eur_nm3`) * mods.energyPrice * (energy.biomethaneCh4Share ?? p.get("eng.biomethane_ch4_purity")) / p.get("eng.biomethane_ch4_purity");
@@ -91,8 +92,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const ox = (id: string, label: string, eur: number) => {
     if (Math.abs(eur) > 0.5) opex.push({ id, label, eur });
   };
-  const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_per_kw") * Math.max(kwEq, 0));
-  ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio") * opexMult);
+  const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_coef") * Math.pow(Math.max(kwEq, 0), p.get("eng.opex.labour_hours_exp")));
+  ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * ((input.finance?.operatorWageLocalPerHour ?? 0) > 0 ? (input.finance!.operatorWageLocalPerHour as number) / ctx.fx : p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio")) * opexMult);
   ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp").reduce((a, l) => a + l.eur, 0);
@@ -156,8 +157,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
     opexEsc: p.get("econ.opex_escalation"),
     rampYear1: p.get("eng.rampup_year1"),
     debtShare,
-    debtRate: p.get("econ.debt_interest"),
-    debtTenor: p.get("econ.debt_tenor_years"),
+    debtRate: input.finance?.debtRate ?? p.get("econ.debt_interest"),
+    debtTenor: input.finance?.debtTenorYears ?? p.get("econ.debt_tenor_years"),
   });
 
   return {

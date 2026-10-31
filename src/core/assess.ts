@@ -10,6 +10,7 @@ import { customerDemand } from "./demand";
 import { assessDigestate } from "./digestate";
 import { classifyPlant, runScenarioRoute } from "./economics";
 import { ENGINEERING_MAP } from "./engineeringParams";
+import { PLAUSIBLE_DISPOSAL_EUR_T, PLAUSIBLE_GATE_FEE_EUR_T, PLAUSIBLE_PURCHASE_EUR_T } from "./feedstock";
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
 import { Params, prov, toMap } from "./params";
@@ -56,6 +57,11 @@ function bisect(f: (x: number) => number, lo: number, hi: number): number | null
   }
   return (a + b) / 2;
 }
+
+/** Customer energy prices more than this factor above the national business price (or below it, for gas) are flagged as likely unit slips (judgement). */
+const PRICE_BAND = 3;
+/** A supplier CAPEX quote more than this factor above or below the model's own estimate is flagged (judgement). */
+const QUOTE_BAND = 2.5;
 
 export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string } = {}): Assessment {
   if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
@@ -106,11 +112,18 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     `USER_INPUT ${input.energy.electricityPriceLocalPerKwh} ${country.currency}/kWh / FX ${fx}; ${params.prov("econ.fx_local_per_eur").source}. Invoice date not supplied; energy/demand split assumed separately.`, "MEDIUM",
     { country: country.code, date: "undated", origin: "USER_INPUT" },
   ));
-  if (demand.gasPriceKnown) marketEvidence.push(prov(
-    "econ.heat_value_eur_kwh_th", "Useful heat displaced at customer gas price", demand.heatValueEurKwh, "EUR/kWh th", "CALCULATION",
-    `USER_INPUT ${input.energy.gasPriceLocalPerM3} ${country.currency}/m3 / FX ${fx} / assumed natural-gas LHV / boiler efficiency. Invoice and calorific value not independently verified.`, "MEDIUM",
-    { country: country.code, date: "undated", origin: "USER_INPUT" },
-  ));
+  const userEvidence = (id: string, label: string, valueEur: number, unit: string, source: string) =>
+    marketEvidence.push(prov(id, label, valueEur, unit, "CALCULATION", `USER_INPUT ${source} / FX ${fx}. Not independently verified (no contract or invoice date supplied).`, "MEDIUM", { country: country.code, date: "undated", origin: "USER_INPUT" }));
+  if (demand.heatValueKnown) {
+    const direct = (input.energy.heatPriceLocalPerKwh ?? 0) > 0;
+    userEvidence("econ.heat_value_eur_kwh_th", direct ? "Heat price agreed with the buyer" : "Useful heat displaced at customer gas price", demand.heatValueEurKwh, "EUR/kWh th",
+      direct ? `${input.energy.heatPriceLocalPerKwh} ${country.currency}/kWh th` : `${input.energy.gasPriceLocalPerM3} ${country.currency}/m3 / assumed natural-gas LHV / boiler efficiency`);
+  }
+  if ((input.energy.exportPriceLocalPerKwh ?? 0) > 0 && base.energy.elExportedKwh > 0) userEvidence("econ.electricity_spot_eur_kwh", "Customer export price (PPA / tariff)", input.energy.exportPriceLocalPerKwh! / fx, "EUR/kWh", `${input.energy.exportPriceLocalPerKwh} ${country.currency}/kWh`);
+  if ((input.finance?.operatorWageLocalPerHour ?? 0) > 0) userEvidence("econ.operator_wage_eur_h", "Customer operator cost per hour", input.finance!.operatorWageLocalPerHour! / fx, "EUR/h", `${input.finance!.operatorWageLocalPerHour} ${country.currency}/h`);
+  const quoteApplies = base.capex.modelledEur !== undefined;
+  if (quoteApplies) userEvidence("econ.capex_quote_eur", `Supplier quote for the ${bestRoute} route (replaces the modelled CAPEX)`, base.capex.totalEur, "EUR", `${input.finance!.capexQuoteLocal} ${country.currency} installed, scenario multiplier 1.0 in base case`);
+  if (input.finance?.debtRate !== undefined) userEvidence("econ.debt_interest", "Customer loan interest rate", input.finance.debtRate, "—", `${(input.finance.debtRate * 100).toFixed(1)} %`);
   const actualEvidence = new Map(selectedParams.usedIds().map((id) => [id, params.prov(id)]));
   for (const p of [...marketEvidence, ...(base.process?.provenance ?? [])]) actualEvidence.set(p.id, p);
   const dataAudit: NonNullable<Assessment["dataAudit"]> = {
@@ -125,7 +138,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     if (id === "econ.electricity_retail_eur_kwh") return !demand.electricityPriceKnown;
     if ((id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share") && base.energy.elSelfConsumedKwh <= 0) return false;
     if (id.startsWith("econ.fert_")) return base.opexRev.revenue.some((line) => line.id === "digestate" && line.eur > 0);
-    return id.startsWith("econ.capex_factor_") || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share";
+    return (id.startsWith("econ.capex_factor_") && !quoteApplies) || id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share";
   });
   const parameterSensitivity = rangeIds.map((id) => {
     const { low, high, basis } = params.prov(id).range!;
@@ -172,8 +185,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   ];
   const sensitivity: SensitivityItem[] = tests.map(([id, label, m]) => {
     let r = run(bestRoute, "base", { ...NO_MODS, ...m });
-    // Feedstock lost after construction: the plant was built for the base case, so CAPEX stays as built.
-    if (m.feedstock !== undefined && r.capex.totalEur > 0) r = run(bestRoute, "base", { ...NO_MODS, ...m, capex: base.capex.totalEur / r.capex.totalEur });
+    // Feedstock or yield shortfall shows up after construction: the plant was built for the base case, so CAPEX stays as built.
+    if ((m.feedstock !== undefined || m.methaneYield !== undefined) && r.capex.totalEur > 0) r = run(bestRoute, "base", { ...NO_MODS, ...m, capex: base.capex.totalEur / r.capex.totalEur });
     return {
       id,
       label,
@@ -238,11 +251,35 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
 
   const priceIds: string[] = [];
   if (!demand.electricityPriceKnown && (base.energy.elSelfConsumedKwh > 0 || base.energy.elPurchasedKwh > 0)) priceIds.push("econ.electricity_retail_eur_kwh");
-  if (base.energy.elExportedKwh > 0) priceIds.push("econ.electricity_spot_eur_kwh");
-  if (!demand.gasPriceKnown && (base.energy.heatUsefulKwh > 0 || base.energy.heatExternalPurchasedKwh > 0)) priceIds.push("econ.heat_value_eur_kwh_th");
+  if (base.energy.elExportedKwh > 0 && !((input.energy.exportPriceLocalPerKwh ?? 0) > 0)) priceIds.push("econ.electricity_spot_eur_kwh");
+  if (!demand.heatValueKnown && (base.energy.heatUsefulKwh > 0 || base.energy.heatExternalPurchasedKwh > 0)) priceIds.push("econ.heat_value_eur_kwh_th");
   if (bestRoute === "biomethane") priceIds.push("econ.biomethane_price_base_eur_nm3");
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
-  const quality = assessQuality(input, base, demand, T, { currency: country.currency, profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: params.prov(capexId).confidence === "LOW" });
+  // Entered prices far from the market usually mean a unit slip (ct vs €, € vs local currency, per MWh vs per kWh).
+  // Electricity: large consumers on wholesale contracts pay well below the business tariff, so the floor is half the spot price.
+  const local = (eur: number) => (eur * fx).toPrecision(3);
+  const priceSlips: string[] = [];
+  const elLow = params.get("econ.electricity_spot_eur_kwh") / 2, elHigh = params.get("econ.electricity_retail_eur_kwh") * PRICE_BAND;
+  if (demand.electricityPriceKnown && (demand.electricityPriceEurKwh < elLow || demand.electricityPriceEurKwh > elHigh)) priceSlips.push(T(`The entered electricity price (${input.energy.electricityPriceLocalPerKwh} ${country.currency}/kWh) is outside the plausible range for this country (${local(elLow)}–${local(elHigh)} ${country.currency}/kWh): check the unit (per kWh, ${country.currency}, not cents or MWh).`, `Введена ціна електроенергії (${input.energy.electricityPriceLocalPerKwh} ${country.currency}/кВт·год) поза правдоподібним діапазоном для країни (${local(elLow)}–${local(elHigh)} ${country.currency}/кВт·год): перевірте одиниці (за кВт·год, у ${country.currency}, не копійки чи МВт·год).`));
+  const heatMarket = params.get("econ.heat_value_eur_kwh_th");
+  if (demand.heatValueKnown && (demand.heatValueEurKwh < heatMarket / PRICE_BAND || demand.heatValueEurKwh > heatMarket * PRICE_BAND)) priceSlips.push(T(`The entered gas or heat price differs more than ${PRICE_BAND}× from the national business level (${local(heatMarket)} ${country.currency}/kWh of heat): check the unit (gas per m³, heat per kWh, in ${country.currency}).`, `Введена ціна газу чи тепла відрізняється більш ніж у ${PRICE_BAND} рази від національного рівня (${local(heatMarket)} ${country.currency}/кВт·год тепла): перевірте одиниці (газ — за м³, тепло — за кВт·год, у ${country.currency}).`));
+  const exportEur = (input.energy.exportPriceLocalPerKwh ?? 0) / fx;
+  if (exportEur > 0 && (exportEur < elLow || exportEur > elHigh)) priceSlips.push(T(`The entered export price (${input.energy.exportPriceLocalPerKwh} ${country.currency}/kWh) is outside the plausible range for this country (${local(elLow)}–${local(elHigh)} ${country.currency}/kWh): check the unit (per kWh, ${country.currency}, not cents or MWh).`, `Введена ціна продажу електроенергії (${input.energy.exportPriceLocalPerKwh} ${country.currency}/кВт·год) поза правдоподібним діапазоном для країни (${local(elLow)}–${local(elHigh)} ${country.currency}/кВт·год): перевірте одиниці (за кВт·год, у ${country.currency}, не копійки чи МВт·год).`));
+  const wageMarket = params.get("econ.labour_official_eur_h") * params.get("econ.operator_wage_ratio");
+  const wageEur = (input.finance?.operatorWageLocalPerHour ?? 0) / fx;
+  if (wageEur > 0 && (wageEur < wageMarket / PRICE_BAND || wageEur > wageMarket * PRICE_BAND)) priceSlips.push(T(`The entered operator cost (${input.finance!.operatorWageLocalPerHour} ${country.currency}/h) differs more than ${PRICE_BAND}× from the national estimate (${local(wageMarket)} ${country.currency}/h): check that it is per hour, fully loaded, in ${country.currency}.`, `Введена вартість години оператора (${input.finance!.operatorWageLocalPerHour} ${country.currency}/год) відрізняється більш ніж у ${PRICE_BAND} рази від національної оцінки (${local(wageMarket)} ${country.currency}/год): перевірте, що це вартість години з нарахуваннями, у ${country.currency}.`));
+  // A supplier quote is checked against the model for the same route: far outside, it is more likely a unit or scope slip.
+  const quoteInfo: string[] = [];
+  const qIn = input.finance;
+  if (!input.process && qIn?.capexQuoteRoute && (qIn.capexQuoteLocal ?? 0) > 0) {
+    const qc = matrix[qIn.capexQuoteRoute].base.capex;
+    const ratio = qc.modelledEur ? qc.totalEur / qc.modelledEur : 1;
+    const routeName = { chp: "CHP", boiler: "boiler", biomethane: "biomethane" }[qIn.capexQuoteRoute];
+    if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${ratio.toFixed(1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${ratio.toFixed(1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
+    if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T(`Your supplier quote is for the ${routeName} route, but the model finds the ${bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.`, `Пропозиція постачальника стосується варіанта «${routeName}», але модель вважає вигіднішим «${bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.`));
+  }
+  const feedSlips = input.feedstocks.some((f) => (f.currentDisposalCostPerTonneLocal ?? 0) / fx > PLAUSIBLE_DISPOSAL_EUR_T || -(f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_GATE_FEE_EUR_T || (f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_PURCHASE_EUR_T);
+  const quality = assessQuality(input, base, demand, T, { currency: country.currency, priceSlips: priceSlips.length + (feedSlips ? 1 : 0), profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: !quoteApplies && params.prov(capexId).confidence === "LOW" });
   if (input.process?.basisDate && input.process.basisDate > asOfDate) {
     const text = T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.", "Дата вихідних даних процесу пізніша за дату оцінки; ці дані не підтверджують поточний висновок.");
     capQuality(quality, 34, { id: "process_basis_date", owner: "client", text });
@@ -263,8 +300,13 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     minChpKw: minChp,
     T,
   });
+  // Model-side evidence gaps lower the displayed confidence and still block STRONG through the level, but they cannot
+  // turn a complete client form into "insufficient data". Caps that exist to withhold a verdict (expired price,
+  // future-dated or missing process basis) keep the full score.
+  const blocking = quality.factors.some((f) => ["price_expired", "process_basis_date", "process_inputs"].includes(f.id));
+  const advisoryPoints = blocking ? 0 : quality.factors.filter((f) => f.owner === "model").reduce((a, f) => a + f.points, 0);
   const verdict = decideVerdict({
-    base, cons, opt, confidence: { level: quality.level, score: quality.score }, minKwEl: minChp, breakEven, lang,
+    base, cons, opt, confidence: { level: quality.level, score: quality.score, clientScore: quality.score + advisoryPoints }, minKwEl: minChp, breakEven, lang,
   });
   if (input.process) verdict.whatWouldChange = [
     T("Verify the inlet analysis and operating history, seasonal availability, and a supplier guarantee for the proposed treatment train.", "Перевірити аналіз потоку, історію роботи, сезонність і гарантії постачальника для запропонованої технології."),
@@ -336,6 +378,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       ...base.feed.lines.flatMap((l) => l.warnings),
       ...base.design.tech.warnings,
       ...logistics.warnings,
+      ...priceSlips,
+      ...quoteInfo,
     ]),
   ];
   if (input.process) warnings.push(T("Upstream budgets must include pretreatment, logistics, storage and final treatment; they are not independently verified installed quotations.", "Бюджети мають включати підготовку, логістику, зберігання й кінцеву обробку; це не незалежно перевірені монтажні оферти."));
@@ -346,6 +390,9 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (base.energy.flaredKwh / gasKwh > 0.1) warnings.push(T(`≈${flareShare} % of the biogas finds no use (flared): review CHP size or seasonality.`, `≈${flareShare} % біогазу не знаходить використання (факел): перегляньте розмір КГУ чи сезонність.`));
   if (digestate.status === "LIABILITY") warnings.push(T("In this configuration the digestate is a cost rather than an asset.", "Дигестат у цій конфігурації — скоріше витрата, ніж актив."));
   if (bestRoute === "biomethane" && !country.biomethaneInjection) warnings.push(T("Grid injection of biomethane is not yet an established pathway in this country: plan for local use (bio-CNG/LNG) or a pioneer connection.", "Ін'єкція біометану в мережу в цій країні ще не усталена: плануйте локальне використання (bio-CNG/LNG) або першопрохідне приєднання."));
+  if (bestRoute === "boiler" && base.energy.heatUsefulKwh < 0.05 * base.energy.gasEnergyKwh) warnings.push(T("No heat buyer was quantified, so the boiler route earns almost nothing: it is only the cheapest of routes that all lose money. This is not a recommendation to build it — find a heat or power buyer, or add energy-dense feedstock.", "Споживача тепла не підтверджено, тому котельня майже нічого не заробляє: це лише найдешевший із маршрутів, які всі збиткові. Це не рекомендація будувати її — потрібен покупець тепла чи електрики або енергетично щільніша сировина."));
+  const unsoldEl = base.energy.elNetKwh - base.energy.elSelfConsumedKwh - base.energy.elExportedKwh;
+  if (bestRoute === "chp" && base.energy.elNetKwh > 0 && unsoldEl / base.energy.elNetKwh > 0.1) warnings.push(T(`≈${Math.round(unsoldEl / base.energy.elNetKwh * 100)} % of the CHP electricity has no buyer without a grid connection and earns nothing; the engine must run in island mode.`, `≈${Math.round(unsoldEl / base.energy.elNetKwh * 100)} % електроенергії КГУ без приєднання до мережі не має споживача й не приносить доходу; двигун працюватиме в острівному режимі.`));
   if (bestRoute === "chp") {
     warnings.push(T("CHP performance uses a 50 Hz biogas full-load catalogue reference (03/2025), interpolated between ratings; part-load, ambient derating and 60 Hz equipment require supplier confirmation.", "Показники CHP взято з каталогу біогазових установок 50 Hz за 03/2025 з інтерполяцією між типорозмірами. Часткове навантаження, вплив температури та обладнання 60 Hz потребують підтвердження виробника."));
     if (base.energy.chpKwEl < 20 || base.energy.chpKwEl > 2300) warnings.push(T("CHP rating is outside the 20–2300 kW reference curve; endpoint efficiency is only a proxy. Obtain a multi-engine or equipment-specific design.", "Потужність CHP виходить за діапазон референсної кривої 20–2300 kW; використано граничний ККД як наближення. Потрібен підбір конкретного обладнання або кількох двигунів."));

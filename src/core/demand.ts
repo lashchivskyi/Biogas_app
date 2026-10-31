@@ -13,6 +13,8 @@ export interface CustomerDemand {
   heatMonthlyKwh: number[];
   heatValueEurKwh: number;
   gasPriceKnown: boolean;
+  /** The customer gave a heat price or a gas price, so the value of heat is theirs, not the national default. */
+  heatValueKnown: boolean;
 }
 
 export function customerDemand(ctx: RunContext): CustomerDemand {
@@ -29,10 +31,13 @@ export function customerDemand(ctx: RunContext): CustomerDemand {
   const elPrice = (priceKnown ? (e.electricityPriceLocalPerKwh as number) / fx : retail) * priceMult;
 
   const gasPriceKnown = (e.gasPriceLocalPerM3 ?? 0) > 0;
+  const heatPriceKnown = (e.heatPriceLocalPerKwh ?? 0) > 0;
   const heatValue =
-    (gasPriceKnown
-      ? (e.gasPriceLocalPerM3 as number) / fx / (lhv * boilerEff)
-      : params.get("econ.heat_value_eur_kwh_th")) * priceMult;
+    (heatPriceKnown
+      ? (e.heatPriceLocalPerKwh as number) / fx
+      : gasPriceKnown
+        ? (e.gasPriceLocalPerM3 as number) / fx / (lhv * boilerEff)
+        : params.get("econ.heat_value_eur_kwh_th")) * priceMult;
 
   const wanted = e.heatNeed !== "none";
   let heatKwh = 0;
@@ -58,5 +63,6 @@ export function customerDemand(ctx: RunContext): CustomerDemand {
     heatMonthlyKwh: profile.map((w) => w * heatKwh),
     heatValueEurKwh: heatValue,
     gasPriceKnown,
+    heatValueKnown: heatPriceKnown || gasPriceKnown,
   };
 }

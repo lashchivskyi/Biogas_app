@@ -9,7 +9,8 @@ export function decideVerdict(args: {
   base: ScenarioResult;
   cons: ScenarioResult;
   opt: ScenarioResult;
-  confidence: { level: Confidence; score: number };
+  /** `clientScore` excludes advisory model-side deductions: a client cannot fill in the model's own data gaps. */
+  confidence: { level: Confidence; score: number; clientScore?: number };
   minKwEl: number;
   breakEven: Assessment["breakEven"];
   lang: CoreLang;
@@ -30,7 +31,7 @@ export function decideVerdict(args: {
   if (base.feed.tonnesYear <= 0 && !(base.process && base.energy.ch4ProducedM3 > 0)) {
     return { id: "INSUFFICIENT_DATA", reasons: [T("No feedstock stream entered.", "Не вказано жодного потоку сировини.")], whatWouldChange: [T("Add herd size or waste quantity.", "Додайте поголів'я або обсяг відходів.")] };
   }
-  if (confidence.score < 35) {
+  if ((confidence.clientScore ?? confidence.score) < 35) {
     reasons.push(T(`Not enough data for a conclusion (data quality ${confidence.score}/100).`, `Недостатньо даних для висновку (якість даних ${confidence.score}/100).`));
     return { id: "INSUFFICIENT_DATA", reasons, whatWouldChange: [T("Fill in the items listed under “What to clarify”.", "Заповніть пропущені дані зі списку «Що потрібно уточнити».")] };
   }
@@ -48,7 +49,9 @@ export function decideVerdict(args: {
 
   const pbCons = cons.fin.simplePaybackYears;
   // "Strong" must survive the conservative case at the country discount rate — otherwise it is a grey-zone project.
-  const strong = pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? 0) >= 1.3 && confidence.level !== "LOW";
+  // Stable fat co-digestion is documented only up to ~30 % of VS (Long et al. 2012, see eng.fat_share_warning): a feed made mostly of grease is untested territory.
+  const fatDominated = base.feed.fatDominantShareVs > 0.5;
+  const strong = !fatDominated && pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? 0) >= 1.3 && confidence.level !== "LOW";
   const borderline = npvBase < 0 && npvBase >= -0.1 * base.fin.capexEur && pb !== null && pb <= 8.5 && opt.fin.npvEur >= 0;
   const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
 
@@ -67,6 +70,10 @@ export function decideVerdict(args: {
       reasons.push(T(`Conservative-case NPV is negative (€${fmt(cons.fin.npvEur)}) — sensitive to key assumptions.`, `У консервативному сценарії NPV від'ємний (${fmt(cons.fin.npvEur)} €) — проєкт чутливий до ключових припущень.`));
       whatWouldChange.push(T("Secure long-term heat and power offtake; benchmark CAPEX with 3–5 suppliers.", "Зафіксувати довгостроковий попит на тепло та електрику, перевірити CAPEX у 3–5 постачальників."));
     }
+    if (fatDominated) {
+      reasons.push(T(`Grease and fat sludge are ${Math.round(base.feed.fatDominantShareVs * 100)} % of the organic matter — far above the ≈ 30 % where stable co-digestion is documented; the economics cannot be called strong without a pilot.`, `Жири та жиро-флотаційний осад — ${Math.round(base.feed.fatDominantShareVs * 100)} % органічної речовини, значно більше за ≈ 30 %, де задокументована стабільна ко-ферментація; без пілота економіку не можна назвати сильною.`));
+      whatWouldChange.push(T("Blend the fat with manure, sludge or food waste (fat ≤ 30 % of VS) or run a pilot digestion test.", "Змішати жир із гноєм, осадом чи харчовими відходами (жир ≤ 30 % VS) або провести пілотну ферментацію."));
+    }
     if (confidence.level === "LOW") {
       reasons.push(T("Data confidence is low — the verdict is preliminary.", "Рівень довіри до даних низький — вердикт попередній."));
       whatWouldChange.push(T("Fill in missing data and run a laboratory feedstock analysis.", "Заповнити пропущені дані та провести лабораторний аналіз сировини."));
@@ -79,7 +86,10 @@ export function decideVerdict(args: {
   reasons.push(
     pb === null
       ? T("Base-case operating margin does not cover costs.", "Операційний прибуток базового сценарію не покриває витрат.")
-      : T(`Simple payback ≈ ${y(pb)}; base NPV €${fmt(npvBase)} (${deep ? "well below zero" : "below zero"} at the country discount rate).`, `Проста окупність ≈ ${y(pb)}; NPV базового сценарію ${fmt(npvBase)} € (${deep ? "істотно нижче нуля" : "нижче нуля"} при ставці дисконтування країни).`),
+      : npvBase >= 0
+        // Positive but thin: the return only just beats the discount rate and capital comes back after more than 10 years.
+        ? T(`Base NPV is only marginally positive (€${fmt(npvBase)}) and simple payback ≈ ${y(pb)} exceeds 10 years — too thin a margin for a screening go.`, `NPV базового сценарію лише ледь додатний (${fmt(npvBase)} €), а проста окупність ≈ ${y(pb)} перевищує 10 років — замалий запас для позитивного висновку скринінгу.`)
+        : T(`Simple payback ≈ ${y(pb)}; base NPV €${fmt(npvBase)} (${deep ? "well below zero" : "below zero"} at the country discount rate).`, `Проста окупність ≈ ${y(pb)}; NPV базового сценарію ${fmt(npvBase)} € (${deep ? "істотно нижче нуля" : "нижче нуля"} при ставці дисконтування країни).`),
   );
   if (opt.fin.npvEur < 0) reasons.push(T(`Even the optimistic case has a negative NPV (€${fmt(opt.fin.npvEur)}).`, `Навіть оптимістичний сценарій має від'ємний NPV (${fmt(opt.fin.npvEur)} €).`));
   if (breakEven.capexReductionPct !== null) whatWouldChange.push(T(`NPV = 0 with ≈ ${Math.round(breakEven.capexReductionPct)} % lower CAPEX (or an equivalent grant).`, `NPV = 0 при зниженні CAPEX на ≈ ${Math.round(breakEven.capexReductionPct)} % (або еквівалентному гранті).`));

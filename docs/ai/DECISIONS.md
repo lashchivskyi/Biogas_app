@@ -31,6 +31,39 @@ replace the line rather than adding a contradicting one.
 - 2026-10-31 — Data-confidence score starts at 80 (`QUALITY_START`), so a screening never shows
   HIGH; every lost point is a `QualityFactor` owned by `client` or `model` (test: score = 80 − Σ).
   Streams with lab DM/VS/BMP no longer count toward the "low-confidence catalogue" deduction.
+- 2026-10-31 — INSUFFICIENT_DATA is gated on client-owned points only (plus blocking caps: expired price,
+  future/missing process basis); model-owned points still lower the level. — Complete forms in KZ/AR/UA/IN
+  were told to "fill in" gaps that only the model's data had.
+- 2026-10-31 — Unknown storage volume on a farm with own slurry = the existing store holds that slurry
+  (Nitrates Directive closed-season duty); only its gas-tight cover is costed, with a warning. Explicit 0 is
+  respected. — New storage for slurry the farm already stores made manure CAPEX 2× DBFZ.
+- 2026-10-31 — Feeds with >50 % of VS from pure grease (`fat_dominant`: grease-trap fat, DAF sludge) cannot be
+  STRONG: stable fat co-digestion is documented only up to ≈ 30 % of VS (Long et al. 2012).
+- 2026-10-31 — Annual mean ≥ 20 °C: digestate store = `eng.storage_months_warm` (3 months, LOW judgement)
+  instead of the German closed-season rule; dilute effluent ≤ 1 month everywhere. — A 6–9 month store was
+  costed for sites with no spreading ban. Best route stays "highest NPV" even if it is a boiler with no heat
+  buyer (switching to CHP made verdicts less honest on seasonal sites); a warning is shown instead.
+- 2026-10-31 — Yield shortfall sensitivity keeps CAPEX as built, like feedstock loss. — Resizing made
+  "yield −20 %" raise NPV.
+- 2026-10-31 — Delivered manure's digestate goes back to the supplying farms (return leg, `MANURE_RETURN_HAUL`):
+  no plant handling/export cost, no "imported nutrient" credit, no plant land need. — It was paid for twice
+  (return haul + third-party export) and its fertiliser value, which the farms already had, was credited to the plant.
+- 2026-10-31 — Entered prices outside plausibility bands are flagged as likely unit slips and force LOW confidence
+  (client-owned), but are still used: off-grid diesel sites can genuinely pay 3× the national price.
+- 2026-10-31 — Effluent-like streams (processing residue ≤ 6 % DM, plus the `dilute` flag) store digestate ≤ 1 month;
+  the rule uses the stream's actual dry matter, not the type. — Whey and pot ale were costed with the 6–9 month
+  spreading-ban store that vinasse already skipped. Threshold is judgement (LOW).
+- 2026-10-31 — Operator time = 22.5·kWe^0.72 h/a (min 750), fitted to Walla & Schneeberger 2008 Table 2
+  (620 / 1 164 / 1 978 h at 100 / 250 / 500 kWe). — The linear 5 h/kWe overstated labour above ~250 kWe.
+- 2026-10-31 — Client-supplied export price, heat price, operator cost and loan terms replace the national estimate
+  and are shown as USER_INPUT evidence; loan terms never enter NPV. Vendor CAPEX quote deliberately not added (route ambiguity).
+- 2026-10-31 — Validation bounds on local-currency amounts are 1e8 per unit (1e15 for project budgets): they only
+  guard against nonsense; plausibility is judged in EUR against national levels. — 1000 rejected VND prices.
+- 2026-10-31 — Straw adds mechanical-milling electricity (66.6 kWh/t) to plant use; its CAPEX and other pretreatment stay
+  warned, not modelled. Fat-rich types keep the whole-stream "fat" flag (no sourced lipid shares); only the wording changed.
+- 2026-10-31 — A supplier CAPEX quote needs its technology (CHP / boiler / biomethane) and replaces only that route's CAPEX;
+  conservative/optimistic multipliers (1.2 / 0.9) still apply; process inputs ignore it; > 2.5× from the model → unit-slip
+  warning and LOW confidence. — One total for all three routes would have made biomethane look as cheap as a CHP plant.
 
 ## Product
 

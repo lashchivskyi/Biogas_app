@@ -155,6 +155,8 @@ const sv: Translation = {
     q6: "6–8. Hur mycket energi använder du?",
     elecBill: "Elräkning per månad", elecBillHint: "Eller ange kWh per år nedan. Om priset inte är känt räknar vi med ≈ {price} per kWh.",
     elecKwh: "…eller förbrukning per år", elecPrice: "Elpris på fakturan (om känt)", elecPriceHint: "Exkl. moms, inkl. nätavgift. Höjer säkerheten.",
+    refineTitle: "Valfritt: avtal och finansiering", refineHint: "Lämna tomt för att använda nationella uppskattningar. Det du anger markeras i rapporten som dina egna uppgifter.", exportPrice: "Pris för såld el (avtal / tariff)", heatPrice: "Pris som värmeköparen betalar per kWh värme", operatorWage: "Operatörens timkostnad inklusive skatter och avgifter", debtShare: "Andel av investeringen som finansieras med lån", debtRate: "Lånets årliga ränta", debtTenor: "Lånets löptid",
+    capexQuote: "Anläggningens totala nyckelfärdiga pris enligt leverantörens offert", capexQuoteRoute: "Offerten gäller denna teknik",
     grid: "Nätanslutning?", gridToggle: "Ja, ansluten (överskott kan säljas)",
     gasToggle: "7. Vi använder naturgas", gasBill: "Gasräkning per månad", gasBillHint: "Om priset inte är känt räknar vi med ≈ {price} per m³.", gasM3: "…eller gas per år", gasPrice: "Gaspris (om känt)",
     heatQ: "8. Behöver du värme?", heatQhint: "Värme räknas bara där den faktiskt används.", heatKwh: "Värmebehov per år (om känt)", heatKwhHint: "Om fältet är tomt och gas är angiven härleder vi det från gasen. Utan uppgift om värmebehov räknar vi inte med någon värmebesparing.",

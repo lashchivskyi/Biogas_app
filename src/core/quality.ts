@@ -28,7 +28,7 @@ export function assessQuality(
   base: ScenarioResult,
   demand: CustomerDemand,
   T: Tr,
-  ctx: { currency: string; profileOnly: boolean; unvalidatedCapital?: boolean },
+  ctx: { currency: string; profileOnly: boolean; unvalidatedCapital?: boolean; priceSlips?: number },
 ): QualityResult {
   let score = QUALITY_START;
   const reasons: string[] = [];
@@ -64,6 +64,10 @@ export function assessQuality(
     missing.push(T("Laboratory DM, VS and BMP for every feedstock stream", "Лабораторні DM, VS і BMP для кожного потоку сировини"));
     factors.push({ id: "lab", owner: "client", points: 15, text: missing[missing.length - 1], gap: "lab" });
   }
+  if (ctx.priceSlips) {
+    // At least 10 points, and always down to LOW: a price we think is mistyped must not carry a "strong" verdict.
+    reason("price_units", "client", Math.max(10, score - 49), T("An entered price is far from market levels — likely a unit slip; correct it or confirm it with an invoice", "Введена ціна далека від ринкового рівня — ймовірна помилка в одиницях; виправте її або підтвердьте рахунком"));
+  }
   if (ctx.profileOnly) {
     reason("price_proxy", "model", 6, T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract", "Принаймні одна ціна, що впливає на цей маршрут, ґрунтується на непідтвердженому ринковому орієнтирі або недоговірному збуті — уточніть застосовний тариф чи контракт із покупцем"));
   }
@@ -93,6 +97,10 @@ export function assessQuality(
   const paidLines = base.feed.lines.filter((l) => own.has(l.id) && FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
     gap("disposal", 5, T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
+  }
+  const pretreatShare = base.feed.tonnesYear > 0 ? base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear : 0;
+  if (pretreatShare > 0.3) {
+    reason("pretreatment_unmodelled", "model", 8, T("Feedstock needs pretreatment (e.g. straw) whose CAPEX and energy are not in this screening — obtain a pretreatment quotation", "Сировина потребує попередньої обробки (напр. солома), CAPEX і енергія якої не входять у цей скринінг — отримайте оферту на обробку"));
   }
   if (base.kwElEquivalent < 30 || base.kwElEquivalent > 5000) {
     reason("scale_range", "model", 8, T("Scale outside the CAPEX calibration range (30 kW – 5 MW electrical equivalent)", "Масштаб поза діапазоном калібрування CAPEX (30 кВт – 5 МВт ел. еквіваленту)"));
