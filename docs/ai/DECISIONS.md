@@ -186,3 +186,8 @@ replace the line rather than adding a contradicting one.
   A failed report-link email makes `applyProviderStatus` throw (webhook 500 → Stripe re-delivers); a 200 is never retried.
   CSP keeps `'unsafe-inline'` scripts on purpose: nonces force all pages dynamic and Next's inline RSC payload has no build hash;
   the gain is `script-src`/`connect-src 'self'`. Rate limits on checkout/quote/leads are shared via Postgres and fail open.
+- 2026-11-01 — Launch readiness: hreflang uses language-only codes (`HREFLANG`, `sr-Latn`), not `INTL_TAG` regions — `es-ES`
+  is never shown to es-MX/AR searchers, `en-GB` not to US/IN. Sitemap and page head list the same set incl. x-default.
+  The reconcile cron also re-sends report links stuck after payment and emails the owner once at 1 h. Load (local prod
+  build, 1 Node process): quote ≈ 65 req/s (15 ms each), paid report SSR ≈ 20 req/s (≈ 50 ms, 630 kB HTML / 110 kB gz);
+  the calculator runs in the browser. `scripts/load.k6.js` is for staging only (Vercel rate limit → 429 counted, not failed).

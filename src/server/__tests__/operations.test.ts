@@ -199,6 +199,25 @@ describe("operations endpoints", () => {
     const after = await run();
     expect(after.checked).toBeGreaterThan(before.checked);
   });
+  it("retries a failed report-link email from the cron and alerts the owner once after an hour", async () => {
+    vi.stubEnv("CRON_SECRET", "cron-secret");
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const { order } = await checkout("en");
+    await O.orders.update(order.id, { status: "paid" }, "test"); // paid, link email never sent
+    const run = async () => (await cron.GET(new Request("https://example.com/api/cron/reconcile", { headers: { authorization: "Bearer cron-secret" } }))).json() as Promise<Record<string, number>>;
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const fetch = mailer().mockImplementation(async (_url, init) => new Response("{}", { status: String(init?.body).includes("buyer@example.com") ? 422 : 200 }));
+    vi.setSystemTime(Date.parse(order.createdAt) + 10 * 60_000);
+    expect((await run()).undelivered).toBeGreaterThan(0);
+    vi.setSystemTime(Date.parse(order.createdAt) + 65 * 60_000);
+    await run();
+    vi.setSystemTime(Date.parse(order.createdAt) + 80 * 60_000);
+    await run();
+    expect(sent(fetch).filter((m) => m.to[0] === "owner@example.com" && m.subject.includes(`not delivered for order ${order.id}`))).toHaveLength(1);
+    fetch.mockResolvedValue(new Response("{}", { status: 200 }));
+    await run();
+    expect((await O.orders.get(order.id))?.customerNotifiedAt).toBeTruthy();
+  });
   it("reports storage health without secrets", async () => {
     const res = await health.GET();
     expect(res.status).toBe(200);

@@ -94,8 +94,11 @@ describe.each(stores())("order repository (%s)", (_name, select) => {
     const claims = await Promise.all(Array.from({ length: 6 }, () => O.orders.claimCustomerNotice(o.id)));
     expect(claims.filter(Boolean)).toHaveLength(1);
     expect((await O.orders.get(o.id))?.customerNotifiedAt).toBeTruthy();
+    const since = new Date(Date.now() - 60_000).toISOString();
+    expect((await O.orders.listUndelivered(since, 100)).map((x) => x.id)).not.toContain(o.id);
     await O.orders.update(o.id, { customerNotifiedAt: undefined }, "email");
     expect((await O.orders.get(o.id))?.customerNotifiedAt).toBeUndefined();
+    expect((await O.orders.listUndelivered(since, 100)).map((x) => x.id)).toContain(o.id);
     expect(await O.orders.claimCustomerNotice(o.id)).toBe(true);
     expect(await O.orders.claimCustomerNotice("missing")).toBe(false);
   });

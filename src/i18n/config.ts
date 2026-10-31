@@ -18,6 +18,15 @@ export const INTL_TAG: Record<Locale, string> = {
   fi: "fi-FI", vi: "vi-VN", th: "th-TH",
 };
 
+/**
+ * hreflang codes: language only, so one page serves every country that speaks it (es → ES/MX/AR,
+ * en → GB/US/CA/IN, de → DE/AT, ro → RO/MD). A regional code such as es-ES is not matched to
+ * es-MX searchers. Serbian pages are Latin script.
+ */
+export const HREFLANG: Record<Locale, string> = Object.fromEntries(
+  (Object.keys(INTL_TAG) as Locale[]).map((l) => [l, l === "sr" ? "sr-Latn" : l]),
+) as Record<Locale, string>;
+
 /** Native language names (shown in the switcher without depending on Intl data). */
 export const NATIVE_NAME: Record<Locale, string> = {
   en: "English", uk: "Українська", pl: "Polski", de: "Deutsch", fr: "Français", it: "Italiano", es: "Español", pt: "Português (Brasil)", nl: "Nederlands",

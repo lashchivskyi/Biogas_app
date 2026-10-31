@@ -56,6 +56,8 @@ export interface OrderRepository {
   findByProviderRef(ref: string): Promise<Order | null>;
   /** Unfinished orders created after `since`, oldest first, without snapshots (reconciliation). */
   listOpen(since: string, limit: number): Promise<Order[]>;
+  /** Paid orders created after `since` whose link email has not gone out, oldest first, without snapshots. */
+  listUndelivered(since: string, limit: number): Promise<Order[]>;
   create(o: NewOrder): Promise<Order>;
   update(id: string, patch: OrderPatch, source: string): Promise<Order | null>;
   /** Atomically marks the customer email as sent; true only for the first caller. */
@@ -127,6 +129,10 @@ const jsonOrders: OrderRepository = {
     return (await readJsonArray<Order>(FILE)).filter((o) => OPEN.includes(o.status) && o.createdAt >= since)
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt)).slice(0, limit).map(withoutSnapshot);
   },
+  async listUndelivered(since, limit) {
+    return (await readJsonArray<Order>(FILE)).filter((o) => o.status === "paid" && !o.customerNotifiedAt && o.createdAt >= since)
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt)).slice(0, limit).map(withoutSnapshot);
+  },
   create(o) {
     return exclusive(FILE, async () => {
       const all = await readJsonArray<Order>(FILE);
@@ -190,6 +196,9 @@ export function postgresOrders(db: Database): OrderRepository {
     async listOpen(since, limit) {
       return (await db.query<Row>(`${SLIM} WHERE status = ANY($1) AND created_at >= $2 ORDER BY created_at LIMIT $3`, [OPEN, since, limit])).rows.map(toOrder);
     },
+    async listUndelivered(since, limit) {
+      return (await db.query<Row>(`${SLIM} WHERE status = 'paid' AND NOT (record ? 'customerNotifiedAt') AND created_at >= $1 ORDER BY created_at LIMIT $2`, [since, limit])).rows.map(toOrder);
+    },
     async create(o) {
       const order = newOrder(o);
       await db.query(
@@ -234,6 +243,7 @@ export const orders: OrderRepository = {
   findByPaymentRef: async (ref) => (await repo()).findByPaymentRef(ref),
   findByProviderRef: async (ref) => (await repo()).findByProviderRef(ref),
   listOpen: async (since, limit) => (await repo()).listOpen(since, limit),
+  listUndelivered: async (since, limit) => (await repo()).listUndelivered(since, limit),
   create: async (o) => (await repo()).create(o),
   update: async (id, patch, source) => (await repo()).update(id, patch, source),
   claimCustomerNotice: async (id) => (await repo()).claimCustomerNotice(id),
