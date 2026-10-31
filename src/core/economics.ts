@@ -2,6 +2,7 @@ import { existingPlant, prepareProcess } from "./processes";
 import { biomethaneOfftake, buildCapex, peakMonthlyHeatKw } from "./capex";
 import { HOURS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
+import { SCENARIOS } from "./scenarios";
 import { customerDemand } from "./demand";
 import { assessDigestate } from "./digestate";
 import { designDigester } from "./digester";
@@ -27,19 +28,31 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const prepared = input.process ? prepareProcess(ctx, operatingYear) : undefined;
   const process = prepared?.process;
   const feed = prepared?.feed ?? analyseFeedstock(ctx);
-  const design = prepared?.design ?? designDigester(feed, ctx);
+  // The plant is built once, for the base case. Conservative and optimistic scenarios (and Monte Carlo draws, stress
+  // tests) change what the built plant earns and what it costs to buy, never its size: the digester, the engine, the
+  // upgrader and the storage stay those of the base design. Otherwise a bigger "optimistic" plant could lose more money.
+  const baseSized = !installed && (ctx.scenario !== SCENARIOS.base || ctx.mods.feedstock !== 1 || ctx.mods.methaneYield !== 1);
+  const designCtx: RunContext = baseSized ? { ...ctx, scenario: SCENARIOS.base, mods: { ...ctx.mods, feedstock: 1, methaneYield: 1 } } : ctx;
+  const designPrepared = baseSized && input.process ? prepareProcess(designCtx, operatingYear) : undefined;
+  const designFeed = designPrepared?.feed ?? (baseSized ? analyseFeedstock(designCtx) : feed);
+  const design = designPrepared?.design ?? prepared?.design ?? designDigester(designFeed, designCtx);
   const demand = customerDemand(ctx);
   // A running plant's own engine fixes the CHP rating in every scenario.
   const existingKw = route === "chp" ? existingPlant(input.process)?.existingChpKwEl : undefined;
-  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx, false, installed?.kw ?? existingKw);
-  const energy = route === "biomethane" && biomethaneOfftake(ctx, energyBeforeOfftake).mode === "cng"
-    ? runEnergy(route, feed, design, demand, ctx, true, installed?.kw ?? existingKw)
+  const sizingEnergy = (cng: boolean) => runEnergy(route, designFeed, design, customerDemand(designCtx), designCtx, cng);
+  const designEnergy0 = baseSized ? sizingEnergy(false) : undefined;
+  const designEnergy = designEnergy0 && route === "biomethane" && biomethaneOfftake(designCtx, designEnergy0).mode === "cng" ? sizingEnergy(true) : designEnergy0;
+  const builtKw = installed?.kw ?? existingKw ?? (designEnergy && route === "chp" ? designEnergy.chpKwEl : undefined);
+  const builtUpgrader = designEnergy && route === "biomethane" ? designEnergy.rawBiogasDesignNm3PerHour : undefined;
+  const energyBeforeOfftake = runEnergy(route, feed, design, demand, ctx, false, builtKw, builtUpgrader);
+  const energy = route === "biomethane" && biomethaneOfftake(designEnergy ? designCtx : ctx, designEnergy0 ?? energyBeforeOfftake).mode === "cng"
+    ? runEnergy(route, feed, design, demand, ctx, true, builtKw, builtUpgrader)
     : energyBeforeOfftake;
   const peakKw = peakMonthlyHeatKw(design, HOURS_IN_MONTH);
-  const gross = installed?.gross ?? buildCapex(route, feed, design, energy, ctx, peakKw, process);
+  const gross = installed?.gross ?? (designEnergy ? buildCapex(route, designFeed, design, designEnergy, ctx, peakKw, designPrepared?.process ?? process) : buildCapex(route, feed, design, energy, ctx, peakKw, process));
   const dig = assessDigestate(feed, ctx);
 
-  const kwEq = route === "chp" ? energy.chpKwEl : (energy.gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
+  const kwEq = route === "chp" ? energy.chpKwEl : ((designEnergy ?? energy).gasEnergyKwh * 0.36) / p.get("eng.chp_design_hours");
 
   const selfShare = demand.electricityPriceKnown ? p.get("eng.invoice_variable_share") : p.get("econ.self_consumption_variable_share");
   // A contracted export price replaces wholesale × haircut (the haircut models selling at the market).

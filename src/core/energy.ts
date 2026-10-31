@@ -37,6 +37,8 @@ export function runEnergy(
   ctx: RunContext,
   cngCompression = false,
   installedChpKw?: number,
+  /** Raw-gas capacity (Nm³/h) of an upgrader already built; gas above it is flared. */
+  installedUpgraderNm3h?: number,
 ): EnergyBalance {
   const { params: p, scenario, mods, input } = ctx;
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
@@ -197,7 +199,11 @@ export function runEnergy(
       heatProduced += gB * boilerEff;
       heatDigesterTotal += D;
       monthlyDigHeat[i] = D;
-      const raw = G - gB;
+      const rawAvailable = G - gB;
+      // A built upgrader treats at most its design flow; the rest of the gas is flared.
+      const rawCap = installedUpgraderNm3h === undefined ? Infinity : installedUpgraderNm3h * HOURS_IN_MONTH[i] * lhv * frac;
+      const raw = Math.min(rawAvailable, rawCap);
+      flared += rawAvailable - raw;
       gasToBoiler += gB;
       gasToUpgrader += raw;
       const outKwh = raw * (1 - slipUp);

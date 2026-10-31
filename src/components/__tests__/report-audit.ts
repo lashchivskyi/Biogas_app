@@ -189,7 +189,7 @@ export function auditModel(a: Assessment): Finding[] {
     check(mc.p10NpvEur <= mc.p50NpvEur && mc.p50NpvEur <= mc.p90NpvEur, "monteCarlo", "P10 ≤ P50 ≤ P90 violated");
     check(mc.probPositive >= 0 && mc.probPositive <= 1, "monteCarlo", "probability outside 0–1");
     // Independent draws between the scenario values stay inside them only when the scenarios are ordered.
-    if (npv.cons <= npv.base && npv.base <= npv.opt) check(mc.p10NpvEur >= npv.cons - Math.abs(npv.cons) * 1e-6 - 1 && mc.p90NpvEur <= npv.opt + Math.abs(npv.opt) * 1e-6 + 1, "monteCarlo", "P10/P90 outside the conservative–optimistic NPV range");
+    if (npv.cons <= npv.base && npv.base <= npv.opt) check(mc.p10NpvEur >= npv.cons - Math.abs(npv.cons) * 1e-6 - 1 && mc.p90NpvEur <= npv.opt + Math.abs(npv.opt) * 1e-6 + 1, "monteCarlo", "P10/P90 outside the conservative–optimistic NPV range", "order");
     if (a.robustness === "clear_go") check(mc.probPositive >= 0.99, "monteCarlo", "clear_go but the Monte Carlo probability of NPV > 0 is below 99 %");
     if (a.robustness === "clear_no") check(mc.probPositive <= 0.01, "monteCarlo", "clear_no but the Monte Carlo probability of NPV > 0 is above 1 %");
     check((mc.p50NpvEur > 0) === (mc.probPositive > 0.5) || Math.abs(mc.probPositive - 0.5) < 0.02, "monteCarlo", "median NPV sign disagrees with the probability of NPV > 0");

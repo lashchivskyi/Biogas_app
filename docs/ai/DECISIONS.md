@@ -135,10 +135,14 @@ replace the line rather than adding a contradicting one.
 
 - 2026-10-31 — Report consistency gate (`report-consistency.test.ts`): the Assessment is the single source; every number in
   the verdict text, tiles, tables, charts, EVPI, Monte Carlo, export and translations is recomputed and compared. Display
-  ranges (CAPEX, payback, NPV) now always read low – high. Open owner decision: scenarios re-size the plant, so in ~17 % of
-  cases (mostly loss-making boiler/biomethane) "optimistic" has a lower NPV/EBITDA than "base" (e.g. a net electricity buyer
-  pays the higher "optimistic" power price). Not changed: needs a decision (size the plant once at base, or define
-  scenarios by outcome). The test ratchets the count (≤ 45 of 234); do not raise it, fix the cause.
+  ranges (CAPEX, payback, NPV) now always read low – high.
+- 2026-10-31 — One plant, three scenarios (owner chose "size once at base"). `runScenarioRoute` sizes digester, storage, engine,
+  upgrader and CAPEX lines on the base case (and ignores the feedstock/yield stress modifiers when sizing); conservative,
+  optimistic, Monte Carlo draws and stress tests change only output, prices and the CAPEX multiplier. A built upgrader flares
+  gas above its design flow. Base results unchanged; 29 of 1 287 verdicts moved (via the conservative case, both ways). CAPEX
+  disorder gone (139 → 0); unordered NPV/EBITDA 197 → 54 of 1 287. Remainder: a net buyer of electricity/heat pays the higher
+  "optimistic" energy price (boiler, biomethane, some CHP). Open: price multiplier on purchases (hold at base, or pair
+  with the buyer's side). Ratchet in `report-consistency.test.ts` (≤ 16 of 234); `plant-sizing.test.ts` guards the sizing.
 - 2026-10-31 — Sweep findings (do not rediscover). Fixed: methane-loss `ratio` was Infinity (now `null`); CHP round-up loop
   hung above 1e16 kW; `processSchema.safeParse` threw on `monthsActive` = 1e300; `assess` returned NaN for non-finite input
   (now throws). By design, NOT bugs: net buyers of power/heat are worse off when that price rises (only sell-side prices are

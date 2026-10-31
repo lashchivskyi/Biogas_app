@@ -14,7 +14,7 @@ Updated 2026-10-31 (evening). Rewrite at the end of a task; keep under 40 lines.
   climates = 13 464 assessments, 0 throws, 0 NaN, balances close (`MATRIX=full`, ≈ 8 min; `FC_RUNS=2000` for a deeper hunt).
 - Report consistency 2026-10-31: `components/__tests__/report-consistency.test.ts` (+ `report-audit*.ts`) renders 10 examples × free/
   standard/full × en/uk/de, checks every figure against the model and between sections, plus export, translations, mutations.
-  0 contradictions in 30 reports. Open: in 39 of 234 sampled cases the "optimistic" scenario is worse than base (see DECISIONS).
+  0 contradictions in 30 reports. One plant per project (sized at base). Open: purchased energy at the "optimistic" price → 54 of 1 287 cases unordered.
 ## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
 1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).

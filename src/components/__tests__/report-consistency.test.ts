@@ -239,7 +239,7 @@ describe("model sweep: every example in six markets keeps the invariants", () =>
    * "optimistic" scenario can lose more than "base". The report shows ranges low – high, so nothing is mislabelled,
    * but the number of such cases must not grow.
    */
-  const UNORDERED_BUDGET = 45;
+  const UNORDERED_BUDGET = 16;
   it("has no contradiction except unordered scenarios, and those do not multiply", () => {
     const hard: string[] = [];
     let unordered = 0, assessed = 0;
