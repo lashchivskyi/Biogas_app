@@ -2,9 +2,11 @@ import { SCENARIOS, type ScenarioDef } from "./scenarios";
 
 /**
  * Uncertainty tools on top of the three scenarios:
- * - Monte Carlo: every scenario quantity drawn independently from a triangular distribution
- *   (conservative / base / optimistic as min / mode / max), Latin hypercube, fixed seed (reproducible).
- *   Independent draws do not stack all bad cases at once, so P10–P90 is narrower than conservative–optimistic.
+ * - Monte Carlo: every scenario quantity drawn from a triangular distribution (conservative / base / optimistic as
+ *   min / mode / max), Latin hypercube, fixed seed (reproducible). Market prices share one draw: the biomethane price
+ *   follows the energy-price multiplier (EU biomethane is priced off gas, and power tracks gas). Catalogue DM × VS
+ *   and lab BMP values get their own bands. The other draws are independent, so P10–P90 stays narrower than
+ *   conservative–optimistic, which stacks every adverse value at once.
  * - Value of information: what knowing one input exactly is worth before deciding to build (EVPI).
  */
 
@@ -44,8 +46,14 @@ export function latinHypercube(n: number, dims: number, seed = 20261031): number
 /** Numeric scenario fields that are sampled; the order is the hypercube dimension order. */
 export const SAMPLED_FIELDS = ["yieldBlend", "processRealisation", "capexMult", "opexMult", "energyPriceMult", "heatUtilisation", "chpHours", "leakShare", "digestateValueFactor", "disposalRealisation", "feedstockAvailability"] as const;
 
-/** One sampled scenario plus the quantile for the biomethane price (cons / base / opt reference prices). */
-export function sampleScenario(u: number[]): { scenario: ScenarioDef; biomethaneU: number } {
+/** Hypercube dimensions: the scenario fields, then the catalogue-solids and lab-BMP quantiles. */
+export const MC_DIMS = SAMPLED_FIELDS.length + 2;
+
+/**
+ * One sampled scenario plus quantiles: the biomethane price (cons / base / opt reference prices) moves with the
+ * energy-price draw; `solidsU` and `labU` place catalogue DM × VS and lab BMP values inside their bands.
+ */
+export function sampleScenario(u: number[]): { scenario: ScenarioDef; biomethaneU: number; solidsU: number; labU: number } {
   const { conservative: lo, base, optimistic: hi } = SCENARIOS;
   const s: ScenarioDef = { ...base };
   SAMPLED_FIELDS.forEach((k, i) => {
@@ -55,7 +63,8 @@ export function sampleScenario(u: number[]): { scenario: ScenarioDef; biomethane
     const uu = lo[k] <= hi[k] ? u[i] : 1 - u[i];
     (s as unknown as Record<string, number>)[k] = triangular(uu, a, base[k], b);
   });
-  return { scenario: s, biomethaneU: u[SAMPLED_FIELDS.length] };
+  const price = u[SAMPLED_FIELDS.indexOf("energyPriceMult")];
+  return { scenario: s, biomethaneU: lo.energyPriceMult <= hi.energyPriceMult ? price : 1 - price, solidsU: u[SAMPLED_FIELDS.length], labU: u[SAMPLED_FIELDS.length + 1] };
 }
 
 export function percentile(sorted: number[], p: number): number {

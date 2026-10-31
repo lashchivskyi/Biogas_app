@@ -52,6 +52,7 @@ export const inputSchema = z.object({
     hasGridConnection: z.boolean(),
     exportPriceLocalPerKwh: optNum(LOCAL_UNIT_MAX),
     heatPriceLocalPerKwh: optNum(LOCAL_UNIT_MAX),
+    biomethanePriceLocalPerMwhHhv: optNum(LOCAL_UNIT_MAX),
   }),
   site: z.object({
     landHa: optNum(1e6),

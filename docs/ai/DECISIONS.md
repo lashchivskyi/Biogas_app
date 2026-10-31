@@ -80,9 +80,16 @@ replace the line rather than adding a contradicting one.
   credits are valued only inside support cases with an official mechanism (US RIN/LCFS). Heat in CHP is allocated by
   the RED Carnot share at 150 °C.
 
-- 2026-10-31 — Monte Carlo samples the existing scenario quantities independently (triangular: conservative /
-  base / optimistic), Latin hypercube, fixed seed, 160 draws, chosen route only. No new ranges were invented; the
-  asymmetric scenario spreads make the median NPV lower than the base case on purpose. It never changes the verdict.
+- 2026-10-31 — Monte Carlo samples the scenario quantities (triangular: conservative / base / optimistic), Latin
+  hypercube, fixed seed, 160 draws, chosen route only; it never changes the verdict. The biomethane price shares the
+  energy-price draw (EU biomethane is priced off gas; power tracks gas). Two sourced bands exist only in the Monte
+  Carlo, not in the scenarios: catalogue DM × VS ±20 % (IPCC 2006 Vol. 4 §10.4.4 Tier 2 ±20 %, LOW) unless the client
+  measured both, lab BMP ±8 % (Hafner et al. 2020). — The report called a "grey" project "100 % positive"; the
+  conservative case is now labelled a stress test and certainty is shown as "> 99 %". Real-plant scatter (AgSTAR
+  0.4–2.2×) is shown as text, not sampled: it mixes reporting noise with downtime the model does not simulate.
+- 2026-10-31 — A buyer's biomethane offer is entered per MWh HHV (how offers are quoted), without support, and
+  replaces the three biomethane price parameters as USER_INPUT (conservative × 0.85, optimistic × 1.1, like a power
+  export contract). It removes the price from "what to verify first"; > 3× from the estimate → unit-slip warning.
 - 2026-10-31 — "What to verify first" ranks by EVPI (build / no-build) over each input's own evidence range, three
   runs per input, NPV interpolated linearly; inputs the client supplied are not listed.
 

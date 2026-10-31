@@ -14,7 +14,7 @@ import { PLAUSIBLE_DISPOSAL_EUR_T, PLAUSIBLE_GATE_FEE_EUR_T, PLAUSIBLE_PURCHASE_
 import { assessLogistics } from "./logistics";
 import { methaneCheck } from "./methane";
 import { ghgCase } from "./ghg";
-import { evpi, latinHypercube, percentile, sampleScenario, SAMPLED_FIELDS, triangular } from "./uncertainty";
+import { evpi, latinHypercube, MC_DIMS, percentile, sampleScenario, triangular } from "./uncertainty";
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import { Params, prov, toMap } from "./params";
 import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
@@ -33,6 +33,19 @@ export function buildParams(country: CountryAdapter, regionId?: string, energy?:
   const marketRegion = regionId?.startsWith("city:") ? city?.adminCode : regionId;
   const overrides = energy && country.paramsForProject ? country.paramsForProject({ regionId: marketRegion ?? "", energy }) : marketRegion && country.paramsForRegion ? country.paramsForRegion(marketRegion) : [];
   const map = { ...ENGINEERING_MAP, ...toMap(country.params), ...toMap(overrides) };
+  const offer = energy?.biomethanePriceLocalPerMwhHhv ?? 0;
+  if (offer > 0) {
+    // Buyer's offer per MWh HHV → EUR per Nm³ of product (LHV × purity × HHV/LHV); scenarios move it like a contracted power price.
+    const fx = map["econ.fx_local_per_eur"].value;
+    const kwhHhvNm3 = map["eng.ch4_lhv_kwh_m3"].value * map["eng.biomethane_ch4_purity"].value * map["eng.gas_hhv_lhv_ratio"].value;
+    const eurNm3 = offer / fx / 1000 * kwhHhvNm3;
+    const source = `USER_INPUT ${offer} ${country.currency}/MWh HHV × ${kwhHhvNm3.toFixed(2)} kWh HHV/Nm³ / FX ${fx}. Buyer offer without support; not independently verified (no contract date supplied).`;
+    const keys = [["cons", SCENARIOS.conservative.energyPriceMult], ["base", 1], ["opt", SCENARIOS.optimistic.energyPriceMult]] as const;
+    for (const [k, m] of keys) {
+      const id = `econ.biomethane_price_${k}_eur_nm3`;
+      map[id] = prov(id, `${map[id].label} (buyer offer${m === 1 ? "" : ` × ${m}`})`, +(eurNm3 * m).toFixed(4), "EUR/Nm³", "CALCULATION", source, "MEDIUM", { country: country.code, date: "undated", origin: "USER_INPUT" });
+    }
+  }
   return new Params(map);
 }
 
@@ -306,7 +319,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (!demand.electricityPriceKnown && (base.energy.elSelfConsumedKwh > 0 || base.energy.elPurchasedKwh > 0)) priceIds.push("econ.electricity_retail_eur_kwh");
   if (base.energy.elExportedKwh > 0 && !((input.energy.exportPriceLocalPerKwh ?? 0) > 0)) priceIds.push("econ.electricity_spot_eur_kwh");
   if (!demand.heatValueKnown && (base.energy.heatUsefulKwh > 0 || base.energy.heatExternalPurchasedKwh > 0)) priceIds.push("econ.heat_value_eur_kwh_th");
-  if (bestRoute === "biomethane") priceIds.push("econ.biomethane_price_base_eur_nm3");
+  const bmOffer = (input.energy.biomethanePriceLocalPerMwhHhv ?? 0) > 0;
+  if (bestRoute === "biomethane" && !bmOffer) priceIds.push("econ.biomethane_price_base_eur_nm3");
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
   // Entered prices far from the market usually mean a unit slip (ct vs €, € vs local currency, per MWh vs per kWh).
   // Electricity: large consumers on wholesale contracts pay well below the business tariff, so the floor is half the spot price.
@@ -318,6 +332,11 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (demand.heatValueKnown && (demand.heatValueEurKwh < heatMarket / PRICE_BAND || demand.heatValueEurKwh > heatMarket * PRICE_BAND)) priceSlips.push(T(`The entered gas or heat price differs more than ${PRICE_BAND}× from the national business level (${local(heatMarket)} ${country.currency}/kWh of heat): check the unit (gas per m³, heat per kWh, in ${country.currency}).`, `Введена ціна газу чи тепла відрізняється більш ніж у ${PRICE_BAND} рази від національного рівня (${local(heatMarket)} ${country.currency}/кВт·год тепла): перевірте одиниці (газ — за м³, тепло — за кВт·год, у ${country.currency}).`));
   const exportEur = (input.energy.exportPriceLocalPerKwh ?? 0) / fx;
   if (exportEur > 0 && (exportEur < elLow || exportEur > elHigh)) priceSlips.push(T(`The entered export price (${input.energy.exportPriceLocalPerKwh} ${country.currency}/kWh) is outside the plausible range for this country (${local(elLow)}–${local(elHigh)} ${country.currency}/kWh): check the unit (per kWh, ${country.currency}, not cents or MWh).`, `Введена ціна продажу електроенергії (${input.energy.exportPriceLocalPerKwh} ${country.currency}/кВт·год) поза правдоподібним діапазоном для країни (${local(elLow)}–${local(elHigh)} ${country.currency}/кВт·год): перевірте одиниці (за кВт·год, у ${country.currency}, не копійки чи МВт·год).`));
+  if (bmOffer) {
+    const market = buildParams(country, input.regionId, { ...input.energy, biomethanePriceLocalPerMwhHhv: undefined }, input.city).get("econ.biomethane_price_base_eur_nm3");
+    const offer = params.get("econ.biomethane_price_base_eur_nm3");
+    if (offer < market / PRICE_BAND || offer > market * PRICE_BAND) priceSlips.push(T(`The entered biomethane price (${input.energy.biomethanePriceLocalPerMwhHhv} ${country.currency}/MWh HHV) differs more than ${PRICE_BAND}× from the national estimate (${local(market / offer * input.energy.biomethanePriceLocalPerMwhHhv! / fx)} ${country.currency}/MWh HHV): check the unit (per MWh, not per kWh or Nm³, in ${country.currency}) and that it excludes state tariffs or premiums.`, `Введена ціна біометану (${input.energy.biomethanePriceLocalPerMwhHhv} ${country.currency}/МВт·год за вищою теплотою згоряння) відрізняється більш ніж у ${PRICE_BAND} рази від національної оцінки (${local(market / offer * input.energy.biomethanePriceLocalPerMwhHhv! / fx)} ${country.currency}/МВт·год): перевірте одиниці (за МВт·год, не за кВт·год чи Нм³, у ${country.currency}) і що в ній немає державних тарифів чи премій.`));
+  }
   const wageMarket = params.get("econ.labour_official_eur_h") * params.get("econ.operator_wage_ratio");
   const wageEur = (input.finance?.operatorWageLocalPerHour ?? 0) / fx;
   if (wageEur > 0 && (wageEur < wageMarket / PRICE_BAND || wageEur > wageMarket * PRICE_BAND)) priceSlips.push(T(`The entered operator cost (${input.finance!.operatorWageLocalPerHour} ${country.currency}/h) differs more than ${PRICE_BAND}× from the national estimate (${local(wageMarket)} ${country.currency}/h): check that it is per hour, fully loaded, in ${country.currency}.`, `Введена вартість години оператора (${input.finance!.operatorWageLocalPerHour} ${country.currency}/год) відрізняється більш ніж у ${PRICE_BAND} рази від національної оцінки (${local(wageMarket)} ${country.currency}/год): перевірте, що це вартість години з нарахуваннями, у ${country.currency}.`));
@@ -380,7 +399,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       const { conservative: c, base: b, optimistic: o } = SCENARIOS;
       add("heat_buyer", [c.heatUtilisation / b.heatUtilisation, 1, o.heatUtilisation / b.heatUtilisation], [npvWith({ heatUse: c.heatUtilisation / b.heatUtilisation }), npvWith({ heatUse: o.heatUtilisation / b.heatUtilisation })]);
     }
-    if (bestRoute === "biomethane") {
+    if (bestRoute === "biomethane" && !bmOffer) {
       const bm = (k: string) => params.get(`econ.biomethane_price_${k}_eur_nm3`);
       const lo = bm("cons") / bm("base"), hi = bm("opt") / bm("base");
       add("offtake", [lo, 1, hi], [npvWith({ productPrice: lo }), npvWith({ productPrice: hi })]);
@@ -393,11 +412,22 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // ---- Monte Carlo over the scenario quantities (chosen route) ----
   let monteCarlo: MonteCarloResult | undefined;
   if (uncertainty) {
-    const draws = latinHypercube(MC_DRAWS, SAMPLED_FIELDS.length + 1).map((u) => {
-      const { scenario, biomethaneU } = sampleScenario(u);
+    // Catalogue DM × VS (unless the client measured both) and lab BMP values carry their own bands; one methane factor
+    // per draw, weighted by each stream's base methane. Catalogue BMP is already covered by the scenario yield range.
+    const solidsBand = params.get("eng.unc_catalogue_solids"), labBand = params.get("eng.unc_lab_bmp");
+    const streams = base.feed.lines.filter((l) => l.ch4M3Year > 0).map((l) => {
+      const f = input.feedstocks.find((x) => x.id === l.id);
+      return { ch4: l.ch4M3Year, measured: f?.dryMatterPct !== undefined && f?.vsPctOfDm !== undefined, lab: f?.methaneYieldLPerKgVs !== undefined };
+    });
+    const ch4Total = streams.reduce((a, s) => a + s.ch4, 0);
+    const methaneFactor = (solidsU: number, labU: number) => ch4Total > 0
+      ? streams.reduce((a, s) => a + s.ch4 * (s.measured ? 1 : triangular(solidsU, 1 - solidsBand, 1, 1 + solidsBand)) * (s.lab ? triangular(labU, 1 - labBand, 1, 1 + labBand) : 1), 0) / ch4Total
+      : 1;
+    const draws = latinHypercube(MC_DRAWS, MC_DIMS).map((u) => {
+      const { scenario, biomethaneU, solidsU, labU } = sampleScenario(u);
       const bm = (k: string) => params.get(`econ.biomethane_price_${k}_eur_nm3`);
       const priced = params.with({ "econ.biomethane_price_base_eur_nm3": triangular(biomethaneU, Math.min(bm("cons"), bm("opt")), bm("base"), Math.max(bm("cons"), bm("opt"))) });
-      const ctx = { ...makeCtx(input, country, priced, "base", NO_MODS, lang), scenario };
+      const ctx = { ...makeCtx(input, country, priced, "base", { ...NO_MODS, methaneYield: methaneFactor(solidsU, labU) }, lang), scenario };
       return runScenarioRoute(ctx, bestRoute).fin;
     });
     const npvs = draws.map((f) => f.npvEur).sort((x, y) => x - y);

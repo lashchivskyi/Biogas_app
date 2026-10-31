@@ -57,6 +57,7 @@ export interface FormState {
   refineOpen?: boolean;
   /** Optional refinements the client may know; empty = use the national estimate. Prices in local currency, rates in %. */
   exportPrice?: string;
+  biomethanePrice?: string;
   heatPrice?: string;
   operatorWage?: string;
   debtSharePct?: string;
@@ -76,7 +77,7 @@ export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
   const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
   if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis") && k !== "reactorTechnology").some(([,v]) => invalid(v))) return 1;
   if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
-  if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear, f.exportPrice, f.heatPrice].some(invalid)) return 2;
+  if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear, f.exportPrice, f.heatPrice, f.biomethanePrice].some(invalid)) return 2;
   if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", f.gasGridKm, ...(f.refineOpen ? [f.operatorWage, f.capexQuote, f.debtSharePct, f.debtRatePct, f.debtTenorYears] : [])].some(invalid)) return 3;
   return null;
 }
@@ -133,10 +134,10 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   };
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm", "debtSharePct", "debtRatePct", "debtTenorYears"] as const;
   for (const key of numbers) next[key] = reformat(f[key] ?? "");
-  for (const key of ["exportPrice", "heatPrice", "operatorWage", "capexQuote"] as const) next[key] = reformat(f[key] ?? "");
+  for (const key of ["exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = reformat(f[key] ?? "");
   for (const line of next.lines) for (const key of ["quantity", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key]);
   if (changed) {
-    for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice", "exportPrice", "heatPrice", "operatorWage", "capexQuote"] as const) next[key] = "";
+    for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice", "exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = "";
     for (const line of next.lines) for (const key of ["disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = "";
   }
   return next;
@@ -217,6 +218,7 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | 
       hasGridConnection: f.hasGrid,
       exportPriceLocalPerKwh: positive(f.exportPrice),
       heatPriceLocalPerKwh: f.heatNeed !== "none" ? positive(f.heatPrice) : undefined,
+      biomethanePriceLocalPerMwhHhv: positive(f.biomethanePrice),
     },
     ...(Object.keys(finance).length ? { finance } : {}),
     site: {
@@ -280,6 +282,7 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
     refineOpen: Object.keys(i.finance ?? {}).length > 0,
     exportPrice: s(i.energy.exportPriceLocalPerKwh),
     heatPrice: s(i.energy.heatPriceLocalPerKwh),
+    biomethanePrice: s(i.energy.biomethanePriceLocalPerMwhHhv),
     operatorWage: s(i.finance?.operatorWageLocalPerHour),
     debtSharePct: s(i.finance?.debtShare === undefined ? undefined : +(i.finance.debtShare * 100).toFixed(6)),
     debtRatePct: s(i.finance?.debtRate === undefined ? undefined : +(i.finance.debtRate * 100).toFixed(6)),

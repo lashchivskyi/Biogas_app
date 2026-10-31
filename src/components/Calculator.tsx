@@ -372,6 +372,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               {form.heatNeed !== "none" && (
                 <Field label={C.heatPrice} htmlFor="c-hp" tooltip={T.heatPrice}><Num id="c-hp" value={form.heatPrice ?? ""} onChange={(v) => set("heatPrice", v)} unit={`${cur}/${L.units.kwh}`} /></Field>
               )}
+              <Field label={C.biomethanePrice} htmlFor="c-bp" tooltip={T.biomethanePrice}>
+                <Num id="c-bp" value={form.biomethanePrice ?? ""} onChange={(v) => set("biomethanePrice", v)} unit={`${cur}/${L.units.mwh}`} />
+              </Field>
             </div>
           </div>
         )}

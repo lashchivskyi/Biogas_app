@@ -9,6 +9,7 @@ import { displayUnit, makeFormat, sig2 } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
 import { decisionCopy } from "@/i18n/decision";
+import fieldCheck from "@/countries/data/backtest-summary.json";
 import { climateCopy } from "@/i18n/climate";
 import { qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
@@ -70,7 +71,10 @@ const ROBUST_STYLE = {
 } as const;
 
 /** How firm the answer is across the scenario range, what drives it, and what a bankable estimate still needs. */
-function Robustness({ a, R, eur }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string }) {
+/** A finite Monte Carlo cannot show certainty: 160 of 160 positive draws is "> 99 %", none is "< 1 %". */
+const probText = (p: number, F: ReturnType<typeof makeFormat>) => p >= 1 ? `> ${F.pct(0.99)}` : p <= 0 ? `< ${F.pct(0.01)}` : F.pct(p);
+
+function Robustness({ a, R, eur, stressNote }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string; stressNote?: string }) {
   const status = a.robustness as keyof typeof ROBUST_STYLE;
   const S = ROBUST_STYLE[status];
   const drivers = a.drivers.map((id) => a.sensitivity.find((s) => s.id === id)).filter((s) => s !== undefined);
@@ -82,6 +86,7 @@ function Robustness({ a, R, eur }: { a: Assessment; R: ResultDict["result"]; eur
       </h2>
       <p className="mt-2 text-[15px] text-ink">{status === "clear_go" ? R.robust.go : status === "clear_no" ? R.robust.no : R.robust.grey}</p>
       <p className="num mt-1 text-sm text-ink2">{f(R.robust.npv, { lo: eur(a.ranges.npvEur[0]), base: eur(a.ranges.npvEur[1]), hi: eur(a.ranges.npvEur[2]) })}</p>
+      {stressNote && <p className="mt-2 text-sm text-ink2">{stressNote}</p>}
       {status !== "clear_no" && drivers.length > 0 && (
         <div className="mt-3">
           {status === "clear_go" && <div className="text-sm font-semibold">{R.robust.drivers}</div>}
@@ -168,7 +173,7 @@ export function ResultView({ a: raw, d, locale, currency, countryNotes = [], acc
         <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
       </div>
 
-      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} />}
+      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} stressNote={a.monteCarlo && f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) })} />}
 
       {/* ---------- Plain summary ---------- */}
       <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
@@ -393,9 +398,10 @@ function MonteCarloPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof
         <Stat label={C.p10} value={F.eur(mc.p10NpvEur)} />
         <Stat label={C.p50} value={F.eur(mc.p50NpvEur)} />
         <Stat label={C.p90} value={F.eur(mc.p90NpvEur)} />
-        <Stat label={C.prob} value={<span className={mc.probPositive >= 0.5 ? "text-good" : "text-warn"}>{F.pct(mc.probPositive)}</span>} />
+        <Stat label={C.prob} value={<span className={mc.probPositive >= 0.5 ? "text-good" : "text-warn"}>{probText(mc.probPositive, F)}</span>} />
         <Stat label={C.payback} value={F.years(mc.p50PaybackYears)} />
       </div>
+      <p className="mt-3 text-sm text-ink2">{f(C.field, { count: fieldCheck.electricity.n, lo: F.n1(1 / fieldCheck.electricity.p90), hi: F.n1(1 / fieldCheck.electricity.p10) })}</p>
     </Section>
   );
 }

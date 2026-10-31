@@ -150,6 +150,11 @@ export interface EnergyInput {
   exportPriceLocalPerKwh?: number;
   /** Price the heat buyer pays, local currency per kWh thermal. Replaces the gas-parity value of heat. */
   heatPriceLocalPerKwh?: number;
+  /**
+   * Price a buyer offers for biomethane, local currency per MWh HHV (GCV, the basis offers are quoted in), without
+   * state tariffs or premiums. Replaces the national biomethane estimate.
+   */
+  biomethanePriceLocalPerMwhHhv?: number;
 }
 
 export interface SiteInput {

@@ -153,6 +153,10 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.methane_loss_high", "Methane loss share that cancels most climate benefit", 0.05, "of production", "ASSUMPTION", "IEA Bioenergy Task 37, 2017, pp. 41–44 (biowaste plants lose the benefit at ≈ 3.5–5.5 %)", "MEDIUM", { date: "2017-12-31" }),
   prov("eng.dry_digestion_dm_pct", "DM above which high-solids digestion is considered", 22, "%", "ASSUMPTION", `${FNR10}, §3.1.1, p. 33; Table 8.4 (wet ≤ 12 % in digester; dry 20–30 % feed)`, "MEDIUM", { date: FNR10_DATE }),
   prov("eng.wet_solids_feeding_dm_pct", "DM above which a solids feeder / recirculation is needed", 12, "%", "ASSUMPTION", `${FNR10}, §2.2.1, p. 23 (pumpable up to ≈ 12 % DM)`, "MEDIUM", { date: FNR10_DATE }),
+
+  // --- uncertainty bands used only by the Monte Carlo (never by the verdict) ---
+  prov("eng.unc_catalogue_solids", "Relative band of catalogue DM × VS when the client gives no measured value", 0.2, "± share", "ESTIMATE", "IPCC 2006 GL Vol. 4 §10.4.4: Tier 2 manure CH₄ factors, built from VS excretion and B0, carry ±20 %; applied here to catalogue DM × VS only (B0 has its own catalogue range)", "LOW", { date: "2006-12-31" }),
+  prov("eng.unc_lab_bmp", "Relative band of a laboratory BMP value", 0.08, "± share", "ESTIMATE", "Hafner et al. 2020, Water 12(6):1752: between-laboratory RSD < 8 % when validation criteria are met (7.5–24 % without them)", "MEDIUM", { date: "2020-06-18" }),
   ...GHG_PARAMS,
 ];
 

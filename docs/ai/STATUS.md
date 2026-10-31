@@ -3,39 +3,31 @@
 Updated 2026-10-31. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 
-- Model 0.6.1; data review 2026-10-30. Tests (1 011), lint, typecheck, build pass.
-- Market data: official sources for 33 countries except LOW items in DATA-SOURCES.md. Regional data: US, CA, BR,
-  IN, MX, IT via admin1 codes. CAPEX recalibrated against DBFZ 2023; support schemes checked against legal texts.
-- Stress tests 2026-10-31 (~300 cases) and follow-ups fixed storage, effluent, yield-as-built, grease, unit slips,
-  haulage, operator time, optional client inputs, straw milling, supplier quote per route. Baseline 1 287 runs.
-- Competitor-audit items 1–7 (2026-10-31): break-even values, quote check, XLSX export, plant-size table (delivered
-  haul × √size), existing-plant CHP option (gas process), RED climate case, AgSTAR back-test on /methodology
-  (79 US digesters, model ÷ reported electricity median 0.94, was 0.53 before NRCS dairy manure). 0 verdict changes;
-  5 US dairy cases moved (larger plants without credits lose more). Items 8–9: "what to verify first" (EVPI per
-  input, one line per action) and Monte Carlo P10/P50/P90 (160 LHS draws, fixed seed) in paid reports; free
-  calculator, what-if, back-test and compare-scenarios run with `uncertainty: false`. Browser check pending.
+- Model 0.6.1; data review 2026-10-30. Tests (1 015), lint, typecheck, build pass. Browser check pending
+  (calculator field and report texts of 2026-10-31 not seen in a browser yet).
+- Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Regional data: US, CA,
+  BR, IN, MX, IT. CAPEX calibrated on DBFZ 2023; support schemes checked against legal texts.
+- Audit 2026-10-31 (39 examples × 33 countries): CH₄, CAPEX/OPEX/revenue, electricity split and cash flows close.
+- Done 2026-10-31 (audit items a, b): buyer's biomethane offer (local/MWh HHV) replaces the estimate; Monte Carlo
+  couples energy and biomethane prices, adds catalogue DM × VS ±20 % and lab BMP ±8 %; report calls the
+  conservative case a stress test, shows "> 99 %" instead of 100 % and the AgSTAR per-plant band (0.4–2.2×).
+  compare-scenarios: 0 of 1 287 verdicts or NPVs moved. MC widened modestly (gb_food P10–P90 3.5 → 4.2 M€); it is
+  still narrower than real plants scatter, because downtime and operating problems are not modelled — said in text.
 
-## Next (highest value first)
+## Next (highest value first) — ranking in PRODUCT.md › Roadmap
 
-0. EU/other dairy VS per head (catalogue 3.7 kg/d excreted) is below IPCC 2006 W. Europe default (≈ 5.1); verify
-   against KTBL/IPCC and back-test on an EU dataset before changing. Swine back-test n = 12 only (ratio 0.80).
-1. Dilute streams use CSTR sizing in cool regions (HRT 25 d); UASB 650 €/m³ is judgement, only −20 % CAPEX.
-   Needs a sourced UASB/lagoon €/m³ (none found twice).
-2. Labour curve is checked against FNR 2008 (3–7 h/kWe) up to 1 MW only; above that and for waste plants with
-   reception/pasteurisation it is extrapolated. DBFZ EEG-Monitoring 2023 Tab. 5-4 not retrievable by search.
-3. Lipid share per fat-rich type (slaughter, fish, olive): not found. Try full texts: Hejnfelt & Angelidaki 2009,
-   Biomass Bioenergy 33:1046; Alburquerque et al. 2004, Bioresour Technol 91:195 (Table 1). Whole-stream flag stays.
-4. Straw: mill CAPEX, steam/alkali steps and a delivered straw price are not modelled (only milling kWh).
-   Press quotes 130–150 €/t (Lower Saxony 2025) are not an accepted source; Zenodo "Straw supply costs for
-   Germany NUTS3 2010–2020" might be.
-5. Spain Canary injection gate; KZ gas ceilings; CA provincial gas; off-grid heat parity; AR/KZ regional power.
+1. EU compliance value for biomethane as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
+2. Evidence loop (RFQ / sampling / grid-operator templates, re-run with evidence). 3. Silage clamp + ensiling loss
+   (KTBL ≈ 10–12 %, verify). 4. Bank pack: construction year, CIT + depreciation, equity IRR, yearly DSCR,
+   reinvestment, residual value (55 of 520 positive cases have IRR < discount + 2.5 pp, all already conditional).
+5. EU back-test; EU dairy VS per head (3.7 vs IPCC 5.1 kg/d). 6. Injection (350 k€, LOW) / grid connection by country.
+- EVPI "yield" item still ignores catalogue DM/VS (only BMP range); include it when the lab-test line is reworked.
+- Carried: UASB €/m³ judgement; labour > 1 MW extrapolated; lipid shares per fat-rich type; straw pretreatment;
+  Spain Canary gate, KZ gas ceilings, CA provincial gas, AR/KZ regional power.
 
 ## Known weaknesses
 
-- Judgement values (LOW): warm-climate 3-month store, `MANURE_RETURN_HAUL` 1.5, price plausibility bands.
-- Biomethane price in RO, GR, RS, MD, BG, MX, TH, VN, TR is a LOW local estimate (0.40 €/Nm³).
-- Catalogue yields ≈ KTBL reference (cattle slurry 209 vs 200 L CH₄/kg VS); not confirmed from Faustzahlen.
-- Best route can be a boiler with no heat buyer when all routes lose (US/CA dairies); warned, but its
-  sensitivities look odd (yield −20 % raises NPV because unsold gas only costs money).
-- `dynamicPaybackYears` is undiscounted (not in the UI). India CBG = gas parity; Canada power 2025 edition.
-- Model-side confidence deductions still lower the level (LOW blocks STRONG): decide if that stays.
+- Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6.
+- Biomethane price LOW everywhere (EU formula; RO, GR, RS, MD, BG, MX, TH, VN, TR 0.40 €/Nm³ estimate).
+- Only membrane upgrading; no propane/odorisation, injection fees, flexible-CHP premium.
+- Boiler with no heat buyer can be "best" when all routes lose (warned). `dynamicPaybackYears` undiscounted.

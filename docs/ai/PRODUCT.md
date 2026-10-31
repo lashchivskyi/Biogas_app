@@ -50,18 +50,33 @@ as a separate case. Market data per country and, where official data exist, per 
   terms, vendor quotes) would improve accuracy enough to justify a longer form.
 - Regional (admin1) market data matter enough beyond US, CA, BR, IN, MX, IT.
 
-## Market position (competitor audit 2026-10-31; re-check yearly)
+## Market position (competitor benchmark 2026-10-31; re-check yearly)
 
-No public tool combines official market data for many countries, route comparison, a verdict and
-per-parameter provenance. Closest: Anessa AD•A (enterprise, sales-led, CI-focused), Luke Biogas tool
-(FI, free, Chen–Hashimoto HRT kinetics, itemised parasitics, CSV/PDF), KTBL (DE, free, incl. existing
-plants post-EEG), LFGcost-Web v3.6 (US landfill, after-tax, loan, credits, break-even price solver),
-RETScreen (generic, Monte Carlo), Bioflux (free, 10 languages, scenario compare, no NPV/method).
-Roadmap by Impact × Differentiation ÷ Complexity. Done 2026-10-31: absolute break-even, supplier-quote check, XLSX
-export, AgSTAR back-test on /methodology, plant-size table, existing-plant CHP option, RED climate case, "what to
-verify first" (EVPI), Monte Carlo P10/P50/P90.
-Next, highest first:
-1. EU back-test (DBFZ operator data or a national register) and EU dairy/swine manure per head.
-2. Portfolio and cross-country comparison of one project.
-3. Flexible CHP (EU flexibility premiums) for existing plants; 4. after-tax/equity IRR only if banks ask.
-Not a goal: dynamic ADM1 simulation; HRT kinetics without sourced per-substrate constants.
+Nobody else sells self-serve, multi-country screening with a verdict. Competitor classes:
+- Free one-country agency tools, no live prices, no verdict: KTBL (DE, existing plants), Luke (FI, Excel since
+  04/2026, ≤ 15 kt), AgSTAR Screening Tool + Penn State (US), ECLAC Methane Calculator (wastewater), BiogasWorld
+  (≥ 30 kt), LFGcost-Web (US landfill, after-tax, credits). Generic: RETScreen Expert (CAD 869/yr, Monte Carlo).
+- Lead-gen calculators (Bioflux, GrowDiesel; Indian CBG): IRR/payback and PDF, method not disclosed.
+- Enterprise, sales-led: Anessa AD•A/AD•O (16 countries, operations + CI revenue loss, fleet benchmarks),
+  SIMBA#biogas (ADM1 dynamic), NNFCC (UK; paid GGSS carbon calculator). Map: IEA BioGRAM (07/2026, potential
+  and cost by region, no project economics).
+- Human studies: ADEME funds feasibility studies up to ~70 % → our report is the step before paying for one.
+Stronger: 33 countries with official prices (+ admin1), three routes, verdict + robustness, provenance per
+parameter, EVPI, Monte Carlo, AgSTAR back-test, support kept separate. Weaker: biomethane offtake value (EU =
+0.8 × business gas + 20 €/MWh judgement, no client input), no EU compliance-market value, pre-tax only, error bands narrower
+than real plants scatter, no bank-format output (browser print only), one site at a time, CAPEX anchored on German plants.
+How professionals get accuracy (and we cannot copy): lab BMP and metered quantities, supplier quotes, a grid
+operator connection study, an offtake contract, an after-tax bank model. Our edge is to say which of these matters
+for this project (EVPI) and re-run with each piece of evidence, so confidence rises as the client prepares.
+
+## Roadmap (Impact × Accuracy gain × Client value × Competitive edge ÷ Complexity; audit 2026-10-31)
+
+1. Done 2026-10-31: honest uncertainty (coupled prices, DM/VS and lab bands, stress-test wording, AgSTAR band) and
+   the buyer's biomethane offer. 2. EU compliance value as support cases from legal texts (FR CPB, DE THG, NL ERE,
+   UK RTFO).
+3. Evidence loop: "what to verify first" turns into RFQ / sampling / grid-operator request templates; the client
+   uploads results and the report re-runs with a higher evidence level. Main reason to pay.
+4. Silage clamp and ensiling loss for stored feeds. 5. Bank pack (construction year, CIT, depreciation, equity IRR,
+   yearly DSCR, reinvestment, residual value) as the top plan. 6. EU back-test and EU manure per head.
+7. Injection and grid connection by country + operator quote input. 8. Portfolio / cross-country comparison.
+Not a goal: ADM1 simulation, plant monitoring (Anessa's space), GIS potential maps (IEA BioGRAM is free).
