@@ -33,7 +33,7 @@ const gridHint: Record<Locale, string> = {
   uk: "Кліматичний орієнтир: найближча клітинка ERA5 (0,25°), без поправки на висоту ділянки.",
   pl: "Dane orientacyjne: najbliższa komórka siatki ERA5 (0,25°), bez korekty wysokości terenu.",
   de: "Klimareferenz: nächstgelegene ERA5-Gitterzelle (0,25°), ohne Höhenkorrektur.",
-  fr: "Référence climatique : maille ERA5 la plus proche (0,25°), sans correction d’altitude.",
+  fr: "Référence climatique : maille ERA5 la plus proche (0,25°), sans correction d’altitude.",
   it: "Riferimento climatico: cella ERA5 più vicina (0,25°), senza correzione per l’altitudine.",
   es: "Referencia climática: celda ERA5 más cercana (0,25°), sin corrección por altitud.",
   pt: "Referência climática: célula ERA5 mais próxima (0,25°), sem correção de altitude.",

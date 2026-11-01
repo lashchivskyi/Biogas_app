@@ -35,8 +35,8 @@ const copy: Record<Locale, HelpCopy> = {
     "Ist der Wert unbekannt, lassen Sie das Feld leer. Das Modell verwendet dann eine Referenzannahme.",
   ],
   fr: [
-    "DM désigne la matière sèche restant après élimination de l’eau. À 20% de DM, 100 kg d’intrant brut contiennent 20 kg de matière sèche. Le laboratoire peut aussi utiliser les sigles TS ou MS.",
-    "VS désigne la part organique de la matière sèche, qui peut produire du biogaz. À 80% de VS, 100 kg de matière sèche contiennent 80 kg de matière organique. Ce pourcentage porte sur la matière sèche, pas sur la masse brute humide.",
+    "La MS (DM) désigne la matière sèche restant après élimination de l’eau. À 20 % de MS, 100 kg d’intrant brut contiennent 20 kg de matière sèche. Le rapport du laboratoire peut aussi utiliser les sigles DM ou TS.",
+    "VS désigne la part organique de la matière sèche, qui peut produire du biogaz. À 80 % de VS, 100 kg de matière sèche contiennent 80 kg de matière organique. Ce pourcentage porte sur la matière sèche, pas sur la masse brute humide.",
     "Le BMP est le potentiel méthanogène mesuré en laboratoire : litres de CH₄ par kilogramme de VS. Saisissez le rendement en méthane, pas le volume total de biogaz. La production réelle dépend aussi des conditions d’exploitation et des pertes.",
     "Indiquez le nombre de mois de disponibilité de l’intrant et le premier mois de cette période. Le modèle répartira ainsi les apports sur l’année. Si un intrant saisonnier est stocké puis alimenté toute l’année, utilisez le calendrier réel d’alimentation et déduisez les pertes au stockage de la quantité.",
     "Si vous ne connaissez pas la valeur, laissez le champ vide : le modèle utilisera une hypothèse de référence.",
@@ -49,14 +49,14 @@ const copy: Record<Locale, HelpCopy> = {
     "Se non conosci il valore, lascia il campo vuoto: il modello userà un’ipotesi di riferimento.",
   ],
   es: [
-    "DM es la materia seca que queda al eliminar el agua. Con un 20% de DM, 100 kg de sustrato fresco contienen 20 kg de materia seca. En el informe del laboratorio también puede figurar como TS o MS.",
-    "VS es la fracción orgánica de la materia seca, a partir de la cual puede producirse biogás. Con un 80% de VS, 100 kg de materia seca contienen 80 kg de materia orgánica. El porcentaje se refiere a la materia seca, no al peso húmedo total.",
+    "MS es la materia seca que queda al eliminar el agua. Con un 20 % de MS, 100 kg de sustrato fresco contienen 20 kg de materia seca. En el informe del laboratorio también puede figurar como TS o DM.",
+    "VS es la fracción orgánica de la materia seca, a partir de la cual puede producirse biogás. Con un 80 % de VS, 100 kg de materia seca contienen 80 kg de materia orgánica. El porcentaje se refiere a la materia seca, no al peso húmedo total.",
     "El BMP es el potencial de metano medido en laboratorio: litros de CH₄ por kilogramo de VS. Introduzca el rendimiento de metano, no el volumen total de biogás. La producción real depende también de las condiciones de operación y las pérdidas.",
     "Indique cuántos meses está disponible el sustrato y el primer mes de ese periodo. El modelo distribuirá así los aportes durante el año. Si un material estacional se almacena y se alimenta todo el año, use el calendario real de alimentación y descuente las pérdidas de almacenamiento de la cantidad.",
     "Si no conoce el valor, deje el campo vacío: el modelo utilizará un supuesto de referencia.",
   ],
   pt: [
-    "DM é a matéria seca que resta após a retirada da água. Com 20% de DM, 100 kg de substrato fresco contêm 20 kg de matéria seca. No laudo, esse parâmetro também pode aparecer como TS, ST ou MS.",
+    "MS é a matéria seca que resta após a retirada da água. Com 20% de MS, 100 kg de substrato fresco contêm 20 kg de matéria seca. No laudo, esse parâmetro também pode aparecer como TS, ST ou MS.",
     "VS é a fração orgânica da matéria seca, que pode dar origem ao biogás. Com 80% de VS, 100 kg de matéria seca contêm 80 kg de matéria orgânica. A porcentagem se refere à matéria seca, não à massa úmida total.",
     "BMP é o potencial de produção de metano medido em laboratório: litros de CH₄ por quilograma de VS. Informe o rendimento de metano, não o volume total de biogás. A produção real depende também das condições de operação e das perdas.",
     "Informe por quantos meses o substrato está disponível e o primeiro mês desse período. O modelo distribuirá a oferta ao longo do ano. Se o material sazonal for armazenado e alimentado durante o ano inteiro, use o calendário real de alimentação e desconte as perdas de armazenamento da quantidade.",
@@ -91,10 +91,10 @@ const copy: Record<Locale, HelpCopy> = {
     "Ha nem ismeri az értéket, hagyja üresen a mezőt. A modell referenciafeltevést használ.",
   ],
   ro: [
-    "DM este substanța uscată rămasă după îndepărtarea apei. La 20% DM, 100 kg de substrat proaspăt conțin 20 kg de substanță uscată. În buletinul de analiză poate apărea și ca TS sau SU.",
-    "VS reprezintă partea organică a substanței uscate, din care se poate forma biogaz. La 80% VS, 100 kg de substanță uscată conțin 80 kg de materie organică. Procentul se raportează la substanța uscată, nu la masa umedă totală.",
+    "DM este substanța uscată rămasă după îndepărtarea apei. La 20 % SU, 100 kg de materie primă proaspătă conțin 20 kg de substanță uscată. În buletinul de analiză poate apărea și ca TS sau SU.",
+    "VS reprezintă partea organică a substanței uscate, din care se poate forma biogaz. La 80 % VS, 100 kg de substanță uscată conțin 80 kg de materie organică. Procentul se raportează la substanța uscată, nu la masa umedă totală.",
     "BMP este potențialul de metan măsurat în laborator: litri de CH₄ pe kilogram de VS. Introduceți randamentul de metan, nu volumul total de biogaz. Producția reală depinde și de condițiile de exploatare și de pierderi.",
-    "Indicați numărul de luni în care substratul este disponibil și prima lună a perioadei. Modelul va distribui astfel aprovizionarea pe parcursul anului. Dacă materialul sezonier este stocat și alimentat tot anul, folosiți calendarul real de alimentare și scădeți pierderile la stocare din cantitate.",
+    "Indicați numărul de luni în care materia primă este disponibilă și prima lună a perioadei. Modelul va distribui astfel aprovizionarea pe parcursul anului. Dacă materialul sezonier este stocat și alimentat tot anul, folosiți calendarul real de alimentare și scădeți pierderile la stocare din cantitate.",
     "Dacă nu cunoașteți valoarea, lăsați câmpul necompletat. Modelul va folosi o ipoteză de referință.",
   ],
   bg: [
