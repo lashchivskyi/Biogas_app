@@ -188,7 +188,7 @@ const lt: Translation = {
     summaryBm: "Tai ≈ {bm} Nm³ biometano per metus.",
     summaryMoney: "Preliminarios investicijos {capex}, atsipirkimas baziniame scenarijuje {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Verta išsamiai nagrinėti: projektas atsilaiko net esant pesimistinėms prielaidoms.",
+      STRONG_CANDIDATE: "Verta išsamiai nagrinėti: projektas atsilaiko net esant atsargioms prielaidoms.",
       POSSIBLE_WITH_CONDITIONS: "Gali atsipirkti, bet tik esant nurodytoms sąlygoms — patvirtinkite jas galimybių studijoje.",
       WEAK_ECONOMICS: "Esamomis sąlygomis investicija per protingą laiką neatsipirks. Žemiau — kas galėtų tai pakeisti.",
       INSUFFICIENT_DATA: "Duomenų išvadai nepakanka — užpildykite trūkstamus punktus.",

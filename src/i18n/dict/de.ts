@@ -188,7 +188,7 @@ const de: Translation = {
     summaryBm: "Das sind ≈ {bm} Nm³ Biomethan pro Jahr.",
     summaryMoney: "Vorläufige Investition {capex}, Amortisation im Basisfall {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Lohnt die Detailplanung: Das Projekt trägt auch unter pessimistischen Annahmen.",
+      STRONG_CANDIDATE: "Lohnt die Detailplanung: Das Projekt trägt auch unter konservativen Annahmen.",
       POSSIBLE_WITH_CONDITIONS: "Kann sich rechnen, aber nur unter den genannten Bedingungen — bestätigen Sie sie in einer Machbarkeitsstudie.",
       WEAK_ECONOMICS: "Unter heutigen Bedingungen amortisiert sich die Investition nicht in angemessener Zeit. Unten steht, was das ändern könnte.",
       INSUFFICIENT_DATA: "Zu wenige Daten für eine Einschätzung — ergänzen Sie die fehlenden Angaben.",

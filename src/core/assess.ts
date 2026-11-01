@@ -5,7 +5,7 @@ import { projectRegion, type CityClimate } from "./location";
 import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
 import type { CountryAdapter, SupportScheme } from "./country";
-import { tr, type CoreLang } from "./i18n";
+import { fmtDec, tr, type CoreLang } from "./i18n";
 import { customerDemand } from "./demand";
 import { assessDigestate } from "./digestate";
 import { classifyPlant, runScenarioRoute } from "./economics";
@@ -130,6 +130,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (!isoDate(asOfDate)) throw new Error("Invalid assessment date");
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";
   const T = tr(lang);
+  const D = fmtDec(lang);
   const params = buildParams(country, input.regionId, input.energy, input.city);
   const fx = params.get("econ.fx_local_per_eur");
   const run = (route: RouteId, scn: ScenarioId, mods: Modifiers = NO_MODS, support?: SupportScheme) =>
@@ -357,7 +358,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const qc = matrix[qIn.capexQuoteRoute].base.capex;
     const ratio = qc.modelledEur ? qc.totalEur / qc.modelledEur : 1;
     const routeName = { chp: "CHP", boiler: "boiler", biomethane: "biomethane" }[qIn.capexQuoteRoute];
-    if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${ratio.toFixed(1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${ratio.toFixed(1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
+    if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T(`The supplier quote (${input.finance!.capexQuoteLocal} ${country.currency}) is ${D(ratio, 1)}× the model's own ${routeName} estimate (${local(qc.modelledEur ?? 0)} ${country.currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.`, `Пропозиція постачальника (${input.finance!.capexQuoteLocal} ${country.currency}) у ${D(ratio, 1)} раза відрізняється від власної оцінки моделі для варіанта «${routeName}» (${local(qc.modelledEur ?? 0)} ${country.currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.`));
     if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T(`Your supplier quote is for the ${routeName} route, but the model finds the ${bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.`, `Пропозиція постачальника стосується варіанта «${routeName}», але модель вважає вигіднішим «${bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.`));
   }
   // ---- what to verify first (value of information) ----

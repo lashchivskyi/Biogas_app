@@ -1,6 +1,6 @@
 import type { CustomerDemand } from "./demand";
 import { FEEDSTOCKS } from "./feedstockData";
-import type { Tr } from "./i18n";
+import { fmtDec, type Tr } from "./i18n";
 import type { DigestateAssessment, LogisticsAssessment, ProjectInput, ScenarioResult, Score } from "./types";
 
 /** Piecewise-linear interpolation through (x,y) points; clamped at both ends. */
@@ -37,6 +37,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const feed = base.feed;
   const e = base.energy;
   const r0 = (n: number) => Math.round(n);
+  const D = fmtDec(T.lang);
 
   // ---------------- Feedstock fit ----------------
   const scale = interp(base.kwElEquivalent, [[0, 0], [25, 20], [50, 45], [100, 65], [200, 80], [400, 92], [800, 100]]);
@@ -119,8 +120,8 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const ecoExpl: string[] = [];
   if (base.fin.npvEur < 0) { eco = Math.min(eco, 35); ecoExpl.push(T("Base-case NPV is negative", "NPV базового сценарію від'ємний")); }
   if (cons.fin.npvEur >= 0) { eco = Math.min(100, eco + 5); ecoExpl.push(T("NPV positive even in the conservative case", "NPV додатний навіть у консервативному сценарії")); }
-  if (base.fin.dscrMin !== null && base.fin.dscrMin < 1.2) { eco = Math.max(0, eco - 10); ecoExpl.push(T(`Minimum DSCR ${base.fin.dscrMin.toFixed(2)} — below the usual bank threshold of 1.2–1.3`, `DSCR мін. ${base.fin.dscrMin.toFixed(2)} — нижче банківського порога 1,2–1,3`)); }
-  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T(`Base-case simple payback ≈ ${pb.toFixed(1)} years`, `Проста окупність базового сценарію ≈ ${pb.toFixed(1)} р.`));
+  if (base.fin.dscrMin !== null && base.fin.dscrMin < 1.2) { eco = Math.max(0, eco - 10); ecoExpl.push(T(`Minimum DSCR ${D(base.fin.dscrMin, 2)} — below the usual bank threshold of 1.2–1.3`, `DSCR мін. ${D(base.fin.dscrMin, 2)} — нижче банківського порога 1,2–1,3`)); }
+  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T(`Base-case simple payback ≈ ${D(pb, 1)} years`, `Проста окупність базового сценарію ≈ ${D(pb, 1)} р.`));
   const ecoValue = clamp(eco);
 
   // ---------------- Risks ----------------
@@ -128,10 +129,10 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const regExpl = [T(`Number and weight of permitting / regulatory steps: ${s.regulatoryPoints} points (more = harder)`, `Кількість і складність дозвільних та регуляторних кроків: ${s.regulatoryPoints} балів (чим більше — тим складніше)`)];
   let env = 20;
   const envExpl: string[] = [];
-  const lossPct = (s.methaneLossShare * 100).toFixed(1);
+  const lossPct = D(s.methaneLossShare * 100, 1);
   if (s.methaneLossShare > s.methaneLossGood) {
     env += Math.min(40, (s.methaneLossShare - s.methaneLossGood) * 800);
-    envExpl.push(T(`Expected methane loss ${lossPct} % (good practice ≤ ${(s.methaneLossGood * 100).toFixed(0)} %)`, `Очікувані втрати метану ${lossPct} % (добра практика ≤ ${(s.methaneLossGood * 100).toFixed(0)} %)`));
+    envExpl.push(T(`Expected methane loss ${lossPct} % (good practice ≤ ${D(s.methaneLossGood * 100)} %)`, `Очікувані втрати метану ${lossPct} % (добра практика ≤ ${D(s.methaneLossGood * 100)} %)`));
   } else envExpl.push(T(`Expected methane loss ${lossPct} % — within good practice if gas-tight and monitored`, `Очікувані втрати метану ${lossPct} % — у межах доброї практики за умови гермітичності та моніторингу`));
   if (input.site.neighboursWithin300m) { env += 20; envExpl.push(T("Neighbours within 300 m: odour and incident exposure", "Сусіди ближче 300 м: запах і ризик інциденту")); }
   if (input.site.nearProtectedOrWaterArea) { env += 20; envExpl.push(T("Water bodies / protected areas nearby", "Водойми / природоохоронні території поруч")); }

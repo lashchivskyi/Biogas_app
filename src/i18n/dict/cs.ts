@@ -188,7 +188,7 @@ const cs: Translation = {
     summaryBm: "To je ≈ {bm} Nm³ biometanu ročně.",
     summaryMoney: "Předběžná investice {capex}, návratnost v základním scénáři {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Stojí za podrobné zpracování: projekt obstojí i při pesimistických předpokladech.",
+      STRONG_CANDIDATE: "Stojí za podrobné zpracování: projekt obstojí i při konzervativních předpokladech.",
       POSSIBLE_WITH_CONDITIONS: "Může se vyplatit, ale jen za výše uvedených podmínek — ověřte je ve studii proveditelnosti.",
       WEAK_ECONOMICS: "Za současných podmínek se investice v rozumné době nevrátí. Níže je, co by to mohlo změnit.",
       INSUFFICIENT_DATA: "Málo dat pro závěr — doplňte chybějící údaje.",

@@ -188,7 +188,7 @@ const tr: Translation = {
     summaryBm: "Bu, yılda ≈ {bm} Nm³ biyometan demektir.",
     summaryMoney: "Ön yatırım {capex}, baz senaryoda geri ödeme {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Ayrıntılı çalışmaya değer: proje kötümser varsayımlarda bile ayakta kalıyor.",
+      STRONG_CANDIDATE: "Ayrıntılı çalışmaya değer: proje temkinli varsayımlarda bile ayakta kalıyor.",
       POSSIBLE_WITH_CONDITIONS: "Kârlı olabilir, ama yalnızca yukarıdaki koşullarla — bunları bir fizibilite etüdünde doğrulayın.",
       WEAK_ECONOMICS: "Mevcut koşullarda yatırım makul bir sürede geri dönmüyor. Bunu neyin değiştirebileceği aşağıda.",
       INSUFFICIENT_DATA: "Sonuç için veri yetersiz — eksik kalemleri doldurun.",

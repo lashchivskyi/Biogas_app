@@ -188,7 +188,7 @@ const sv: Translation = {
     summaryBm: "Det motsvarar ≈ {bm} Nm³ biometan per år.",
     summaryMoney: "Preliminär investering {capex}, återbetalning i basscenariot {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Värt att gå vidare med: projektet håller även med pessimistiska antaganden.",
+      STRONG_CANDIDATE: "Värt att gå vidare med: projektet håller även med försiktiga antaganden.",
       POSSIBLE_WITH_CONDITIONS: "Det kan löna sig, men bara på villkoren ovan — bekräfta dem i en förstudie.",
       WEAK_ECONOMICS: "Under nuvarande förutsättningar betalar sig investeringen inte inom rimlig tid. Nedan ser du vad som kan ändra det.",
       INSUFFICIENT_DATA: "För lite data för en slutsats — fyll i det som saknas.",

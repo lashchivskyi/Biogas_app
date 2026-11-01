@@ -1,4 +1,4 @@
-import { fmtInt, type CoreLang, tr } from "./i18n";
+import { fmtDec, fmtInt, type CoreLang, tr } from "./i18n";
 import type { Assessment, Confidence, ScenarioResult, VerdictId } from "./types";
 
 /** Below this client-side data score the verdict is INSUFFICIENT_DATA and no report is sold. */
@@ -21,7 +21,8 @@ export function decideVerdict(args: {
   const { base, cons, opt, confidence, minKwEl, breakEven, lang } = args;
   const T = tr(lang);
   const fmt = fmtInt(lang);
-  const y = (n: number) => (lang === "uk" ? `${n.toFixed(1).replace(".", ",")} р.` : `${n.toFixed(1)} yr`);
+  const D = fmtDec(lang);
+  const y = (n: number) => (lang === "uk" ? `${D(n, 1)} р.` : `${D(n, 1)} yr`);
   const reasons: string[] = [];
   const whatWouldChange: string[] = [];
 
@@ -59,7 +60,7 @@ export function decideVerdict(args: {
   const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
 
   if (strong) {
-    reasons.push(T(`Simple payback ≈ ${y(pb!)} (base) and ≈ ${y(pbCons!)} in the conservative case; base NPV €${fmt(npvBase)}; minimum DSCR ${(base.fin.dscrMin ?? 0).toFixed(2)}.`, `Проста окупність ≈ ${y(pb!)} (базовий) і ≈ ${y(pbCons!)} у консервативному сценарії; NPV базового ${fmt(npvBase)} €; DSCR мін. ${(base.fin.dscrMin ?? 0).toFixed(2)}.`));
+    reasons.push(T(`Simple payback ≈ ${y(pb!)} (base) and ≈ ${y(pbCons!)} in the conservative case; base NPV €${fmt(npvBase)}; minimum DSCR ${D(base.fin.dscrMin ?? 0, 2)}.`, `Проста окупність ≈ ${y(pb!)} (базовий) і ≈ ${y(pbCons!)} у консервативному сценарії; NPV базового ${fmt(npvBase)} €; DSCR мін. ${D(base.fin.dscrMin ?? 0, 2)}.`));
     whatWouldChange.push(T("Confirm with a laboratory feedstock analysis (BMP) and real energy invoices.", "Підтвердити лабораторним аналізом сировини (BMP) та реальними рахунками за енергію."));
     return { id: "STRONG_CANDIDATE", reasons, whatWouldChange };
   }

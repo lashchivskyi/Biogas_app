@@ -188,7 +188,7 @@ const fi: Translation = {
     summaryBm: "Se on ≈ {bm} Nm³ biometaania vuodessa.",
     summaryMoney: "Alustava investointi {capex}, takaisinmaksu perusskenaariossa {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Kannattaa selvittää tarkemmin: hanke kestää myös pessimistiset oletukset.",
+      STRONG_CANDIDATE: "Kannattaa selvittää tarkemmin: hanke kestää myös varovaiset oletukset.",
       POSSIBLE_WITH_CONDITIONS: "Voi kannattaa, mutta vain yllä mainituin ehdoin — vahvista ne kannattavuusselvityksessä.",
       WEAK_ECONOMICS: "Nykyisillä ehdoilla investointi ei maksa itseään takaisin kohtuullisessa ajassa. Alla, mikä voisi muuttaa tämän.",
       INSUFFICIENT_DATA: "Tiedot eivät riitä johtopäätökseen — täydennä puuttuvat kohdat.",

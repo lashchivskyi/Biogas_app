@@ -717,7 +717,7 @@ export function auditExport(a: Assessment, access: "standard" | "full", currency
   eq("NPV", base.fin.npvEur); eq("IRR", base.fin.irr as number); eq("Simple payback", base.fin.simplePaybackYears as number);
   eq("Minimum DSCR", base.fin.dscrMin as number); eq("Debt, EUR", base.fin.debtEur); eq("Biogas, m³/year", base.feed.biogasM3Year);
   eq("Net electricity", base.energy.elNetKwh / 1000); eq("Useful heat", base.energy.heatUsefulKwh / 1000); eq("Biomethane, Nm³/year", base.energy.biomethaneNm3);
-  eq("Verdict", a.verdict.id); eq("Chosen route", (a.lang === "uk" ? { chp: "Когенерація", boiler: "Котел", biomethane: "Біометан" } : { chp: "CHP", boiler: "Boiler", biomethane: "Biomethane" })[a.bestRoute]); eq("Exchange rate", a.fx);
+  eq("Verdict", ({ STRONG_CANDIDATE: ["Strong candidate", "Сильний кандидат"], POSSIBLE_WITH_CONDITIONS: ["Possible with conditions", "Можливо за умов"], WEAK_ECONOMICS: ["Weak economics", "Слабка економіка"], INSUFFICIENT_DATA: ["Insufficient data", "Недостатньо даних"], NOT_RECOMMENDED_AT_SCALE: ["Not recommended at this scale", "Не рекомендовано за такого масштабу"] } as const)[a.verdict.id][a.lang === "uk" ? 1 : 0]); eq("Chosen route", (a.lang === "uk" ? { chp: "Когенерація", boiler: "Котел", biomethane: "Біометан" } : { chp: "CHP", boiler: "Boiler", biomethane: "Biomethane" })[a.bestRoute]); eq("Exchange rate", a.fx);
   if (be.capexReductionPct !== null) eq("CAPEX reduction needed", be.capexReductionPct);
   if (be.maxCapexEur != null) eq("Highest installed cost", be.maxCapexEur);
   if (a.monteCarlo) { eq("NPV P10", a.monteCarlo.p10NpvEur); eq("NPV median", a.monteCarlo.p50NpvEur); eq("NPV P90", a.monteCarlo.p90NpvEur); eq("Chance that NPV > 0", a.monteCarlo.probPositive); }

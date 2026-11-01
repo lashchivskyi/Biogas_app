@@ -1,3 +1,4 @@
+import { fmtDec } from "./i18n";
 import { activeMonths, DAYS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import { ANIMALS, FEEDSTOCKS, isEffluentLike, PAID_HANDLING } from "./feedstockData";
@@ -44,6 +45,7 @@ export function resolveLine(line: FeedstockLineInput, params?: Params) {
 
 export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   const { input, params, scenario, mods, fx, t: T, lang } = ctx;
+  const D = fmtDec(lang);
   const lhv = params.get("eng.ch4_lhv_kwh_m3");
   const transportRate = params.get("econ.transport_eur_tkm") * mods.transport;
   const transportFixed = params.get("econ.transport_fixed_eur_t") * mods.transport;
@@ -163,8 +165,8 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   let inhibition = 1;
   if (poultryShare > thr) {
     inhibition = Math.max(0.7, 1 - lossPer10 * ((poultryShare - thr) / 0.1));
-    const ps = (poultryShare * 100).toFixed(0);
-    const cut = ((1 - inhibition) * 100).toFixed(0);
+    const ps = D(poultryShare * 100);
+    const cut = D((1 - inhibition) * 100);
     warnings.push(
       T(
         `Poultry manure is ${ps} % of the organic matter: risk of ammonia inhibition. The model cuts the yield by ${cut} %; dilution or a co-substrate is needed.`,
@@ -174,7 +176,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   }
   if (fatShare > fatWarn) {
     inhibition *= 0.95;
-    const fs = (fatShare * 100).toFixed(0);
+    const fs = D(fatShare * 100);
     warnings.push(T(`Fats are ${fs} % of the organic matter: risk of foaming and long-chain fatty-acid inhibition; dose gradually.`, `Жирові відходи — ${fs} % органічної речовини: ризик піноутворення та інгібування довголанцюговими жирними кислотами; дозувати поступово.`));
   }
 

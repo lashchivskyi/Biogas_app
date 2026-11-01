@@ -188,7 +188,7 @@ const et: Translation = {
     summaryBm: "See on ≈ {bm} Nm³ biometaani aastas.",
     summaryMoney: "Esialgne investeering {capex}, tasuvus baasstsenaariumis {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Tasub üksikasjalikult läbi töötada: projekt peab vastu ka pessimistlike eelduste korral.",
+      STRONG_CANDIDATE: "Tasub üksikasjalikult läbi töötada: projekt peab vastu ka konservatiivsete eelduste korral.",
       POSSIBLE_WITH_CONDITIONS: "Võib end ära tasuda, kuid ainult eespool toodud tingimustel — kinnitage need teostatavusuuringus.",
       WEAK_ECONOMICS: "Praegustel tingimustel investeering mõistliku ajaga ei tasu. Allpool on, mis võiks seda muuta.",
       INSUFFICIENT_DATA: "Järelduseks pole piisavalt andmeid — täitke puuduvad punktid.",

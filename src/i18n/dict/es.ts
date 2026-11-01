@@ -188,7 +188,7 @@ const es: Translation = {
     summaryBm: "Equivale a ≈ {bm} Nm³ de biometano al año.",
     summaryMoney: "Inversión preliminar {capex}, retorno en el escenario base {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Merece un estudio detallado: el proyecto aguanta incluso con supuestos pesimistas.",
+      STRONG_CANDIDATE: "Merece un estudio detallado: el proyecto aguanta incluso con supuestos conservadores.",
       POSSIBLE_WITH_CONDITIONS: "Puede salir rentable, pero solo con las condiciones indicadas: confírmelas en un estudio de viabilidad.",
       WEAK_ECONOMICS: "En las condiciones actuales la inversión no se recupera en un plazo razonable. Abajo verá qué podría cambiarlo.",
       INSUFFICIENT_DATA: "No hay datos suficientes para concluir: complete los apartados que faltan.",

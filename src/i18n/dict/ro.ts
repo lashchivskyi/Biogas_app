@@ -61,7 +61,7 @@ const ro: Translation = {
     segments: {
       meat: { label: "Procesare carne / abator", insight: "Deșeurile de abator au cea mai multă energie pe tonă. Plătiți deja pentru eliminarea lor și folosiți zilnic abur și frig.", conditions: ["De la ≈ 2–3 mii t de deșeuri pe an", "Igienizare (reguli sanitar-veterinare)", "Nevoie de căldură și electricitate pe tot parcursul anului"] },
       dairyproc: { label: "Fabrică de lactate / brânzeturi", insight: "Zerul și nămolul gras apar zilnic; apa caldă și aburul sunt necesare non-stop.", conditions: ["De la ≈ 10–20 mii t de zer pe an", "Zerul nu se vinde mai scump ca furaj", "Căldură folosită tot anul"] },
-      sugar: { label: "Fabrică de zahăr", insight: "Borhotul presat dă ≈ 70 m³ de metan pe tonă, iar fabrica consumă cantități uriașe de căldură. Însilozat, alimentează digestorul tot anul.", conditions: ["De la ≈ 30.000 t borhot presat pe an", "Borhotul nu se vinde mai scump ca furaj", "Silozuri pentru alimentare tot anul"] },
+      sugar: { label: "Fabrică de zahăr", insight: "Borhotul presat dă ≈ 70 m³ de metan pe tonă, iar fabrica consumă cantități uriașe de căldură. Însilozat, alimentează fermentatorul tot anul.", conditions: ["De la ≈ 30.000 t borhot presat pe an", "Borhotul nu se vinde mai scump ca furaj", "Silozuri pentru alimentare tot anul"] },
       foodwaste: { label: "Deșeuri alimentare / biodeșeuri municipale", insight: "Instalația este plătită să primească materia primă (taxă de primire) și apoi vinde biometan — două venituri dintr-o tonă.", conditions: ["Contracte de tonaj garantate", "Despachetare și recepție închisă", "Certificarea calității digestatului"] },
       poultry: { label: "Fermă de păsări", insight: "Dejecțiile de pasăre sunt bogate în energie, dar amoniacul frânează procesul. Trebuie diluate sau amestecate cu alte deșeuri.", conditions: ["Un cosubstrat (dejecții lichide, deșeuri alimentare)", "Încălzirea halelor iarna", "Teren sau cumpărător pentru digestat"] },
       pigs: { label: "Fermă de porci", insight: "Dejecțiile de porc sunt 95 % apă. Fără adaosuri energetice, socoteala iese rar — doar la scară foarte mare.", conditions: ["Un cosubstrat cu taxă de primire", "Căldură tot anul pentru purcei", "Instalația lângă bazinul de dejecții"] },
@@ -188,7 +188,7 @@ const ro: Translation = {
     summaryBm: "Asta înseamnă ≈ {bm} Nm³ de biometan pe an.",
     summaryMoney: "Investiție preliminară {capex}, recuperare în scenariul de bază {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Merită aprofundat: proiectul rezistă chiar și cu ipoteze pesimiste.",
+      STRONG_CANDIDATE: "Merită aprofundat: proiectul rezistă chiar și cu ipoteze prudente.",
       POSSIBLE_WITH_CONDITIONS: "Poate fi rentabil, dar doar în condițiile de mai sus — confirmați-le într-un studiu de fezabilitate.",
       WEAK_ECONOMICS: "În condițiile actuale investiția nu se recuperează într-un timp rezonabil. Mai jos vedeți ce ar putea schimba asta.",
       INSUFFICIENT_DATA: "Prea puține date pentru o concluzie — completați ce lipsește.",

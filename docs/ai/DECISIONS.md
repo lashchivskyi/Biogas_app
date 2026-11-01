@@ -196,3 +196,6 @@ replace the line rather than adding a contradicting one.
   NPV/IRR/CHP/COD terms where its UI already does (VAN, Kapitalwert, BHKW, ChZT…) and one form of address (it tu, es usted,
   Nordics du/sinä, others formal). Core engineering notes stay English for non-uk locales (`coreLang`). Tooltip coverage is
   enforced by `dict.test.ts`.
+- 2026-11-01 — Localization QA is code: `src/i18n/glossary.ts` (terms, forbidden variants, DO-NOT-TRANSLATE, SI units, style) +
+  `__tests__/qa.test.ts` over every i18n module; style guide = skill `localization`. Scenario is "Conservative" in every
+  language (the verdict text said "pessimistic" in 24 locales; fixed). Known defects are a ratchet (`KNOWN`): lower, never raise.

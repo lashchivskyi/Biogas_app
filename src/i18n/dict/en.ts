@@ -190,7 +190,7 @@ const en = {
     summaryBm: "That's ≈ {bm} Nm³ of biomethane a year.",
     summaryMoney: "Preliminary investment {capex}, base-case payback {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Worth detailed work: the project holds up even under pessimistic assumptions.",
+      STRONG_CANDIDATE: "Worth detailed work: the project holds up even under conservative assumptions.",
       POSSIBLE_WITH_CONDITIONS: "It can pay off, but only under the conditions above — confirm them in a feasibility study.",
       WEAK_ECONOMICS: "Under current conditions the investment won't pay back in a reasonable time. Below is what could change that.",
       INSUFFICIENT_DATA: "Not enough data for a conclusion — fill in the missing items.",

@@ -188,7 +188,7 @@ const da: Translation = {
     summaryBm: "Det svarer til ≈ {bm} Nm³ biometan om året.",
     summaryMoney: "Foreløbig investering {capex}, tilbagebetaling i basisscenariet {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Værd at arbejde videre med: projektet holder selv med pessimistiske antagelser.",
+      STRONG_CANDIDATE: "Værd at arbejde videre med: projektet holder selv med forsigtige antagelser.",
       POSSIBLE_WITH_CONDITIONS: "Det kan betale sig, men kun på betingelserne ovenfor — bekræft dem i en forundersøgelse.",
       WEAK_ECONOMICS: "Under de nuværende forhold tjener investeringen sig ikke hjem inden for rimelig tid. Nedenfor kan du se, hvad der kan ændre det.",
       INSUFFICIENT_DATA: "For få data til en konklusion — udfyld de manglende punkter.",

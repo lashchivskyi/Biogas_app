@@ -61,7 +61,7 @@ const sr: Translation = {
     segments: {
       meat: { label: "Prerada mesa / klanica", insight: "Klanični otpad ima najviše energije po toni. Već plaćate njegovo odnošenje i svakodnevno trošite paru i hlađenje.", conditions: ["Od ≈ 2–3 hiljada t otpada godišnje", "Higijenizacija (veterinarski propisi)", "Celogodišnja potreba za toplotom i strujom na lokaciji"] },
       dairyproc: { label: "Mlekara / sirana", insight: "Surutka i masni mulj nastaju svakog dana; topla voda i para su potrebni neprekidno.", conditions: ["Od ≈ 10–20 hiljada t surutke godišnje", "Surutka se ne prodaje skuplje kao stočna hrana", "Toplota se koristi cele godine"] },
-      sugar: { label: "Šećerana", insight: "Presovani rezanci daju ≈ 70 m³ metana po toni, a šećerana troši ogromne količine toplote. Silirani održavaju digestor u radu cele godine.", conditions: ["Od ≈ 30.000 t presovanih rezanaca godišnje", "Rezanci se ne prodaju skuplje kao stočna hrana", "Silos za celogodišnje doziranje"] },
+      sugar: { label: "Šećerana", insight: "Presovani rezanci daju ≈ 70 m³ metana po toni, a šećerana troši ogromne količine toplote. Silirani održavaju fermentor u radu cele godine.", conditions: ["Od ≈ 30.000 t presovanih rezanaca godišnje", "Rezanci se ne prodaju skuplje kao stočna hrana", "Silos za celogodišnje doziranje"] },
       foodwaste: { label: "Otpad od hrane / komunalni biootpad", insight: "Postrojenje dobija naknadu za prijem sirovine (gate fee), a zatim prodaje biometan — dva prihoda od jedne tone.", conditions: ["Obezbeđeni ugovori o količinama", "Raspakivanje i zatvoreni prijem", "Sertifikacija kvaliteta digestata"] },
       poultry: { label: "Živinarska farma", insight: "Živinski stajnjak je bogat energijom, ali amonijak usporava proces. Potrebno ga je razblažiti ili mešati sa drugim otpadom.", conditions: ["Kosupstrat (tečni stajnjak, otpad od hrane)", "Grejanje objekata zimi", "Površine ili kupac za digestat"] },
       pigs: { label: "Svinjarska farma", insight: "Svinjski tečni stajnjak je 95 % voda. Bez energetski bogatih dodataka računica retko izlazi — osim pri vrlo velikom obimu.", conditions: ["Kosupstrat uz naknadu za prijem", "Celogodišnja toplota za prasad", "Postrojenje odmah uz lagunu za stajnjak"] },
@@ -188,7 +188,7 @@ const sr: Translation = {
     summaryBm: "To je ≈ {bm} Nm³ biometana godišnje.",
     summaryMoney: "Preliminarna investicija {capex}, povraćaj u osnovnom scenariju {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Vredi detaljne razrade: projekat opstaje i uz pesimistične pretpostavke.",
+      STRONG_CANDIDATE: "Vredi detaljne razrade: projekat opstaje i uz konzervativne pretpostavke.",
       POSSIBLE_WITH_CONDITIONS: "Može da se isplati, ali samo uz navedene uslove — potvrdite ih u studiji izvodljivosti.",
       WEAK_ECONOMICS: "U sadašnjim uslovima investicija se neće vratiti u razumnom roku. Ispod je šta bi to moglo da promeni.",
       INSUFFICIENT_DATA: "Nema dovoljno podataka za zaključak — dopunite ono što nedostaje.",

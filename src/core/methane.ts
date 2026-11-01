@@ -1,4 +1,4 @@
-import type { Tr } from "./i18n";
+import { fmtDec, type Tr } from "./i18n";
 import type { Params } from "./params";
 import type { Assessment, ScenarioResult } from "./types";
 
@@ -13,6 +13,7 @@ export function methaneCheck(
   p: Params,
   T: Tr,
 ): Assessment["methane"] {
+  const D = fmtDec(T.lang);
   const gwp = p.get("eng.gwp_ch4");
   const rho = p.get("eng.ch4_density_kg_m3");
   const lhv = p.get("eng.ch4_lhv_kwh_m3");
@@ -38,8 +39,8 @@ export function methaneCheck(
     T("Continuous gas-holder pressure monitoring; a standby flare instead of venting.", "Постійний моніторинг тиску газгольдера, зарезервований факел замість випуску в атмосферу."),
     T("CHP with an oxidation catalyst and tuning regime to cut methane slip.", "КГУ з окислювальним каталізатором та регламентом налаштувань для зменшення проскоку метану."),
   ];
-  const lp = (e.methaneLossShare * 100).toFixed(1);
-  const gp = (good * 100).toFixed(0);
+  const lp = D(e.methaneLossShare * 100, 1);
+  const gp = D(good * 100);
   if (e.methaneLossShare > good) advice.unshift(T(`Expected loss ${lp} % is above good practice (${gp} %): budget for monitoring.`, `Очікувані втрати ${lp} % вищі за добру практику (${gp} %): закладіть бюджет на моніторинг.`));
   if (e.methaneLossShare > high || (ratio === null || ratio > 0.5)) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements.", "Втрати метану можуть знівелювати кліматичну вигоду. Не декларуйте зменшення викидів без вимірювань."));
 

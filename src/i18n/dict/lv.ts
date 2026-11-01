@@ -188,7 +188,7 @@ const lv: Translation = {
     summaryBm: "Tas ir ≈ {bm} Nm³ biometāna gadā.",
     summaryMoney: "Provizoriskās investīcijas {capex}, atmaksāšanās bāzes scenārijā {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Vērts izstrādāt detalizēti: projekts iztur pat pesimistiskus pieņēmumus.",
+      STRONG_CANDIDATE: "Vērts izstrādāt detalizēti: projekts iztur pat piesardzīgus pieņēmumus.",
       POSSIBLE_WITH_CONDITIONS: "Var atmaksāties, bet tikai ar minētajiem nosacījumiem — apstipriniet tos priekšizpētē.",
       WEAK_ECONOMICS: "Pašreizējos apstākļos investīcija saprātīgā laikā neatmaksāsies. Zemāk — kas to varētu mainīt.",
       INSUFFICIENT_DATA: "Datu nepietiek secinājumam — aizpildiet trūkstošo.",

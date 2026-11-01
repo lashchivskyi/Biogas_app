@@ -573,7 +573,7 @@ const sr: typeof en = {
   heatKwh: "Toplota koju zaista koristite godišnje, u kWh. Toplota koju niko ne koristi nema vrednost, zato budite realni.",
   heatPrice: "Koliko vas po kWh košta toplota koja bi bila zamenjena (gas, dizel, peleti itd.).",
   biomethanePrice: "Ako vam je kupac ponudio cenu za biometan, unesite je ovde; bez ponude koristimo nacionalnu procenu. Ponude su obično po MWh gornje toplotne moći (HHV). Ne uključujte državne tarife i premije: prikazuju se posebno.",
-  land: "Slobodna površina uz lokaciju za digestor, rezervoare i opremu. Premalo zemljišta može da isključi neke varijante.",
+  land: "Slobodna površina uz lokaciju za fermentor, rezervoare i opremu. Premalo zemljišta može da isključi neke varijante.",
   storage: "Postojeći rezervoari ili lagune koji se mogu ponovo koristiti. To smanjuje investiciju.",
   gasGrid: "Udaljenost do najbližeg gasovoda. Mala udaljenost čini utiskivanje biometana realnim; dug gasovod je veoma skup.",
   neighbours: "Stambeni objekti u blizini mogu značiti neprijatne mirise, buku i prigovore u postupku dobijanja dozvola.",

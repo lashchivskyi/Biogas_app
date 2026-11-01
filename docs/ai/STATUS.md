@@ -7,7 +7,8 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
   security review 2026-11-01 (0 critical/high; refund replay, admin CSRF, PII in log fixed; CSP; shared rate limit). Not tested: real Stripe, real email.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Scenario sweep 13 464 assessments, 0 throws/NaN,
   balances close; 30 reports, 0 contradictions. Benchmark vs KTBL, Luke, WSU, LandGEM (PRODUCT.md › Market).
-- L10n QA 2026-11-01, 25 locales: tooltips translated (were English), plan names/terms/register unified; needs native review.
+- L10n: tooltips, plan names, terms unified; automatic QA (`src/i18n/__tests__/qa.test.ts`, glossary, skill `localization`). Open: ~250 known DNT/unit/
+  abbreviation defects (`KNOWN`), % spacing, +60 % buttons; no native review.
 ## Launch readiness 2026-11-01 (green = verified in code/tests/local prod build)
 - GREEN: server errors → redacted JSON log + Sentry envelope (`monitoring.ts`); payment alerts (paid, mismatch, refund, dispute);
   cron re-sends stuck report links + owner alert at 1 h; no PII/tokens in app logs; health `/api/health` (storage check);

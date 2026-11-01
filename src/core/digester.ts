@@ -1,3 +1,4 @@
+import { fmtDec } from "./i18n";
 import { DAYS_IN_MONTH, HOURS_IN_MONTH, meanTemp, substrateTempC } from "./climate";
 import type { RunContext } from "./context";
 import { FEEDSTOCKS, isEffluentLike } from "./feedstockData";
@@ -43,6 +44,7 @@ export function chooseDigestion(feed: FeedstockSummary, ctx: RunContext): Kind {
 
 export function recommendTechnology(feed: FeedstockSummary, ctx: RunContext, hrt: number, digestion: Kind): TechnologyRecommendation {
   const T = ctx.t;
+  const FD = fmtDec(ctx.lang);
   const p = ctx.params;
   const reasons: string[] = [];
   const warnings: string[] = [];
@@ -61,32 +63,32 @@ export function recommendTechnology(feed: FeedstockSummary, ctx: RunContext, hrt
     case "covered_lagoon":
       primary = T("Covered anaerobic lagoon (unheated, ambient temperature)", "Накрита анаеробна лагуна (без підігріву)");
       reactor = T("Lined lagoon with HDPE gas-tight cover, sludge removal and gas collection", "Лагуна з геомембраною та газонепроникним накриттям HDPE, видалення осаду, збір газу");
-      reasons.push(T(`Warm climate (annual mean ≈ ${tMean.toFixed(0)} °C) and a liquid feed (${dm.toFixed(1)} % DM): an unheated covered lagoon is the lowest-cost proven option.`, `Теплий клімат (середня ≈ ${tMean.toFixed(0)} °C) і рідка сировина (${dm.toFixed(1)} % DM): ненагріта накрита лагуна — найдешевше перевірене рішення.`));
+      reasons.push(T(`Warm climate (annual mean ≈ ${FD(tMean, 0)} °C) and a liquid feed (${FD(dm, 1)} % DM): an unheated covered lagoon is the lowest-cost proven option.`, `Теплий клімат (середня ≈ ${FD(tMean, 0)} °C) і рідка сировина (${FD(dm, 1)} % DM): ненагріта накрита лагуна — найдешевше перевірене рішення.`));
       alternatives.push(T("Heated CSTR or UASB for higher, steadier gas yield per m³", "Нагрітий CSTR або UASB — вищий і стабільніший вихід на м³"));
       break;
     case "high_rate":
       primary = T("High-rate anaerobic reactor (UASB / EGSB / anaerobic filter)", "Високонавантажений анаеробний реактор (UASB / EGSB / анаеробний фільтр)");
       reactor = T("Granular-sludge reactor with pre-acidification and equalisation tank", "Реактор з гранульованим мулом, преацидифікація та буферна ємність");
-      reasons.push(T(`Very dilute stream (${dm.toFixed(1)} % DM): a CSTR would be oversized; high-rate reactors retain the biomass and need a fraction of the volume.`, `Дуже розбавлений потік (${dm.toFixed(1)} % DM): CSTR вийшов би завеликим; високонавантажені реактори утримують біомасу і потребують у рази меншого об'єму.`));
+      reasons.push(T(`Very dilute stream (${FD(dm, 1)} % DM): a CSTR would be oversized; high-rate reactors retain the biomass and need a fraction of the volume.`, `Дуже розбавлений потік (${FD(dm, 1)} % DM): CSTR вийшов би завеликим; високонавантажені реактори утримують біомасу і потребують у рази меншого об'єму.`));
       alternatives.push(T("Covered lagoon if land is available and the climate is warm", "Накрита лагуна, якщо є площа і теплий клімат"));
       break;
     case "high_solids":
       primary = T("Dry (high-solids) digestion, mesophilic", "Суха (high-solids) ферментація, мезофільна");
       reactor = T("Garage (box) batch digesters with percolate recirculation, or horizontal plug-flow", "Гаражні (box) реактори періодичної дії з рециркуляцією перколяту або горизонтальний plug-flow");
       mode = "batch";
-      reasons.push(T(`Average mix dry matter ${dm.toFixed(0)} % ≥ ${dryThr} %: wet digestion would need dilution, increasing volume and heat losses.`, `Середня сухість суміші ${dm.toFixed(0)} % ≥ ${dryThr} % — мокра ферментація потребувала б розведення, збільшуючи об'єм і тепловтрати.`));
+      reasons.push(T(`Average mix dry matter ${FD(dm, 0)} % ≥ ${dryThr} %: wet digestion would need dilution, increasing volume and heat losses.`, `Середня сухість суміші ${FD(dm, 0)} % ≥ ${dryThr} % — мокра ферментація потребувала б розведення, збільшуючи об'єм і тепловтрати.`));
       alternatives.push(T("Wet digestion diluted with slurry/effluent — cheaper equipment, larger digester", "Мокра ферментація з розведенням гноївкою/стоками — дешевше обладнання, але більший ферментер"));
       break;
     case "wet_with_solids_feeding":
       primary = T("Wet mesophilic digestion with solids feeding", "Мокра мезофільна ферментація з подачею твердих");
       reactor = T("CSTR with a solids feeder and recirculation, or horizontal plug-flow for dairy manure", "CSTR з подачею твердих (feeder) і рециркуляцією, або горизонтальний plug-flow для гною ВРХ");
-      reasons.push(T(`Dry matter ${dm.toFixed(0)} % is above the pumpable limit without a solids feeder (${solidsThr} %).`, `Сухість ${dm.toFixed(0)} % — вище порога перемішування без подачі твердих (${solidsThr} %).`));
+      reasons.push(T(`Dry matter ${FD(dm, 0)} % is above the pumpable limit without a solids feeder (${solidsThr} %).`, `Сухість ${FD(dm, 0)} % — вище порога перемішування без подачі твердих (${solidsThr} %).`));
       alternatives.push(T("Horizontal plug-flow (good for 10–14 % DM cattle manure)", "Горизонтальний plug-flow (добре для гною ВРХ 10–14 % DM)"));
       break;
     default:
       primary = T("Wet mesophilic digestion (CSTR)", "Мокра мезофільна ферментація (CSTR)");
       reactor = T("Vertical CSTR with mechanical mixing and a membrane gas holder", "Вертикальний CSTR з механічним змішуванням і мембранним газгольдером");
-      reasons.push(T(`Dry matter ${dm.toFixed(1)} %: a liquid mix suited to wet mesophilic digestion.`, `Сухість ${dm.toFixed(1)} % — рідка суміш, придатна для мокрої мезофільної ферментації.`));
+      reasons.push(T(`Dry matter ${FD(dm, 1)} %: a liquid mix suited to wet mesophilic digestion.`, `Сухість ${FD(dm, 1)} % — рідка суміш, придатна для мокрої мезофільної ферментації.`));
       if (feed.manureShareVs > 0.7) alternatives.push(T("Horizontal plug-flow as a simpler option for small cattle-manure plants", "Горизонтальний plug-flow як простіша альтернатива для невеликого гною ВРХ"));
   }
 
@@ -215,7 +217,7 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
 
   const tech = recommendTechnology(feed, ctx, hrt, digestion);
   if (assumedExisting > 0) {
-    const m3 = Math.round(assumedExisting).toLocaleString("en-US");
+    const m3 = fmtDec(ctx.lang)(Math.round(assumedExisting));
     tech.warnings.push(ctx.t(
       `Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ ${m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about ${Math.round(p.get("eng.capex.storage_new_eur_m3"))} € per missing m³ before overheads.`,
       `Обсяг наявного сховища не вказано: вважаємо, що теперішнє сховище гноївки вміщує власний гній ферми (≈ ${m3} м³), і рахуємо лише його газонепроникне накриття. Вкажіть реальний обсяг; якщо він менший, CAPEX зросте приблизно на ${Math.round(p.get("eng.capex.storage_new_eur_m3"))} € за кожен відсутній м³ до накладних витрат.`,

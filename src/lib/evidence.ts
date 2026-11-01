@@ -1,6 +1,7 @@
 import type { Assessment, MeasureItem } from "@/core";
 import type { Locale } from "@/i18n";
 import { COUNTRIES } from "@/countries";
+import { fmtDec } from "@/core/i18n";
 
 /**
  * "What to verify first" turned into actions: the steps to get the evidence, a request pre-filled with the project's
@@ -17,16 +18,17 @@ export interface EvidenceRequest {
 }
 
 type Lang = "en" | "uk";
-const n0 = (v: number) => Math.round(v).toLocaleString("en-US").replace(/,/g, " ");
-const sig = (v: number) => n0(Number(v.toPrecision(2)));
 
 export function evidenceRequest(a: Assessment, item: MeasureItem, locale: Locale): EvidenceRequest | undefined {
   const l: Lang = locale === "uk" ? "uk" : "en";
   const T = (en: string, uk: string) => (l === "uk" ? uk : en);
+  const D = fmtDec(l);
+  const n0 = (v: number) => D(Math.round(v));
+  const sig = (v: number) => n0(Number(v.toPrecision(2)));
   const r = a.routesBase[a.bestRoute];
   const e = r.energy;
   const country = COUNTRIES[a.input.countryCode]?.nameEn ?? a.input.countryCode;
-  const streams = r.feed.lines.map((s) => `- ${s.label}: ${sig(s.tonnesYear)} ${T("t/year", "т/рік")}, DM ≈ ${s.dryMatterPct.toFixed(1)} %`).join("\n");
+  const streams = r.feed.lines.map((s) => `- ${s.label}: ${sig(s.tonnesYear)} ${T("t/year", "т/рік")}, DM ≈ ${D(s.dryMatterPct, 1)} %`).join("\n");
   const routeLine = a.bestRoute === "chp"
     ? T(`combined heat and power ≈ ${sig(e.chpKwEl)} kWe`, `когенерація ≈ ${sig(e.chpKwEl)} кВт ел.`)
     : a.bestRoute === "biomethane"

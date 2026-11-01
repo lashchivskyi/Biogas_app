@@ -188,7 +188,7 @@ const nl: Translation = {
     summaryBm: "Dat is ≈ {bm} Nm³ groen gas per jaar.",
     summaryMoney: "Voorlopige investering {capex}, terugverdientijd in het basisscenario {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Verdere uitwerking waard: het project staat ook onder pessimistische aannames overeind.",
+      STRONG_CANDIDATE: "Verdere uitwerking waard: het project staat ook onder voorzichtige aannames overeind.",
       POSSIBLE_WITH_CONDITIONS: "Het kan renderen, maar alleen onder de voorwaarden hierboven — bevestig ze in een haalbaarheidsstudie.",
       WEAK_ECONOMICS: "Onder de huidige omstandigheden verdient de investering zich niet binnen redelijke tijd terug. Hieronder ziet u wat dat kan veranderen.",
       INSUFFICIENT_DATA: "Te weinig gegevens voor een conclusie — vul de ontbrekende punten aan.",

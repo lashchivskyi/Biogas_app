@@ -188,7 +188,7 @@ const hu: Translation = {
     summaryBm: "Ez évi ≈ {bm} Nm³ biometán.",
     summaryMoney: "Előzetes beruházás {capex}, megtérülés az alapváltozatban {payback}.",
     tone: {
-      STRONG_CANDIDATE: "Érdemes részletesen kidolgozni: a projekt pesszimista feltevések mellett is megáll.",
+      STRONG_CANDIDATE: "Érdemes részletesen kidolgozni: a projekt óvatos feltevések mellett is megáll.",
       POSSIBLE_WITH_CONDITIONS: "Megtérülhet, de csak a fenti feltételek mellett — igazolja őket megvalósíthatósági tanulmányban.",
       WEAK_ECONOMICS: "A jelenlegi feltételek mellett a beruházás nem térül meg észszerű időn belül. Lent látja, mi változtathatna ezen.",
       INSUFFICIENT_DATA: "Kevés az adat a következtetéshez — töltse ki a hiányzó tételeket.",

@@ -7,8 +7,8 @@ import type { Locale } from "./config";
 type HelpCopy = readonly [dm: string, vs: string, bmp: string, season: string, unknown: string];
 const copy: Record<Locale, HelpCopy> = {
   en: [
-    "DM is the material left after water is removed. At 20% DM, 100 kg of fresh feedstock contains 20 kg of dry matter. Look for DM or TS in the laboratory report.",
-    "VS is the organic part of the dry matter, which provides the material for biogas production. At 80% VS, 100 kg of dry matter contains 80 kg of organic matter. The percentage refers to dry matter, not fresh feedstock.",
+    "DM is the material left after water is removed. At 20 % DM, 100 kg of fresh feedstock contains 20 kg of dry matter. Look for DM or TS in the laboratory report.",
+    "VS is the organic part of the dry matter, which provides the material for biogas production. At 80 % VS, 100 kg of dry matter contains 80 kg of organic matter. The percentage refers to dry matter, not fresh feedstock.",
     "BMP is the methane potential measured in a laboratory: litres of CH₄ per kilogram of VS. Enter methane yield, not total biogas yield. Actual plant production also depends on operating conditions and losses.",
     "Enter how many months the feedstock is available and the first month of that period. The model uses these to distribute supply through the year. If seasonal material is stored and fed all year, use the actual feeding schedule and allow for storage losses in the quantity.",
     "If you do not know the value, leave the field blank: the model will use a reference assumption.",

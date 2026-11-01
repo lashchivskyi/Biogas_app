@@ -14,6 +14,27 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   const route = (r: RouteId) => ({ chp: T("CHP", "Когенерація"), boiler: T("Boiler", "Котел"), biomethane: T("Biomethane", "Біометан") })[r];
   const scn = (s: ScenarioId) => ({ conservative: T("Conservative", "Консервативний"), base: T("Base", "Базовий"), optimistic: T("Optimistic", "Оптимістичний") })[s];
   const be = a.breakEven;
+  // Machine codes never reach the sheet: each enum is shown in the report language (unknown codes stay visible).
+  const CODES: Record<string, [string, string]> = {
+    STRONG_CANDIDATE: ["Strong candidate", "Сильний кандидат"], POSSIBLE_WITH_CONDITIONS: ["Possible with conditions", "Можливо за умов"],
+    WEAK_ECONOMICS: ["Weak economics", "Слабка економіка"], INSUFFICIENT_DATA: ["Insufficient data", "Недостатньо даних"],
+    NOT_RECOMMENDED_AT_SCALE: ["Not recommended at this scale", "Не рекомендовано за такого масштабу"],
+    LOW: ["low", "низька"], MEDIUM: ["medium", "середня"], HIGH: ["high", "висока"],
+    MEASURED: ["Measured", "Виміряно"], USER_INPUT: ["User input", "Ввід користувача"], MARKET_DATA: ["Market data", "Ринкові дані"],
+    ENGINEERING_ASSUMPTION: ["Engineering assumption", "Інженерне припущення"], CALCULATED_VALUE: ["Calculated value", "Розрахункове значення"],
+    clear_go: ["Clear go in all scenarios", "Чіткий позитив в усіх сценаріях"], grey: ["Depends on the scenario", "Залежить від сценарію"], clear_no: ["Clear no in all scenarios", "Чітко негативно в усіх сценаріях"], insufficient: ["Insufficient data", "Недостатньо даних"],
+    FACT: ["Fact", "Факт"], ASSUMPTION: ["Assumption", "Припущення"], CALCULATION: ["Calculation", "Розрахунок"], ESTIMATE: ["Estimate", "Оцінка"],
+    CONSTANT: ["Constant", "Стала"], WITHIN_REVIEW_WINDOW: ["Within review window", "У межах терміну перегляду"], REVIEW_REQUIRED: ["Review required", "Потрібен перегляд"],
+    EXPIRED: ["Expired", "Прострочено"], UNDATED: ["Undated", "Без дати"],
+    below: ["Below the model range", "Нижче діапазону моделі"], within: ["Within the model range", "У межах діапазону моделі"], above: ["Above the model range", "Вище діапазону моделі"],
+    open: ["Open", "Відкрита"], competitive: ["Competitive", "Конкурсна"], closing: ["Closing", "Закривається"], closed: ["Closed", "Закрита"], uncertain: ["Uncertain", "Невизначена"],
+    electricity: ["Electricity", "Електроенергія"], heat: ["Heat", "Тепло"], biomethane: ["Biomethane", "Біометан"],
+    closed_storage: ["Closed (gas-tight)", "Закрите (газонепроникне)"], open_storage: ["Open", "Відкрите"],
+    yield: ["Gas yield", "Вихід газу"], quantity: ["Quantity", "Кількість"], capex: ["CAPEX", "CAPEX"], electricity_price: ["Electricity price", "Ціна електроенергії"],
+    export_price: ["Export price", "Ціна експорту"], heat_price: ["Heat price", "Ціна тепла"], heat_buyer: ["Heat buyer", "Споживач тепла"], offtake: ["Offtake", "Збут"],
+    fertiliser: ["Fertiliser value", "Цінність добрива"], bill_structure: ["Bill structure", "Структура рахунку"], market: ["Market", "Ринок"],
+  };
+  const C = (code: string | undefined) => (code === undefined ? "" : CODES[code] ? T(CODES[code][0], CODES[code][1]) : code);
   const blank: Cell[] = [];
 
   const summary: Cell[][] = [
@@ -26,9 +47,9 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     [T("Exchange rate, local currency per EUR", "Курс, місцева валюта за EUR"), a.fx],
     [T("Local currency", "Місцева валюта"), opts.currency],
     [T("Chosen route", "Обраний маршрут"), route(a.bestRoute)],
-    [T("Verdict", "Вердикт"), a.verdict.id],
-    [T("Data confidence", "Довіра до даних"), `${a.confidence.level} (${a.confidence.score}/100)`],
-    [T("Robustness across scenarios", "Стійкість між сценаріями"), a.robustness],
+    [T("Verdict", "Вердикт"), C(a.verdict.id)],
+    [T("Data confidence", "Довіра до даних"), `${C(a.confidence.level)} (${a.confidence.score}/100)`],
+    [T("Robustness across scenarios", "Стійкість між сценаріями"), C(a.robustness)],
     blank,
     [T("Base case", "Базовий сценарій"), "EUR"],
     [T("CAPEX", "CAPEX"), base.capex.totalEur],
@@ -86,10 +107,10 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   const evidence = a.marketEvidence ?? [];
   const assumptions: Cell[][] = [
     [T("Parameter", "Параметр"), T("Value", "Значення"), T("Unit", "Одиниця"), T("Type", "Тип"), T("Confidence", "Довіра"), T("Date", "Дата"), T("Source", "Джерело"), "ID"],
-    ...evidence.map((p) => [p.label, p.value, p.unit, p.origin ?? p.kind, p.confidence, p.date, p.source, p.id]),
+    ...evidence.map((p) => [p.label, p.value, p.unit, C(p.origin ?? p.kind), C(p.confidence), p.date, p.source, p.id]),
     blank,
     [T("Data check", "Перевірка даних"), T("Status", "Статус"), T("Observed through", "Період до"), T("Valid until", "Чинне до"), T("Reason", "Причина")],
-    ...(a.dataAudit?.checks ?? []).map((c) => [c.parameterId, c.status, c.observedThrough ?? "", c.validUntil ?? "", c.reason]),
+    ...(a.dataAudit?.checks ?? []).map((c) => [c.parameterId, C(c.status), c.observedThrough ?? "", c.validUntil ?? "", c.reason]),
   ];
 
   const sheets: Sheet[] = [
@@ -102,7 +123,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   if (a.measureFirst?.length) {
     sheets.push({ name: T("Verify first", "Перевірити першим"), widths: [22, 30, 18, 18, 18, 14], rows: [
       [T("Input", "Вхідні дані"), T("Registry parameter", "Параметр реєстру"), T("NPV at low end, EUR", "NPV на нижній межі, EUR"), T("NPV at high end, EUR", "NPV на верхній межі, EUR"), T("Value of knowing (EVPI), EUR", "Цінність знання (EVPI), EUR"), T("Can flip the answer", "Може змінити відповідь")],
-      ...a.measureFirst.map((m) => [m.kind, m.parameterId ?? "", m.lowNpvEur, m.highNpvEur, m.evpiEur, m.flips ? T("yes", "так") : ""] as Cell[]),
+      ...a.measureFirst.map((m) => [C(m.kind), m.parameterId ?? "", m.lowNpvEur, m.highNpvEur, m.evpiEur, m.flips ? T("yes", "так") : ""] as Cell[]),
     ] });
   }
 
@@ -110,8 +131,8 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     const g = a.ghg;
     sheets.push({ name: T("Climate (RED)", "Клімат (RED)"), widths: [60, 18], rows: [
       [T("Climate case, EU RED II Annex VI default values (separate from the verdict)", "Кліматичний сценарій, стандартні значення EU RED II, додаток VI (окремо від вердикту)"), ""],
-      [T("Product", "Продукт"), g.product],
-      [T("Digestate storage", "Зберігання дигестату"), g.digestate],
+      [T("Product", "Продукт"), C(g.product)],
+      [T("Digestate storage", "Зберігання дигестату"), C(`${g.digestate}_storage`)],
       ...g.shares.map((s) => [T(`Energy share, ${s.substrate}`, `Енергетична частка, ${s.substrate}`), s.share] as Cell[]),
       [T("Emissions per MJ biogas / biomethane, g CO2e", "Викиди на МДж біогазу / біометану, г CO2e"), g.feedGMJ],
       [T("Emissions per MJ product, g CO2e", "Викиди на МДж продукту, г CO2e"), g.productGMJ],
@@ -142,7 +163,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
       [T("Model estimate, same route and capacity", "Оцінка моделі, той самий маршрут і потужність"), q.modelledEur],
       [T("Model range, optimistic", "Діапазон моделі, оптимістичний"), q.modelRangeEur[0]],
       [T("Model range, conservative", "Діапазон моделі, консервативний"), q.modelRangeEur[1]],
-      [T("Position", "Положення"), q.position],
+      [T("Position", "Положення"), C(q.position)],
       ...(q.capacity ? [[T(`Capacity, ${q.capacity.unit}`, `Потужність, ${q.capacity.unit}`), q.capacity.value] as Cell[]] : []),
       [T("Highest price at NPV = 0", "Найвища ціна при NPV = 0"), q.maxCapexEur],
       blank,
@@ -168,7 +189,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     ] });
     sheets.push({ name: T("Support cases", "Підтримка"), widths: [48, 12, 10, 18, 14, 18, 60], rows: [
       [T("Scheme (separate case, never in the verdict)", "Схема (окремий сценарій, не входить у вердикт)"), T("Status", "Статус"), T("Eligible", "Відповідає"), "NPV, EUR", T("Payback, years", "Окупність, років"), T("Change in NPV, EUR", "Зміна NPV, EUR"), T("Source", "Джерело")],
-      ...a.supportCases.map((s) => [s.name, s.status, s.eligible ? T("yes", "так") : T("no", "ні"), s.npvEur, s.paybackYears, s.deltaNpvEur, s.source]),
+      ...a.supportCases.map((s) => [s.name, C(s.status), s.eligible ? T("yes", "так") : T("no", "ні"), s.npvEur, s.paybackYears, s.deltaNpvEur, s.source]),
     ] });
   }
   return sheets;
