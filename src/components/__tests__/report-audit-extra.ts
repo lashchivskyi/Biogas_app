@@ -3,6 +3,7 @@ import type { Dict, Locale } from "@/i18n";
 import { decisionCopy } from "@/i18n/decision";
 import { offerCopy } from "@/i18n/offer";
 import { h2Chunks, near, norm, statsOf, txt, WS, type Access, type Finding } from "./report-audit";
+import { messageArgs } from "@/i18n/message";
 
 /**
  * Languages, tiers and translated templates: translation and packaging must not change a number or a meaning.
@@ -83,7 +84,7 @@ export function auditCopy(locale: string, own: Record<string, unknown>, ref: Rec
   const a = new Map<string, string>(), b = new Map<string, string>();
   leaves(own, "", new Map(), a);
   leaves(ref, "", new Map(), b);
-  const vars = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]);
+  const vars = (s: string) => { try { return messageArgs(s); } catch { return [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]); } };
   for (const [k, e] of b) {
     const t = a.get(k);
     if (t === undefined) { out.push({ where: `copy ${locale} ${k}`, message: "missing translation" }); continue; }

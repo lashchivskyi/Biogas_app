@@ -199,3 +199,11 @@ replace the line rather than adding a contradicting one.
 - 2026-11-01 — Localization QA is code: `src/i18n/glossary.ts` (terms, forbidden variants, DO-NOT-TRANSLATE, SI units, style) +
   `__tests__/qa.test.ts` over every i18n module; style guide = skill `localization`. Scenario is "Conservative" in every
   language (the verdict text said "pessimistic" in 24 locales; fixed). Known defects are a ratchet (`KNOWN`): lower, never raise.
+
+- 2026-11-01 — Plurals and numbers: own ICU subset in `src/i18n/message.ts` (`{n, plural, one{# x} few{# xs} other{# xs}}`, `select`, `=N`,
+  `#`, non-ICU `decimal{}` for Serbian "1,5 provere") on `Intl.PluralRules`, not `intl-messageformat`: no dependency or ~15 kB parser for
+  features we never write, runs on edge/Node/browser unchanged, apostrophes stay literal (uk/fr/it). `fmt(s, vars, locale)` keeps plain `{name}`
+  as before; integers print as passed, fractions get the locale mark. Languages whose noun does not change after a number (hu, tr, vi, th) keep
+  plain `{n}`; counts in the core text (en/uk only) use `fmtUnit` (months, years, days) and `fmtTimes`; `fmtSig` replaces `toPrecision`
+  (it printed `2.34e+4` for VND/THB). New counted strings must be written as plural; `qa-rules.pluralIssues` demands every CLDR
+  category the locale uses for 0–1000 and decimals.

@@ -1,22 +1,45 @@
 import { CYRILLIC_UNITS, DO_NOT_TRANSLATE, DRY_MATTER_TOKENS, ENGLISH_LEAKS, GLOSSARY, LOCALISED_ABBREVIATIONS, SI_UNITS, type SiUnit } from "../glossary";
-import type { Locale } from "..";
+import { INTL_TAG, type Locale } from "..";
+import { messageArgs, parseMessage, pluralCases, usedCategories } from "../message";
 
 const L = "\\p{L}\\p{M}";
 /** Whole-word match that also works for Cyrillic, Greek and Thai (no \b). */
 const word = (w: string, flags = "u") => new RegExp(`(?<![${L}\\d])${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![${L}\\d])`, flags);
 
 // ---- placeholders and ICU-style syntax -------------------------------------------------------------------------
-export const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+/** Argument names of the message, including those inside plural/select bodies. */
+export function placeholders(s: string): string[] {
+  try { return messageArgs(s); } catch { return [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort(); }
+}
 
-/** The app interpolates plain `{name}` only (`fmt`). Anything else with braces is a typo or an unsupported ICU form. */
+/** `fmt` understands `{name}`, `{n, plural, …}` and `{x, select, …}` only. Anything else with braces is a typo or an unsupported form. */
 export function icuIssues(s: string): string[] {
   const out: string[] = [];
-  const stripped = s.replace(/\{\w+\}/g, "");
-  if (/[{}]/.test(stripped)) out.push(`stray brace in "${stripped.match(/.{0,12}[{}].{0,12}/)?.[0]}"`);
   if (/\{\s*\}/.test(s)) out.push("empty placeholder");
-  if (/\{\w+\s*,\s*(plural|select|selectordinal|number|date)/.test(s)) out.push("ICU plural/select is not supported by fmt()");
+  if (/\{\s*\w+\s*,\s*(?!(?:plural|select)\s*,)\w+/.test(s)) out.push("unsupported ICU form (only plural and select)");
+  else {
+    try { parseMessage(s); } catch (e) { out.push(`invalid message syntax: ${(e as Error).message}`); }
+  }
   const sq = (s.match(/\[/g) ?? []).length - (s.match(/\]/g) ?? []).length;
   if (sq !== 0) out.push("unbalanced [ ]");
+  return out;
+}
+
+/** CLDR check: every plural defines `other`, only selectors the locale knows, and every category the locale really uses for 0–1000 and decimals. */
+export function pluralIssues(locale: Locale, s: string): string[] {
+  const out: string[] = [];
+  let found: { name: string; selectors: string[] }[];
+  try { found = pluralCases(s); } catch { return []; }
+  const tag = INTL_TAG[locale];
+  const known = new Intl.PluralRules(tag).resolvedOptions().pluralCategories as string[];
+  const needed = usedCategories(tag);
+  for (const { name, selectors } of found) {
+    for (const sel of selectors) if (!/^=\d+$/.test(sel) && sel !== "decimal" && !known.includes(sel)) out.push(`{${name}}: "${sel}" is not a ${locale} plural category (${known.join("/")})`);
+    const missing = needed.filter((c) => !selectors.includes(c) && c !== "other");
+    // A language may cover a category by `other`; it must then be a deliberate choice, so the string must list the others it distinguishes.
+    if (selectors.length === 1 && selectors[0] === "other" && needed.length > 1) out.push(`{${name}}: plural with only "other" (${locale} distinguishes ${needed.join("/")})`);
+    else if (missing.length) out.push(`{${name}}: ${locale} needs ${missing.join("/")}`);
+  }
   return out;
 }
 

@@ -1,5 +1,6 @@
 import en, { type Dict } from "./dict/en";
 import { DEFAULT_LOCALE, INTL_TAG, isLocale, type Locale } from "./config";
+import { formatMessage, type MessageVars } from "./message";
 
 export type { Dict } from "./dict/en";
 export * from "./config";
@@ -57,9 +58,13 @@ export async function getDictionary(locale: string): Promise<Dict> {
   return d;
 }
 
-/** "{n} of {total}" interpolation. Unknown keys are left visible so missing data is noticed. */
-export function fmt(s: string, vars: Record<string, string | number> = {}): string {
-  return s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
+/**
+ * "{n} of {total}" interpolation. Unknown keys are left visible so missing data is noticed.
+ * Strings with `{n, plural, one{…} few{…} other{…}}` / `{x, select, …}` follow the CLDR rules of `locale`
+ * (see message.ts); pass the locale whenever the string can contain them.
+ */
+export function fmt(s: string, vars: MessageVars = {}, locale: Locale = DEFAULT_LOCALE): string {
+  return formatMessage(s, vars, INTL_TAG[locale]);
 }
 
 /** Localised country name via Intl (no manual translation of 33 names × 25 languages). */

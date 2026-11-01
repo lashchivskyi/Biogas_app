@@ -1,4 +1,4 @@
-import { fmtDec } from "./i18n";
+import { fmtDec, fmtTimes, fmtUnit } from "./i18n";
 import { activeMonths, DAYS_IN_MONTH } from "./climate";
 import type { RunContext } from "./context";
 import { ANIMALS, FEEDSTOCKS, isEffluentLike, PAID_HANDLING } from "./feedstockData";
@@ -46,6 +46,7 @@ export function resolveLine(line: FeedstockLineInput, params?: Params) {
 export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   const { input, params, scenario, mods, fx, t: T, lang } = ctx;
   const D = fmtDec(lang);
+  const M = fmtUnit(lang);
   const lhv = params.get("eng.ch4_lhv_kwh_m3");
   const transportRate = params.get("econ.transport_eur_tkm") * mods.transport;
   const transportFixed = params.get("econ.transport_fixed_eur_t") * mods.transport;
@@ -119,9 +120,9 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (t.confidence === "LOW") w.push(T(`Parameters for "${nm}" have low confidence — a laboratory analysis (BMP) is needed.`, `Параметри «${nm}» мають низьку довіру — потрібен лабораторний аналіз (BMP).`));
     if (t.flags.includes("competing_use") && opportunity === 0) w.push(T(`"${nm}" often has an alternative use (e.g. animal feed) — enter its sale price.`, `«${nm}» часто має альтернативне використання (корм) — вкажіть його ціну.`));
     if (t.flags.includes("pretreatment")) w.push(T(`"${nm}": pretreatment (steam explosion, extrusion, milling) is not in the CAPEX of this screening (milling electricity, ${Math.round(params.get("eng.pretreatment_milling_kwh_t"))} kWh/t, is counted; steam, alkali or extrusion steps are not), and the catalogue yield assumes it is done — obtain a pretreatment quotation and a delivered straw price before relying on the result.`, `«${nm}»: попередня обробка (паровий вибух, екструзія, подрібнення) не входить у CAPEX цього скринінгу (електроенергію на подрібнення, ${Math.round(params.get("eng.pretreatment_milling_kwh_t"))} кВт·год/т, враховано; парову, лужну чи екструзійну обробку — ні), а каталожний вихід її передбачає — перед рішенням отримайте оферту на обробку та ціну соломи з доставкою.`));
-    if (t.flags.includes("seasonal") && months < 9) w.push(T(`Seasonal stream (${months} months): equipment sits idle for the rest of the year.`, `Сезонний потік (${months} міс.): обладнання простоюватиме решту року.`));
+    if (t.flags.includes("seasonal") && months < 9) w.push(T(`Seasonal stream (${M(months, "month")}): equipment sits idle for the rest of the year.`, `Сезонний потік (${M(months, "month")}): обладнання простоюватиме решту року.`));
     // A stream the catalogue treats as year-round but the client enters as seasonal sizes the plant for the peak month.
-    else if (months < 9 && t.defaultMonths >= 12) w.push(T(`"${nm}" is entered for ${months} months only: the digester is sized for that peak and sits idle the rest of the year. If the stream can be stored (e.g. ensiled), feeding it year-round needs a plant about ${Math.round(12 / months)}× smaller.`, `«${nm}» вказано лише на ${months} міс.: реактор розраховано на цей пік, решту року він простоює. Якщо потік можна зберігати (напр. силосувати), рівномірна подача протягом року потребує установки приблизно в ${Math.round(12 / months)} раз меншої.`));
+    else if (months < 9 && t.defaultMonths >= 12) w.push(T(`"${nm}" is entered for ${M(months, "month")} only: the digester is sized for that peak and sits idle the rest of the year. If the stream can be stored (e.g. ensiled), feeding it year-round needs a plant about ${Math.round(12 / months)}× smaller.`, `«${nm}» вказано лише на ${M(months, "month")}: реактор розраховано на цей пік, решту року він простоює. Якщо потік можна зберігати (напр. силосувати), рівномірна подача протягом року потребує установки приблизно у ${fmtTimes("uk")(12 / months)} меншої.`));
     const eurT = (local: number | undefined) => (local ?? 0) / fx;
     if (eurT(line.currentDisposalCostPerTonneLocal) > PLAUSIBLE_DISPOSAL_EUR_T || -eurT(line.purchasePricePerTonneLocal) > PLAUSIBLE_GATE_FEE_EUR_T || eurT(line.purchasePricePerTonneLocal) > PLAUSIBLE_PURCHASE_EUR_T)
       w.push(T(`"${nm}": the entered price per tonne is far above usual market levels (disposal > ${PLAUSIBLE_DISPOSAL_EUR_T}, gate fee > ${PLAUSIBLE_GATE_FEE_EUR_T}, purchase > ${PLAUSIBLE_PURCHASE_EUR_T} €/t equivalent): check the unit (per tonne, local currency) — the result depends on it directly.`, `«${nm}»: введена ціна за тонну значно вища за звичний ринковий рівень (утилізація > ${PLAUSIBLE_DISPOSAL_EUR_T}, плата за приймання > ${PLAUSIBLE_GATE_FEE_EUR_T}, закупівля > ${PLAUSIBLE_PURCHASE_EUR_T} €/т в еквіваленті): перевірте одиниці (за тонну, у місцевій валюті) — результат прямо від неї залежить.`));

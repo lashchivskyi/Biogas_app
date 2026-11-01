@@ -1,3 +1,4 @@
+import { fmtUnit } from "./i18n";
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import { SCENARIOS } from "./scenarios";
 import type { Assessment, Provenance } from "./types";
@@ -48,7 +49,7 @@ export function checkEvidence(p: Provenance, asOfDate: string): Check {
   if (p.id === "econ.fx_local_per_eur" && /annual average/i.test(p.source)) return result("REVIEW_REQUIRED", "Annual-average FX is a historical valuation basis, not the current reference rate");
   // Review policy, not evidence that the newest available publication was independently checked.
   const maxAge = p.id === "econ.fx_local_per_eur" ? 7 : /labour|wage|operator/.test(p.id) ? 730 : /electricity_spot/.test(p.id) ? 60 : 400;
-  return age > maxAge ? result("REVIEW_REQUIRED", `Observation is ${Math.floor(age)} days old; exceeds the ${maxAge}-day review policy`) : result("WITHIN_REVIEW_WINDOW", `Within the ${maxAge}-day review policy; applicability and latest publication must still be checked`);
+  return age > maxAge ? result("REVIEW_REQUIRED", `Observation is ${fmtUnit("en")(Math.floor(age), "day")} old; exceeds the ${maxAge}-day review policy`) : result("WITHIN_REVIEW_WINDOW", `Within the ${maxAge}-day review policy; applicability and latest publication must still be checked`);
 }
 
 /** Stable change identifier; this is not a cryptographic signature or an accuracy certificate. */

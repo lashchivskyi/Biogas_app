@@ -252,7 +252,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
       <div className="no-print mb-4">
         <div className="flex items-center justify-between text-sm">
           <span className="font-semibold text-ink2">{fmt(C.stepOf, { n: step + 1, total: C.steps.length, name: C.steps[step] })}</span>
-          <span className="text-muted">{fmt(C.minutesLeft, { n: Math.max(1, 3 - step) })}</span>
+          <span className="text-muted">{fmt(C.minutesLeft, { n: Math.max(1, 3 - step) }, locale)}</span>
         </div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface2" role="progressbar" aria-valuemin={1} aria-valuemax={C.steps.length} aria-valuenow={step + 1} aria-label={C.progress}>
           <div className="h-full rounded-full bg-brand transition-all duration-500" style={{ width: `${((step + 1) / C.steps.length) * 100}%` }} />

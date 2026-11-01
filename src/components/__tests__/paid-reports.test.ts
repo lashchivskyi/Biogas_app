@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
+import { fmt } from "@/i18n";
 import en from "@/i18n/dict/en";
 import { offerCopy } from "@/i18n/offer";
 import { ResultView, type ResultViewProps } from "../ResultView";
@@ -57,9 +58,9 @@ describe("paid report contents", () => {
     const O = offerCopy.en;
     expect(html).toContain(O.teaserStandard);
     expect(html).toContain(O.teaserExtended);
-    expect(html).toContain(O.tStress.replace("{n}", String(a.sensitivity.length)));
+    expect(html).toContain(fmt(O.tStress, { n: a.sensitivity.length }, "en"));
     expect(html).toContain(O.tMonthly);
-    if (a.measureFirst?.length) expect(html).toContain(O.tChecks.replace("{n}", String(a.measureFirst.length)));
+    if (a.measureFirst?.length) expect(html).toContain(fmt(O.tChecks, { n: a.measureFirst.length }, "en"));
   });
 
   it("blocks the purchase on an INSUFFICIENT_DATA verdict", () => {

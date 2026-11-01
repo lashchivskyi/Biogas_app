@@ -14,18 +14,18 @@ export function PaidTeaser({ a, R, locale, unlockSlot, samplesHref }: { a: Asses
   const country = countryName(a.countryCode, locale);
   const lines = b.capex.lines.length + b.opexRev.opex.length + b.opexRev.revenue.length;
   const standard = [
-    a.measureFirst?.length ? f(O.tChecks, { n: a.measureFirst.length }) : null,
-    f(O.tLines, { n: lines }),
+    a.measureFirst?.length ? f(O.tChecks, { n: a.measureFirst.length }, locale) : null,
+    f(O.tLines, { n: lines }, locale),
     a.input.process ? null : O.tMonthly,
-    a.scale?.length ? f(O.tSizes, { n: a.scale.length }) : null,
-    a.monteCarlo ? f(O.tMc, { n: a.monteCarlo.n }) : null,
-    f(O.tRegister, { n: a.regulatory.items.length }),
+    a.scale?.length ? f(O.tSizes, { n: a.scale.length }, locale) : null,
+    a.monteCarlo ? f(O.tMc, { n: a.monteCarlo.n }, locale) : null,
+    f(O.tRegister, { n: a.regulatory.items.length }, locale),
     O.tExcel,
   ].filter((x): x is string => !!x);
   const extended = [
     O.tScen,
-    f(O.tStress, { n: a.sensitivity.length }),
-    a.supportCases.length ? f(O.tSupport, { n: a.supportCases.length, country }) : f(O.tSupportNone, { country }),
+    f(O.tStress, { n: a.sensitivity.length }, locale),
+    a.supportCases.length ? f(O.tSupport, { n: a.supportCases.length, country }, locale) : f(O.tSupportNone, { country }, locale),
   ];
   const insufficient = a.verdict.id === "INSUFFICIENT_DATA";
   const list = (items: string[]) => <ul className="mt-2 space-y-1.5 text-sm text-ink2">{items.map((x) => <li key={x} className="flex gap-2"><span aria-hidden className="text-brand">✓</span><span>{x}</span></li>)}</ul>;

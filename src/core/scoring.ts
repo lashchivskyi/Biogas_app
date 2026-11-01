@@ -1,6 +1,6 @@
 import type { CustomerDemand } from "./demand";
 import { FEEDSTOCKS } from "./feedstockData";
-import { fmtDec, type Tr } from "./i18n";
+import { fmtDec, fmtUnit, type Tr } from "./i18n";
 import type { DigestateAssessment, LogisticsAssessment, ProjectInput, ScenarioResult, Score } from "./types";
 
 /** Piecewise-linear interpolation through (x,y) points; clamped at both ends. */
@@ -38,6 +38,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const e = base.energy;
   const r0 = (n: number) => Math.round(n);
   const D = fmtDec(T.lang);
+  const U = fmtUnit(T.lang);
 
   // ---------------- Feedstock fit ----------------
   const scale = interp(base.kwElEquivalent, [[0, 0], [25, 20], [50, 45], [100, 65], [200, 80], [400, 92], [800, 100]]);
@@ -121,7 +122,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   if (base.fin.npvEur < 0) { eco = Math.min(eco, 35); ecoExpl.push(T("Base-case NPV is negative", "NPV базового сценарію від'ємний")); }
   if (cons.fin.npvEur >= 0) { eco = Math.min(100, eco + 5); ecoExpl.push(T("NPV positive even in the conservative case", "NPV додатний навіть у консервативному сценарії")); }
   if (base.fin.dscrMin !== null && base.fin.dscrMin < 1.2) { eco = Math.max(0, eco - 10); ecoExpl.push(T(`Minimum DSCR ${D(base.fin.dscrMin, 2)} — below the usual bank threshold of 1.2–1.3`, `DSCR мін. ${D(base.fin.dscrMin, 2)} — нижче банківського порога 1,2–1,3`)); }
-  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T(`Base-case simple payback ≈ ${D(pb, 1)} years`, `Проста окупність базового сценарію ≈ ${D(pb, 1)} р.`));
+  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T(`Base-case simple payback ≈ ${U(pb, "year", 1)}`, `Проста окупність базового сценарію ≈ ${U(pb, "year", 1)}`));
   const ecoValue = clamp(eco);
 
   // ---------------- Risks ----------------

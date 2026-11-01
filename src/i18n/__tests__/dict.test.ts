@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getDictionary, LOCALES } from "..";
+import { messageArgs } from "../message";
 import en from "../dict/en";
 import { stepHelp } from "../step-help";
 import { processFieldHelp } from "../process-help";
@@ -14,7 +15,7 @@ function leaves(o: unknown, path = "", out = new Map<string, string>()): Map<str
   return out;
 }
 
-const vars = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+const vars = (s: string) => messageArgs(s);
 const ref = leaves(en);
 
 it("keeps screening uncertainty copy intact in every locale without claiming validated accuracy", async () => {

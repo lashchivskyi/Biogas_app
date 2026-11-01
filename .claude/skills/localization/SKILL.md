@@ -23,8 +23,11 @@ as done by the tests.
 3. **One term per concept** from the glossary (digester, digestate, feedstock, CHP, biomethane, payback, NPV, IRR, COD,
    conservative / base / optimistic, plan names). Scenario is **Conservative**, never "pessimistic". Do not mix the English
    abbreviation (NPV, IRR, CHP, COD) with the local one except as "Kapitalwert (NPV)".
-4. Placeholders `{name}` and `[accent]` stay exactly; move them to the natural place in the sentence. No ICU plural/select
-   (the app only substitutes `{name}`): word the sentence so it works for any number.
+4. Placeholders `{name}` and `[accent]` stay exactly; move them to the natural place in the sentence. A string with a count
+   (`{n}` checks, rows, sizes, days…) is written as `{n, plural, one{# check} other{# checks}}` with the CLDR categories of the
+   language (uk/pl/cs/sk/lt: few + many, lv: zero, ro: few + `de`, sr: few + `decimal{}` for fractions, en/de/fr/it/es/pt/nl/sv:
+   one + other). Where the noun does not change after a number (hu, tr, vi, th) keep plain `{n}`. Pass the locale to `fmt(s, vars, locale)`.
+   Everything else is word-for-word `{name}`; no other ICU forms. Rules and syntax: `src/i18n/message.ts`; tests: `plural.test.ts`.
 5. Never change keys, formulas or numbers. Decimal separator and spacing follow the table below.
 6. Titles and headings: sentence case in every language except German nouns (normal German capitalisation) and where a
    plan name is a proper name (pricing). Buttons: short verb or noun, no full stop. Expect +30–40 % length; a button that grows

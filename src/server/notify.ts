@@ -17,7 +17,13 @@ export async function notifyOwner(subject: string, lines: string[]): Promise<voi
   }
 }
 
-const money = (o: Order) => `${(o.amountMinor / 100).toFixed(2)} ${o.currency}`;
+const money = (o: Order) => {
+  try {
+    return new Intl.NumberFormat("en-GB", { style: "currency", currency: o.currency.toUpperCase() }).format(o.amountMinor / 100);
+  } catch {
+    return `${o.amountMinor / 100} ${o.currency}`; // not an ISO 4217 code: show the raw amount rather than fail the notice
+  }
+};
 
 /**
  * Emails the private report link once per paid order (webhook, poll, cron or admin may all call

@@ -5,7 +5,7 @@ import { projectRegion, type CityClimate } from "./location";
 import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
 import type { CountryAdapter, SupportScheme } from "./country";
-import { fmtDec, tr, type CoreLang } from "./i18n";
+import { fmtDec, fmtSig, tr, type CoreLang } from "./i18n";
 import { customerDemand } from "./demand";
 import { assessDigestate } from "./digestate";
 import { classifyPlant, runScenarioRoute } from "./economics";
@@ -181,7 +181,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if ((input.finance?.operatorWageLocalPerHour ?? 0) > 0) userEvidence("econ.operator_wage_eur_h", "Customer operator cost per hour", input.finance!.operatorWageLocalPerHour! / fx, "EUR/h", `${input.finance!.operatorWageLocalPerHour} ${country.currency}/h`);
   const quoteApplies = base.capex.modelledEur !== undefined;
   if (quoteApplies) userEvidence("econ.capex_quote_eur", `Supplier quote for the ${bestRoute} route (replaces the modelled CAPEX)`, base.capex.totalEur, "EUR", `${input.finance!.capexQuoteLocal} ${country.currency} installed, scenario multiplier 1.0 in base case`);
-  if (input.finance?.debtRate !== undefined) userEvidence("econ.debt_interest", "Customer loan interest rate", input.finance.debtRate, "—", `${(input.finance.debtRate * 100).toFixed(1)} %`);
+  if (input.finance?.debtRate !== undefined) userEvidence("econ.debt_interest", "Customer loan interest rate", input.finance.debtRate, "—", `${fmtDec("en")(input.finance.debtRate * 100, 1)} %`);
   const actualEvidence = new Map(selectedParams.usedIds().map((id) => [id, params.prov(id)]));
   for (const p of [...marketEvidence, ...(base.process?.provenance ?? [])]) actualEvidence.set(p.id, p);
   const dataAudit: NonNullable<Assessment["dataAudit"]> = {
@@ -335,7 +335,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
   // Entered prices far from the market usually mean a unit slip (ct vs €, € vs local currency, per MWh vs per kWh).
   // Electricity: large consumers on wholesale contracts pay well below the business tariff, so the floor is half the spot price.
-  const local = (eur: number) => (eur * fx).toPrecision(3);
+  const local = (eur: number) => fmtSig(lang)(eur * fx);
   const priceSlips: string[] = [];
   const elLow = params.get("econ.electricity_spot_eur_kwh") / 2, elHigh = params.get("econ.electricity_retail_eur_kwh") * PRICE_BAND;
   if (demand.electricityPriceKnown && (demand.electricityPriceEurKwh < elLow || demand.electricityPriceEurKwh > elHigh)) priceSlips.push(T(`The entered electricity price (${input.energy.electricityPriceLocalPerKwh} ${country.currency}/kWh) is outside the plausible range for this country (${local(elLow)}–${local(elHigh)} ${country.currency}/kWh): check the unit (per kWh, ${country.currency}, not cents or MWh).`, `Введена ціна електроенергії (${input.energy.electricityPriceLocalPerKwh} ${country.currency}/кВт·год) поза правдоподібним діапазоном для країни (${local(elLow)}–${local(elHigh)} ${country.currency}/кВт·год): перевірте одиниці (за кВт·год, у ${country.currency}, не копійки чи МВт·год).`));

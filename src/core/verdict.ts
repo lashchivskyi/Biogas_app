@@ -1,4 +1,4 @@
-import { fmtDec, fmtInt, type CoreLang, tr } from "./i18n";
+import { fmtDec, fmtInt, fmtUnit, type CoreLang, tr } from "./i18n";
 import type { Assessment, Confidence, ScenarioResult, VerdictId } from "./types";
 
 /** Below this client-side data score the verdict is INSUFFICIENT_DATA and no report is sold. */
@@ -22,7 +22,8 @@ export function decideVerdict(args: {
   const T = tr(lang);
   const fmt = fmtInt(lang);
   const D = fmtDec(lang);
-  const y = (n: number) => (lang === "uk" ? `${D(n, 1)} р.` : `${D(n, 1)} yr`);
+  const U = fmtUnit(lang);
+  const y = (n: number) => U(n, "year", 1, "short");
   const reasons: string[] = [];
   const whatWouldChange: string[] = [];
 

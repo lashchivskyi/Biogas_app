@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { LOCALES, type Locale } from "..";
 import { GLOSSARY } from "../glossary";
 import { loadCorpus, type Corpus } from "./qa-corpus";
+import { flattenMessage } from "../message";
 import * as R from "./qa-rules";
 
 /**
@@ -25,8 +26,10 @@ let corpus: Corpus;
 beforeAll(async () => { corpus = await loadCorpus(); });
 
 type Finding = string;
-const scan = (locale: Locale, rule: (e: { module: string; path: string; text: string; en: string | undefined }) => string[]): Finding[] =>
-  corpus.byLocale[locale].flatMap((e) => rule(e).map((m) => `${e.module}:${e.path} ${m}`));
+type Scanned = { module: string; path: string; text: string; en: string | undefined };
+/** Text rules see plural/select messages as one representative sentence (the `other` branch); `raw` keeps the message as authored. */
+const scan = (locale: Locale, rule: (e: Scanned) => string[], raw = false): Finding[] =>
+  corpus.byLocale[locale].flatMap((e) => rule(raw ? e : { ...e, text: flattenMessage(e.text), en: e.en === undefined ? undefined : flattenMessage(e.en) }).map((m) => `${e.module}:${e.path} ${m}`));
 const show = (f: Finding[]) => `${f.length} finding(s):\n  ${f.slice(0, 12).join("\n  ")}`;
 
 function ratchet(check: keyof typeof KNOWN, locale: Locale, found: Finding[]) {
@@ -48,13 +51,13 @@ describe.each(LOCALES)("localisation QA %s", (locale) => {
 
   it("keeps placeholders, [accent] marks and valid {name} syntax", () => {
     const bad = scan(locale, (e) => {
-      const out = R.icuIssues(e.text);
+      const out = [...R.icuIssues(e.text), ...R.pluralIssues(locale, e.text)];
       if (locale === "en") return out;
       if (e.en === undefined) return [...out, "no English source at this path"];
       if (R.placeholders(e.text).join() !== R.placeholders(e.en).join()) out.push(`placeholders {${R.placeholders(e.text)}} ≠ {${R.placeholders(e.en)}}`);
       if (R.accentMarks(e.text) !== R.accentMarks(e.en)) out.push("[accent] marks differ from English");
       return out;
-    });
+    }, true);
     expect(bad, show(bad)).toEqual([]);
   });
 
@@ -110,7 +113,7 @@ describe.each(LOCALES)("localisation QA %s", (locale) => {
   it("does not leave a meaningful share of strings identical to English", () => {
     if (locale === "en") return;
     const entries = corpus.byLocale[locale];
-    const same = entries.filter((e) => R.sameAsEnglish(e.text, e.en));
+    const same = entries.filter((e) => R.sameAsEnglish(flattenMessage(e.text), e.en && flattenMessage(e.en)));
     expect(same.length / entries.length, `identical to English: ${same.slice(0, 10).map((e) => `${e.module}:${e.path}`).join(", ")}`).toBeLessThan(0.05);
   });
 });
@@ -119,9 +122,9 @@ it("reports warnings: text expansion > +60 % on short strings, % spacing, stray 
   const lines: string[] = [];
   for (const locale of LOCALES.filter((l) => l !== "en")) {
     const entries = corpus.byLocale[locale];
-    const wide = entries.filter((e) => (R.expansion(e.text, e.en) ?? 0) > 0.6);
-    const pct = entries.flatMap((e) => R.percentIssues(locale, e.text));
-    const latin = entries.flatMap((e) => R.strayLatin(locale, e.text));
+    const wide = entries.filter((e) => (R.expansion(flattenMessage(e.text), e.en && flattenMessage(e.en)) ?? 0) > 0.6);
+    const pct = entries.flatMap((e) => R.percentIssues(locale, flattenMessage(e.text)));
+    const latin = entries.flatMap((e) => R.strayLatin(locale, flattenMessage(e.text)));
     if (wide.length || pct.length || latin.length) {
       const worst = wide.slice(0, 3).map((e) => `"${e.en}" → "${e.text}"`).join("; ");
       lines.push(`${locale}: +60 % ${wide.length}${worst ? ` (e.g. ${worst})` : ""} · % spacing ${pct.length} · stray Latin ${latin.length}${latin.length ? ` (${[...new Set(latin)].slice(0, 6).join(", ")})` : ""}`);
@@ -143,7 +146,13 @@ it("the rules catch what they are meant to catch", () => {
   expect(R.dntMissing("uk", "Monte Carlo and EPA AgSTAR", "Монте-Карло та EPA AgSTAR")).toEqual(["Monte Carlo"]);
   expect(R.unitsMissing("uk", "{v} kWh, 5 t", "{v} кВт·год, 5 т")).toEqual([]);
   expect(R.unitsMissing("de", "{v} MWh", "{v} Megawattstunden")).toEqual(["MWh"]);
-  expect(R.icuIssues("{n, plural, one {a} other {b}}").length).toBeGreaterThan(0);
+  expect(R.icuIssues("{n, plural, one {a} other {b}}")).toEqual([]);
+  expect(R.icuIssues("{n, plural, one {a}}").join()).toMatch(/other/);
+  expect(R.icuIssues("{n, number, percent}").join()).toMatch(/unsupported/);
+  expect(R.icuIssues("a } b").length).toBeGreaterThan(0);
+  expect(R.pluralIssues("uk", "{n, plural, one{# a} other{# b}}").join()).toMatch(/needs few\/many/);
+  expect(R.pluralIssues("de", "{n, plural, one{# a} few{# b} other{# c}}").join()).toMatch(/not a de plural category/);
+  expect(R.pluralIssues("pl", "{n, plural, one{# a} few{# b} many{# c} other{# d}}")).toEqual([]);
   expect(R.icuIssues("Hello {name} and [accent]")).toEqual([]);
   expect(R.decimalIssues("de", "0.25–1 MW, 3.000 t")).toEqual(["0.25"]);
   expect(R.quoteIssues("pl", 'Wybierz "plan"')).toContain('straight quote "');
