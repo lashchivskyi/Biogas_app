@@ -51,7 +51,7 @@ export function climateDistance(a: number[], b: number[]): number {
 
 export function climateSummary(region: Region, lang: CoreLang = "uk") {
   const analogues = CLIMATE_BENCHMARKS.map((b) => ({
-    name: lang === "uk" ? b.name : b.nameEn,
+    name: lang === "uk" ? b.name : b.local?.[lang] ?? b.nameEn,
     distance: climateDistance(region.monthlyTempC, b.monthlyTempC),
     meanTempC: meanTemp(b.monthlyTempC),
   }))

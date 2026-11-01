@@ -298,7 +298,7 @@ const de: Translation = {
       dairy_cow: { label: "Milchkühe", unit: "Tiere" }, cattle_other: { label: "Jungvieh / Mastrinder", unit: "Tiere" }, pig_finisher: { label: "Mastschweine", unit: "Plätze" },
       sow: { label: "Sauen mit Ferkeln", unit: "Tiere" }, layer_hen: { label: "Legehennen", unit: "Tiere" }, broiler: { label: "Masthähnchen", unit: "Plätze" },
     },
-    units: { tYear: "t/Jahr", months: "Monate", years: "J.", never: "keine Amortisation", over25: "> 25 J.", kwe: "kWel" },
+    units: { tYear: "t/Jahr", months: "Monate", years: "J.", yearsN: "{n} J.", never: "keine Amortisation", over25: "> 25 J.", kwe: "kWel" },
   },
   examples: {
     in_food_40k: "Biogasgenossenschaft · Mist und Filterkuchen",

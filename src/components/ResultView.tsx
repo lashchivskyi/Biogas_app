@@ -24,7 +24,7 @@ import { DataConfidence } from "./DataConfidence";
 import { PaidTeaser } from "./PaidTeaser";
 import { SupportTable } from "./SupportTable";
 import { offerCopy } from "@/i18n/offer";
-import { processCopy, processFieldLabels } from "@/i18n/processes";
+import { processCopy, processFieldLabels, processMetricLabels, processPrimary } from "@/i18n/processes";
 import { PROCESS_UNITS, type ProcessKind, type ProcessResult } from "@/core/processes";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
@@ -153,6 +153,8 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
   const L = d.labels;
   const F = makeFormat(locale, L.units, display);
   const { n0, eur, money, years, range, compact } = F;
+  /** Year part of "t/yr" in the language (rok, god., год.): a gas flow per year uses the same word. */
+  const perYear = L.units.tYear.split("/")[1] ?? "yr";
   const best = a.scenarios.base;
   const route = a.bestRoute;
   const r = a.ranges;
@@ -296,8 +298,8 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
             <div><dt className="text-muted">{R.heatUseful}</dt><dd className="num font-semibold">{n0(e.heatUsefulKwh / 1000)} {L.units.mwh} <span className="font-normal text-muted">{R.of} {n0(e.heatNetAvailableKwh / 1000)}</span></dd></div>
             <div><dt className="text-muted">{R.elSplit}</dt><dd className="num font-semibold">{n0(e.elSelfConsumedKwh / 1000)} / {n0(e.elExportedKwh / 1000)} {L.units.mwh}</dd></div>
           </dl> : <dl className="grid gap-3 text-sm sm:grid-cols-2">
-            <div><dt className="text-muted">CH₄</dt><dd className="num font-semibold">{n0(best.feed.ch4M3Year)} Nm³/a</dd></div>
-            <div><dt className="text-muted">{R.biogas}</dt><dd className="num font-semibold">{n0(best.feed.biogasM3Year)} Nm³/a</dd></div>
+            <div><dt className="text-muted">CH₄</dt><dd className="num font-semibold">{n0(best.feed.ch4M3Year)} Nm³/{perYear}</dd></div>
+            <div><dt className="text-muted">{R.biogas}</dt><dd className="num font-semibold">{n0(best.feed.biogasM3Year)} Nm³/{perYear}</dd></div>
           </dl>}
         </div>
       </Section>
@@ -548,6 +550,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
   const routes: RouteId[] = ["chp", "boiler", "biomethane"];
   const PC = processCopy(locale);
   const fields = processFieldLabels(locale);
+  const metricLabels = processMetricLabels(locale);
   const O = offerCopy[locale];
   const metricNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 6 }).format;
   const moneyLabels: Record<string, string> = { ...financialLabels(locale, d), ...(process && { process: PC.models[process.kind], process_operation: fields.processOpexLocalYear, residual_disposal: fields.residualCostLocalT, gas_supply: fields.gasPriceLocalNm3, treatment: fields.avoidedTreatmentLocalM3 }) };
@@ -692,7 +695,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
           {process ? <Fold title={PC.models[process.kind]} open>
             <p className="text-sm text-ink2">{PC.inputHint}</p>
             <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-              {Object.entries(process.metrics).map(([id, m]) => <div key={id}><dt className="text-muted">{PROCESS_METRIC_LABELS[id] ?? fields[id]}</dt><dd className="num font-semibold">{metricNumber(m.value)} {m.unit}</dd></div>)}
+              {Object.entries(process.metrics).map(([id, m]) => <div key={id}><dt className="text-muted">{metricLabels[id] ?? PROCESS_METRIC_LABELS[id] ?? fields[id]}</dt><dd className="num font-semibold">{metricNumber(m.value)} {m.unit}</dd></div>)}
             </dl>
             <p className="mt-3 text-xs text-muted">{PC.costHint}</p>
           </Fold> : <Fold title={R.dFeed} open>
@@ -720,12 +723,12 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
           </Fold>}
 
           <Fold title={R.dTech}>
-            <p lang={a.lang} className="font-semibold">{best.design.tech.primary}</p>
+            <p lang={a.lang} className="font-semibold">{processPrimary(locale, best.design.tech.primary)}</p>
             <p lang={a.lang} className="mt-1 text-sm text-ink2">{best.design.tech.reactor}</p>
             <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-4">
               {([
                 [R.workVol, best.design.workingVolumeM3, `≈ ${n0(sig2(best.design.workingVolumeM3))} m³`],
-                [R.hrt, best.design.hrtDays, `${best.design.hrtDays} ${R.days}`],
+                [R.hrt, best.design.hrtDays, `${n1(best.design.hrtDays)} ${R.days}`],
                 [R.olr, best.design.olrKgVsM3Day, `${n1(best.design.olrKgVsM3Day)} kg VS/(m³·d)`],
                 [R.storage, best.design.storageVolumeM3, `≈ ${n0(sig2(best.design.storageVolumeM3))} m³`],
               ] as const).filter(([, v]) => !process || v > 0).map(([label, , text]) => <div key={label}><dt className="text-muted">{label}</dt><dd className="num font-semibold">{text}</dd></div>)}

@@ -298,7 +298,7 @@ const el: Translation = {
       dairy_cow: { label: "Αγελάδες γάλακτος", unit: "κεφαλές" }, cattle_other: { label: "Μοσχίδες / βοοειδή κρεατοπαραγωγής", unit: "κεφαλές" }, pig_finisher: { label: "Χοίροι πάχυνσης", unit: "θέσεις" },
       sow: { label: "Χοιρομητέρες με χοιρίδια", unit: "κεφαλές" }, layer_hen: { label: "Ωοτόκες όρνιθες", unit: "πτηνά" }, broiler: { label: "Κοτόπουλα κρεατοπαραγωγής", unit: "θέσεις" },
     },
-    units: { tYear: "t/έτος", months: "μήνες", years: "έτη", never: "χωρίς απόσβεση", over25: "> 25 έτη" },
+    units: { tYear: "t/έτος", months: "μήνες", years: "έτη", yearsN: "{n} έτη", never: "χωρίς απόσβεση", over25: "> 25 έτη" },
   },
   examples: {
     in_food_40k: "Συνεταιρισμός βιοαερίου · κοπριά και λάσπη διήθησης",

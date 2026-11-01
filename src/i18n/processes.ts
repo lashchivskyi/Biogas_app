@@ -212,7 +212,29 @@ const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; 
   lv: { reactor: "Reaktors", upgrading: "Attīrīšana", dm: "SV", cod: "ĶSP", biogas: "biogāze" },
   et: { reactor: "Reaktor", upgrading: "Puhastus", cod: "KHT", biogas: "biogaas" },
   th: { reactor: "ถังปฏิกรณ์", upgrading: "การปรับปรุงคุณภาพก๊าซ", dm: "TS", biogas: "ไบโอแก๊ส" },
+  pl: { reactor: "Reaktor", upgrading: "Uszlachetnianie biogazu", dm: "s.m.", cod: "ChZT", biogas: "biogaz" },
+  cs: { reactor: "Reaktor", upgrading: "Úprava na biometan", dm: "sušina", cod: "CHSK", biogas: "bioplyn" },
+  sk: { reactor: "Reaktor", upgrading: "Úprava na biometán", dm: "sušina", cod: "CHSK", biogas: "bioplyn" },
+  sr: { reactor: "Reaktor", upgrading: "Prečišćavanje biogasa", dm: "SM", cod: "HPK", biogas: "biogas" },
+  bg: { reactor: "Реактор", upgrading: "Обогатяване до биометан", dm: "СВ", cod: "ХПК", biogas: "биогаз" },
 };
+/** Labels of the gas-stream balance and the technology line, where the English form was replaced by a local one. */
+const gasLabels: Partial<Record<Locale, { loss: string; residual: string; captured: string; total: string; primary: string }>> = {
+  pl: { loss: "Strata CH₄", residual: "Pozostałość, m", captured: "CH₄ → kogeneracja / uszlachetnianie / kocioł", total: "CH₄ ogółem", primary: "Biogaz / kogeneracja / kocioł" },
+  cs: { loss: "Ztráta CH₄", residual: "Zbytek, m", captured: "CH₄ → KGJ / úprava / kotel", total: "CH₄ celkem", primary: "Bioplyn / KGJ / kotel" },
+  sk: { loss: "Strata CH₄", residual: "Zvyšok, m", captured: "CH₄ → kogenerácia / úprava / kotol", total: "CH₄ spolu", primary: "Bioplyn / kogenerácia / kotol" },
+  sr: { loss: "Gubitak CH₄", residual: "Ostatak, m", captured: "CH₄ → kogeneracija / prečišćavanje / kotao", total: "CH₄ ukupno", primary: "Biogas / kogeneracija / kotao" },
+  bg: { loss: "Загуба на CH₄", residual: "Остатък, m", captured: "CH₄ → когенерация / пречистване / котел", total: "CH₄ общо", primary: "Биогаз / когенерация / котел" },
+};
+/** Local overrides of the process-balance row labels (the rest are symbols). */
+export function processMetricLabels(locale: Locale): Record<string, string> {
+  const g = gasLabels[locale];
+  return g ? { capturedCh4: g.captured, uncapturedCh4: g.loss, generatedCh4: g.total, residual: g.residual } : {};
+}
+/** The model writes the technology line of an existing-gas case in English; show the local form when there is one. */
+export function processPrimary(locale: Locale, primary: string): string {
+  return primary === "Biogas / CHP / boiler" ? gasLabels[locale]?.primary ?? primary : primary;
+}
 /** Lower-cases a label inside a sentence; German nouns keep their capital. */
 const lowerUnlessGerman = (locale: Locale, text: string) => (locale === "de" ? text : text.toLocaleLowerCase());
 /** Biogas upgrading as a label; `inBrackets` lower-cases it after another word (not for German nouns). */

@@ -298,7 +298,7 @@ const pt: Translation = {
       dairy_cow: { label: "Vacas leiteiras", unit: "cabeças" }, cattle_other: { label: "Recria / gado de corte", unit: "cabeças" }, pig_finisher: { label: "Suínos em terminação", unit: "vagas" },
       sow: { label: "Matrizes com leitões", unit: "cabeças" }, layer_hen: { label: "Galinhas poedeiras", unit: "aves" }, broiler: { label: "Frangos de corte", unit: "vagas" },
     },
-    units: { tYear: "t/ano", months: "meses", years: "anos", never: "sem retorno", over25: "> 25 anos" },
+    units: { tYear: "t/ano", months: "meses", years: "anos", yearsN: "{n} anos", never: "sem retorno", over25: "> 25 anos" },
   },
   examples: {
     in_food_40k: "Cooperativa de biogás · esterco e torta de filtro",

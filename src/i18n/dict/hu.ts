@@ -298,7 +298,7 @@ const hu: Translation = {
       dairy_cow: { label: "Tejelő tehén", unit: "db" }, cattle_other: { label: "Növendék / húsmarha", unit: "db" }, pig_finisher: { label: "Hízósertés", unit: "férőhely" },
       sow: { label: "Koca malacokkal", unit: "db" }, layer_hen: { label: "Tojótyúk", unit: "db" }, broiler: { label: "Brojler", unit: "férőhely" },
     },
-    units: { tYear: "t/év", months: "hónap", years: "év", never: "nem térül meg", over25: "> 25 év" },
+    units: { tYear: "t/év", months: "hónap", years: "év", yearsN: "{n} év", never: "nem térül meg", over25: "> 25 év" },
   },
   examples: {
     in_food_40k: "Biogázszövetkezet · trágya és szűrőpogácsa",

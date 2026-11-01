@@ -1,5 +1,6 @@
 import type { Dict, Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
+import { formatMessage } from "@/i18n/message";
 
 /** Calendar date at the user's location. Call on an explicit action, not during SSR. */
 export function calendarDateAt(date: Date, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
@@ -48,7 +49,7 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"], displ
   const price = (v: number, code: string) => curFull(code).format(v);
   /** Small unit prices (per kWh, per Nm³) in the display currency, three significant digits. */
   const unitPrice = (v: number) => new Intl.NumberFormat(tag, { style: "currency", currency: display.currency, maximumSignificantDigits: 3 }).format(v * display.rate);
-  const years = (v: number | null) => (v === null || !Number.isFinite(v) ? units.never : v > 25 ? units.over25 : `${n1(v)} ${units.years}`);
+  const years = (v: number | null) => (v === null || !Number.isFinite(v) ? units.never : v > 25 ? units.over25 : units.yearsN ? formatMessage(units.yearsN, { n: Number(v.toFixed(1)) }, tag) : `${n1(v)} ${units.years}`);
   const pct = (v: number, digits = 0) => new Intl.NumberFormat(tag, { style: "percent", maximumFractionDigits: digits }).format(v);
   const range = (a: number, b: number, f: (v: number) => string = (v) => n0(sig2(v))) => {
     const lo = Math.min(a, b);

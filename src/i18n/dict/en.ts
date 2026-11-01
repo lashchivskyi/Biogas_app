@@ -301,7 +301,7 @@ const en = {
       dairy_cow: { label: "Dairy cows", unit: "head" }, cattle_other: { label: "Young / beef cattle", unit: "head" }, pig_finisher: { label: "Finishing pigs", unit: "places" },
       sow: { label: "Sows with piglets", unit: "head" }, layer_hen: { label: "Laying hens", unit: "birds" }, broiler: { label: "Broilers", unit: "places" },
     },
-    units: { tYear: "t/yr", t: "t", ha: "ha", m3: "m³", km: "km", kwh: "kWh", mwh: "MWh", pct: "%", months: "months", years: "yr", never: "no payback", over25: "> 25 yr", kw: "kW", kwe: "kWe" },
+    units: { tYear: "t/yr", t: "t", ha: "ha", m3: "m³", km: "km", kwh: "kWh", mwh: "MWh", pct: "%", months: "months", years: "yr", yearsN: "{n} yr", never: "no payback", over25: "> 25 yr", kw: "kW", kwe: "kWe" },
   },
   examples: {
     in_food_40k: "Biogas cooperative · dung and press mud",

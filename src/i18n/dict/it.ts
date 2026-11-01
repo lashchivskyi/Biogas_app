@@ -298,7 +298,7 @@ const it: Translation = {
       dairy_cow: { label: "Vacche da latte", unit: "capi" }, cattle_other: { label: "Rimonta / bovini da carne", unit: "capi" }, pig_finisher: { label: "Suini all’ingrasso", unit: "posti" },
       sow: { label: "Scrofe con suinetti", unit: "capi" }, layer_hen: { label: "Galline ovaiole", unit: "capi" }, broiler: { label: "Broiler", unit: "posti" },
     },
-    units: { tYear: "t/anno", months: "mesi", years: "anni", never: "nessun rientro", over25: "> 25 anni" },
+    units: { tYear: "t/anno", months: "mesi", years: "anni", yearsN: "{n} anni", never: "nessun rientro", over25: "> 25 anni" },
   },
   examples: {
     in_food_40k: "Cooperativa biogas · letame e fanghi di filtrazione",

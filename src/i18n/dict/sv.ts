@@ -298,7 +298,7 @@ const sv: Translation = {
       dairy_cow: { label: "Mjölkkor", unit: "djur" }, cattle_other: { label: "Ungdjur / köttdjur", unit: "djur" }, pig_finisher: { label: "Slaktsvin", unit: "platser" },
       sow: { label: "Suggor med smågrisar", unit: "djur" }, layer_hen: { label: "Värphöns", unit: "höns" }, broiler: { label: "Slaktkycklingar", unit: "platser" },
     },
-    units: { tYear: "t/år", months: "månader", years: "år", never: "ingen återbetalning", over25: "> 25 år" },
+    units: { tYear: "t/år", months: "månader", years: "år", yearsN: "{n} år", never: "ingen återbetalning", over25: "> 25 år" },
   },
   examples: {
     in_food_40k: "Biogaskooperativ · gödsel och filterkaka",

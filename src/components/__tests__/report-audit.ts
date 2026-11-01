@@ -636,7 +636,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   if (Math.abs(feedTotal - base.feed.tonnesYear) > feed.length * 1) bad("feedstock table", `rows sum to ${feedTotal} t, the model has ${Math.round(base.feed.tonnesYear)} t`);
   const tech = txt(fold(1)), dz = base.design;
   const techCheck = (v: number, want: string, w: string) => { if (!proc || v > 0) has(tech, want, w); };
-  techCheck(dz.workingVolumeM3, `≈ ${n0(sig2(dz.workingVolumeM3))} m³`, "digester volume"); techCheck(dz.hrtDays, `${dz.hrtDays} ${R.days}`, "retention time"); techCheck(dz.olrKgVsM3Day, `${n1(dz.olrKgVsM3Day)} kg VS/(m³·d)`, "loading rate"); techCheck(dz.storageVolumeM3, `≈ ${n0(sig2(dz.storageVolumeM3))} m³`, "storage volume");
+  techCheck(dz.workingVolumeM3, `≈ ${n0(sig2(dz.workingVolumeM3))} m³`, "digester volume"); techCheck(dz.hrtDays, `${n1(dz.hrtDays)} ${R.days}`, "retention time"); techCheck(dz.olrKgVsM3Day, `${n1(dz.olrKgVsM3Day)} kg VS/(m³·d)`, "loading rate"); techCheck(dz.storageVolumeM3, `≈ ${n0(sig2(dz.storageVolumeM3))} m³`, "storage volume");
   const safetyFold = txt(fold(6));
   for (const s of a.safety) has(safetyFold, s.hazard, `safety ${s.id}`);
   has(safetyFold, locText(SAFETY_DISCLAIMER, a.lang), "safety disclaimer");

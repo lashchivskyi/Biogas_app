@@ -298,7 +298,7 @@ const fr: Translation = {
       dairy_cow: { label: "Vaches laitières", unit: "têtes" }, cattle_other: { label: "Génisses / bovins viande", unit: "têtes" }, pig_finisher: { label: "Porcs à l’engrais", unit: "places" },
       sow: { label: "Truies avec porcelets", unit: "têtes" }, layer_hen: { label: "Poules pondeuses", unit: "sujets" }, broiler: { label: "Poulets de chair", unit: "places" },
     },
-    units: { tYear: "t/an", months: "mois", years: "ans", never: "pas de retour", over25: "> 25 ans" },
+    units: { tYear: "t/an", months: "mois", years: "ans", yearsN: "{n} ans", never: "pas de retour", over25: "> 25 ans" },
   },
   examples: {
     in_food_40k: "Coopérative biogaz · fumier et écumes de sucrerie",

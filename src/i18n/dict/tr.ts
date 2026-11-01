@@ -298,7 +298,7 @@ const tr: Translation = {
       dairy_cow: { label: "Süt inekleri", unit: "baş" }, cattle_other: { label: "Genç / besi sığırı", unit: "baş" }, pig_finisher: { label: "Besi domuzları", unit: "kapasite" },
       sow: { label: "Yavrulu anaç domuzlar", unit: "baş" }, layer_hen: { label: "Yumurta tavukları", unit: "adet" }, broiler: { label: "Etlik piliçler", unit: "kapasite" },
     },
-    units: { tYear: "t/yıl", months: "ay", years: "yıl", never: "geri ödeme yok", over25: "> 25 yıl" },
+    units: { tYear: "t/yıl", months: "ay", years: "yıl", yearsN: "{n} yıl", never: "geri ödeme yok", over25: "> 25 yıl" },
   },
   examples: {
     in_food_40k: "Biyogaz kooperatifi · gübre ve filtre çamuru",

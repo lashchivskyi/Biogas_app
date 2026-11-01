@@ -298,7 +298,7 @@ const lv: Translation = {
       dairy_cow: { label: "Slaucamās govis", unit: "gab." }, cattle_other: { label: "Jaunlopi / gaļas liellopi", unit: "gab." }, pig_finisher: { label: "Nobarojamās cūkas", unit: "vietas" },
       sow: { label: "Sivēnmātes ar sivēniem", unit: "gab." }, layer_hen: { label: "Dējējvistas", unit: "gab." }, broiler: { label: "Broileri", unit: "vietas" },
     },
-    units: { tYear: "t/gadā", months: "mēn.", years: "g.", never: "neatmaksājas", over25: "> 25 g." },
+    units: { tYear: "t/gadā", months: "mēn.", years: "g.", yearsN: "{n} g.", never: "neatmaksājas", over25: "> 25 g." },
   },
   examples: {
     in_food_40k: "Biogāzes kooperatīvs · kūtsmēsli un filtrācijas nogulsnes",

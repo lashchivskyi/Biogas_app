@@ -298,7 +298,7 @@ const lt: Translation = {
       dairy_cow: { label: "Melžiamos karvės", unit: "vnt." }, cattle_other: { label: "Prieauglis / mėsiniai galvijai", unit: "vnt." }, pig_finisher: { label: "Penimos kiaulės", unit: "vietų" },
       sow: { label: "Paršavedės su paršeliais", unit: "vnt." }, layer_hen: { label: "Vištos dedeklės", unit: "vnt." }, broiler: { label: "Broileriai", unit: "vietų" },
     },
-    units: { tYear: "t/m.", months: "mėn.", years: "m.", never: "neatsiperka", over25: "> 25 m." },
+    units: { tYear: "t/m.", months: "mėn.", years: "m.", yearsN: "{n} m.", never: "neatsiperka", over25: "> 25 m." },
   },
   examples: {
     in_food_40k: "Biodujų kooperatyvas · mėšlas ir filtravimo dumblas",

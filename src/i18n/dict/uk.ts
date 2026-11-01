@@ -298,7 +298,7 @@ const uk: Translation = {
       dairy_cow: { label: "Дійні корови", unit: "гол." }, cattle_other: { label: "Молодняк / м’ясна ВРХ", unit: "гол." }, pig_finisher: { label: "Свині на відгодівлі", unit: "місць" },
       sow: { label: "Свиноматки з поросятами", unit: "гол." }, layer_hen: { label: "Курки-несучки", unit: "гол." }, broiler: { label: "Бройлери", unit: "місць" },
     },
-    units: { tYear: "т/рік", t: "т", ha: "га", m3: "м³", km: "км", kwh: "кВт·год", mwh: "МВт·год", months: "міс.", years: "р.", never: "не окупається", over25: "> 25 р.", kw: "кВт", kwe: "кВт ел." },
+    units: { tYear: "т/рік", t: "т", ha: "га", m3: "м³", km: "км", kwh: "кВт·год", mwh: "МВт·год", months: "міс.", years: "р.", yearsN: "{n} р.", never: "не окупається", over25: "> 25 р.", kw: "кВт", kwe: "кВт ел." },
   },
   examples: {
     in_food_40k: "Біогазовий кооператив · гній і фільтраційний осад",

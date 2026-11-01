@@ -107,7 +107,7 @@ export const offerCopy: Record<Locale, OfferCopy> = {
   },
   pl: {
     waiver: "Proszę o natychmiastowe dostarczenie raportu i przyjmuję do wiadomości, że po jego dostarczeniu tracę prawo odstąpienia od umowy.",
-    waiverMail: "{date} poprosiłeś o natychmiastowe dostarczenie i potwierdziłeś: „{text}”",
+    waiverMail: "{date} zażądano natychmiastowego dostarczenia i potwierdzono: „{text}”",
     insufficient: "Na razie brakuje danych do wniosku, więc płatny raport nie odpowie na Twoje pytanie. Najpierw uzupełnij brakujące dane.",
     vatExclusive: "Ceny nie zawierają VAT. Jeśli VAT jest należny, zostanie doliczony na stronie płatności na podstawie danych rozliczeniowych, przed zapłatą.",
     vatFinal: "Podana cena to cała kwota do zapłaty; przy płatności nie dolicza się VAT ani innych podatków.",
@@ -129,7 +129,7 @@ export const offerCopy: Record<Locale, OfferCopy> = {
     driversLocked: "Wpływ każdego czynnika na NPV jest w płatnym raporcie.",
     monthlyTitle: "Miesięczny bilans energii",
     monthlySub: "Scenariusz bazowy, wybrana ścieżka. Energia gazu to użyteczna energia metanu (wartość opałowa) po stratach.",
-    monthlyCols: ["Miesiąc", "Substrat, t", "Energia gazu, MWh", "Ciepło na fermentor, MWh", "Ciepło użyteczne, MWh", "Energia elektryczna netto, MWh"],
+    monthlyCols: ["Miesiąc", "Substrat, t", "Energia gazu, MWh", "Ciepło na komorę fermentacyjną, MWh", "Ciepło użyteczne, MWh", "Energia elektryczna netto, MWh"],
     residualsTitle: "Poferment i pozostałości",
     resResidue: "Poferment ≈ {t} t/rok z ≈ {n} kg N/rok. Sposób i koszt zagospodarowania to Twoje dane (OPEX); nie liczymy wartości nawozowej.",
     resWastewater: "Osad nadmierny ≈ {t} t/rok (uwodniony); ścieki ≈ {cod} mg ChZT/l trafiają do doczyszczania. Potwierdź limit zrzutu i sposób zagospodarowania osadu.",

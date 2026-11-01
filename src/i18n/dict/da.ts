@@ -298,7 +298,7 @@ const da: Translation = {
       dairy_cow: { label: "Malkekøer", unit: "dyr" }, cattle_other: { label: "Opdræt / kødkvæg", unit: "dyr" }, pig_finisher: { label: "Slagtesvin", unit: "stipladser" },
       sow: { label: "Søer med pattegrise", unit: "dyr" }, layer_hen: { label: "Æglæggende høner", unit: "dyr" }, broiler: { label: "Slagtekyllinger", unit: "pladser" },
     },
-    units: { tYear: "t/år", months: "måneder", years: "år", never: "ingen tilbagebetaling", over25: "> 25 år" },
+    units: { tYear: "t/år", months: "måneder", years: "år", yearsN: "{n} år", never: "ingen tilbagebetaling", over25: "> 25 år" },
   },
   examples: {
     in_food_40k: "Biogasandelsselskab · gødning og filterkage",

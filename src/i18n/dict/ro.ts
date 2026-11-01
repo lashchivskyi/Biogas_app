@@ -298,7 +298,7 @@ const ro: Translation = {
       dairy_cow: { label: "Vaci de lapte", unit: "capete" }, cattle_other: { label: "Tineret / bovine de carne", unit: "capete" }, pig_finisher: { label: "Porci la îngrășat", unit: "locuri" },
       sow: { label: "Scroafe cu purcei", unit: "capete" }, layer_hen: { label: "Găini ouătoare", unit: "capete" }, broiler: { label: "Broileri", unit: "locuri" },
     },
-    units: { tYear: "t/an", months: "luni", years: "ani", never: "nu se recuperează", over25: "> 25 ani" },
+    units: { tYear: "t/an", months: "luni", years: "ani", yearsN: "{n} ani", never: "nu se recuperează", over25: "> 25 ani" },
   },
   examples: {
     in_food_40k: "Cooperativă de biogaz · gunoi de grajd și nămol de filtrare",

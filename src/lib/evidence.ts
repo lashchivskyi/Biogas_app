@@ -3,6 +3,8 @@ import type { Locale } from "@/i18n";
 import { COUNTRIES } from "@/countries";
 import { fmtDec, tr } from "@/core/i18n";
 import { coreLang } from "@/i18n/config";
+import { countryName } from "@/i18n";
+import { GLOSSARY } from "@/i18n/glossary";
 
 /**
  * "What to verify first" turned into actions: the steps to get the evidence, a request pre-filled with the project's
@@ -25,8 +27,8 @@ export function evidenceRequest(a: Assessment, item: MeasureItem, locale: Locale
   const sig = (v: number) => n0(Number(v.toPrecision(2)));
   const r = a.routesBase[a.bestRoute];
   const e = r.energy;
-  const country = COUNTRIES[a.input.countryCode]?.nameEn ?? a.input.countryCode;
-  const streams = r.feed.lines.map((s) => `- ${s.label}: ${sig(s.tonnesYear)} ${T("t/year")}, DM ≈ ${D(s.dryMatterPct, 1)} %`).join("\n");
+  const country = COUNTRIES[a.input.countryCode] ? countryName(a.input.countryCode, l) : a.input.countryCode;
+  const streams = r.feed.lines.map((s) => `- ${s.label}: ${sig(s.tonnesYear)} ${T("t/year")}, ${GLOSSARY[l].terms.dm} ≈ ${D(s.dryMatterPct, 1)} %`).join("\n");
   const routeLine = a.bestRoute === "chp"
     ? T("combined heat and power ≈ {chpKwEl} kWe", { chpKwEl: sig(e.chpKwEl) })
     : a.bestRoute === "biomethane"

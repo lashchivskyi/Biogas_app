@@ -8,17 +8,19 @@ export interface ClimateBenchmark {
   /** Ukrainian; `nameEn` for every other language. */
   name: string;
   nameEn: string;
+  /** Local spelling where the language has one (the other languages show `nameEn`). */
+  local?: Partial<Record<string, string>>;
   country: string;
   monthlyTempC: number[];
 }
 
 export const CLIMATE_BENCHMARKS: ClimateBenchmark[] = [
-  { id: "krakow", name: "Краків (PL)", nameEn: "Kraków (PL)", country: "PL", monthlyTempC: [-1.0, 0.2, 4.0, 9.8, 14.5, 18.0, 19.8, 19.4, 14.5, 9.4, 4.4, 0.3] },
-  { id: "rzeszow", name: "Жешув (PL)", nameEn: "Rzeszów (PL)", country: "PL", monthlyTempC: [-1.8, -0.6, 3.3, 9.5, 14.4, 17.9, 19.7, 19.2, 14.1, 8.9, 3.9, -0.4] },
-  { id: "praha", name: "Прага (CZ)", nameEn: "Prague (CZ)", country: "CZ", monthlyTempC: [0.0, 1.2, 4.9, 10.2, 14.6, 18.2, 20.1, 19.7, 14.7, 9.6, 4.5, 1.2] },
-  { id: "dresden", name: "Дрезден (DE, схід)", nameEn: "Dresden (DE, east)", country: "DE", monthlyTempC: [0.8, 1.8, 5.2, 10.2, 14.4, 17.9, 19.8, 19.5, 14.8, 10.0, 5.2, 2.0] },
-  { id: "munchen", name: "Мюнхен (DE, Баварія)", nameEn: "Munich (DE, Bavaria)", country: "DE", monthlyTempC: [-0.2, 0.8, 4.8, 9.3, 13.6, 17.3, 19.2, 18.8, 14.2, 9.5, 4.1, 0.7] },
-  { id: "salzburg", name: "Зальцбург (AT)", nameEn: "Salzburg (AT)", country: "AT", monthlyTempC: [-0.9, 0.4, 4.4, 8.9, 13.3, 16.8, 18.7, 18.3, 13.9, 9.2, 3.7, 0.0] },
-  { id: "vilnius", name: "Вільнюс (LT)", nameEn: "Vilnius (LT)", country: "LT", monthlyTempC: [-3.5, -2.7, 1.3, 7.8, 13.5, 16.6, 19.0, 18.0, 13.0, 7.8, 2.4, -1.8] },
-  { id: "kobenhavn", name: "Копенгаген (DK)", nameEn: "Copenhagen (DK)", country: "DK", monthlyTempC: [1.9, 1.9, 3.9, 8.0, 12.4, 15.5, 18.1, 17.9, 14.4, 10.3, 6.1, 3.4] },
+  { id: "krakow", name: "Краків (PL)", nameEn: "Kraków (PL)", local: { pl: "Kraków (PL)", cs: "Krakov (PL)", sk: "Krakov (PL)", sr: "Krakov (PL)", bg: "Краков (PL)" }, country: "PL", monthlyTempC: [-1.0, 0.2, 4.0, 9.8, 14.5, 18.0, 19.8, 19.4, 14.5, 9.4, 4.4, 0.3] },
+  { id: "rzeszow", name: "Жешув (PL)", nameEn: "Rzeszów (PL)", local: { pl: "Rzeszów (PL)", cs: "Rzeszów (PL)", sk: "Rzeszów (PL)", sr: "Žešov (PL)", bg: "Жешув (PL)" }, country: "PL", monthlyTempC: [-1.8, -0.6, 3.3, 9.5, 14.4, 17.9, 19.7, 19.2, 14.1, 8.9, 3.9, -0.4] },
+  { id: "praha", name: "Прага (CZ)", nameEn: "Prague (CZ)", local: { pl: "Praga (CZ)", cs: "Praha (CZ)", sk: "Praha (CZ)", sr: "Prag (CZ)", bg: "Прага (CZ)" }, country: "CZ", monthlyTempC: [0.0, 1.2, 4.9, 10.2, 14.6, 18.2, 20.1, 19.7, 14.7, 9.6, 4.5, 1.2] },
+  { id: "dresden", name: "Дрезден (DE, схід)", nameEn: "Dresden (DE, east)", local: { pl: "Drezno (DE, wschód)", cs: "Drážďany (DE, východ)", sk: "Drážďany (DE, východ)", sr: "Drezden (DE, istok)", bg: "Дрезден (DE, изток)" }, country: "DE", monthlyTempC: [0.8, 1.8, 5.2, 10.2, 14.4, 17.9, 19.8, 19.5, 14.8, 10.0, 5.2, 2.0] },
+  { id: "munchen", name: "Мюнхен (DE, Баварія)", nameEn: "Munich (DE, Bavaria)", local: { pl: "Monachium (DE, Bawaria)", cs: "Mnichov (DE, Bavorsko)", sk: "Mníchov (DE, Bavorsko)", sr: "Minhen (DE, Bavarska)", bg: "Мюнхен (DE, Бавария)" }, country: "DE", monthlyTempC: [-0.2, 0.8, 4.8, 9.3, 13.6, 17.3, 19.2, 18.8, 14.2, 9.5, 4.1, 0.7] },
+  { id: "salzburg", name: "Зальцбург (AT)", nameEn: "Salzburg (AT)", local: { pl: "Salzburg (AT)", cs: "Salcburk (AT)", sk: "Salzburg (AT)", sr: "Salcburg (AT)", bg: "Залцбург (AT)" }, country: "AT", monthlyTempC: [-0.9, 0.4, 4.4, 8.9, 13.3, 16.8, 18.7, 18.3, 13.9, 9.2, 3.7, 0.0] },
+  { id: "vilnius", name: "Вільнюс (LT)", nameEn: "Vilnius (LT)", local: { pl: "Wilno (LT)", cs: "Vilnius (LT)", sk: "Vilnius (LT)", sr: "Vilnjus (LT)", bg: "Вилнюс (LT)" }, country: "LT", monthlyTempC: [-3.5, -2.7, 1.3, 7.8, 13.5, 16.6, 19.0, 18.0, 13.0, 7.8, 2.4, -1.8] },
+  { id: "kobenhavn", name: "Копенгаген (DK)", nameEn: "Copenhagen (DK)", local: { pl: "Kopenhaga (DK)", cs: "Kodaň (DK)", sk: "Kodaň (DK)", sr: "Kopenhagen (DK)", bg: "Копенхаген (DK)" }, country: "DK", monthlyTempC: [1.9, 1.9, 3.9, 8.0, 12.4, 15.5, 18.1, 17.9, 14.4, 10.3, 6.1, 3.4] },
 ];

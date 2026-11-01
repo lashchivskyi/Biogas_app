@@ -298,7 +298,7 @@ const es: Translation = {
       dairy_cow: { label: "Vacas lecheras", unit: "cabezas" }, cattle_other: { label: "Recría / vacuno de carne", unit: "cabezas" }, pig_finisher: { label: "Cerdos de cebo", unit: "plazas" },
       sow: { label: "Cerdas con lechones", unit: "cabezas" }, layer_hen: { label: "Gallinas ponedoras", unit: "aves" }, broiler: { label: "Pollos de engorde", unit: "plazas" },
     },
-    units: { tYear: "t/año", months: "meses", years: "años", never: "sin retorno", over25: "> 25 años" },
+    units: { tYear: "t/año", months: "meses", years: "años", yearsN: "{n} años", never: "sin retorno", over25: "> 25 años" },
   },
   examples: {
     in_food_40k: "Cooperativa de biogás · estiércol y cachaza",

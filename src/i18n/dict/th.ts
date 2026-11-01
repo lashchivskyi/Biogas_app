@@ -298,7 +298,7 @@ const th: Translation = {
       dairy_cow: { label: "แม่โครีดนม", unit: "ตัว" }, cattle_other: { label: "ลูกโค / โคเนื้อ", unit: "ตัว" }, pig_finisher: { label: "สุกรขุน", unit: "ตัว (ตามความจุ)" },
       sow: { label: "แม่สุกรพร้อมลูก", unit: "ตัว" }, layer_hen: { label: "ไก่ไข่", unit: "ตัว" }, broiler: { label: "ไก่เนื้อ", unit: "ตัว (ตามความจุ)" },
     },
-    units: { tYear: "ตัน/ปี", t: "ตัน", months: "เดือน", years: "ปี", never: "ไม่คืนทุน", over25: "> 25 ปี" },
+    units: { tYear: "ตัน/ปี", t: "ตัน", months: "เดือน", years: "ปี", yearsN: "{n} ปี", never: "ไม่คืนทุน", over25: "> 25 ปี" },
   },
   examples: {
     in_food_40k: "สหกรณ์ไบโอแก๊ส · มูลโคและกากตะกอนกรอง",

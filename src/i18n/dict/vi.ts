@@ -298,7 +298,7 @@ const vi: Translation = {
       dairy_cow: { label: "Bò sữa", unit: "con" }, cattle_other: { label: "Bê / bò thịt", unit: "con" }, pig_finisher: { label: "Heo thịt", unit: "chỗ" },
       sow: { label: "Heo nái và heo con", unit: "con" }, layer_hen: { label: "Gà đẻ trứng", unit: "con" }, broiler: { label: "Gà thịt", unit: "chỗ" },
     },
-    units: { tYear: "tấn/năm", t: "tấn", months: "tháng", years: "năm", never: "không hoàn vốn", over25: "> 25 năm" },
+    units: { tYear: "tấn/năm", t: "tấn", months: "tháng", years: "năm", yearsN: "{n} năm", never: "không hoàn vốn", over25: "> 25 năm" },
   },
   examples: {
     in_food_40k: "Hợp tác xã biogas · phân bò và bùn lọc đường",

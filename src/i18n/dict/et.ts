@@ -298,7 +298,7 @@ const et: Translation = {
       dairy_cow: { label: "Piimalehmad", unit: "tk" }, cattle_other: { label: "Noorkari / lihaveised", unit: "tk" }, pig_finisher: { label: "Nuumsead", unit: "kohta" },
       sow: { label: "Emised põrsastega", unit: "tk" }, layer_hen: { label: "Munakanad", unit: "tk" }, broiler: { label: "Broilerid", unit: "kohta" },
     },
-    units: { tYear: "t/a", months: "kuud", years: "a", never: "ei tasu end ära", over25: "> 25 a" },
+    units: { tYear: "t/a", months: "kuud", years: "a", yearsN: "{n} a", never: "ei tasu end ära", over25: "> 25 a" },
   },
   examples: {
     in_food_40k: "Biogaasiühistu · sõnnik ja filtrikook",

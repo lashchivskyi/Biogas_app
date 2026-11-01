@@ -298,7 +298,7 @@ const fi: Translation = {
       dairy_cow: { label: "Lypsylehmät", unit: "kpl" }, cattle_other: { label: "Nuorkarja / lihanaudat", unit: "kpl" }, pig_finisher: { label: "Lihasiat", unit: "paikkaa" },
       sow: { label: "Emakot porsaineen", unit: "kpl" }, layer_hen: { label: "Munivat kanat", unit: "kpl" }, broiler: { label: "Broilerit", unit: "paikkaa" },
     },
-    units: { tYear: "t/v", months: "kk", years: "v", never: "ei maksa itseään takaisin", over25: "> 25 v" },
+    units: { tYear: "t/v", months: "kk", years: "v", yearsN: "{n} v", never: "ei maksa itseään takaisin", over25: "> 25 v" },
   },
   examples: {
     in_food_40k: "Biokaasuosuuskunta · lanta ja suodatuskakku",

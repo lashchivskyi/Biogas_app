@@ -298,7 +298,7 @@ const nl: Translation = {
       dairy_cow: { label: "Melkkoeien", unit: "dieren" }, cattle_other: { label: "Jongvee / vleesvee", unit: "dieren" }, pig_finisher: { label: "Vleesvarkens", unit: "plaatsen" },
       sow: { label: "Zeugen met biggen", unit: "dieren" }, layer_hen: { label: "Leghennen", unit: "dieren" }, broiler: { label: "Vleeskuikens", unit: "plaatsen" },
     },
-    units: { tYear: "t/jaar", months: "maanden", years: "jr", never: "geen terugverdientijd", over25: "> 25 jr" },
+    units: { tYear: "t/jaar", months: "maanden", years: "jr", yearsN: "{n} jr", never: "geen terugverdientijd", over25: "> 25 jr" },
   },
   examples: {
     in_food_40k: "Biogascoöperatie · mest en filterkoek",
