@@ -11,7 +11,7 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "en";
 
 /** Locales whose core catalog is complete (enforced by `core-catalog.test.ts`). Add a locale here only when its catalog passes. */
-export const CORE_LOCALES: readonly Locale[] = ["en", "uk", "de", "pl", "fr", "es"];
+export const CORE_LOCALES: readonly Locale[] = ["en", "uk", "de", "pl", "fr", "es", "cs", "sk", "sr", "bg"];
 
 /** The language of the model text for a UI locale: its own where the catalog is complete, English otherwise. */
 export const coreLang = (l: Locale): Locale => (CORE_LOCALES.includes(l) ? l : "en");

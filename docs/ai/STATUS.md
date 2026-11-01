@@ -9,6 +9,7 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
   balances close; 30 reports, 0 contradictions. Benchmark vs KTBL, Luke, WSU, LandGEM (PRODUCT.md › Market).
 - L10n: terms unified; automatic QA (`qa.test.ts`, glossary, skill `localization`); CLDR plurals in `fmt()` for the 7 counted offer lines in 21 of 25 locales
   (`plural.test.ts`: n = 0, 1, 2, 5, 21, 1.5). Open: ~250 known DNT/unit/abbreviation defects (`KNOWN`), % spacing, +60 % buttons; no native review.
+  Model-sentence catalogs (`src/i18n/core/*.ts`, 718 keys) done for de, pl, fr, es, cs, sk, sr, bg. English in EVERY language (also uk): parameter-register `source` texts (`countries/sources.ts`, `modelAudit.ts`) in the full report/xlsx — owner decision needed.
 ## Launch readiness 2026-11-01 (green = verified in code/tests/local prod build)
 - GREEN: server errors → redacted JSON log + Sentry envelope (`monitoring.ts`); payment alerts (paid, mismatch, refund, dispute);
   cron re-sends stuck report links + owner alert at 1 h; no PII/tokens in app logs; health `/api/health` (storage check);
