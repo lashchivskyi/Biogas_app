@@ -4,6 +4,7 @@ import { calendarDateAt } from "@/lib/format";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
+import { locList, registerMessages, type Messages } from "@/core/i18n";
 import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES } from "@/countries";
@@ -86,7 +87,8 @@ function Toggle({ checked, onChange, label, tooltip }: { checked: boolean; onCha
 }
 
 
-export function Calculator({ locale, d, examples, demo, samplesHref }: { locale: Locale; d: CalculatorDict; examples: ExampleSummary[]; demo: boolean; samplesHref: string }) {
+export function Calculator({ locale, d, examples, demo, samplesHref, core }: { locale: Locale; d: CalculatorDict; examples: ExampleSummary[]; demo: boolean; samplesHref: string; core?: Messages }) {
+  registerMessages(locale, core);
   const C = d.calc;
   const L = d.labels;
   const T = stepHelp(locale);
@@ -454,11 +456,12 @@ export function Calculator({ locale, d, examples, demo, samplesHref }: { locale:
               </div>
             </div>
             <ResultView
+              core={core}
               a={assessment}
               d={d}
               locale={locale}
               currency={cur}
-              countryNotes={country.approachNotes[lang]}
+              countryNotes={locList(country.approachNotes, lang)}
               access="free"
               samplesHref={samplesHref}
               methodologyHref={`/${locale}/methodology`}

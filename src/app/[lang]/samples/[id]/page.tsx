@@ -9,9 +9,10 @@ import { ResultView, type ResultViewProps } from "@/components/ResultView";
 import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { SampleCaseBrief } from "@/components/SampleCaseBrief";
 import { assess } from "@/core";
+import { locList } from "@/core/i18n";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
-import { countryName, getDictionary, type Locale } from "@/i18n";
+import { countryName, getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
 import { exampleTitle } from "@/lib/examples";
@@ -36,9 +37,10 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
   const d = await getDictionary(locale);
   const country = getCountry(ex.input.countryCode);
   const cl = coreLang(locale);
+  const core = await getCoreCatalog(locale);
   const a = assess(ex.input, country, { lang: cl });
   const title = exampleTitle(ex, d, lang as Locale);
-  const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: country.approachNotes[cl], access: "full", methodologyHref: `/${locale}/methodology` };
+  const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: locList(country.approachNotes, cl), core, access: "full", methodologyHref: `/${locale}/methodology` };
   return (
     <main>
       <PageHero
@@ -51,7 +53,7 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
         <div className="no-print mb-4 flex flex-wrap justify-between gap-3">
           <Link href={`/${locale}/calculator`} className="btn btn-primary">{d.samples.run}</Link>
           <div className="flex flex-wrap gap-3">
-            <ExportButton a={a} currency={country.currency} access="full" label={decisionCopy[locale].exportXlsx} />
+            <ExportButton a={a} currency={country.currency} access="full" label={decisionCopy[locale].exportXlsx} core={core} />
             <PrintButton label={d.report.print} />
           </div>
         </div>

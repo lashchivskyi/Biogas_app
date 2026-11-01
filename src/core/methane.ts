@@ -41,7 +41,7 @@ export function methaneCheck(
   ];
   const lp = D(e.methaneLossShare * 100, 1);
   const gp = D(good * 100);
-  if (e.methaneLossShare > good) advice.unshift(T(`Expected loss ${lp} % is above good practice (${gp} %): budget for monitoring.`, `Очікувані втрати ${lp} % вищі за добру практику (${gp} %): закладіть бюджет на моніторинг.`));
+  if (e.methaneLossShare > good) advice.unshift(T("Expected loss {lp} % is above good practice ({gp} %): budget for monitoring.", "Очікувані втрати {lp} % вищі за добру практику ({gp} %): закладіть бюджет на моніторинг.", { lp, gp }));
   if (e.methaneLossShare > high || (ratio === null || ratio > 0.5)) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements.", "Втрати метану можуть знівелювати кліматичну вигоду. Не декларуйте зменшення викидів без вимірювань."));
 
   return {

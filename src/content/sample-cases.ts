@@ -1,4 +1,3 @@
-import type { CoreLang } from "@/core/i18n";
 
 interface CaseNotes {
   context: string;
@@ -6,7 +5,7 @@ interface CaseNotes {
   verify: string;
 }
 interface SampleCase {
-  notes: Record<CoreLang, CaseNotes>;
+  notes: { en: CaseNotes; uk: CaseNotes };
   sources: readonly { title: string; url: string }[];
 }
 

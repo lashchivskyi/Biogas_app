@@ -2,12 +2,19 @@
  * Supported UI locales. English is the source language; every other dictionary must satisfy the
  * English type (missing keys fail the build). Countries map to a default locale for detection.
  *
- * Report language: the model's explanatory text (core) exists in English and Ukrainian; other
- * locales show the translated UI with English model explanations (see `coreLang`).
+ * Report language: the model's explanatory text (core) is authored in English and Ukrainian; every other language is a
+ * catalog (`src/i18n/core/<locale>.ts`). Locales without a complete catalog show the translated UI with English model
+ * explanations (see `coreLang`).
  */
 export const LOCALES = ["en", "uk", "pl", "de", "fr", "it", "es", "pt", "nl", "cs", "sk", "hu", "ro", "bg", "sr", "el", "tr", "lt", "lv", "et", "da", "sv", "fi", "vi", "th"] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "en";
+
+/** Locales whose core catalog is complete (enforced by `core-catalog.test.ts`). Add a locale here only when its catalog passes. */
+export const CORE_LOCALES: readonly Locale[] = ["en", "uk", "de", "pl", "fr", "es"];
+
+/** The language of the model text for a UI locale: its own where the catalog is complete, English otherwise. */
+export const coreLang = (l: Locale): Locale => (CORE_LOCALES.includes(l) ? l : "en");
 
 export const isLocale = (v: string | undefined | null): v is Locale => !!v && (LOCALES as readonly string[]).includes(v);
 
@@ -34,7 +41,6 @@ export const NATIVE_NAME: Record<Locale, string> = {
   et: "Eesti", da: "Dansk", sv: "Svenska", fi: "Suomi", vi: "Tiếng Việt", th: "ไทย",
 };
 
-export const coreLang = (l: Locale): "en" | "uk" => (l === "uk" ? "uk" : "en");
 
 /** Supported project markets and their default UI locales. Unsupported visitor countries use US/en/USD. */
 export const COUNTRY_LOCALE: Record<string, Locale> = {

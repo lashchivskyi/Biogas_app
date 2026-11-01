@@ -1,14 +1,14 @@
 import type { Assessment, RouteId, ScenarioId } from "@/core";
+import { tr } from "@/core/i18n";
 import type { Cell, Sheet } from "./xlsx";
 
 /**
  * Editable spreadsheet of a paid report: the same numbers as the page, in EUR, with the assumptions behind them.
- * Labels follow the model language (English or Ukrainian), like the model's own explanations.
+ * Labels follow the model language (`a.lang`), like the model's own explanations.
  * The standard plan gets the base case; the full plan adds scenarios, routes, sensitivities and support cases.
  */
 export function reportSheets(a: Assessment, opts: { currency: string; access: "standard" | "full" }): Sheet[] {
-  const uk = a.lang === "uk";
-  const T = (en: string, ukText: string) => (uk ? ukText : en);
+  const T = tr(a.lang);
   const full = opts.access === "full";
   const base = a.scenarios.base;
   const route = (r: RouteId) => ({ chp: T("CHP", "Когенерація"), boiler: T("Boiler", "Котел"), biomethane: T("Biomethane", "Біометан") })[r];
@@ -29,7 +29,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     below: ["Below the model range", "Нижче діапазону моделі"], within: ["Within the model range", "У межах діапазону моделі"], above: ["Above the model range", "Вище діапазону моделі"],
     open: ["Open", "Відкрита"], competitive: ["Competitive", "Конкурсна"], closing: ["Closing", "Закривається"], closed: ["Closed", "Закрита"], uncertain: ["Uncertain", "Невизначена"],
     electricity: ["Electricity", "Електроенергія"], heat: ["Heat", "Тепло"], biomethane: ["Biomethane", "Біометан"],
-    closed_storage: ["Closed (gas-tight)", "Закрите (газонепроникне)"], open_storage: ["Open", "Відкрите"],
+    closed_storage: ["Closed (gas-tight)", "Закрите (газонепроникне)"], open_storage: ["Open (not gas-tight)", "Відкрите"],
     yield: ["Gas yield", "Вихід газу"], quantity: ["Quantity", "Кількість"], capex: ["CAPEX", "CAPEX"], electricity_price: ["Electricity price", "Ціна електроенергії"],
     export_price: ["Export price", "Ціна експорту"], heat_price: ["Heat price", "Ціна тепла"], heat_buyer: ["Heat buyer", "Споживач тепла"], offtake: ["Offtake", "Збут"],
     fertiliser: ["Fertiliser value", "Цінність добрива"], bill_structure: ["Bill structure", "Структура рахунку"], market: ["Market", "Ринок"],
@@ -73,12 +73,12 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     [T("Energy price increase needed, %", "Потрібне зростання цін на енергію, %"), be.energyPriceIncreasePct],
     [T("Highest installed cost, EUR", "Найвища вартість будівництва, EUR"), be.maxCapexEur ?? null],
     ...(be.product ? [
-      [T(`Product value now, ${be.product.unit}`, `Цінність продукту зараз, ${be.product.unit}`), be.product.currentEur],
-      [T(`Product value at NPV = 0, ${be.product.unit}`, `Цінність продукту при NPV = 0, ${be.product.unit}`), be.product.breakEvenEur],
+      [T("Product value now, {unit}", "Цінність продукту зараз, {unit}", { unit: be.product.unit }), be.product.currentEur],
+      [T("Product value at NPV = 0, {unit}", "Цінність продукту при NPV = 0, {unit}", { unit: be.product.unit }), be.product.breakEvenEur],
       ...(be.product.breakEvenEurMwh !== undefined ? [[T("Biomethane at NPV = 0, EUR/MWh LHV", "Біометан при NPV = 0, EUR/МВт·год (нижча теплота згоряння)"), be.product.breakEvenEurMwh]] : []),
     ] : []),
     ...(a.monteCarlo ? [
-      [T(`Monte Carlo (${a.monteCarlo.n} independent draws of the scenario quantities)`, `Монте-Карло (${a.monteCarlo.n} незалежних вибірок величин сценаріїв)`), ""],
+      [T("Monte Carlo ({n} independent draws of the scenario quantities)", "Монте-Карло ({n} незалежних вибірок величин сценаріїв)", { n: a.monteCarlo.n }), ""],
       ["NPV P10, EUR", a.monteCarlo.p10NpvEur], [T("NPV median, EUR", "Медіана NPV, EUR"), a.monteCarlo.p50NpvEur], ["NPV P90, EUR", a.monteCarlo.p90NpvEur],
       [T("Chance that NPV > 0", "Імовірність NPV > 0"), a.monteCarlo.probPositive],
     ] as Cell[][] : []),
@@ -133,7 +133,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
       [T("Climate case, EU RED II Annex VI default values (separate from the verdict)", "Кліматичний сценарій, стандартні значення EU RED II, додаток VI (окремо від вердикту)"), ""],
       [T("Product", "Продукт"), C(g.product)],
       [T("Digestate storage", "Зберігання дигестату"), C(`${g.digestate}_storage`)],
-      ...g.shares.map((s) => [T(`Energy share, ${s.substrate}`, `Енергетична частка, ${s.substrate}`), s.share] as Cell[]),
+      ...g.shares.map((s) => [T("Energy share, {substrate}", "Енергетична частка, {substrate}", { substrate: s.substrate }), s.share] as Cell[]),
       [T("Emissions per MJ biogas / biomethane, g CO2e", "Викиди на МДж біогазу / біометану, г CO2e"), g.feedGMJ],
       [T("Emissions per MJ product, g CO2e", "Викиди на МДж продукту, г CO2e"), g.productGMJ],
       [T("Fossil comparator, g CO2e/MJ", "Викопний еквівалент, г CO2e/МДж"), g.comparatorGMJ],
@@ -164,7 +164,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
       [T("Model range, optimistic", "Діапазон моделі, оптимістичний"), q.modelRangeEur[0]],
       [T("Model range, conservative", "Діапазон моделі, консервативний"), q.modelRangeEur[1]],
       [T("Position", "Положення"), C(q.position)],
-      ...(q.capacity ? [[T(`Capacity, ${q.capacity.unit}`, `Потужність, ${q.capacity.unit}`), q.capacity.value] as Cell[]] : []),
+      ...(q.capacity ? [[T("Capacity, {unit}", "Потужність, {unit}", { unit: q.capacity.unit }), q.capacity.value] as Cell[]] : []),
       [T("Highest price at NPV = 0", "Найвища ціна при NPV = 0"), q.maxCapexEur],
       blank,
       ...lines(T("Complete scope, model estimate per item", "Повний обсяг, оцінка моделі за позиціями"), q.scope, q.modelledEur),

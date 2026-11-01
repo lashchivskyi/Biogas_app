@@ -3,7 +3,8 @@ import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { absoluteUrl } from "@/config/site";
 import { getCountry } from "@/countries";
 import { assess } from "@/core";
-import { isLocale, type Locale } from "@/i18n/config";
+import { getCoreCatalog } from "@/i18n";
+import { coreLang, isLocale, type Locale } from "@/i18n/config";
 import { offerCopy } from "@/i18n/offer";
 import { deliverPaidReport, notifyOwner } from "../notify";
 import { orders, type Order } from "../orders";
@@ -47,13 +48,14 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
   const tier = country.priceTier;
   const provider = activeProvider();
   if (!provider) throw new CheckoutError("Online payment is not available", 503);
-  const reportLang = input.lang === "uk" ? "uk" : "en";
+  const locale = (isLocale(input.lang) ? input.lang : "en") as Locale;
+  await getCoreCatalog(locale); // registers the catalog the snapshot text is written from
+  const reportLang = coreLang(locale);
   const assessmentSnapshot = assess({ ...input.input, lang: reportLang }, country, { asOfDate: new Date().toISOString().slice(0, 10) });
   assertSellable(assessmentSnapshot);
 
   const quote = input.quoteToken ? verifyPaymentQuote(input.quoteToken, input) : createPaymentQuote(input);
   const { amountMinor, priceEurCents } = quote;
-  const locale = (isLocale(input.lang) ? input.lang : "en") as Locale;
 
   const order = await orders.create({
     plan: input.plan,

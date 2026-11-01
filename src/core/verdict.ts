@@ -37,7 +37,7 @@ export function decideVerdict(args: {
     return { id: "INSUFFICIENT_DATA", reasons: [T("No feedstock stream entered.", "Не вказано жодного потоку сировини.")], whatWouldChange: [T("Add herd size or waste quantity.", "Додайте поголів'я або обсяг відходів.")] };
   }
   if ((confidence.clientScore ?? confidence.score) < VERDICT_MIN_SCORE) {
-    reasons.push(T(`Not enough data for a conclusion (data quality ${confidence.score}/100).`, `Недостатньо даних для висновку (якість даних ${confidence.score}/100).`));
+    reasons.push(T("Not enough data for a conclusion (data quality {score}/100).", "Недостатньо даних для висновку (якість даних {score}/100).", { score: confidence.score }));
     return { id: "INSUFFICIENT_DATA", reasons, whatWouldChange: [T("Add the items listed under “What you can add” below.", "Додайте дані зі списку «Що можете додати ви» нижче.")] };
   }
 
@@ -46,7 +46,7 @@ export function decideVerdict(args: {
   const npvBase = base.fin.npvEur;
 
   if (kw < minKwEl && npvBase < 0) {
-    reasons.push(T(`Energy equivalent ≈ ${Math.round(kw)} kWe — below ${minKwEl} kW — and the base-case NPV is negative (€${fmt(npvBase)}).`, `Енергетичний еквівалент ≈ ${Math.round(kw)} кВт ел. — менше ${minKwEl} кВт, а NPV базового сценарію від'ємний (${fmt(npvBase)} €).`));
+    reasons.push(T("Energy equivalent ≈ {kw} kWe — below {minKwEl} kW — and the base-case NPV is negative (€{npvBase}).", "Енергетичний еквівалент ≈ {kw} кВт ел. — менше {minKwEl} кВт, а NPV базового сценарію від'ємний ({npvBase} €).", { kw: Math.round(kw), minKwEl, npvBase: fmt(npvBase) }));
     whatWouldChange.push(T("Add energy-dense wastes (co-substrate) or pool feedstock with neighbours (cluster plant).", "Додати енергетично щільні відходи (ко-сировина) або об'єднати потоки сусідніх господарств (кластер)."));
     whatWouldChange.push(T("Consider the simplest option — a biogas boiler for a constant heat need — or supplying feedstock to a larger plant.", "Оцінити найпростіший варіант — біогазовий котел за постійної потреби в теплі, або здачу сировини на більшу установку."));
     return { id: "NOT_RECOMMENDED_AT_SCALE", reasons, whatWouldChange };
@@ -61,22 +61,22 @@ export function decideVerdict(args: {
   const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
 
   if (strong) {
-    reasons.push(T(`Simple payback ≈ ${y(pb!)} (base) and ≈ ${y(pbCons!)} in the conservative case; base NPV €${fmt(npvBase)}; minimum DSCR ${D(base.fin.dscrMin ?? 0, 2)}.`, `Проста окупність ≈ ${y(pb!)} (базовий) і ≈ ${y(pbCons!)} у консервативному сценарії; NPV базового ${fmt(npvBase)} €; DSCR мін. ${D(base.fin.dscrMin ?? 0, 2)}.`));
+    reasons.push(T("Simple payback ≈ {pb} (base) and ≈ {pbCons} in the conservative case; base NPV €{npvBase}; minimum DSCR {dscrMin}.", "Проста окупність ≈ {pb} (базовий) і ≈ {pbCons} у консервативному сценарії; NPV базового {npvBase} €; DSCR мін. {dscrMin}.", { pb: y(pb!), pbCons: y(pbCons!), npvBase: fmt(npvBase), dscrMin: D(base.fin.dscrMin ?? 0, 2) }));
     whatWouldChange.push(T("Confirm with a laboratory feedstock analysis (BMP) and real energy invoices.", "Підтвердити лабораторним аналізом сировини (BMP) та реальними рахунками за енергію."));
     return { id: "STRONG_CANDIDATE", reasons, whatWouldChange };
   }
   if (possible) {
     reasons.push(
       borderline
-        ? T(`Base NPV close to zero (€${fmt(npvBase)}) at the country discount rate, payback ≈ ${y(pb!)}; optimistic case positive (€${fmt(opt.fin.npvEur)}).`, `Базовий NPV біля нуля (${fmt(npvBase)} €) при ставці дисконтування країни, окупність ≈ ${y(pb!)}; оптимістичний сценарій додатний (${fmt(opt.fin.npvEur)} €).`)
-        : T(`Base NPV positive (€${fmt(npvBase)}), payback ≈ ${y(pb!)}.`, `Базовий NPV додатний (${fmt(npvBase)} €), окупність ≈ ${y(pb!)}.`),
+        ? T("Base NPV close to zero (€{npvBase}) at the country discount rate, payback ≈ {pb}; optimistic case positive (€{npvEur}).", "Базовий NPV біля нуля ({npvBase} €) при ставці дисконтування країни, окупність ≈ {pb}; оптимістичний сценарій додатний ({npvEur} €).", { npvBase: fmt(npvBase), pb: y(pb!), npvEur: fmt(opt.fin.npvEur) })
+        : T("Base NPV positive (€{npvBase}), payback ≈ {pb}.", "Базовий NPV додатний ({npvBase} €), окупність ≈ {pb}.", { npvBase: fmt(npvBase), pb: y(pb!) }),
     );
     if (cons.fin.npvEur < 0) {
-      reasons.push(T(`Conservative-case NPV is negative (€${fmt(cons.fin.npvEur)}) — sensitive to key assumptions.`, `У консервативному сценарії NPV від'ємний (${fmt(cons.fin.npvEur)} €) — проєкт чутливий до ключових припущень.`));
+      reasons.push(T("Conservative-case NPV is negative (€{npvEur}) — sensitive to key assumptions.", "У консервативному сценарії NPV від'ємний ({npvEur} €) — проєкт чутливий до ключових припущень.", { npvEur: fmt(cons.fin.npvEur) }));
       whatWouldChange.push(T("Secure long-term heat and power offtake; benchmark CAPEX with 3–5 suppliers.", "Зафіксувати довгостроковий попит на тепло та електрику, перевірити CAPEX у 3–5 постачальників."));
     }
     if (fatDominated) {
-      reasons.push(T(`Grease and fat sludge are ${Math.round(base.feed.fatDominantShareVs * 100)} % of the organic matter — far above the ≈ 30 % where stable co-digestion is documented; the economics cannot be called strong without a pilot.`, `Жири та жиро-флотаційний осад — ${Math.round(base.feed.fatDominantShareVs * 100)} % органічної речовини, значно більше за ≈ 30 %, де задокументована стабільна ко-ферментація; без пілота економіку не можна назвати сильною.`));
+      reasons.push(T("Grease and fat sludge are {fatDominantShareVs} % of the organic matter — far above the ≈ 30 % where stable co-digestion is documented; the economics cannot be called strong without a pilot.", "Жири та жиро-флотаційний осад — {fatDominantShareVs} % органічної речовини, значно більше за ≈ 30 %, де задокументована стабільна ко-ферментація; без пілота економіку не можна назвати сильною.", { fatDominantShareVs: Math.round(base.feed.fatDominantShareVs * 100) }));
       whatWouldChange.push(T("Blend the fat with manure, sludge or food waste (fat ≤ 30 % of VS) or run a pilot digestion test.", "Змішати жир із гноєм, осадом чи харчовими відходами (жир ≤ 30 % VS) або провести пілотну ферментацію."));
     }
     if (confidence.level === "LOW") {
@@ -93,13 +93,15 @@ export function decideVerdict(args: {
       ? T("Base-case operating margin does not cover costs.", "Операційний прибуток базового сценарію не покриває витрат.")
       : npvBase >= 0
         // Positive but thin: the return only just beats the discount rate and capital comes back after more than 10 years.
-        ? T(`Base NPV is only marginally positive (€${fmt(npvBase)}) and simple payback ≈ ${y(pb)} exceeds 10 years — too thin a margin for a screening go.`, `NPV базового сценарію лише ледь додатний (${fmt(npvBase)} €), а проста окупність ≈ ${y(pb)} перевищує 10 років — замалий запас для позитивного висновку скринінгу.`)
-        : T(`Simple payback ≈ ${y(pb)}; base NPV €${fmt(npvBase)} (${deep ? "well below zero" : "below zero"} at the country discount rate).`, `Проста окупність ≈ ${y(pb)}; NPV базового сценарію ${fmt(npvBase)} € (${deep ? "істотно нижче нуля" : "нижче нуля"} при ставці дисконтування країни).`),
+        ? T("Base NPV is only marginally positive (€{npvBase}) and simple payback ≈ {pb} exceeds 10 years — too thin a margin for a screening go.", "NPV базового сценарію лише ледь додатний ({npvBase} €), а проста окупність ≈ {pb} перевищує 10 років — замалий запас для позитивного висновку скринінгу.", { npvBase: fmt(npvBase), pb: y(pb) })
+        : deep
+          ? T("Simple payback ≈ {pb}; base NPV €{npvBase} (well below zero at the country discount rate).", "Проста окупність ≈ {pb}; NPV базового сценарію {npvBase} € (істотно нижче нуля при ставці дисконтування країни).", { pb: y(pb), npvBase: fmt(npvBase) })
+          : T("Simple payback ≈ {pb}; base NPV €{npvBase} (below zero at the country discount rate).", "Проста окупність ≈ {pb}; NPV базового сценарію {npvBase} € (нижче нуля при ставці дисконтування країни).", { pb: y(pb), npvBase: fmt(npvBase) }),
   );
-  if (opt.fin.npvEur < 0) reasons.push(T(`Even the optimistic case has a negative NPV (€${fmt(opt.fin.npvEur)}).`, `Навіть оптимістичний сценарій має від'ємний NPV (${fmt(opt.fin.npvEur)} €).`));
-  if (breakEven.capexReductionPct !== null) whatWouldChange.push(T(`NPV = 0 with ≈ ${Math.round(breakEven.capexReductionPct)} % lower CAPEX (or an equivalent grant).`, `NPV = 0 при зниженні CAPEX на ≈ ${Math.round(breakEven.capexReductionPct)} % (або еквівалентному гранті).`));
+  if (opt.fin.npvEur < 0) reasons.push(T("Even the optimistic case has a negative NPV (€{npvEur}).", "Навіть оптимістичний сценарій має від'ємний NPV ({npvEur} €).", { npvEur: fmt(opt.fin.npvEur) }));
+  if (breakEven.capexReductionPct !== null) whatWouldChange.push(T("NPV = 0 with ≈ {capexReductionPct} % lower CAPEX (or an equivalent grant).", "NPV = 0 при зниженні CAPEX на ≈ {capexReductionPct} % (або еквівалентному гранті).", { capexReductionPct: Math.round(breakEven.capexReductionPct) }));
   else whatWouldChange.push(T("Lower CAPEX alone does not fix it — additional revenue streams are needed.", "Зниження CAPEX саме по собі проблему не розв'язує — потрібні додаткові джерела доходу."));
-  if (breakEven.energyPriceIncreasePct !== null) whatWouldChange.push(T(`NPV = 0 with ≈ ${Math.round(breakEven.energyPriceIncreasePct)} % higher energy prices.`, `NPV = 0 при зростанні цін на енергію на ≈ ${Math.round(breakEven.energyPriceIncreasePct)} %.`));
+  if (breakEven.energyPriceIncreasePct !== null) whatWouldChange.push(T("NPV = 0 with ≈ {energyPriceIncreasePct} % higher energy prices.", "NPV = 0 при зростанні цін на енергію на ≈ {energyPriceIncreasePct} %.", { energyPriceIncreasePct: Math.round(breakEven.energyPriceIncreasePct) }));
   whatWouldChange.push(T("A gate-fee co-substrate (food waste, fats), a real heat customer, or a cluster with neighbours.", "Ко-сировина з платою за приймання (харчові відходи, жири), реальний споживач тепла, або кластер із сусідніми господарствами."));
   return { id: "WEAK_ECONOMICS", reasons, whatWouldChange };
 }

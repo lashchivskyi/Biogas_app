@@ -1,4 +1,5 @@
 import type { Region } from "./country";
+import type { CoreLang } from "./i18n";
 import { CLIMATE_BENCHMARKS } from "./climateBenchmarks";
 
 export const DAYS_IN_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -48,7 +49,7 @@ export function climateDistance(a: number[], b: number[]): number {
   return Math.sqrt(s / n);
 }
 
-export function climateSummary(region: Region, lang: "en" | "uk" = "uk") {
+export function climateSummary(region: Region, lang: CoreLang = "uk") {
   const analogues = CLIMATE_BENCHMARKS.map((b) => ({
     name: lang === "uk" ? b.name : b.nameEn,
     distance: climateDistance(region.monthlyTempC, b.monthlyTempC),

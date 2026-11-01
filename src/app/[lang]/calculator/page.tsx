@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Calculator, type ExampleSummary } from "@/components/Calculator";
 import { PageHero } from "@/components/PageHero";
-import { getDictionary, type Locale } from "@/i18n";
+import { getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { alternates } from "@/i18n/seo";
 import { paymentsMode } from "@/server/payments/providers";
 import { exampleTitle, rankedExamples } from "@/lib/examples";
@@ -16,6 +16,7 @@ export default async function CalculatorPage({ params }: PageProps<"/[lang]/calc
   const { lang } = await params;
   const locale = lang as Locale;
   const d = await getDictionary(locale);
+  const core = await getCoreCatalog(locale);
   const examples: ExampleSummary[] = rankedExamples().map(({ e, a }) => {
     const v = a.verdict.id;
     const tone = v === "STRONG_CANDIDATE" ? "good" : v === "POSSIBLE_WITH_CONDITIONS" ? "mid" : "weak";
@@ -26,7 +27,7 @@ export default async function CalculatorPage({ params }: PageProps<"/[lang]/calc
     <main>
       <PageHero eyebrow={d.calc.eyebrow} title={d.calc.title} lead={d.calc.lead} />
       <div className="container-x py-8">
-        <Calculator locale={locale} d={dict} examples={examples} demo={paymentsMode().demo} samplesHref={`/${locale}/samples`} />
+        <Calculator locale={locale} d={dict} examples={examples} demo={paymentsMode().demo} samplesHref={`/${locale}/samples`} core={core} />
       </div>
     </main>
   );

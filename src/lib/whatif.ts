@@ -1,4 +1,5 @@
 import type { Assessment, CoreLang, ProjectInput } from "@/core";
+import { fmtInt, tr } from "@/core/i18n";
 
 /**
  * "What would make it work?" levers shown under a result. Each lever is a concrete, realistic
@@ -45,7 +46,7 @@ export const LEVERS: Lever[] = [
 
 /** Plain-language "why" behind the verdict: the single most important driver (model language). */
 export function keyDriver(a: Assessment, lang: CoreLang = a.lang): string {
-  const uk = lang === "uk";
+  const T = tr(lang);
   const b = a.scenarios.base;
   const kw = Math.max(1, b.kwElEquivalent);
   const perKw = b.capex.totalEur / kw;
@@ -53,25 +54,17 @@ export function keyDriver(a: Assessment, lang: CoreLang = a.lang): string {
   const total = Math.max(1, b.opexRev.revenueEur);
   const top = [...rev].sort((x, y) => y.eur - x.eur)[0];
   const heatUnused = b.energy.heatNetAvailableKwh > 0 ? 1 - b.energy.heatUsefulKwh / b.energy.heatNetAvailableKwh : 0;
-  const fmt = (n: number) => new Intl.NumberFormat(uk ? "uk-UA" : "en-GB", { maximumFractionDigits: 0 }).format(n);
+  const fmt = fmtInt(lang);
 
   if (a.verdict.id === "WEAK_ECONOMICS" || a.verdict.id === "NOT_RECOMMENDED_AT_SCALE") {
     if (kw < 150 && perKw > 7000)
-      return uk
-        ? `Головна причина — малий масштаб: сировина дає лише ≈ ${fmt(kw)} кВт, а установка коштує ≈ ${fmt(perKw)} € за кожен кВт. Реактор, сховище й когенерація дорогі навіть для малої потужності.`
-        : `Main reason — small scale: the feedstock supports only ≈ ${fmt(kw)} kW, while the plant costs ≈ €${fmt(perKw)} per kW. Digester, storage and CHP are expensive even at small capacity.`;
+      return T("Main reason — small scale: the feedstock supports only ≈ {kw} kW, while the plant costs ≈ €{perKw} per kW. Digester, storage and CHP are expensive even at small capacity.", "Головна причина — малий масштаб: сировина дає лише ≈ {kw} кВт, а установка коштує ≈ {perKw} € за кожен кВт. Реактор, сховище й когенерація дорогі навіть для малої потужності.", { kw: fmt(kw), perKw: fmt(perKw) });
     if (heatUnused > 0.6 && b.energy.heatNetAvailableKwh > 200_000)
-      return uk
-        ? `Головна причина — ≈ ${Math.round(heatUnused * 100)} % тепла не має споживача, тож половина енергії установки не приносить грошей.`
-        : `Main reason — ≈ ${Math.round(heatUnused * 100)} % of the heat has no user, so half of the plant's energy earns nothing.`;
+      return T("Main reason — ≈ {share} % of the heat has no user, so half of the plant's energy earns nothing.", "Головна причина — ≈ {share} % тепла не має споживача, тож половина енергії установки не приносить грошей.", { share: Math.round(heatUnused * 100) });
     if (b.feed.energyDensityKwhPerTonne < 200)
-      return uk
-        ? `Головна причина — низька енергія сировини (≈ ${fmt(b.feed.energyDensityKwhPerTonne)} кВт·год на тонну): переважно вода, мало органіки.`
-        : `Main reason — low feedstock energy (≈ ${fmt(b.feed.energyDensityKwhPerTonne)} kWh per tonne): mostly water, little organic matter.`;
-    return uk
-      ? `Операційний прибуток (≈ ${fmt(b.fin.ebitdaEurYear)} €/рік) замалий відносно інвестицій ≈ ${fmt(b.capex.totalEur)} €.`
-      : `Operating margin (≈ €${fmt(b.fin.ebitdaEurYear)}/year) is too small for an investment of ≈ €${fmt(b.capex.totalEur)}.`;
+      return T("Main reason — low feedstock energy (≈ {density} kWh per tonne): mostly water, little organic matter.", "Головна причина — низька енергія сировини (≈ {density} кВт·год на тонну): переважно вода, мало органіки.", { density: fmt(b.feed.energyDensityKwhPerTonne) });
+    return T("Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.", "Операційний прибуток (≈ {ebitda} €/рік) замалий відносно інвестицій ≈ {capex} €.", { ebitda: fmt(b.fin.ebitdaEurYear), capex: fmt(b.capex.totalEur) });
   }
-  if (top) return uk ? `Найбільша вигода — «${top.label.toLowerCase()}»: ≈ ${Math.round((top.eur / total) * 100)} % усіх доходів і економії.` : `Largest benefit — “${top.label.toLowerCase()}”: ≈ ${Math.round((top.eur / total) * 100)} % of all revenue and savings.`;
+  if (top) return T("Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.", "Найбільша вигода — «{label}»: ≈ {share} % усіх доходів і економії.", { label: top.label.toLowerCase(), share: Math.round((top.eur / total) * 100) });
   return "";
 }

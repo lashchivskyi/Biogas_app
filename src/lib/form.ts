@@ -1,4 +1,5 @@
 import { canonicalBusiness, defaultProcess } from "@/core/businesses";
+import type { CoreLang } from "@/core/i18n";
 import { processSchema, type ProcessInput, type ProcessKind } from "@/core/processes";
 import { BUSINESS_TYPES, FEEDSTOCKS } from "@/core/feedstockData";
 import type { CountryAdapter } from "@/core/country";
@@ -143,7 +144,7 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   return next;
 }
 
-export function formToInput(f: FormState, country: CountryAdapter, lang: "en" | "uk"): ProjectInput {
+export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLang): ProjectInput {
   // Drafts saved before numberLocale existed used a dot or comma as the decimal mark,
   // never locale-specific grouping. Preserve that meaning when opening an old draft.
   const num = (s: string) => formNumber(s, f.numberLocale);

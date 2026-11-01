@@ -4,7 +4,7 @@ import { assess, buildParams, SAFETY_DISCLAIMER } from "@/core";
 import type { Assessment, RouteId, ScenarioId, ScenarioResult } from "@/core";
 import { QUALITY_START } from "@/core";
 import { npv as npvOf } from "@/core/finance";
-import { fmtInt } from "@/core/i18n";
+import { fmtInt, locText } from "@/core/i18n";
 import { getCountry } from "@/countries";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { decisionCopy } from "@/i18n/decision";
@@ -629,7 +629,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   has(tech, `≈ ${n0(sig2(dz.workingVolumeM3))} m³`, "digester volume"); has(tech, `${dz.hrtDays} ${R.days}`, "retention time"); has(tech, `${n1(dz.olrKgVsM3Day)} kg VS/(m³·d)`, "loading rate"); has(tech, `≈ ${n0(sig2(dz.storageVolumeM3))} m³`, "storage volume");
   const safetyFold = txt(fold(6));
   for (const s of a.safety) has(safetyFold, s.hazard, `safety ${s.id}`);
-  has(safetyFold, SAFETY_DISCLAIMER[a.lang], "safety disclaimer");
+  has(safetyFold, locText(SAFETY_DISCLAIMER, a.lang), "safety disclaimer");
   const assumptions = fold(7);
   const items = [...assumptions.matchAll(/<dt lang="en" class="font-semibold">([\s\S]*?)<\/dt>/g)].length;
   void items;

@@ -8,7 +8,7 @@ import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
 import { localizedHub, localizedSegment } from "@/content/localized";
 import { SEGMENTS, segmentBySlug } from "@/content/segments";
-import { countryName, fmt, getDictionary, type Locale } from "@/i18n";
+import { countryName, fmt, getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { alternates } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
@@ -41,6 +41,7 @@ export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/
   if (!s) notFound();
   const locale = lang as Locale;
   const d = await getDictionary(locale);
+  await getCoreCatalog(locale);
   const seo = localizedSegment(s, locale, d);
   const H = localizedHub(locale, d).sector;
   const ex = EXAMPLES.find((e) => e.id === s.exampleId);

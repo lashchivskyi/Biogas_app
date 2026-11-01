@@ -1,3 +1,4 @@
+import type { CoreLang } from "./i18n";
 import type { ProcessInput, ProcessResult } from "./processes";
 import type { BusinessTypeId } from "./businesses";
 export type { BusinessTypeId } from "./businesses";
@@ -202,7 +203,7 @@ export interface ProjectInput {
    */
   assumedSupportEurPerKwh?: number;
   /** Language of the model's explanatory text. Default "en". */
-  lang?: "en" | "uk";
+  lang?: CoreLang;
 }
 
 /* ---------------- results ---------------- */
@@ -492,7 +493,7 @@ export interface Assessment {
   /** Economics under each national support scheme the project could apply for — never in the verdict. */
   supportCases: SupportCase[];
   notes: string[];
-  lang: "en" | "uk";
+  lang: CoreLang;
 }
 
 export interface ProductBreakEven {

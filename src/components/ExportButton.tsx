@@ -1,12 +1,14 @@
 "use client";
 
 import type { Assessment } from "@/core";
+import { registerMessages, type Messages } from "@/core/i18n";
 import { reportSheets } from "@/lib/report-export";
 import { writeXlsx } from "@/lib/xlsx";
 
 /** Downloads the report as an editable Excel workbook, built in the browser from the saved assessment. */
-export function ExportButton({ a, currency, access, label }: { a: Assessment; currency: string; access: "standard" | "full"; label: string }) {
+export function ExportButton({ a, currency, access, label, core }: { a: Assessment; currency: string; access: "standard" | "full"; label: string; core?: Messages }) {
   const download = () => {
+    registerMessages(a.lang, core);
     const bytes = writeXlsx(reportSheets(a, { currency, access }));
     const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
     const link = document.createElement("a");

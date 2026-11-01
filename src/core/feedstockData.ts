@@ -1,4 +1,4 @@
-import type { CoreLang } from "./i18n";
+import { locText, type CoreLang } from "./i18n";
 import type { AnimalKind, Confidence, FeedstockTypeId, HandlingId } from "./types";
 
 /**
@@ -97,7 +97,7 @@ export const HANDLING_IDS: HandlingId[] = ["field_spreading", "lagoon", "paid_di
 /** Handling modes where the customer currently pays third parties and the stream stops costing once it is digested. */
 export const PAID_HANDLING: HandlingId[] = ["paid_disposal", "landfill"];
 
-export const feedName = (id: FeedstockTypeId, lang: CoreLang) => FEEDSTOCKS[id].name[lang];
+export const feedName = (id: FeedstockTypeId, lang: CoreLang) => locText(FEEDSTOCKS[id].name, lang);
 
 /**
  * Industrial effluent-like stream: a processing residue at or below this dry matter (whey 6 %, pot ale 4.5 %,

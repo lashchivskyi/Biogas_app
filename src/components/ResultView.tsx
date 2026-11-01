@@ -2,6 +2,7 @@ import { ProcessReport } from "./ProcessReport";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { marketBandsFor, minimumGapsForVerdict, SAFETY_DISCLAIMER, VERDICT_MIN_SCORE } from "@/core";
+import { locText, registerMessages, type Messages } from "@/core/i18n";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
@@ -117,6 +118,8 @@ function Robustness({ a, R, eur, stressNote, lockedNote }: { a: Assessment; R: R
 }
 
 export interface ResultViewProps {
+  /** Catalog of the model's sentences for `locale` (src/i18n/core): client components receive it as a prop, the server registry is not shared with them. */
+  core?: Messages;
   display?: { currency: "EUR" | "USD"; rate: number; date: string };
   a: Assessment;
   d: ResultDict;
@@ -133,7 +136,8 @@ export interface ResultViewProps {
   methodologyHref: string;
 }
 
-export function ResultView({ a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
+export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
+  registerMessages(locale, core);
   if (raw.input.process) return <ProcessReport a={raw} d={d} locale={locale} currency={currency} display={display} access={access} unlockSlot={unlockSlot} afterSlot={afterSlot} methodologyHref={methodologyHref} />;
   const stressLabels = sensitivityLabels(locale, d);
   const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
@@ -746,7 +750,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
                 </li>
               ))}
             </ul>
-            <p lang={a.lang} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{SAFETY_DISCLAIMER[a.lang]}</p>
+            <p lang={a.lang} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-950">{locText(SAFETY_DISCLAIMER, a.lang)}</p>
           </Fold>
 
           <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>

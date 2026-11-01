@@ -123,7 +123,7 @@ export const HUB: { en: HubContent; uk: HubContent } = {
       },
     ],
     sector: {
-      drivers: "Що визначає окупність",
+      drivers: "Від чого залежить окупність",
       conditions: "Щоб проєкт спрацював",
       faq: "Часті запитання",
       others: "Біогаз для інших напрямів",

@@ -95,9 +95,9 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
 
   rev("el_self", T("Electricity savings (self-consumption)", "Економія на електроенергії (власне споживання)"), selfEur);
   rev("el_export", T("Surplus electricity sold", "Продаж надлишків електроенергії"), exportEur);
-  rev("el_tariff", T(`Electricity under ${sup?.name ?? "support tariff"}`, `Електрика за ${sup?.name ?? "тарифом підтримки"}`), tariffEur);
+  rev("el_tariff", sup ? T("Electricity under {name}", "Електрика за {name}", { name: sup.name }) : T("Electricity under support tariff", "Електрика за тарифом підтримки"), tariffEur);
   rev("heat", T("Useful heat (fuel displaced)", "Корисне тепло (заміщення палива)"), heatEur);
-  rev("biomethane", sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? T(`Biomethane under ${sup.name}`, `Біометан за ${sup.name}`) : T("Biomethane sales", "Продаж біометану"), bmEur);
+  rev("biomethane", sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? T("Biomethane under {name}", "Біометан за {name}", { name: sup.name }) : T("Biomethane sales", "Продаж біометану"), bmEur);
   rev("disposal", T("Avoided waste-disposal cost", "Економія на утилізації відходів"), disposalEur);
   rev("digestate", T("Digestate fertiliser value (incremental)", "Добривна цінність дигестату (інкрементальна)"), dig.fertiliserValueEurYear);
   if (process) rev("treatment", T("Avoided treatment charges (contract basis)", "Уникнені витрати очищення (за договором)"), process.avoidedTreatmentEurYear);
@@ -145,7 +145,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   if (grantShare > 0) {
     const grant = -gross.totalEur * grantShare;
     capex = {
-      lines: [...gross.lines, { id: "grant", label: T(`Grant / tax credit: ${sup!.name} (${Math.round(grantShare * 100)} %)`, `Грант / податковий кредит: ${sup!.name} (${Math.round(grantShare * 100)} %)`), eur: grant }],
+      lines: [...gross.lines, { id: "grant", label: T("Grant / tax credit: {name} ({grantShare} %)", "Грант / податковий кредит: {name} ({grantShare} %)", { name: sup!.name, grantShare: Math.round(grantShare * 100) }), eur: grant }],
       totalEur: gross.totalEur + grant,
     };
   }

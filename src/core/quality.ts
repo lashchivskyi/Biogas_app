@@ -78,7 +78,7 @@ export function assessQuality(
     gap("electricity", 12, T("Annual electricity consumption (kWh) — without it self-consumption is not credited", "Річне споживання електроенергії (кВт·год) — без нього власне споживання не враховується"));
   }
   if (!demand.electricityPriceKnown && input.energy.electricityKwhYear !== 0) {
-    gap("electricity_price", 6, T(`Electricity price from your bill (${cur}/kWh)`, `Ціна електроенергії за рахунком (${cur}/кВт·год)`));
+    gap("electricity_price", 6, T("Electricity price from your bill ({cur}/kWh)", "Ціна електроенергії за рахунком ({cur}/кВт·год)", { cur }));
   }
   if (demand.heatWanted && !demand.heatKnown) {
     gap("heat", 14, T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue", "Обсяг теплоспоживання (кВт·год/рік або газ, м³) — без підтвердженого обсягу дохід від тепла не зараховується"));
@@ -96,7 +96,7 @@ export function assessQuality(
   const own = new Set(input.feedstocks.filter((f) => !(f.delivered && f.purchasePricePerTonneLocal !== undefined)).map((f) => f.id));
   const paidLines = base.feed.lines.filter((l) => own.has(l.id) && FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
-    gap("disposal", 5, T(`Current disposal cost (${cur}/t) — possible savings not credited`, `Поточна вартість утилізації (${cur}/т) — можлива економія не врахована`));
+    gap("disposal", 5, T("Current disposal cost ({cur}/t) — possible savings not credited", "Поточна вартість утилізації ({cur}/т) — можлива економія не врахована", { cur }));
   }
   const pretreatShare = base.feed.tonnesYear > 0 ? base.feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear : 0;
   if (pretreatShare > 0.3) {

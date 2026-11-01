@@ -58,10 +58,10 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   }
   const feedValue = input.process ? clamp(0.6 * scale + 0.4 * consistency) : clamp(0.4 * scale + 0.2 * density + 0.2 * consistency + 0.2 * logisticsScore - feedPenalty);
   const feedExpl = [
-    T(`Energy equivalent ≈ ${r0(base.kwElEquivalent)} kWe (scale score ${r0(scale)}/100)`, `Енергетичний еквівалент ≈ ${r0(base.kwElEquivalent)} кВт ел. (оцінка масштабу ${r0(scale)}/100)`),
-    T(`Feedstock energy ≈ ${r0(feed.energyDensityKwhPerTonne)} kWh of methane per tonne (score ${r0(density)}/100)`, `Енергія сировини ≈ ${r0(feed.energyDensityKwhPerTonne)} кВт·год метану на тонну (оцінка ${r0(density)}/100)`),
-    T(`Feedstock available ${monthsWithFeed} of 12 months`, `Потік наявний ${monthsWithFeed} з 12 місяців`),
-    ...(worstLogistics >= 0.25 ? [T(`Logistics take up to ${r0(worstLogistics * 100)} % of the feedstock's energy value`, `Логістика сировини забирає до ${r0(worstLogistics * 100)} % її енергетичної вартості`)] : []),
+    T("Energy equivalent ≈ {kwElEquivalent} kWe (scale score {scale}/100)", "Енергетичний еквівалент ≈ {kwElEquivalent} кВт ел. (оцінка масштабу {scale}/100)", { kwElEquivalent: r0(base.kwElEquivalent), scale: r0(scale) }),
+    T("Feedstock energy ≈ {energyDensityKwhPerTonne} kWh of methane per tonne (score {density}/100)", "Енергія сировини ≈ {energyDensityKwhPerTonne} кВт·год метану на тонну (оцінка {density}/100)", { energyDensityKwhPerTonne: r0(feed.energyDensityKwhPerTonne), density: r0(density) }),
+    T("Feedstock available {monthsWithFeed} of 12 months", "Потік наявний {monthsWithFeed} з 12 місяців", { monthsWithFeed }),
+    ...(worstLogistics >= 0.25 ? [T("Logistics take up to {worstLogistics} % of the feedstock's energy value", "Логістика сировини забирає до {worstLogistics} % її енергетичної вартості", { worstLogistics: r0(worstLogistics * 100) })] : []),
     ...feedNotes,
   ];
 
@@ -75,15 +75,15 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
     const distScore = km === undefined ? 40 : interp(km, [[0, 95], [2, 80], [5, 60], [10, 35], [20, 10]]);
     const scaleScore = interp(e.rawBiogasNm3PerHour, [[0, 5], [60, 15], [150, 45], [400, 80], [800, 100]]);
     energyValue = clamp(0.5 * distScore + 0.5 * scaleScore);
-    energyExpl.push(T(`Biomethane: raw biogas ≈ ${r0(e.rawBiogasNm3PerHour)} Nm³/h (EU average plant ≈ 483 m³/h)`, `Біометан: сирого біогазу ≈ ${r0(e.rawBiogasNm3PerHour)} Нм³/год (орієнтир EU: середній завод ≈ 483 м³/год)`));
-    energyExpl.push(km === undefined ? T("Distance to the gas grid not given", "Відстань до газової мережі не вказана") : T(`≈ ${km} km to the gas grid`, `До газової мережі ≈ ${km} км`));
+    energyExpl.push(T("Biomethane: raw biogas ≈ {rawBiogasNm3PerHour} Nm³/h (EU average plant ≈ 483 m³/h)", "Біометан: сирого біогазу ≈ {rawBiogasNm3PerHour} Нм³/год (орієнтир EU: середній завод ≈ 483 м³/год)", { rawBiogasNm3PerHour: r0(e.rawBiogasNm3PerHour) }));
+    energyExpl.push(km === undefined ? T("Distance to the gas grid not given", "Відстань до газової мережі не вказана") : T("≈ {km} km to the gas grid", "До газової мережі ≈ {km} км", { km }));
   } else {
     const avail = e.elNetKwh + e.heatNetAvailableKwh;
     const used = e.elSelfConsumedKwh + 0.6 * e.elExportedKwh + e.heatUsefulKwh;
     energyValue = avail > 0 ? clamp((used / avail) * 100) : 0;
     const elShareSelf = e.elNetKwh > 0 ? e.elSelfConsumedKwh / e.elNetKwh : 0;
-    energyExpl.push(T(`Own consumption absorbs ${r0(elShareSelf * 100)} % of the electricity produced`, `Власне споживання електрики покриває ${r0(elShareSelf * 100)} % виробленої`));
-    energyExpl.push(T(`Useful heat ${r0(e.heatUsefulKwh / 1000)} MWh of ${r0(e.heatNetAvailableKwh / 1000)} MWh available after digester needs`, `Корисне тепло ${r0(e.heatUsefulKwh / 1000)} МВт·год із ${r0(e.heatNetAvailableKwh / 1000)} МВт·год доступних після потреб реактора`));
+    energyExpl.push(T("Own consumption absorbs {elShareSelf} % of the electricity produced", "Власне споживання електрики покриває {elShareSelf} % виробленої", { elShareSelf: r0(elShareSelf * 100) }));
+    energyExpl.push(T("Useful heat {heatUsefulKwh} MWh of {heatNetAvailableKwh} MWh available after digester needs", "Корисне тепло {heatUsefulKwh} МВт·год із {heatNetAvailableKwh} МВт·год доступних після потреб реактора", { heatUsefulKwh: r0(e.heatUsefulKwh / 1000), heatNetAvailableKwh: r0(e.heatNetAvailableKwh / 1000) }));
     if (!demand.electricityKnown) { energyValue = Math.max(0, energyValue - 10); energyExpl.push(T("Electricity consumption not given", "Споживання електрики не вказано")); }
     if (demand.heatWanted && !demand.heatKnown) { energyValue = Math.max(0, energyValue - 10); energyExpl.push(T("Heat consumption not given", "Обсяг теплоспоживання не вказано")); }
     if (!input.energy.hasGridConnection) energyExpl.push(T("No grid connection: surplus cannot be sold", "Немає мережевого підключення: надлишки не продаються"));
@@ -93,7 +93,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   let loc = 100;
   const locExpl: string[] = [];
   if (input.site.neighboursWithin300m) { loc -= 25; locExpl.push(T("Neighbours within 300 m: odour, traffic, safety distances", "Сусіди ближче 300 м: запах, транспорт, відстані безпеки")); }
-  if (input.site.nearProtectedOrWaterArea) { loc -= 30; locExpl.push(T("Water bodies or protected areas nearby", "Поряд водойми або природоохоронні території")); }
+  if (input.site.nearProtectedOrWaterArea) { loc -= 30; locExpl.push(T("Water bodies or protected areas nearby", "Поблизу водойм або заповідних територій")); }
   if (digestate.adequacy === "SHORT") { loc -= 25; locExpl.push(T("Not enough land for the digestate", "Недостатньо землі для дигестату")); }
   else if (digestate.adequacy === "UNKNOWN") { loc -= 10; locExpl.push(T("Land for digestate unknown", "Площа полів для дигестату невідома")); }
   if (logistics.perLine.some((l) => l.distanceKm > 30)) { loc -= 20; locExpl.push(T("Some feedstock comes from more than 30 km", "Є сировина з відстані понад 30 км")); }
@@ -105,7 +105,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   // ---------------- Technical feasibility ----------------
   let tech = 100;
   const techExpl: string[] = [];
-  if (base.kwElEquivalent < s.minChpKw) { tech -= 45; techExpl.push(T(`Energy equivalent below ${s.minChpKw} kWe: hardly sensible technically`, `Енергетичний еквівалент < ${s.minChpKw} кВт ел.: технічно сенсу майже немає`)); }
+  if (base.kwElEquivalent < s.minChpKw) { tech -= 45; techExpl.push(T("Energy equivalent below {minChpKw} kWe: hardly sensible technically", "Енергетичний еквівалент < {minChpKw} кВт ел.: технічно сенсу майже немає", { minChpKw: s.minChpKw })); }
   else if (base.kwElEquivalent < 50) { tech -= 25; techExpl.push(T("Micro scale (< 50 kWe): high specific cost and complexity", "Мікромасштаб (< 50 кВт ел.): висока питома вартість і складність")); }
   if (feed.inhibitionFactor < 1) { tech -= 15; techExpl.push(T("Ammonia / fat inhibition needs active process control", "Аміачне інгібування / жири потребують керування процесом")); }
   if (feed.abpTonnesYear > 0) { tech -= 10; techExpl.push(T("ABP pasteurisation adds complexity", "Пастеризація ABP ускладнює схему")); }
@@ -121,20 +121,20 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const ecoExpl: string[] = [];
   if (base.fin.npvEur < 0) { eco = Math.min(eco, 35); ecoExpl.push(T("Base-case NPV is negative", "NPV базового сценарію від'ємний")); }
   if (cons.fin.npvEur >= 0) { eco = Math.min(100, eco + 5); ecoExpl.push(T("NPV positive even in the conservative case", "NPV додатний навіть у консервативному сценарії")); }
-  if (base.fin.dscrMin !== null && base.fin.dscrMin < 1.2) { eco = Math.max(0, eco - 10); ecoExpl.push(T(`Minimum DSCR ${D(base.fin.dscrMin, 2)} — below the usual bank threshold of 1.2–1.3`, `DSCR мін. ${D(base.fin.dscrMin, 2)} — нижче банківського порога 1,2–1,3`)); }
-  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T(`Base-case simple payback ≈ ${U(pb, "year", 1)}`, `Проста окупність базового сценарію ≈ ${U(pb, "year", 1)}`));
+  if (base.fin.dscrMin !== null && base.fin.dscrMin < 1.2) { eco = Math.max(0, eco - 10); ecoExpl.push(T("Minimum DSCR {dscrMin} — below the usual bank threshold of 1.2–1.3", "DSCR мін. {dscrMin} — нижче банківського порога 1,2–1,3", { dscrMin: D(base.fin.dscrMin, 2) })); }
+  ecoExpl.unshift(pb === null ? T("Operating margin ≤ 0 — no payback", "Операційний прибуток ≤ 0 — окупності немає") : T("Base-case simple payback ≈ {year}", "Проста окупність базового сценарію ≈ {year}", { year: U(pb, "year", 1) }));
   const ecoValue = clamp(eco);
 
   // ---------------- Risks ----------------
   const regRisk = clamp((s.regulatoryPoints - 5) * 4.5);
-  const regExpl = [T(`Number and weight of permitting / regulatory steps: ${s.regulatoryPoints} points (more = harder)`, `Кількість і складність дозвільних та регуляторних кроків: ${s.regulatoryPoints} балів (чим більше — тим складніше)`)];
+  const regExpl = [T("Number and weight of permitting / regulatory steps: {regulatoryPoints} points (more = harder)", "Кількість і складність дозвільних та регуляторних кроків: {regulatoryPoints} балів (чим більше — тим складніше)", { regulatoryPoints: s.regulatoryPoints })];
   let env = 20;
   const envExpl: string[] = [];
   const lossPct = D(s.methaneLossShare * 100, 1);
   if (s.methaneLossShare > s.methaneLossGood) {
     env += Math.min(40, (s.methaneLossShare - s.methaneLossGood) * 800);
-    envExpl.push(T(`Expected methane loss ${lossPct} % (good practice ≤ ${D(s.methaneLossGood * 100)} %)`, `Очікувані втрати метану ${lossPct} % (добра практика ≤ ${D(s.methaneLossGood * 100)} %)`));
-  } else envExpl.push(T(`Expected methane loss ${lossPct} % — within good practice if gas-tight and monitored`, `Очікувані втрати метану ${lossPct} % — у межах доброї практики за умови гермітичності та моніторингу`));
+    envExpl.push(T("Expected methane loss {lossPct} % (good practice ≤ {methaneLossGood} %)", "Очікувані втрати метану {lossPct} % (добра практика ≤ {methaneLossGood} %)", { lossPct, methaneLossGood: D(s.methaneLossGood * 100) }));
+  } else envExpl.push(T("Expected methane loss {lossPct} % — within good practice if gas-tight and monitored", "Очікувані втрати метану {lossPct} % — у межах доброї практики за умови гермітичності та моніторингу", { lossPct }));
   if (input.site.neighboursWithin300m) { env += 20; envExpl.push(T("Neighbours within 300 m: odour and incident exposure", "Сусіди ближче 300 м: запах і ризик інциденту")); }
   if (input.site.nearProtectedOrWaterArea) { env += 20; envExpl.push(T("Water bodies / protected areas nearby", "Водойми / природоохоронні території поруч")); }
   if (digestate.adequacy === "SHORT") { env += 15; envExpl.push(T("Surplus digestate: risk of nitrogen over-application", "Надлишок дигестату: ризик перевнесення N на поля")); }
@@ -161,6 +161,6 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const sorted = [...scores].map((sc) => ({ sc, good: sc.isRisk ? 100 - sc.value : sc.value })).sort((a, b) => b.good - a.good);
   const top = sorted[0];
   const bottom = sorted[sorted.length - 1];
-  overallExpl.push(T(`Strongest: ${top.sc.label} (${r0(top.good)}); weakest: ${bottom.sc.label} (${r0(bottom.good)}).`, `Найсильніше: ${top.sc.label} (${r0(top.good)}); найслабше: ${bottom.sc.label} (${r0(bottom.good)}).`));
+  overallExpl.push(T("Strongest: {label} ({good}); weakest: {label2} ({good2}).", "Найсильніше: {label} ({good}); найслабше: {label2} ({good2}).", { label: top.sc.label, good: r0(top.good), label2: bottom.sc.label, good2: r0(bottom.good) }));
   return { scores, overall: { value: r0(overall), explanation: overallExpl } };
 }

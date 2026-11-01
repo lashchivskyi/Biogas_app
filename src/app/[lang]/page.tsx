@@ -14,7 +14,7 @@ import { SITE } from "@/config/site";
 import { SEGMENTS } from "@/content/segments";
 import { segmentCopy } from "@/content/localized";
 import { SECTOR_IDS, FIT_IDS, BUSINESS_TYPES, BUSINESS_GROUPS } from "@/core/businesses";
-import { countryName, getDictionary, type Locale } from "@/i18n";
+import { countryName, getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
@@ -32,6 +32,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   const base = `/${locale}`;
   const F = makeFormat(locale, d.labels.units);
   const cl = coreLang(locale);
+  await getCoreCatalog(locale);
 
   const run = (id: string): { a: Assessment; country: string; example: (typeof EXAMPLES)[number] } => {
     const ex = EXAMPLES.find((e) => e.id === id)!;

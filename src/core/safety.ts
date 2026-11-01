@@ -60,7 +60,7 @@ export function safetyRegister(input: ProjectInput, feed: FeedstockSummary, lang
   }
   items.push({
     id: "water", hazard: T("Soil and water pollution: slurry/digestate spills, lagoon overflow", "Забруднення ґрунту й вод: розливи гноївки/дигестату, переливи лагуни"), relevance: input.site.nearProtectedOrWaterArea ? "CONDITIONAL" : "ALWAYS", severity: "HIGH",
-    trigger: input.site.nearProtectedOrWaterArea ? T("Water bodies / protected areas nearby", "Поруч водойми/природоохоронні території") : undefined,
+    trigger: input.site.nearProtectedOrWaterArea ? T("Water bodies / protected areas nearby", "Водойми / природоохоронні території поруч") : undefined,
     controls: [
       T("Bund sized for the largest tank", "Обвалування/піддон на найбільший резервуар"),
       T("Level sensors and a spill-response plan", "Датчики рівня, план реагування на розлив"),

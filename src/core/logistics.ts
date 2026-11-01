@@ -1,5 +1,6 @@
 import type { RunContext } from "./context";
 import { FEEDSTOCKS } from "./feedstockData";
+import { locText } from "./i18n";
 import { MANURE_RETURN_HAUL } from "./feedstock";
 import type { FeedstockSummary, LogisticsAssessment } from "./types";
 
@@ -31,11 +32,11 @@ export function assessLogistics(feed: FeedstockSummary, ctx: RunContext, energyV
     }
     const sh = Math.round(share * 100);
     const be = Math.round(breakEven);
-    if (level === "CRITICAL") warnings.push(T(`"${l.label}": hauling ${dist} km eats ≈${sh} % of its energy value — build the plant at the source (rule of thumb: ≤ ${be} km).`, `«${l.label}»: перевезення ${dist} км з'їдає ≈${sh} % енергетичної вартості — установку слід будувати біля джерела (орієнтир: ≤ ${be} км).`));
-    else if (level === "WARNING") warnings.push(T(`"${l.label}": logistics take ${sh} % of its energy value — borderline.`, `«${l.label}»: логістика ${sh} % від енергетичної вартості — на межі економічної доцільності.`));
+    if (level === "CRITICAL") warnings.push(T("\"{label}\": hauling {dist} km eats ≈{sh} % of its energy value — build the plant at the source (rule of thumb: ≤ {be} km).", "«{label}»: перевезення {dist} км з'їдає ≈{sh} % енергетичної вартості — установку слід будувати біля джерела (орієнтир: ≤ {be} км).", { label: l.label, dist, sh, be }));
+    else if (level === "WARNING") warnings.push(T("\"{label}\": logistics take {sh} % of its energy value — borderline.", "«{label}»: логістика {sh} % від енергетичної вартості — на межі економічної доцільності.", { label: l.label, sh }));
     return {
       id: l.id,
-      label: FEEDSTOCKS[l.typeId].name[ctx.lang],
+      label: locText(FEEDSTOCKS[l.typeId].name, ctx.lang),
       distanceKm: dist,
       transportCostEurPerTonne: cost,
       energyValueEurPerTonne: value,

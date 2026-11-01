@@ -100,7 +100,7 @@ export function buildCapex(
     const band = 1 + (ctx.scenario.id === "conservative" ? 1 : ctx.scenario.id === "optimistic" ? -1 : 0) * existing.uncertaintyPct / 100;
     const kept = [
       ...(process ? [{ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)", "Технологічна частина: бюджет монтажу (без перетворення газу)"), eur: process.capexEur }] : []),
-      { id: "chp_overhaul", label: T(`Existing CHP ${Math.round(existing.existingChpKwEl!)} kWe: overhaul / replacement budget`, `Наявна КГУ ${Math.round(existing.existingChpKwEl!)} кВт ел.: бюджет капремонту / заміни`), eur: (existing.chpOverhaulLocal ?? 0) / ctx.fx * ctx.mods.capex * band },
+      { id: "chp_overhaul", label: T("Existing CHP {existingChpKwEl} kWe: overhaul / replacement budget", "Наявна КГУ {existingChpKwEl} кВт ел.: бюджет капремонту / заміни", { existingChpKwEl: Math.round(existing.existingChpKwEl!) }), eur: (existing.chpOverhaulLocal ?? 0) / ctx.fx * ctx.mods.capex * band },
     ];
     return { lines: kept, totalEur: kept.reduce((a, l) => a + l.eur, 0) };
   }
@@ -115,7 +115,7 @@ export function buildCapex(
     const kw = Math.max(energy.chpKwEl, 1);
     const unitChp = p.get("eng.capex.chp_eur_kw_100") * Math.pow(kw / 100, p.get("eng.capex.chp_scale_exp"));
     const chpEur = unitChp * kw;
-    add("chp", T(`CHP unit ${Math.round(kw)} kWe`, `Когенераційна установка ${Math.round(kw)} кВт ел.`), chpEur);
+    add("chp", T("CHP unit {kw} kWe", "Когенераційна установка {kw} кВт ел.", { kw: Math.round(kw) }), chpEur);
     const thKw = (kw * energy.chpEtaTh) / Math.max(energy.chpEtaEl, 0.01);
     if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * thKw);
     add("backup_boiler", T("Back-up biogas boiler", "Резервний котел на біогазі"), 0.5 * p.get("eng.capex.boiler_eur_kw") * peakHeatKw);
@@ -129,7 +129,7 @@ export function buildCapex(
     const off = biomethaneOfftake(ctx, energy);
     if (off.mode === "grid") {
       add("injection", T("Metering & grid-injection station", "Вузол обліку та ін'єкції"), p.get("eng.capex.injection_fixed"));
-      add("pipeline", T(`Pipeline to gas grid (${off.km} km)`, `Газопровід до мережі (${off.km} км)`), off.pipelineEur);
+      add("pipeline", T("Pipeline to gas grid ({km} km)", "Газопровід до мережі ({km} км)", { km: off.km }), off.pipelineEur);
     } else {
       add("cng", T("Bio-CNG: 250 bar compression, filling post, cascade trailers (no grid connection)", "Bio-CNG: компресія 250 бар, пост заправки, каскадні причепи (без приєднання до мережі)"), off.cngEur);
     }

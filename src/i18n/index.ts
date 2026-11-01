@@ -1,6 +1,7 @@
 import en, { type Dict } from "./dict/en";
-import { DEFAULT_LOCALE, INTL_TAG, isLocale, type Locale } from "./config";
+import { CORE_LOCALES, DEFAULT_LOCALE, INTL_TAG, isLocale, type Locale } from "./config";
 import { formatMessage, type MessageVars } from "./message";
+import { registerMessages, type Messages } from "@/core/i18n";
 
 export type { Dict } from "./dict/en";
 export * from "./config";
@@ -46,6 +47,29 @@ const loaders: Record<Locale, () => Promise<{ default: Dict | Translation }>> = 
   vi: () => import("./dict/vi"),
   th: () => import("./dict/th"),
 };
+
+/** Model-text catalogs (`core/<locale>.ts`, English text → translation) for the locales listed in `CORE_LOCALES`. */
+const coreLoaders: Partial<Record<Locale, () => Promise<{ default: Messages }>>> = {
+  de: () => import("./core/de"),
+  pl: () => import("./core/pl"),
+  fr: () => import("./core/fr"),
+  es: () => import("./core/es"),
+};
+
+/**
+ * Loads and registers the catalog of the model's own sentences (verdict reasons, warnings, report sheets) for `locale`.
+ * Server pages await it before `assess()`/rendering; client components receive the object as a prop and call `registerMessages`.
+ * Returns undefined for en/uk (authored beside the code) and for locales without a complete catalog (English is shown).
+ */
+export async function getCoreCatalog(locale: string): Promise<Messages | undefined> {
+  const l: Locale = isLocale(locale) ? locale : DEFAULT_LOCALE;
+  if (!CORE_LOCALES.includes(l)) return undefined;
+  const load = coreLoaders[l];
+  if (!load) return undefined;
+  const messages = (await load()).default;
+  registerMessages(l, messages);
+  return messages;
+}
 
 export async function getDictionary(locale: string): Promise<Dict> {
   const l: Locale = isLocale(locale) ? locale : DEFAULT_LOCALE;

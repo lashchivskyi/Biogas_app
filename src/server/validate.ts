@@ -1,6 +1,7 @@
 import { processSchema } from "@/core/processes";
 import { modelsForBusiness } from "@/core/businesses";
 import { z } from "zod";
+import { LOCALES } from "@/i18n/config";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS, type HandlingId } from "@/core";
 import { COUNTRIES } from "@/countries";
 import { verifyCity } from "./cities";
@@ -37,7 +38,7 @@ export const inputSchema = z.object({
   countryCode: z.enum(key(COUNTRIES)),
   regionId: z.string().max(40),
   city: z.custom<CityClimate>((c) => !!c && typeof c === "object" && verifyCity(c, (c as CityClimate).countryCode), "Invalid or altered city climate; select the city again").optional(),
-  lang: z.enum(["en", "uk"]).optional(),
+  lang: z.enum(LOCALES).optional(),
   businessType: z.enum(key(BUSINESS_TYPES)),
   process: processSchema.optional(),
   projectRole: z.enum(["feedstock_owner", "waste_operator", "developer", "offtaker"]).optional(),
