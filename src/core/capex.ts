@@ -66,7 +66,7 @@ export function buildCapex(
   );
 
   // Storage
-  add("storage_cover", T("Gas-tight cover on existing storage", "Газонепроникне накриття існуючого сховища"), design.storageCovered * p.get("eng.capex.cover_existing_eur_m3"));
+  add("storage_cover", T("Gas-tight cover on existing storage", "Газонепроникне накриття наявного сховища"), design.storageCovered * p.get("eng.capex.cover_existing_eur_m3"));
   add("storage_new", T("New covered digestate storage", "Нове накрите сховище дигестату"), design.storageNew * p.get("eng.capex.storage_new_eur_m3"));
   add("storage_open", T("New open digestate storage", "Нове відкрите сховище дигестату"), design.storageOpenNew * p.get("eng.capex.storage_new_eur_m3") * p.get("eng.capex.storage_open_share"));
 

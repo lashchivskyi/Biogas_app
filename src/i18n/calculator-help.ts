@@ -51,9 +51,9 @@ const copy: Record<Locale, HelpCopy> = {
   es: [
     "DM es la materia seca que queda al eliminar el agua. Con un 20% de DM, 100 kg de sustrato fresco contienen 20 kg de materia seca. En el informe del laboratorio también puede figurar como TS o MS.",
     "VS es la fracción orgánica de la materia seca, a partir de la cual puede producirse biogás. Con un 80% de VS, 100 kg de materia seca contienen 80 kg de materia orgánica. El porcentaje se refiere a la materia seca, no al peso húmedo total.",
-    "El BMP es el potencial de metano medido en laboratorio: litros de CH₄ por kilogramo de VS. Introduce el rendimiento de metano, no el volumen total de biogás. La producción real depende también de las condiciones de operación y las pérdidas.",
-    "Indica cuántos meses está disponible el sustrato y el primer mes de ese periodo. El modelo distribuirá así los aportes durante el año. Si un material estacional se almacena y se alimenta todo el año, usa el calendario real de alimentación y descuenta las pérdidas de almacenamiento de la cantidad.",
-    "Si no conoces el valor, deja el campo vacío: el modelo utilizará un supuesto de referencia.",
+    "El BMP es el potencial de metano medido en laboratorio: litros de CH₄ por kilogramo de VS. Introduzca el rendimiento de metano, no el volumen total de biogás. La producción real depende también de las condiciones de operación y las pérdidas.",
+    "Indique cuántos meses está disponible el sustrato y el primer mes de ese periodo. El modelo distribuirá así los aportes durante el año. Si un material estacional se almacena y se alimenta todo el año, use el calendario real de alimentación y descuente las pérdidas de almacenamiento de la cantidad.",
+    "Si no conoce el valor, deje el campo vacío: el modelo utilizará un supuesto de referencia.",
   ],
   pt: [
     "DM é a matéria seca que resta após a retirada da água. Com 20% de DM, 100 kg de substrato fresco contêm 20 kg de matéria seca. No laudo, esse parâmetro também pode aparecer como TS, ST ou MS.",

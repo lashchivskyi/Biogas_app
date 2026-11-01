@@ -191,3 +191,8 @@ replace the line rather than adding a contradicting one.
   The reconcile cron also re-sends report links stuck after payment and emails the owner once at 1 h. Load (local prod
   build, 1 Node process): quote ≈ 65 req/s (15 ms each), paid report SSR ≈ 20 req/s (≈ 50 ms, 630 kB HTML / 110 kB gz);
   the calculator runs in the browser. `scripts/load.k6.js` is for staging only (Vercel rate limit → 429 counted, not failed).
+- 2026-11-01 — Localization: a plan keeps one local name per locale, the one on the pricing page (e.g. de Basisbericht, fr
+  Rapport essentiel), also in offer teasers and FAQ; Stripe product names stay English. Each locale uses its own
+  NPV/IRR/CHP/COD terms where its UI already does (VAN, Kapitalwert, BHKW, ChZT…) and one form of address (it tu, es usted,
+  Nordics du/sinä, others formal). Core engineering notes stay English for non-uk locales (`coreLang`). Tooltip coverage is
+  enforced by `dict.test.ts`.

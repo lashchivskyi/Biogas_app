@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { getDictionary, LOCALES } from "..";
 import en from "../dict/en";
+import { stepHelp } from "../step-help";
+import { processFieldHelp } from "../process-help";
 
 type Tree = { [k: string]: unknown };
 
@@ -46,4 +48,12 @@ describe.each(LOCALES.filter((l) => l !== "en"))("dictionary %s", (locale) => {
     expect(own.size, `${locale}: translated keys`).toBeGreaterThan(ref.size * 0.9);
     expect(same / own.size, `${locale}: share identical to English`).toBeLessThan(0.08);
   });
+});
+
+it("translates every calculator and process tooltip instead of falling back to English", () => {
+  const step = stepHelp("en"), proc = processFieldHelp("en");
+  for (const locale of LOCALES.filter((l) => l !== "en")) {
+    for (const [k, v] of Object.entries(stepHelp(locale))) expect(v, `${locale}: step-help ${k}`).not.toBe(step[k as keyof typeof step]);
+    for (const [k, v] of Object.entries(processFieldHelp(locale))) expect(v, `${locale}: process-help ${k}`).not.toBe(proc[k]);
+  }
 });

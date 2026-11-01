@@ -8,8 +8,8 @@ export const errorCopy: Record<Locale, ErrorCopy> = {
   pl: ["Nie znaleziono strony", "Link może być niepełny lub strona została przeniesiona.", "Strona główna", "Nie udało się wczytać strony", "Spróbuj ponownie za chwilę.", "Spróbuj ponownie"],
   de: ["Seite nicht gefunden", "Der Link ist möglicherweise unvollständig oder die Seite wurde verschoben.", "Zur Startseite", "Die Seite konnte nicht geladen werden", "Bitte versuchen Sie es gleich noch einmal.", "Erneut versuchen"],
   fr: ["Page introuvable", "Le lien est peut-être incomplet ou la page a été déplacée.", "Retour à l’accueil", "Impossible de charger cette page", "Veuillez réessayer dans un instant.", "Réessayer"],
-  it: ["Pagina non trovata", "Il link potrebbe essere incompleto o la pagina potrebbe essere stata spostata.", "Torna alla pagina iniziale", "Impossibile caricare la pagina", "Riprovate tra qualche istante.", "Riprova"],
-  es: ["Página no encontrada", "Es posible que el enlace esté incompleto o que la página se haya movido.", "Volver al inicio", "No se ha podido cargar la página", "Vuelve a intentarlo dentro de un momento.", "Volver a intentar"],
+  it: ["Pagina non trovata", "Il link potrebbe essere incompleto o la pagina potrebbe essere stata spostata.", "Torna alla pagina iniziale", "Impossibile caricare la pagina", "Riprova tra qualche istante.", "Riprova"],
+  es: ["Página no encontrada", "Es posible que el enlace esté incompleto o que la página se haya movido.", "Volver al inicio", "No se ha podido cargar la página", "Vuelva a intentarlo dentro de un momento.", "Volver a intentar"],
   pt: ["Página não encontrada", "O link pode estar incompleto ou a página pode ter mudado de endereço.", "Voltar ao início", "Não foi possível carregar a página", "Tente novamente em instantes.", "Tentar novamente"],
   nl: ["Pagina niet gevonden", "De link is mogelijk onvolledig of de pagina is verplaatst.", "Naar de startpagina", "Deze pagina kon niet worden geladen", "Probeer het over een moment opnieuw.", "Opnieuw proberen"],
   cs: ["Stránka nenalezena", "Odkaz může být neúplný nebo byla stránka přesunuta.", "Na úvodní stránku", "Stránku se nepodařilo načíst", "Zkuste to prosím za chvíli znovu.", "Zkusit znovu"],
@@ -32,7 +32,7 @@ export const errorCopy: Record<Locale, ErrorCopy> = {
 
 export const numberError: Record<Locale, string> = {
   en: "Enter a valid number.", uk: "Введіть коректне число.", pl: "Wpisz poprawną liczbę.", de: "Geben Sie eine gültige Zahl ein.",
-  fr: "Saisissez un nombre valide.", it: "Inserite un numero valido.", es: "Introduce un número válido.", pt: "Digite um número válido.",
+  fr: "Saisissez un nombre valide.", it: "Inserisci un numero valido.", es: "Introduzca un número válido.", pt: "Digite um número válido.",
   nl: "Voer een geldig getal in.", cs: "Zadejte platné číslo.", sk: "Zadajte platné číslo.", hu: "Adjon meg érvényes számot.",
   ro: "Introduceți un număr valid.", bg: "Въведете валидно число.", sr: "Unesite ispravan broj.", el: "Εισαγάγετε έναν έγκυρο αριθμό.",
   tr: "Geçerli bir sayı girin.", lt: "Įveskite tinkamą skaičių.", lv: "Ievadiet derīgu skaitli.", et: "Sisestage korrektne arv.",

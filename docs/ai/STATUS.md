@@ -2,12 +2,12 @@
 
 Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
-
-- Model 0.6.1; data review 2026-10-30. Tests (1 407), lint, typecheck, build pass. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
+- Model 0.6.1; data review 2026-10-30. Tests (1 408), lint, typecheck, build pass. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
 - UX audit 2026-10-31 (axe WCAG 2.2 AA, Lighthouse desktop 99/100/100/100; mobile calculator/report perf ≈ 79). Offer audit and
   security review 2026-11-01 (0 critical/high; refund replay, admin CSRF, PII in log fixed; CSP; shared rate limit). Not tested: real Stripe, real email.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Scenario sweep 13 464 assessments, 0 throws/NaN,
   balances close; 30 reports, 0 contradictions. Benchmark vs KTBL, Luke, WSU, LandGEM (PRODUCT.md › Market).
+- L10n QA 2026-11-01, 25 locales: tooltips translated (were English), plan names/terms/register unified; needs native review.
 ## Launch readiness 2026-11-01 (green = verified in code/tests/local prod build)
 - GREEN: server errors → redacted JSON log + Sentry envelope (`monitoring.ts`); payment alerts (paid, mismatch, refund, dispute);
   cron re-sends stuck report links + owner alert at 1 h; no PII/tokens in app logs; health `/api/health` (storage check);
