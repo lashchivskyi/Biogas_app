@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Az üzemi árrés (≈ {ebitda} €/év) túl kicsi egy ≈ {capex} € beruházáshoz.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Legnagyobb haszon — „{label}”: az összes bevétel és megtakarítás ≈ {share}%-a.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Az eredeti számítási verzió nem lett elmentve ehhez a régi megrendeléshez. Ez a jelentés új értékelés a jelenlegi modellel és a rendelkezésre álló adatokkal.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "A meglévő tárolótérfogat nincs megadva: feltételezzük, hogy a gazdaság jelenlegi hígtrágyatárolója a saját trágyáját fogadja be (≈ {m3} m³), és csak gáztömör fedést kap. Adja meg a tényleges térfogatot; ha kisebb, a CAPEX hozzávetőleg {perM3} €-val nő minden hiányzó m³ után, az általános költségek előtt.",
 };
 
 export default messages;

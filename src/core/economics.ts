@@ -93,15 +93,15 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   const disposalEur = feed.lines.reduce((a, l) => a + l.disposalSavingEurYear, 0);
   const supportEur = 0; // Uncontracted legacy subsidies must not change the base verdict.
 
-  rev("el_self", T("Electricity savings (self-consumption)", "Економія на електроенергії (власне споживання)"), selfEur);
-  rev("el_export", T("Surplus electricity sold", "Продаж надлишків електроенергії"), exportEur);
-  rev("el_tariff", sup ? T("Electricity under {name}", "Електрика за {name}", { name: sup.name }) : T("Electricity under support tariff", "Електрика за тарифом підтримки"), tariffEur);
-  rev("heat", T("Useful heat (fuel displaced)", "Корисне тепло (заміщення палива)"), heatEur);
-  rev("biomethane", sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? T("Biomethane under {name}", "Біометан за {name}", { name: sup.name }) : T("Biomethane sales", "Продаж біометану"), bmEur);
-  rev("disposal", T("Avoided waste-disposal cost", "Економія на утилізації відходів"), disposalEur);
-  rev("digestate", T("Digestate fertiliser value (incremental)", "Добривна цінність дигестату (інкрементальна)"), dig.fertiliserValueEurYear);
-  if (process) rev("treatment", T("Avoided treatment charges (contract basis)", "Уникнені витрати очищення (за договором)"), process.avoidedTreatmentEurYear);
-  rev("support", T("Assumed support (NOT guaranteed)", "Припущена підтримка (НЕ гарантована)"), supportEur);
+  rev("el_self", T("Electricity savings (self-consumption)"), selfEur);
+  rev("el_export", T("Surplus electricity sold"), exportEur);
+  rev("el_tariff", sup ? T("Electricity under {name}", { name: sup.name }) : T("Electricity under support tariff"), tariffEur);
+  rev("heat", T("Useful heat (fuel displaced)"), heatEur);
+  rev("biomethane", sup?.biomethaneEurNm3 !== undefined && route === "biomethane" ? T("Biomethane under {name}", { name: sup.name }) : T("Biomethane sales"), bmEur);
+  rev("disposal", T("Avoided waste-disposal cost"), disposalEur);
+  rev("digestate", T("Digestate fertiliser value (incremental)"), dig.fertiliserValueEurYear);
+  if (process) rev("treatment", T("Avoided treatment charges (contract basis)"), process.avoidedTreatmentEurYear);
+  rev("support", T("Assumed support (NOT guaranteed)"), supportEur);
 
   // ---------- opex ----------
   const opex: { id: string; label: string; eur: number }[] = [];
@@ -109,31 +109,31 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
     if (Math.abs(eur) > 0.5) opex.push({ id, label, eur });
   };
   const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_coef") * Math.pow(Math.max(kwEq, 0), p.get("eng.opex.labour_hours_exp")));
-  ox("labour", T("Staff (operator, supervision)", "Персонал (оператор, нагляд)"), labourHours * ((input.finance?.operatorWageLocalPerHour ?? 0) > 0 ? (input.finance!.operatorWageLocalPerHour as number) / ctx.fx : p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio")) * opexMult);
-  ox("chp_service", T("CHP service (oil, spares, overhaul reserve)", "Сервіс когенерації (мастило, запчастини, ремонт)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
+  ox("labour", T("Staff (operator, supervision)"), labourHours * ((input.finance?.operatorWageLocalPerHour ?? 0) > 0 ? (input.finance!.operatorWageLocalPerHour as number) / ctx.fx : p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio")) * opexMult);
+  ox("chp_service", T("CHP service (oil, spares, overhaul reserve)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp" || l.id === "chp_overhaul").reduce((a, l) => a + l.eur, 0);
   const otherCapex = gross.totalEur - upgradingCapex - chpCapex - (process?.capexEur ?? 0);
-  ox("maintenance", T("Plant maintenance", "Обслуговування обладнання"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
-  ox("upgrading_maintenance", T("Upgrading unit maintenance", "Обслуговування установки очищення"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
-  ox("insurance", T("Insurance", "Страхування"), gross.totalEur * p.get("eng.opex.insurance_share"));
-  ox("monitoring", T("Lab tests, safety inspections, leak monitoring", "Лабораторія, інспекції безпеки, моніторинг витоків"), p.get("eng.opex.monitoring_fixed") * opexMult);
-  ox("feedstock", T("Feedstock purchase (net of gate fees)", "Закупівля сировини (за вирахуванням плати за прийом)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0) + feed.tonnesYear * mods.feedstockEurT);
-  ox("opportunity", T("Lost revenue from alternative feedstock use", "Втрачений дохід від альтернативного використання сировини"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
-  ox("transport", T("Feedstock logistics (and digestate return)", "Логістика сировини (та повернення дигестату)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
+  ox("maintenance", T("Plant maintenance"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
+  ox("upgrading_maintenance", T("Upgrading unit maintenance"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
+  ox("insurance", T("Insurance"), gross.totalEur * p.get("eng.opex.insurance_share"));
+  ox("monitoring", T("Lab tests, safety inspections, leak monitoring"), p.get("eng.opex.monitoring_fixed") * opexMult);
+  ox("feedstock", T("Feedstock purchase (net of gate fees)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0) + feed.tonnesYear * mods.feedstockEurT);
+  ox("opportunity", T("Lost revenue from alternative feedstock use"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
+  ox("transport", T("Feedstock logistics (and digestate return)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
   // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled.
   const rejectT = feed.lines.reduce((a, l) => a + l.tonnesYear * (l.typeId === "food_waste" ? p.get("eng.opex.reject_share_food_waste") : l.typeId === "municipal_biowaste" ? p.get("eng.opex.reject_share_biowaste") : 0), 0);
-  ox("rejects", T("Disposal of pre-treatment rejects (packaging, plastics, grit)", "Утилізація відходів сортування (упаковка, пластик, пісок)"), rejectT * p.get("eng.opex.reject_disposal_eur_t") * opexMult);
-  ox("digestate_handling", T("Digestate handling (incremental)", "Поводження з дигестатом (інкрементально)"), dig.handlingCostEurYear);
-  ox("el_purchased", T("Electricity purchased", "Закупівля електроенергії"), energy.elPurchasedKwh * demand.electricityPriceEurKwh);
-  ox("heat_external", T("External heat for the digester", "Зовнішнє тепло для обігріву реактора"), energy.heatExternalPurchasedKwh * demand.heatValueEurKwh);
-  if (route === "biomethane" && biomethaneOfftake(ctx, energy).mode === "cng") ox("cng_haul", T("Bio-CNG road haulage to the offtaker", "Перевезення bio-CNG до покупця"), biomethaneOfftake(ctx, energy).haulEurYear * opexMult);
-  if (route === "biomethane") ox("certification", T("Biomethane certification, trading, balancing", "Сертифікація, торгівля, балансування біометану"), energy.biomethaneNm3 * p.get("eng.opex.certification_eur_nm3") * opexMult);
+  ox("rejects", T("Disposal of pre-treatment rejects (packaging, plastics, grit)"), rejectT * p.get("eng.opex.reject_disposal_eur_t") * opexMult);
+  ox("digestate_handling", T("Digestate handling (incremental)"), dig.handlingCostEurYear);
+  ox("el_purchased", T("Electricity purchased"), energy.elPurchasedKwh * demand.electricityPriceEurKwh);
+  ox("heat_external", T("External heat for the digester"), energy.heatExternalPurchasedKwh * demand.heatValueEurKwh);
+  if (route === "biomethane" && biomethaneOfftake(ctx, energy).mode === "cng") ox("cng_haul", T("Bio-CNG road haulage to the offtaker"), biomethaneOfftake(ctx, energy).haulEurYear * opexMult);
+  if (route === "biomethane") ox("certification", T("Biomethane certification, trading, balancing"), energy.biomethaneNm3 * p.get("eng.opex.certification_eur_nm3") * opexMult);
 
   if (process) {
-    ox("process_operation", T("Upstream process operation (budget)", "Експлуатація технологічної частини (бюджет)"), process.opexEurYear);
-    ox("residual_disposal", T("Residuals treatment and disposal", "Очищення й утилізація залишків"), process.residualTonnesYear * (input.process!.residualCostLocalT ?? 0) / ctx.fx * opexMult);
-    ox("gas_supply", T("Purchased biogas", "Закупівля біогазу"), process.gasPurchaseEurYear);
+    ox("process_operation", T("Upstream process operation (budget)"), process.opexEurYear);
+    ox("residual_disposal", T("Residuals treatment and disposal"), process.residualTonnesYear * (input.process!.residualCostLocalT ?? 0) / ctx.fx * opexMult);
+    ox("gas_supply", T("Purchased biogas"), process.gasPurchaseEurYear);
   }
   const revenueEur = revenueAll;
   const opexEur = opex.reduce((a, l) => a + l.eur, 0);
@@ -145,7 +145,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   if (grantShare > 0) {
     const grant = -gross.totalEur * grantShare;
     capex = {
-      lines: [...gross.lines, { id: "grant", label: T("Grant / tax credit: {name} ({grantShare} %)", "Грант / податковий кредит: {name} ({grantShare} %)", { name: sup!.name, grantShare: Math.round(grantShare * 100) }), eur: grant }],
+      lines: [...gross.lines, { id: "grant", label: T("Grant / tax credit: {name} ({grantShare} %)", { name: sup!.name, grantShare: Math.round(grantShare * 100) }), eur: grant }],
       totalEur: gross.totalEur + grant,
     };
   }

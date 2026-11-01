@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Provozní marže (≈ {ebitda} €/rok) je příliš malá pro investici ≈ {capex} €.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Největší přínos — „{label}“: ≈ {share} % všech příjmů a úspor.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Původní verze výpočtu nebyla u této starší objednávky uložena. Tato zpráva je nové vyhodnocení pomocí aktuálního modelu a dostupných dat.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Stávající objem skladu nebyl zadán: předpokládá se, že současná jímka na kejdu farmy pojme vlastní hnůj (≈ {m3} m³) a je pouze opatřena plynotěsným zakrytím. Zadejte skutečný objem; pokud je menší, CAPEX vzroste přibližně o {perM3} € na každý chybějící m³ před režijními náklady.",
 };
 
 export default messages;

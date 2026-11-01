@@ -89,17 +89,15 @@ export const UA: CountryAdapter = {
   support: {
     summary: {
       en: "The only route for new plants is market-premium auctions (bid cap 12 €c/kWh; the 'other RES' lot of 30.10.2026 did not take place; indicative biogas quotas 21–29 MW a year for 2027–2030). The green tariff ends on 01.01.2030 and has no EUR floor for plants commissioned after 2024. Biomethane: export, no subsidy.",
-      uk: "Для нових станцій — лише аукціони з ринковою премією (стеля ставки 12 євроцентів/кВт·год; лот «інші ВДЕ» 30.10.2026 не відбувся; орієнтовні квоти для біогазу 21–29 МВт на рік у 2027–2030 рр.). «Зелений» тариф діє до 01.01.2030 і не має євро-мінімуму для об'єктів після 2024 р. Біометан — експорт без субсидій.",
     },
     availableForNewSmallProjects: false,
     checkedOn: "2026-10-30",
     schemes: [
-      { id: "ua.auction", name: "Аукціон з ринковою премією (інші ВДЕ) — market-premium auction", status: "competitive", electricityTariffEurKwh: 0.12, routes: ["chp"], note: { en: "Bid cap 12 €c/kWh; your own winning bid is guaranteed via a market premium. The 30.10.2026 lot did not take place (Prozorro).", uk: "Стеля ставки 12 євроцентів/кВт·год; ваша виграшна ставка гарантується ринковою премією. Лот 30.10.2026 не відбувся (Prozorro)." }, source: "Guaranteed Buyer notice 03.09.2026 (150 MW, cap 12 €c); Prozorro: auction did not take place; CMU order 298-р (508-р); Law 555-IV Art. 9-3", confidence: "LOW", checkedOn: "2026-10-30" },
+      { id: "ua.auction", name: "Аукціон з ринковою премією (інші ВДЕ) — market-premium auction", status: "competitive", electricityTariffEurKwh: 0.12, routes: ["chp"], note: { en: "Bid cap 12 €c/kWh; your own winning bid is guaranteed via a market premium. The 30.10.2026 lot did not take place (Prozorro)." }, source: "Guaranteed Buyer notice 03.09.2026 (150 MW, cap 12 €c); Prozorro: auction did not take place; CMU order 298-р (508-р); Law 555-IV Art. 9-3", confidence: "LOW", checkedOn: "2026-10-30" },
     ],
   },
   regulatory: regulatoryFor("UA"),
   approachNotes: {
     en: ["No subsidy for new small plants: the case rests on own electricity and heat, avoided disposal and energy resilience. Biomethane export to the EU (ISCC) is open to large producers."],
-    uk: ["Для нових малих установок субсидій немає: економіка тримається на власній електриці й теплі, економії на утилізації та енергостійкості. Експорт біометану до ЄС (ISCC) доступний великим виробникам."],
   },
 };

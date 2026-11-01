@@ -130,7 +130,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   if (!isoDate(asOfDate)) throw new Error("Invalid assessment date");
   const lang: CoreLang = opts.lang ?? input.lang ?? "en";
   const T = tr(lang);
-  const routeWord: Record<RouteId, string> = { chp: T("CHP", "Когенерація"), boiler: T("boiler", "котел"), biomethane: T("biomethane", "біометан") };
+  const routeWord: Record<RouteId, string> = { chp: T("CHP"), boiler: T("boiler"), biomethane: T("biomethane") };
   const D = fmtDec(lang);
   const params = buildParams(country, input.regionId, input.energy, input.city);
   const fx = params.get("econ.fx_local_per_eur");
@@ -233,14 +233,14 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
 
   // ---- sensitivity (best route, base scenario) ----
   const tests: Array<[string, string, Partial<Modifiers>]> = [
-    ["yield", T("Methane yield −20 %", "Вихід метану −20 %"), { methaneYield: 0.8 }],
+    ["yield", T("Methane yield −20 %"), { methaneYield: 0.8 }],
     ["capex", "CAPEX +20 %", { capex: 1.2 }],
-    ["maintenance", T("Maintenance +30 %", "Обслуговування +30 %"), { maintenance: 1.3 }],
-    ["energy_price", T("Energy prices −20 %", "Ціни на енергію −20 %"), { energyPrice: 0.8 }],
-    ["heat_use", T("Heat use −50 %", "Використання тепла −50 %"), { heatUse: 0.5 }],
-    ["feedstock", T("Loss of 20 % of feedstock", "Втрата 20 % сировини"), { feedstock: 0.8 }],
-    input.process ? ["process_opex", "OPEX +30 %", { opex: 1.3 }] : ["transport", T("Logistics +50 %", "Логістика +50 %"), { transport: 1.5 }],
-    ["downtime", T("CHP downtime +10 pp", "Простої КГУ +10 п.п."), { extraDowntimePp: 10 }],
+    ["maintenance", T("Maintenance +30 %"), { maintenance: 1.3 }],
+    ["energy_price", T("Energy prices −20 %"), { energyPrice: 0.8 }],
+    ["heat_use", T("Heat use −50 %"), { heatUse: 0.5 }],
+    ["feedstock", T("Loss of 20 % of feedstock"), { feedstock: 0.8 }],
+    input.process ? ["process_opex", "OPEX +30 %", { opex: 1.3 }] : ["transport", T("Logistics +50 %"), { transport: 1.5 }],
+    ["downtime", T("CHP downtime +10 pp"), { extraDowntimePp: 10 }],
   ];
   const sensitivity: SensitivityItem[] = tests.map(([id, label, m]) => {
     let r = run(bestRoute, "base", { ...NO_MODS, ...m });
@@ -315,13 +315,13 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     regItems = regItems.filter(r => !["eu.nitrates","uk.nvz","ca.nutrient","ua.digestate"].includes(r.id));
     regItems.push({ id: "process.basis", status: "TO_VERIFY", effort: "HIGH",
       title: input.process.kind === "wastewater"
-        ? T("Confirm discharge limits, final polishing and sludge disposal authorisations", "Підтвердити нормативи скиду, доочищення та дозволений шлях утилізації осаду")
+        ? T("Confirm discharge limits, final polishing and sludge disposal authorisations")
         : input.process.kind === "landfill"
-          ? T("Confirm landfill permit, gas collection obligations and aftercare responsibilities", "Перевірити дозвіл полігона, обов’язки зі збору газу та післяексплуатаційного догляду")
+          ? T("Confirm landfill permit, gas collection obligations and aftercare responsibilities")
           : input.process.kind === "gas"
-            ? T("Confirm gas transfer contract, inlet quality and approvals for the new gas-use equipment", "Перевірити договір постачання, якість газу та дозволи на нове газовикористовувальне обладнання")
-            : T("Confirm material classification, pretreatment requirements and lawful residuals disposal", "Перевірити класифікацію матеріалу, вимоги до підготовки та законний шлях утилізації залишків"),
-      appliesBecause: T("Process-specific site conditions; no automatic legal eligibility", "Умови конкретного процесу та майданчика; автоматичного підтвердження законності немає") });
+            ? T("Confirm gas transfer contract, inlet quality and approvals for the new gas-use equipment")
+            : T("Confirm material classification, pretreatment requirements and lawful residuals disposal"),
+      appliesBecause: T("Process-specific site conditions; no automatic legal eligibility") });
   }
   const pointsOf = { LOW: 1, MEDIUM: 2, HIGH: 3 } as const;
   const regPoints = regItems.reduce((a, i) => a + pointsOf[i.effort], 0);
@@ -339,19 +339,19 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const local = (eur: number) => fmtSig(lang)(eur * fx);
   const priceSlips: string[] = [];
   const elLow = params.get("econ.electricity_spot_eur_kwh") / 2, elHigh = params.get("econ.electricity_retail_eur_kwh") * PRICE_BAND;
-  if (demand.electricityPriceKnown && (demand.electricityPriceEurKwh < elLow || demand.electricityPriceEurKwh > elHigh)) priceSlips.push(T("The entered electricity price ({electricityPriceLocalPerKwh} {currency}/kWh) is outside the plausible range for this country ({elLow}–{elHigh} {currency}/kWh): check the unit (per kWh, {currency}, not cents or MWh).", "Введена ціна електроенергії ({electricityPriceLocalPerKwh} {currency}/кВт·год) поза правдоподібним діапазоном для країни ({elLow}–{elHigh} {currency}/кВт·год): перевірте одиниці (за кВт·год, у {currency}, не копійки чи МВт·год).", { electricityPriceLocalPerKwh: input.energy.electricityPriceLocalPerKwh!, currency: country.currency, elLow: local(elLow), elHigh: local(elHigh) }));
+  if (demand.electricityPriceKnown && (demand.electricityPriceEurKwh < elLow || demand.electricityPriceEurKwh > elHigh)) priceSlips.push(T("The entered electricity price ({electricityPriceLocalPerKwh} {currency}/kWh) is outside the plausible range for this country ({elLow}–{elHigh} {currency}/kWh): check the unit (per kWh, {currency}, not cents or MWh).", { electricityPriceLocalPerKwh: input.energy.electricityPriceLocalPerKwh!, currency: country.currency, elLow: local(elLow), elHigh: local(elHigh) }));
   const heatMarket = params.get("econ.heat_value_eur_kwh_th");
-  if (demand.heatValueKnown && (demand.heatValueEurKwh < heatMarket / PRICE_BAND || demand.heatValueEurKwh > heatMarket * PRICE_BAND)) priceSlips.push(T("The entered gas or heat price differs more than {PRICE_BAND}× from the national business level ({heatMarket} {currency}/kWh of heat): check the unit (gas per m³, heat per kWh, in {currency}).", "Введена ціна газу чи тепла відрізняється більш ніж у {PRICE_BAND} рази від національного рівня ({heatMarket} {currency}/кВт·год тепла): перевірте одиниці (газ — за м³, тепло — за кВт·год, у {currency}).", { PRICE_BAND, heatMarket: local(heatMarket), currency: country.currency }));
+  if (demand.heatValueKnown && (demand.heatValueEurKwh < heatMarket / PRICE_BAND || demand.heatValueEurKwh > heatMarket * PRICE_BAND)) priceSlips.push(T("The entered gas or heat price differs more than {PRICE_BAND}× from the national business level ({heatMarket} {currency}/kWh of heat): check the unit (gas per m³, heat per kWh, in {currency}).", { PRICE_BAND, heatMarket: local(heatMarket), currency: country.currency }));
   const exportEur = (input.energy.exportPriceLocalPerKwh ?? 0) / fx;
-  if (exportEur > 0 && (exportEur < elLow || exportEur > elHigh)) priceSlips.push(T("The entered export price ({exportPriceLocalPerKwh} {currency}/kWh) is outside the plausible range for this country ({elLow}–{elHigh} {currency}/kWh): check the unit (per kWh, {currency}, not cents or MWh).", "Введена ціна продажу електроенергії ({exportPriceLocalPerKwh} {currency}/кВт·год) поза правдоподібним діапазоном для країни ({elLow}–{elHigh} {currency}/кВт·год): перевірте одиниці (за кВт·год, у {currency}, не копійки чи МВт·год).", { exportPriceLocalPerKwh: input.energy.exportPriceLocalPerKwh!, currency: country.currency, elLow: local(elLow), elHigh: local(elHigh) }));
+  if (exportEur > 0 && (exportEur < elLow || exportEur > elHigh)) priceSlips.push(T("The entered export price ({exportPriceLocalPerKwh} {currency}/kWh) is outside the plausible range for this country ({elLow}–{elHigh} {currency}/kWh): check the unit (per kWh, {currency}, not cents or MWh).", { exportPriceLocalPerKwh: input.energy.exportPriceLocalPerKwh!, currency: country.currency, elLow: local(elLow), elHigh: local(elHigh) }));
   if (bmOffer) {
     const market = buildParams(country, input.regionId, { ...input.energy, biomethanePriceLocalPerMwhHhv: undefined }, input.city).get("econ.biomethane_price_base_eur_nm3");
     const offer = params.get("econ.biomethane_price_base_eur_nm3");
-    if (offer < market / PRICE_BAND || offer > market * PRICE_BAND) priceSlips.push(T("The entered biomethane price ({biomethanePriceLocalPerMwhHhv} {currency}/MWh HHV) differs more than {PRICE_BAND}× from the national estimate ({fx} {currency}/MWh HHV): check the unit (per MWh, not per kWh or Nm³, in {currency}) and that it excludes state tariffs or premiums.", "Введена ціна біометану ({biomethanePriceLocalPerMwhHhv} {currency}/МВт·год за вищою теплотою згоряння) відрізняється більш ніж у {PRICE_BAND} рази від національної оцінки ({fx} {currency}/МВт·год): перевірте одиниці (за МВт·год, не за кВт·год чи Нм³, у {currency}) і що в ній немає державних тарифів чи премій.", { biomethanePriceLocalPerMwhHhv: input.energy.biomethanePriceLocalPerMwhHhv!, currency: country.currency, PRICE_BAND, fx: local(market / offer * input.energy.biomethanePriceLocalPerMwhHhv! / fx) }));
+    if (offer < market / PRICE_BAND || offer > market * PRICE_BAND) priceSlips.push(T("The entered biomethane price ({biomethanePriceLocalPerMwhHhv} {currency}/MWh HHV) differs more than {PRICE_BAND}× from the national estimate ({fx} {currency}/MWh HHV): check the unit (per MWh, not per kWh or Nm³, in {currency}) and that it excludes state tariffs or premiums.", { biomethanePriceLocalPerMwhHhv: input.energy.biomethanePriceLocalPerMwhHhv!, currency: country.currency, PRICE_BAND, fx: local(market / offer * input.energy.biomethanePriceLocalPerMwhHhv! / fx) }));
   }
   const wageMarket = params.get("econ.labour_official_eur_h") * params.get("econ.operator_wage_ratio");
   const wageEur = (input.finance?.operatorWageLocalPerHour ?? 0) / fx;
-  if (wageEur > 0 && (wageEur < wageMarket / PRICE_BAND || wageEur > wageMarket * PRICE_BAND)) priceSlips.push(T("The entered operator cost ({operatorWageLocalPerHour} {currency}/h) differs more than {PRICE_BAND}× from the national estimate ({wageMarket} {currency}/h): check that it is per hour, fully loaded, in {currency}.", "Введена вартість години оператора ({operatorWageLocalPerHour} {currency}/год) відрізняється більш ніж у {PRICE_BAND} рази від національної оцінки ({wageMarket} {currency}/год): перевірте, що це вартість години з нарахуваннями, у {currency}.", { operatorWageLocalPerHour: input.finance!.operatorWageLocalPerHour!, currency: country.currency, PRICE_BAND, wageMarket: local(wageMarket) }));
+  if (wageEur > 0 && (wageEur < wageMarket / PRICE_BAND || wageEur > wageMarket * PRICE_BAND)) priceSlips.push(T("The entered operator cost ({operatorWageLocalPerHour} {currency}/h) differs more than {PRICE_BAND}× from the national estimate ({wageMarket} {currency}/h): check that it is per hour, fully loaded, in {currency}.", { operatorWageLocalPerHour: input.finance!.operatorWageLocalPerHour!, currency: country.currency, PRICE_BAND, wageMarket: local(wageMarket) }));
   // A supplier quote is checked against the model for the same route: far outside, it is more likely a unit or scope slip.
   const quoteInfo: string[] = [];
   const qIn = input.finance;
@@ -359,8 +359,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const qc = matrix[qIn.capexQuoteRoute].base.capex;
     const ratio = qc.modelledEur ? qc.totalEur / qc.modelledEur : 1;
     const routeName = routeWord[qIn.capexQuoteRoute];
-    if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T("The supplier quote ({capexQuoteLocal} {currency}) is {ratio}× the model's own {routeName} estimate ({modelledEur} {currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.", "Пропозиція постачальника ({capexQuoteLocal} {currency}) у {ratio} раза відрізняється від власної оцінки моделі для варіанта «{routeName}» ({modelledEur} {currency}): перевірте валюту, обсяг поставки (реактор, використання газу, приєднання, проєктування) і чи це та сама потужність.", { capexQuoteLocal: input.finance!.capexQuoteLocal!, currency: country.currency, ratio: D(ratio, 1), routeName, modelledEur: local(qc.modelledEur ?? 0) }));
-    if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T("Your supplier quote is for the {routeName} route, but the model finds the {bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.", "Пропозиція постачальника стосується варіанта «{routeName}», але модель вважає вигіднішим «{bestRoute}», тому в основному результаті пропозицію не використано. Вона враховується в порівнянні варіантів.", { routeName, bestRoute: routeWord[bestRoute] }));
+    if (ratio < 1 / QUOTE_BAND || ratio > QUOTE_BAND) priceSlips.push(T("The supplier quote ({capexQuoteLocal} {currency}) is {ratio}× the model's own {routeName} estimate ({modelledEur} {currency}): check the currency, the scope (digester, gas use, grid connection, engineering) and whether it is for the same capacity.", { capexQuoteLocal: input.finance!.capexQuoteLocal!, currency: country.currency, ratio: D(ratio, 1), routeName, modelledEur: local(qc.modelledEur ?? 0) }));
+    if (qIn.capexQuoteRoute !== bestRoute) quoteInfo.push(T("Your supplier quote is for the {routeName} route, but the model finds the {bestRoute} route more profitable, so the quote is not used in the headline result. It is used in the route comparison.", { routeName, bestRoute: routeWord[bestRoute] }));
   }
   // ---- what to verify first (value of information) ----
   // Each input's plausible range, three runs (low / base / high), EVPI for the build decision. Inputs the client already
@@ -489,13 +489,13 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const feedSlips = input.feedstocks.some((f) => (f.currentDisposalCostPerTonneLocal ?? 0) / fx > PLAUSIBLE_DISPOSAL_EUR_T || -(f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_GATE_FEE_EUR_T || (f.purchasePricePerTonneLocal ?? 0) / fx > PLAUSIBLE_PURCHASE_EUR_T);
   const quality = assessQuality(input, base, demand, T, { currency: country.currency, priceSlips: priceSlips.length + (feedSlips ? 1 : 0), profileOnly: priceIds.some((id) => params.prov(id).confidence === "LOW"), unvalidatedCapital: !quoteApplies && params.prov(capexId).confidence === "LOW" });
   if (input.process?.basisDate && input.process.basisDate > asOfDate) {
-    const text = T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.", "Дата вихідних даних процесу пізніша за дату оцінки; ці дані не підтверджують поточний висновок.");
+    const text = T("The supplied process basis is dated after the assessment; it cannot substantiate a current conclusion.");
     capQuality(quality, 34, { id: "process_basis_date", owner: "client", text });
     quality.reasons.push(text);
   }
   const expiredPrices = dataAudit.checks.filter((check) => (priceIds.includes(check.parameterId) && check.status === "EXPIRED") || (check.observedThrough && check.observedThrough > asOfDate) || (check.publishedOn && check.publishedOn > asOfDate));
   if (expiredPrices.length) {
-    const text = T("A price affecting this route is expired or unavailable as of the assessment date; current applicable evidence is required before a verdict", "Ціна, що впливає на цей маршрут, втратила чинність або ще не була доступна на дату оцінки; для висновку потрібні чинні застосовні дані");
+    const text = T("A price affecting this route is expired or unavailable as of the assessment date; current applicable evidence is required before a verdict");
     capQuality(quality, 34, { id: "price_expired", owner: "model", text });
     quality.level = "LOW";
     quality.reasons.push(text);
@@ -517,9 +517,9 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     base, cons, opt, confidence: { level: quality.level, score: quality.score, clientScore: quality.score + advisoryPoints }, minKwEl: minChp, breakEven, lang,
   });
   if (input.process) verdict.whatWouldChange = [
-    T("Verify the inlet analysis and operating history, seasonal availability, and a supplier guarantee for the proposed treatment train.", "Перевірити аналіз потоку, історію роботи, сезонність і гарантії постачальника для запропонованої технології."),
-    T("Confirm complete installed-cost quotations, residuals disposal, final effluent treatment and the energy offtake contract. Check the downside case before investment.", "Підтвердити повні кошториси монтажу, утилізацію залишків, доочищення стоків та договір збуту енергії. Перед інвестуванням перевірити несприятливий сценарій."),
-    T("Obtain site-specific permits and grid gas-quality requirements; extend this pre-tax screening to tax, working capital and lender cash-flow modelling.", "Уточнити дозволи й вимоги мережі до якості газу; доповнити попередню оцінку податками, оборотним капіталом і моделлю грошових потоків для кредитора."),
+    T("Verify the inlet analysis and operating history, seasonal availability, and a supplier guarantee for the proposed treatment train."),
+    T("Confirm complete installed-cost quotations, residuals disposal, final effluent treatment and the energy offtake contract. Check the downside case before investment."),
+    T("Obtain site-specific permits and grid gas-quality requirements; extend this pre-tax screening to tax, working capital and lender cash-flow modelling."),
   ];
 
   // ---- national support: separate cases, never in the verdict ----
@@ -527,20 +527,20 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // Scheme rules are written for digesters fed with farm or organic-waste feedstock. For an existing gas source the
   // case is computed as "if eligible", never shown as eligible: the scheme's own gas-source category must confirm it.
   const gasSource = input.process && input.process.kind !== "residue" ? input.process.kind : undefined;
-  const gasSourceName = gasSource === "wastewater" ? T("wastewater (sewage) gas", "газ зі стічних вод") : gasSource === "landfill" ? T("landfill gas", "звалищний газ") : T("an existing biogas stream", "наявний потік біогазу");
+  const gasSourceName = gasSource === "wastewater" ? T("wastewater (sewage) gas") : gasSource === "landfill" ? T("landfill gas") : T("an existing biogas stream");
   const supportCases: SupportCase[] = country.support.schemes.map((sc) => {
     const route = sc.routes.includes(bestRoute) ? bestRoute : sc.routes[0];
     const ref = matrix[route].base;
     const kw = ref.kwElEquivalent;
     let reason = "";
-    if (sc.maxKwEl !== undefined && kw > sc.maxKwEl) reason = T("Plant ≈ {kw} kWe exceeds the {maxKwEl} kW limit.", "Установка ≈ {kw} кВт ел. перевищує ліміт {maxKwEl} кВт.", { kw: Math.round(kw), maxKwEl: sc.maxKwEl });
-    if (sc.minKwEl !== undefined && kw < sc.minKwEl) reason = T("Plant ≈ {kw} kWe is below the {minKwEl} kW minimum.", "Установка ≈ {kw} кВт ел. менша за мінімум {minKwEl} кВт.", { kw: Math.round(kw), minKwEl: sc.minKwEl });
-    if (sc.minManureShareMass !== undefined && manureMass < sc.minManureShareMass) reason = T("Manure is {manureMass} % of the mass; the scheme requires ≥ {minManureShareMass} %.", "Гній становить {manureMass} % маси; схема вимагає ≥ {minManureShareMass} %.", { manureMass: Math.round(manureMass * 100), minManureShareMass: Math.round(sc.minManureShareMass * 100) });
-    if (route === "chp" && ref.energy.chpKwEl < minChp && sc.electricityTariffEurKwh) reason = T("Too small for a CHP plant.", "Замало для когенерації.");
-    if (route === "biomethane" && ref.energy.rawBiogasNm3PerHour < minBio) reason = T("Raw biogas ≈ {rawBiogasNm3PerHour} Nm³/h is below the practical upgrading minimum ({minBio} Nm³/h) — consider a cluster.", "Сирого біогазу ≈ {rawBiogasNm3PerHour} Нм³/год — менше практичного мінімуму для очищення ({minBio} Нм³/год); розгляньте кластер.", { rawBiogasNm3PerHour: Math.round(ref.energy.rawBiogasNm3PerHour), minBio });
-    if (sc.status === "closed" && reason === "") reason = T("Call closed — shown for reference only.", "Прийом заявок закрито — лише для довідки.");
+    if (sc.maxKwEl !== undefined && kw > sc.maxKwEl) reason = T("Plant ≈ {kw} kWe exceeds the {maxKwEl} kW limit.", { kw: Math.round(kw), maxKwEl: sc.maxKwEl });
+    if (sc.minKwEl !== undefined && kw < sc.minKwEl) reason = T("Plant ≈ {kw} kWe is below the {minKwEl} kW minimum.", { kw: Math.round(kw), minKwEl: sc.minKwEl });
+    if (sc.minManureShareMass !== undefined && manureMass < sc.minManureShareMass) reason = T("Manure is {manureMass} % of the mass; the scheme requires ≥ {minManureShareMass} %.", { manureMass: Math.round(manureMass * 100), minManureShareMass: Math.round(sc.minManureShareMass * 100) });
+    if (route === "chp" && ref.energy.chpKwEl < minChp && sc.electricityTariffEurKwh) reason = T("Too small for a CHP plant.");
+    if (route === "biomethane" && ref.energy.rawBiogasNm3PerHour < minBio) reason = T("Raw biogas ≈ {rawBiogasNm3PerHour} Nm³/h is below the practical upgrading minimum ({minBio} Nm³/h) — consider a cluster.", { rawBiogasNm3PerHour: Math.round(ref.energy.rawBiogasNm3PerHour), minBio });
+    if (sc.status === "closed" && reason === "") reason = T("Call closed — shown for reference only.");
     const unconfirmed = gasSource !== undefined && reason === "";
-    if (unconfirmed) reason = T("Eligibility of {gasSourceName} is not modelled: shown \"if eligible\". Confirm the gas-source category, tariff and any existing support with the scheme operator.", "Право на підтримку для джерела «{gasSourceName}» не моделюємо: показано «якщо схема застосовна». Підтвердьте категорію джерела газу, тариф і наявну підтримку в адміністратора схеми.", { gasSourceName });
+    if (unconfirmed) reason = T("Eligibility of {gasSourceName} is not modelled: shown \"if eligible\". Confirm the gas-source category, tariff and any existing support with the scheme operator.", { gasSourceName });
     const computable = reason === "" || sc.status === "closed" || unconfirmed;
     const r = computable ? run(route, "base", NO_MODS, sc) : ref;
     return {
@@ -588,7 +588,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // ---- warnings ----
   const warnings = [
     ...new Set([
-      ...(input.assumedSupportEurPerKwh ? [T("Legacy assumed support is excluded from the base assessment.", "Старе припущення про підтримку виключено з базової оцінки.")] : []),
+      ...(input.assumedSupportEurPerKwh ? [T("Legacy assumed support is excluded from the base assessment.")] : []),
       ...base.feed.warnings,
       ...base.feed.lines.flatMap((l) => l.warnings),
       ...base.design.tech.warnings,
@@ -597,33 +597,33 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       ...quoteInfo,
     ]),
   ];
-  if (input.process) warnings.push(T("Upstream budgets must include pretreatment, logistics, storage and final treatment; they are not independently verified installed quotations.", "Бюджети мають включати підготовку, логістику, зберігання й кінцеву обробку; це не незалежно перевірені монтажні оферти."));
-  if (input.process?.kind === "residue" || input.process?.kind === "wastewater") warnings.push(T("BMP/COD and retention time alone do not verify salinity, ammonia inhibition, toxic contaminants or treatment stability; confirm with representative analysis and continuous pilot/vendor data.", "BMP/COD і час утримання не підтверджують стійкість процесу за наявності солей, аміаку чи токсичних домішок; потрібні репрезентативні аналізи та дані безперервного пілота або виробника."));
-  if (existingPlant(input.process)) warnings.push(T("The CHP option keeps the existing engine: its overhaul budget must carry it through the whole 15-year horizon. A second overhaul, a shorter remaining life or a lost feed-in tariff is not modelled; enter it in the budget.", "Варіант когенерації залишає наявний двигун: бюджет капремонту має забезпечити його роботу всі 15 років. Другий капремонт, коротший ресурс чи втрату тарифу не моделюємо; включіть це в бюджет."));
-  if (input.process?.kind === "gas" || input.process?.kind === "landfill") warnings.push(T("The treatment quotation and recovery must cover the actual H2S, siloxanes, moisture, N2 and O2. Entered product purity is a design requirement, not demonstrated gas-grid compliance.", "Оферта та recovery мають відповідати фактичним H2S, силоксанам, волозі, N2 та O2. Введена чистота продукту — проєктна вимога, а не доказ відповідності газовій мережі."));
-  if (base.energy.heatExternalPurchasedKwh > 0) warnings.push(T("Own biogas is not enough to heat the digester in the coldest months — external heat is needed.", "Власного біогазу бракує для обігріву реактора в найхолодніші місяці — потрібне зовнішнє тепло."));
+  if (input.process) warnings.push(T("Upstream budgets must include pretreatment, logistics, storage and final treatment; they are not independently verified installed quotations."));
+  if (input.process?.kind === "residue" || input.process?.kind === "wastewater") warnings.push(T("BMP/COD and retention time alone do not verify salinity, ammonia inhibition, toxic contaminants or treatment stability; confirm with representative analysis and continuous pilot/vendor data."));
+  if (existingPlant(input.process)) warnings.push(T("The CHP option keeps the existing engine: its overhaul budget must carry it through the whole 15-year horizon. A second overhaul, a shorter remaining life or a lost feed-in tariff is not modelled; enter it in the budget."));
+  if (input.process?.kind === "gas" || input.process?.kind === "landfill") warnings.push(T("The treatment quotation and recovery must cover the actual H2S, siloxanes, moisture, N2 and O2. Entered product purity is a design requirement, not demonstrated gas-grid compliance."));
+  if (base.energy.heatExternalPurchasedKwh > 0) warnings.push(T("Own biogas is not enough to heat the digester in the coldest months — external heat is needed."));
   const flareShare = Math.round((base.energy.flaredKwh / gasKwh) * 100);
-  if (base.energy.flaredKwh / gasKwh > 0.1) warnings.push(T("≈{flareShare} % of the biogas finds no use (flared): review CHP size or seasonality.", "≈{flareShare} % біогазу не знаходить використання (факел): перегляньте розмір КГУ чи сезонність.", { flareShare }));
-  if (digestate.status === "LIABILITY") warnings.push(T("In this configuration the digestate is a cost rather than an asset.", "Дигестат у цій конфігурації — скоріше витрата, ніж актив."));
-  if (bestRoute === "biomethane" && !country.biomethaneInjection) warnings.push(T("Grid injection of biomethane is not yet an established pathway in this country: plan for local use (bio-CNG/LNG) or a pioneer connection.", "Ін'єкція біометану в мережу в цій країні ще не усталена: плануйте локальне використання (bio-CNG/LNG) або першопрохідне приєднання."));
-  if (bestRoute === "boiler" && base.energy.heatUsefulKwh < 0.05 * base.energy.gasEnergyKwh) warnings.push(T("No heat buyer was quantified, so the boiler route earns almost nothing: it is only the cheapest of routes that all lose money. This is not a recommendation to build it — find a heat or power buyer, or add energy-dense feedstock.", "Споживача тепла не підтверджено, тому котельня майже нічого не заробляє: це лише найдешевший із маршрутів, які всі збиткові. Це не рекомендація будувати її — потрібен покупець тепла чи електрики або енергетично щільніша сировина."));
+  if (base.energy.flaredKwh / gasKwh > 0.1) warnings.push(T("≈{flareShare} % of the biogas finds no use (flared): review CHP size or seasonality.", { flareShare }));
+  if (digestate.status === "LIABILITY") warnings.push(T("In this configuration the digestate is a cost rather than an asset."));
+  if (bestRoute === "biomethane" && !country.biomethaneInjection) warnings.push(T("Grid injection of biomethane is not yet an established pathway in this country: plan for local use (bio-CNG/LNG) or a pioneer connection."));
+  if (bestRoute === "boiler" && base.energy.heatUsefulKwh < 0.05 * base.energy.gasEnergyKwh) warnings.push(T("No heat buyer was quantified, so the boiler route earns almost nothing: it is only the cheapest of routes that all lose money. This is not a recommendation to build it — find a heat or power buyer, or add energy-dense feedstock."));
   const unsoldEl = base.energy.elNetKwh - base.energy.elSelfConsumedKwh - base.energy.elExportedKwh;
-  if (bestRoute === "chp" && base.energy.elNetKwh > 0 && unsoldEl / base.energy.elNetKwh > 0.1) warnings.push(T("≈{elNetKwh} % of the CHP electricity has no buyer without a grid connection and earns nothing; the engine must run in island mode.", "≈{elNetKwh} % електроенергії КГУ без приєднання до мережі не має споживача й не приносить доходу; двигун працюватиме в острівному режимі.", { elNetKwh: Math.round(unsoldEl / base.energy.elNetKwh * 100) }));
+  if (bestRoute === "chp" && base.energy.elNetKwh > 0 && unsoldEl / base.energy.elNetKwh > 0.1) warnings.push(T("≈{elNetKwh} % of the CHP electricity has no buyer without a grid connection and earns nothing; the engine must run in island mode.", { elNetKwh: Math.round(unsoldEl / base.energy.elNetKwh * 100) }));
   if (bestRoute === "chp") {
-    warnings.push(T("CHP performance uses a 50 Hz biogas full-load catalogue reference (03/2025), interpolated between ratings; part-load, ambient derating and 60 Hz equipment require supplier confirmation.", "Показники CHP взято з каталогу біогазових установок 50 Hz за 03/2025 з інтерполяцією між типорозмірами. Часткове навантаження, вплив температури та обладнання 60 Hz потребують підтвердження виробника."));
-    if (base.energy.chpKwEl < 20 || base.energy.chpKwEl > 2300) warnings.push(T("CHP rating is outside the 20–2300 kW reference curve; endpoint efficiency is only a proxy. Obtain a multi-engine or equipment-specific design.", "Потужність CHP виходить за діапазон референсної кривої 20–2300 кВт; використано граничний ККД як наближення. Потрібен підбір конкретного обладнання або кількох двигунів."));
+    warnings.push(T("CHP performance uses a 50 Hz biogas full-load catalogue reference (03/2025), interpolated between ratings; part-load, ambient derating and 60 Hz equipment require supplier confirmation."));
+    if (base.energy.chpKwEl < 20 || base.energy.chpKwEl > 2300) warnings.push(T("CHP rating is outside the 20–2300 kW reference curve; endpoint efficiency is only a proxy. Obtain a multi-engine or equipment-specific design."));
   }
   const reviewChecks = dataAudit.checks.filter((check) => ["EXPIRED", "REVIEW_REQUIRED", "UNDATED"].includes(check.status) && check.parameterId.startsWith("econ."));
-  if (reviewChecks.length) warnings.push(T("Market data require review ({join}). Observation dates and validity are shown in the evidence; these are not verified current customer quotations.", "Ринкові дані потребують перевірки ({join}). Періоди й строки дії наведено в джерелах; це не підтверджені актуальні пропозиції для замовника.", { join: reviewChecks.map((check) => check.parameterId).join(", ") }));
+  if (reviewChecks.length) warnings.push(T("Market data require review ({join}). Observation dates and validity are shown in the evidence; these are not verified current customer quotations.", { join: reviewChecks.map((check) => check.parameterId).join(", ") }));
 
   const supportIncluded = false;
   const notes = [
-    T("Support: {summary}", "Підтримка: {summary}", { summary: locText(country.support.summary, lang) }),
+    T("Support: {summary}", { summary: locText(country.support.summary, lang) }),
     ...locList(country.approachNotes, lang),
-    supportIncluded ? T("WARNING: an assumed, non-guaranteed support payment is included.", "УВАГА: у розрахунок включено припущену підтримку, яка не гарантована.") : T("The verdict excludes subsidies; national support is shown as separate cases.", "Вердикт не враховує субсидій; національна підтримка показана окремими сценаріями."),
-    T("This is a preliminary (screening) assessment — not a detailed engineering design and not a commercial offer.", "Це попередня (скринінгова) оцінка: не детальний інженерний проєкт і не комерційна пропозиція."),
-    T("Financial results are pre-tax project cash flows. Depreciation, income taxes, working capital, financing fees and detailed debt covenants are not modelled; DSCR is an EBITDA-based screening ratio, not lender CFADS.", "Фінансові результати розраховані за грошовими потоками проєкту до оподаткування. Амортизація, податок на прибуток, оборотний капітал, комісії за фінансування та детальні кредитні ковенанти не моделюються; DSCR — попередній показник на основі EBITDA, а не банківського CFADS."),
-    ...(parameterSensitivity.length ? [T("Parameter bounds are tested individually using the applicable market/CAPEX evidence. These engineering or tariff ranges are not statistical confidence intervals and do not replace supplier quotations or customer bills.", "Межі параметрів перевірені окремо за доступними країновими даними й оцінками CAPEX. Інженерні та тарифні діапазони не є статистичними довірчими інтервалами й не замінюють комерційних пропозицій та рахунків споживача.")] : []),
+    supportIncluded ? T("WARNING: an assumed, non-guaranteed support payment is included.") : T("The verdict excludes subsidies; national support is shown as separate cases."),
+    T("This is a preliminary (screening) assessment — not a detailed engineering design and not a commercial offer."),
+    T("Financial results are pre-tax project cash flows. Depreciation, income taxes, working capital, financing fees and detailed debt covenants are not modelled; DSCR is an EBITDA-based screening ratio, not lender CFADS."),
+    ...(parameterSensitivity.length ? [T("Parameter bounds are tested individually using the applicable market/CAPEX evidence. These engineering or tariff ranges are not statistical confidence intervals and do not replace supplier quotations or customer bills.")] : []),
   ];
 
   const used = params.usedIds();

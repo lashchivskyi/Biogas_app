@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Das Betriebsergebnis (≈ {ebitda} €/Jahr) ist für eine Investition von ≈ {capex} € zu gering.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Größter Nutzen – „{label}“: ≈ {share} % aller Erlöse und Einsparungen.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Die ursprüngliche Berechnungsversion wurde für diese ältere Bestellung nicht gespeichert. Dieser Bericht ist eine neue Bewertung mit dem aktuellen Modell und den verfügbaren Daten.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Vorhandenes Lagervolumen nicht angegeben: Es wird angenommen, dass der aktuelle Güllespeicher des Betriebs den eigenen Wirtschaftsdünger fasst (≈ {m3} m³) und nur mit einer gasdichten Abdeckung nachgerüstet wird. Geben Sie das tatsächliche Volumen an; ist es kleiner, steigen die CAPEX um etwa {perM3} € je fehlendem m³ vor Gemeinkosten.",
 };
 
 export default messages;

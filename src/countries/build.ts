@@ -41,7 +41,7 @@ export interface CountryProfile {
   ef: number;
   regions: Region[];
   support: SupportInfo;
-  notes: { en: string[]; uk: string[] };
+  notes: { en: string[] };
   nitrateLimit?: number;
   storageMonths?: number;
   maturity?: "operational" | "profile";

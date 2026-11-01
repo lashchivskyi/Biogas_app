@@ -3,17 +3,18 @@ import { join } from "node:path";
 import ts from "typescript";
 
 /**
- * Finds every English source text of the model that other languages translate by catalog (`d.core`, `src/i18n/core/<locale>.ts`).
- * A source text is an English string literal that is written next to its Ukrainian twin:
- *   T("English", "Українська"[, vars])  ·  ["English", "Українська"]  ·  { en: "English", uk: "Українська" }  ·  f(id, "English", "Українська", …)
- * The English text is the catalog key. Dynamic strings written as `${…}` do not exist any more: values are `{name}` placeholders.
+ * Finds the English source texts of the model in the code: the texts that every language translates by catalog
+ * (`src/i18n/core/<locale>.ts`, Ukrainian included). A source text is an English string literal written as
+ *   T("English", vars?)  ·  ctx.t("English")  ·  { en: "English" }  ·  { en: ["English", …] }
+ *   and the text arguments of the local helpers `it(id, en, whyEn, …)` (regulatory) and `none(en)` / `sup(en, …)` (profiles).
+ * The English text is the catalog key. Dynamic strings written as `${…}` are not allowed: values are `{name}` placeholders.
  */
-export interface CoreKey { en: string; uk: string[]; where: string[] }
+export interface CoreKey { en: string; where: string[] }
 
 // src/content is not here: hub, segment and sample pages of other locales are authored per locale in the dictionaries (`localized.ts`, `samples.ts`).
 const ROOTS = ["src/core", "src/countries", "src/lib", "src/server", "src/app"];
-const CYR = /[Ѐ-ӿ]/;
 const LAT = /[A-Za-z]{2}/;
+const CYR = /[Ѐ-ӿ]/;
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -27,45 +28,64 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const lit = (n: ts.Node): string | undefined => (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n) ? n.text : undefined);
 
-export function collectCoreKeys(root = process.cwd()): Map<string, CoreKey> {
+/** Argument positions of the English texts in the local helpers whose arguments are not the model's `T`. */
+const HELPERS: Record<string, { file: RegExp; args: number[] }> = {
+  it: { file: /countries[\\/]regulatory\.ts$/, args: [1, 2] },
+  none: { file: /countries[\\/]profiles\.ts$/, args: [0] },
+  sup: { file: /countries[\\/]profiles\.ts$/, args: [0] },
+};
+
+export interface CoreScan {
+  /** English source texts of the model with their places. */
+  keys: Map<string, CoreKey>;
+  /** Every string literal of the model code (to see that a catalog key is still written somewhere). */
+  literals: Set<string>;
+  /** Source texts written as `${…}` templates or other non-literals, which no catalog can hold. */
+  dynamic: string[];
+}
+
+export function scanCoreCode(root = process.cwd()): CoreScan {
   const keys = new Map<string, CoreKey>();
-  const add = (en: string, uk: string, where: string) => {
-    if (!LAT.test(en) || CYR.test(en) || !CYR.test(uk)) return;
-    const k = keys.get(en) ?? { en, uk: [], where: [] };
-    if (!k.uk.includes(uk)) k.uk.push(uk);
+  const literals = new Set<string>();
+  const dynamic: string[] = [];
+  const add = (en: string, where: string) => {
+    // Acronyms (CAPEX, NPV) are the same in every language: no translation, no key.
+    if (!LAT.test(en) || CYR.test(en) || !/[a-z]/.test(en)) return;
+    const k = keys.get(en) ?? { en, where: [] };
     k.where.push(where);
     keys.set(en, k);
   };
   for (const r of ROOTS) {
     for (const file of walk(join(root, r))) {
       const sf = ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true);
-      const at = (n: ts.Node) => `${file.slice(root.length + 1)}:${sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1}`;
-      const prop = (o: ts.ObjectLiteralExpression, name: string) => o.properties.find((p): p is ts.PropertyAssignment => ts.isPropertyAssignment(p) && p.name.getText(sf).replace(/["']/g, "") === name)?.initializer;
-      /** English node next to its Ukrainian twin: strings, arrays of strings and objects with the same property names are paired element-wise. */
-      const align = (en: ts.Node, uk: ts.Node) => {
-        const a = lit(en), b = lit(uk);
-        if (a !== undefined && b !== undefined) add(a, b, at(en));
-        else if (ts.isArrayLiteralExpression(en) && ts.isArrayLiteralExpression(uk) && en.elements.length === uk.elements.length) en.elements.forEach((e, i) => align(e, uk.elements[i]));
-        else if (ts.isObjectLiteralExpression(en) && ts.isObjectLiteralExpression(uk)) for (const p of en.properties) if (ts.isPropertyAssignment(p)) { const o = prop(uk, p.name.getText(sf).replace(/["']/g, "")); if (o) align(p.initializer, o); }
-      };
-      const pairs = (nodes: readonly ts.Node[]) => {
-        for (let i = 0; i + 1 < nodes.length; i++) {
-          const a = nodes[i], b = nodes[i + 1];
-          if (lit(a) !== undefined && lit(b) !== undefined) align(a, b);
-          else if (ts.isArrayLiteralExpression(a) && ts.isArrayLiteralExpression(b)) align(a, b);
-        }
+      const rel = file.slice(root.length + 1);
+      const at = (n: ts.Node) => `${rel}:${sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1}`;
+      /** An English text node: a literal, or an array of them; anything dynamic is reported. */
+      const text = (n: ts.Node | undefined) => {
+        if (!n) return;
+        const s = lit(n);
+        if (s !== undefined) add(s, at(n));
+        else if (ts.isArrayLiteralExpression(n)) n.elements.forEach((e) => text(e));
+        else if (ts.isTemplateExpression(n) || ts.isBinaryExpression(n)) dynamic.push(`${at(n)}: ${n.getText(sf).slice(0, 60)}`);
       };
       const visit = (n: ts.Node) => {
-        if (ts.isCallExpression(n)) pairs(n.arguments);
-        else if (ts.isArrayLiteralExpression(n)) pairs(n.elements);
-        else if (ts.isObjectLiteralExpression(n)) {
-          const en = prop(n, "en"), uk = prop(n, "uk");
-          if (en && uk) align(en, uk);
+        const s = lit(n);
+        if (s !== undefined) literals.add(s);
+        if (ts.isCallExpression(n)) {
+          const callee = n.expression;
+          const name = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : "";
+          if (name === "T" || name === "t") text(n.arguments[0]);
+          else if (Object.hasOwn(HELPERS, name) && HELPERS[name].file.test(file)) for (const i of HELPERS[name].args) text(n.arguments[i]);
+        } else if (ts.isObjectLiteralExpression(n)) {
+          const en = n.properties.find((p): p is ts.PropertyAssignment => ts.isPropertyAssignment(p) && p.name.getText(sf) === "en");
+          if (en) text(en.initializer);
         }
         ts.forEachChild(n, visit);
       };
       visit(sf);
     }
   }
-  return keys;
+  return { keys, literals, dynamic };
 }
+
+export const collectCoreKeys = (root = process.cwd()): Map<string, CoreKey> => scanCoreCode(root).keys;

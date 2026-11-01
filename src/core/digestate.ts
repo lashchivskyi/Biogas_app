@@ -66,11 +66,11 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const T = ctx.t;
   const req = Math.round(required);
   const advice: string[] = [];
-  if (adequacy === "UNKNOWN") advice.push(T("Enter the land area available for spreading: without it digestate is a potential liability.", "Вкажіть площу полів, на які можна вносити дигестат: без цього вартість дигестату — потенційний борг."));
-  if (adequacy === "SHORT") advice.push(T("Not enough land: ≈ {req} ha needed at {nLimit} kg N/ha. Surplus digestate is a cost (agreements with neighbours, separation, pelletising).", "Земель недостатньо: потрібно ≈ {req} га за лімітом {nLimit} кг N/га. Надлишок дигестату — витрата (договори з сусідніми господарствами, сепарація, гранулювання).", { req, nLimit }));
-  if (feed.lines.some(returned)) advice.push(T("Digestate from delivered manure is assumed to go back to the supplying farms (return haul is in the transport cost). Fix this in the supply contracts; if farms refuse it, the plant needs its own outlet.", "Дигестат із привізного гною повертається господарствам-постачальникам (зворотний рейс враховано у вартості перевезення). Закріпіть це в договорах постачання; якщо господарства відмовляться, установці потрібен власний збут."));
-  advice.push(T("Digestate storage for {month} for the closed spreading season; keep ≈ 150 days (incl. the digester) gas-tight, otherwise methane and N are lost.", "Сховище дигестату на {month} на період заборони внесення; ≈ 150 діб (разом із реактором) — газонепроникно, інакше втрачаються метан і азот.", { month: fmtUnit(T.lang)(storageMonths, "month") }));
-  advice.push(T("Spread by injection or trailing hose (not splash plate): less odour and ammonia loss.", "Внесення — інжектором або стрічкове (не розкидання): менше запаху та втрат аміаку."));
+  if (adequacy === "UNKNOWN") advice.push(T("Enter the land area available for spreading: without it digestate is a potential liability."));
+  if (adequacy === "SHORT") advice.push(T("Not enough land: ≈ {req} ha needed at {nLimit} kg N/ha. Surplus digestate is a cost (agreements with neighbours, separation, pelletising).", { req, nLimit }));
+  if (feed.lines.some(returned)) advice.push(T("Digestate from delivered manure is assumed to go back to the supplying farms (return haul is in the transport cost). Fix this in the supply contracts; if farms refuse it, the plant needs its own outlet."));
+  advice.push(T("Digestate storage for {month} for the closed spreading season; keep ≈ 150 days (incl. the digester) gas-tight, otherwise methane and N are lost.", { month: fmtUnit(T.lang)(storageMonths, "month") }));
+  advice.push(T("Spread by injection or trailing hose (not splash plate): less odour and ammonia loss."));
 
   const status: DigestateAssessment["status"] = adequacy === "SHORT" || net < 0 ? "LIABILITY" : net > 1000 ? "ASSET" : "NEUTRAL";
 

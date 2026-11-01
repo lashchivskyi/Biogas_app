@@ -34,15 +34,15 @@ export function methaneCheck(
   const ratio = displaced > 0 ? co2e / displaced : co2e > 0 ? null : 0;
 
   const advice = [
-    T("Gas-tight covers on the digester and digestate storage (incl. lagoon covers) — the single most important measure.", "Газонепроникні покриття реактора та сховища дигестату (накриття лагуни) — головний захід."),
-    T("Leak detection and repair (LDAR): optical gas imaging or tracer method at least yearly, plus an acceptance test after construction.", "Програма пошуку витоків (LDAR): ОГІ-камера або трасерний метод — раз на рік мінімум, плюс акт приймання після монтажу."),
-    T("Continuous gas-holder pressure monitoring; a standby flare instead of venting.", "Постійний моніторинг тиску газгольдера, зарезервований факел замість випуску в атмосферу."),
-    T("CHP with an oxidation catalyst and tuning regime to cut methane slip.", "КГУ з окислювальним каталізатором та регламентом налаштувань для зменшення проскоку метану."),
+    T("Gas-tight covers on the digester and digestate storage (incl. lagoon covers) — the single most important measure."),
+    T("Leak detection and repair (LDAR): optical gas imaging or tracer method at least yearly, plus an acceptance test after construction."),
+    T("Continuous gas-holder pressure monitoring; a standby flare instead of venting."),
+    T("CHP with an oxidation catalyst and tuning regime to cut methane slip."),
   ];
   const lp = D(e.methaneLossShare * 100, 1);
   const gp = D(good * 100);
-  if (e.methaneLossShare > good) advice.unshift(T("Expected loss {lp} % is above good practice ({gp} %): budget for monitoring.", "Очікувані втрати {lp} % вищі за добру практику ({gp} %): закладіть бюджет на моніторинг.", { lp, gp }));
-  if (e.methaneLossShare > high || (ratio === null || ratio > 0.5)) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements.", "Втрати метану можуть знівелювати кліматичну вигоду. Не декларуйте зменшення викидів без вимірювань."));
+  if (e.methaneLossShare > good) advice.unshift(T("Expected loss {lp} % is above good practice ({gp} %): budget for monitoring.", { lp, gp }));
+  if (e.methaneLossShare > high || (ratio === null || ratio > 0.5)) advice.unshift(T("Methane losses could cancel the climate benefit. Do not claim emission reductions without measurements."));
 
   return {
     lossShare: e.methaneLossShare,

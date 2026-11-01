@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Biên lợi nhuận vận hành (≈ €{ebitda}/năm) quá nhỏ so với khoản đầu tư ≈ €{capex}.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Lợi ích lớn nhất — “{label}”: ≈ {share}% tổng doanh thu và tiết kiệm.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Phiên bản tính toán gốc không được lưu cho đơn hàng cũ này. Báo cáo này là một lần đánh giá mới, dùng mô hình hiện hành và dữ liệu hiện có.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Chưa nhập thể tích bể chứa hiện có: giả định bể chứa chất thải lỏng hiện tại của trang trại chứa được lượng phân của chính trang trại (≈ {m3} m³) và chỉ được lắp thêm nắp kín khí. Hãy nhập thể tích thực tế; nếu nhỏ hơn, CAPEX tăng khoảng {perM3} € cho mỗi m³ còn thiếu, trước chi phí chung.",
 };
 
 export default messages;

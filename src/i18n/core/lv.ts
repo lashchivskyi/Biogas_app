@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Ekspluatācijas marža (≈ {ebitda} €/gadā) ir pārāk maza ≈ {capex} € ieguldījumam.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Lielākais ieguvums — „{label}“: ≈ {share} % no visiem ieņēmumiem un ietaupījumiem.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Sākotnējā aprēķina versija šim vecajam pasūtījumam netika saglabāta. Šis pārskats ir jauns novērtējums, izmantojot pašreizējo modeli un pieejamos datus.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Esošās krātuves tilpums nav ievadīts: pieņemts, ka saimniecības pašreizējā šķidrmēslu krātuve satur savus kūtsmēslus (≈ {m3} m³) un tai tiek uzstādīts tikai gāzes necaurlaidīgs pārsegs. Ievadiet faktisko tilpumu; ja tas ir mazāks, CAPEX palielinās aptuveni par {perM3} € par katru trūkstošo m³ pirms pieskaitāmajām izmaksām.",
 };
 
 export default messages;

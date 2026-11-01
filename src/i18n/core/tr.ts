@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "İşletme marjı (≈ €{ebitda}/yıl), ≈ €{capex} tutarındaki bir yatırım için çok küçük.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "En büyük fayda — “{label}”: tüm gelir ve tasarrufların ≈ %{share} kadarı.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Bu eski sipariş için ilk hesaplama sürümü kaydedilmemiştir. Bu rapor, güncel model ve mevcut verilerle yapılmış yeni bir değerlendirmedir.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Mevcut depolama hacmi girilmedi: çiftliğin mevcut sıvı gübre deposunun kendi gübresini alacağı (≈ {m3} m³) ve yalnızca gaz geçirmez bir örtü takılacağı varsayılmaktadır. Gerçek hacmi girin; daha küçükse CAPEX, eksik her m³ için genel giderlerden önce yaklaşık {perM3} € artar.",
 };
 
 export default messages;

@@ -58,17 +58,17 @@ export function buildCapex(
   add(
     "digester",
     kind === "covered_lagoon"
-      ? T("Covered anaerobic lagoon (liner, gas-tight cover, gas collection)", "Накрита анаеробна лагуна (геомембрана, газонепроникне накриття, збір газу)")
+      ? T("Covered anaerobic lagoon (liner, gas-tight cover, gas collection)")
       : kind === "high_rate"
-        ? T("High-rate anaerobic reactor with equalisation tank", "Високонавантажений анаеробний реактор з буферною ємністю")
-        : T("Digester (tank, insulation, mixing, heating, membrane roof)", "Реактор (ємність, ізоляція, змішування, нагрів, мембранний дах)"),
+        ? T("High-rate anaerobic reactor with equalisation tank")
+        : T("Digester (tank, insulation, mixing, heating, membrane roof)"),
     digesterEur,
   );
 
   // Storage
-  add("storage_cover", T("Gas-tight cover on existing storage", "Газонепроникне накриття наявного сховища"), design.storageCovered * p.get("eng.capex.cover_existing_eur_m3"));
-  add("storage_new", T("New covered digestate storage", "Нове накрите сховище дигестату"), design.storageNew * p.get("eng.capex.storage_new_eur_m3"));
-  add("storage_open", T("New open digestate storage", "Нове відкрите сховище дигестату"), design.storageOpenNew * p.get("eng.capex.storage_new_eur_m3") * p.get("eng.capex.storage_open_share"));
+  add("storage_cover", T("Gas-tight cover on existing storage"), design.storageCovered * p.get("eng.capex.cover_existing_eur_m3"));
+  add("storage_new", T("New covered digestate storage"), design.storageNew * p.get("eng.capex.storage_new_eur_m3"));
+  add("storage_open", T("New open digestate storage"), design.storageOpenNew * p.get("eng.capex.storage_new_eur_m3") * p.get("eng.capex.storage_open_share"));
 
   // Feed & reception
   const hasSolids = feed.dryMatterPct >= p.get("eng.wet_solids_feeding_dm_pct") || feed.lines.some((l) => l.dryMatterPct >= 20);
@@ -79,16 +79,16 @@ export function buildCapex(
   // Contaminated / packaged wastes need a depackaging & sorting line and an enclosed reception hall, scaling with throughput.
   const dirtyTpa = feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("contaminants") && l.category === "processing").reduce((a, l) => a + l.tonnesYear, 0);
   if (dirtyTpa > 0) feedEur += p.get("eng.capex.pretreatment_eur_per_tpa") * dirtyTpa;
-  add("feed", T("Feeding, reception and pre-treatment", "Подача, приймання, підготовка сировини"), feedEur);
+  add("feed", T("Feeding, reception and pre-treatment"), feedEur);
   // A crop harvested once a year is stored whole: the clamp holds the full annual harvest.
-  if ((feed.ensiledTonnesYear ?? 0) > 0) add("silage_clamp", T("Bunker silo (clamp) for the annual crop harvest", "Силосна траншея для річного врожаю"), (feed.ensiledTonnesYear! * 1000 / p.get("eng.silage_density_kg_m3")) * p.get("eng.capex.silage_clamp_eur_m3"));
+  if ((feed.ensiledTonnesYear ?? 0) > 0) add("silage_clamp", T("Bunker silo (clamp) for the annual crop harvest"), (feed.ensiledTonnesYear! * 1000 / p.get("eng.silage_density_kg_m3")) * p.get("eng.capex.silage_clamp_eur_m3"));
 
   // Pasteurisation for ABP
   if (feed.abpTonnesYear > 0) {
     const peakAbpTDay = Math.max(...DAYS_IN_MONTH.map((days, i) =>
       feed.lines.filter((l) => FEEDSTOCKS[l.typeId].abp !== "none").reduce((total, l) => total + l.monthlyTonnes[i], 0) / days,
     ));
-    add("pasteurisation", T("Pasteurisation 70 °C / 1 h (ABP Cat. 3)", "Пастеризація 70 °C / 1 год (ABP кат. 3)"), p.get("eng.capex.pasteurisation_fixed") + p.get("eng.capex.pasteurisation_per_tday") * peakAbpTDay);
+    add("pasteurisation", T("Pasteurisation 70 °C / 1 h (ABP Cat. 3)"), p.get("eng.capex.pasteurisation_fixed") + p.get("eng.capex.pasteurisation_per_tday") * peakAbpTDay);
   }
 
   }
@@ -99,14 +99,14 @@ export function buildCapex(
     // budget carries the client's uncertainty band in the scenarios, like the upgrading quote, not the country factor.
     const band = 1 + (ctx.scenario.id === "conservative" ? 1 : ctx.scenario.id === "optimistic" ? -1 : 0) * existing.uncertaintyPct / 100;
     const kept = [
-      ...(process ? [{ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)", "Технологічна частина: бюджет монтажу (без перетворення газу)"), eur: process.capexEur }] : []),
-      { id: "chp_overhaul", label: T("Existing CHP {existingChpKwEl} kWe: overhaul / replacement budget", "Наявна КГУ {existingChpKwEl} кВт ел.: бюджет капремонту / заміни", { existingChpKwEl: Math.round(existing.existingChpKwEl!) }), eur: (existing.chpOverhaulLocal ?? 0) / ctx.fx * ctx.mods.capex * band },
+      ...(process ? [{ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)"), eur: process.capexEur }] : []),
+      { id: "chp_overhaul", label: T("Existing CHP {existingChpKwEl} kWe: overhaul / replacement budget", { existingChpKwEl: Math.round(existing.existingChpKwEl!) }), eur: (existing.chpOverhaulLocal ?? 0) / ctx.fx * ctx.mods.capex * band },
     ];
     return { lines: kept, totalEur: kept.reduce((a, l) => a + l.eur, 0) };
   }
   // Gas system
   const rawNm3h = Math.max(energy.rawBiogasDesignNm3PerHour, 1);
-  if (!existing) add("gas_system", T("Gas holder, flare, H₂S removal, gas lines", "Газгольдер, факел, очищення (H₂S), газові лінії"), p.get("eng.capex.gas_system_fixed") + p.get("eng.capex.gas_system_per_nm3h") * rawNm3h);
+  if (!existing) add("gas_system", T("Gas holder, flare, H₂S removal, gas lines"), p.get("eng.capex.gas_system_fixed") + p.get("eng.capex.gas_system_per_nm3h") * rawNm3h);
 
   if (route === "boiler") peakHeatKw = Math.max(peakHeatKw, ...feed.monthlyCh4M3.map((v, m) => v * (1 - ctx.scenario.leakShare) * p.get("eng.ch4_lhv_kwh_m3") * p.get("eng.boiler_efficiency") / HOURS_IN_MONTH[m] * (ctx.input.process ? processCalendar(ctx.input.process).days / ctx.input.process.operatingDays : 1)));
   // Conversion equipment
@@ -115,43 +115,43 @@ export function buildCapex(
     const kw = Math.max(energy.chpKwEl, 1);
     const unitChp = p.get("eng.capex.chp_eur_kw_100") * Math.pow(kw / 100, p.get("eng.capex.chp_scale_exp"));
     const chpEur = unitChp * kw;
-    add("chp", T("CHP unit {kw} kWe", "Когенераційна установка {kw} кВт ел.", { kw: Math.round(kw) }), chpEur);
+    add("chp", T("CHP unit {kw} kWe", { kw: Math.round(kw) }), chpEur);
     const thKw = (kw * energy.chpEtaTh) / Math.max(energy.chpEtaEl, 0.01);
-    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * thKw);
-    add("backup_boiler", T("Back-up biogas boiler", "Резервний котел на біогазі"), 0.5 * p.get("eng.capex.boiler_eur_kw") * peakHeatKw);
+    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * thKw);
+    add("backup_boiler", T("Back-up biogas boiler"), 0.5 * p.get("eng.capex.boiler_eur_kw") * peakHeatKw);
     conversion = chpEur;
   } else if (route === "boiler") {
-    add("boiler", T("Biogas boiler", "Котел на біогазі"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
-    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer", "Теплообмінники та теплотраса до споживача"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * peakHeatKw);
+    add("boiler", T("Biogas boiler"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
+    if (ctx.input.energy.heatNeed !== "none") add("heat_network", T("Heat exchangers and heat main to the consumer"), p.get("eng.capex.heat_network_fixed") + p.get("eng.capex.heat_network_per_kw") * peakHeatKw);
   } else {
     const q = Math.max(energy.rawBiogasDesignNm3PerHour, 10);
-    if (!quotedUpgrade) add("upgrading", T("Biogas upgrading to biomethane (membranes) + compression", "Очищення біогазу до біометану (мембрани) + компресія"), p.get("eng.capex.upgrade_ref_eur") * Math.pow(q / 250, p.get("eng.capex.upgrade_scale_exp")));
+    if (!quotedUpgrade) add("upgrading", T("Biogas upgrading to biomethane (membranes) + compression"), p.get("eng.capex.upgrade_ref_eur") * Math.pow(q / 250, p.get("eng.capex.upgrade_scale_exp")));
     const off = biomethaneOfftake(ctx, energy);
     if (off.mode === "grid") {
-      add("injection", T("Metering & grid-injection station", "Вузол обліку та ін'єкції"), p.get("eng.capex.injection_fixed"));
-      add("pipeline", T("Pipeline to gas grid ({km} km)", "Газопровід до мережі ({km} км)", { km: off.km }), off.pipelineEur);
+      add("injection", T("Metering & grid-injection station"), p.get("eng.capex.injection_fixed"));
+      add("pipeline", T("Pipeline to gas grid ({km} km)", { km: off.km }), off.pipelineEur);
     } else {
-      add("cng", T("Bio-CNG: 250 bar compression, filling post, cascade trailers (no grid connection)", "Bio-CNG: компресія 250 бар, пост заправки, каскадні причепи (без приєднання до мережі)"), off.cngEur);
+      add("cng", T("Bio-CNG: 250 bar compression, filling post, cascade trailers (no grid connection)"), off.cngEur);
     }
-    add("boiler", T("Boiler for digester heating", "Котел для обігріву реактора"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
+    add("boiler", T("Boiler for digester heating"), p.get("eng.capex.boiler_eur_kw") * peakHeatKw * 1.2);
   }
   void conversion;
 
   const equipment = lines.reduce((a, l) => a + l.eur, 0);
-  add("electrical", T("Electrical, I&C and SCADA", "Електрика, КВП і автоматика (SCADA)"), equipment * p.get("eng.capex.electrical_share"));
-  add("piping", T("Substrate and gas piping", "Трубопроводи субстрату та газу"), equipment * p.get("eng.capex.piping_share"));
-  add("civil", T("Civil works, site, roads", "Будівельні роботи, майданчик, дороги"), equipment * p.get("eng.capex.civil_share"));
+  add("electrical", T("Electrical, I&C and SCADA"), equipment * p.get("eng.capex.electrical_share"));
+  add("piping", T("Substrate and gas piping"), equipment * p.get("eng.capex.piping_share"));
+  add("civil", T("Civil works, site, roads"), equipment * p.get("eng.capex.civil_share"));
   if (existing) {
     // A running plant already has its grid connection.
   } else if (route === "chp") {
-    add("grid", T("Grid connection", "Приєднання до електромережі"), p.get("eng.capex.grid_connection_fixed") + p.get("eng.capex.grid_connection_per_kw") * energy.chpKwEl);
+    add("grid", T("Grid connection"), p.get("eng.capex.grid_connection_fixed") + p.get("eng.capex.grid_connection_per_kw") * energy.chpKwEl);
   } else {
-    add("grid", T("Grid connection", "Приєднання до електромережі"), p.get("eng.capex.grid_connection_fixed") * 0.5);
+    add("grid", T("Grid connection"), p.get("eng.capex.grid_connection_fixed") * 0.5);
   }
   const subtotal = lines.reduce((a, l) => a + l.eur, 0);
-  add("engineering", T("Engineering, permits, EIA, commissioning", "Проєктування, дозволи, ОВД, пусконалагодження"), subtotal * p.get("eng.capex.engineering_share"));
+  add("engineering", T("Engineering, permits, EIA, commissioning"), subtotal * p.get("eng.capex.engineering_share"));
   const subtotal2 = lines.reduce((a, l) => a + l.eur, 0);
-  add("contingency", T("Contingency", "Непередбачені витрати"), subtotal2 * p.get("eng.capex.contingency_share"));
+  add("contingency", T("Contingency"), subtotal2 * p.get("eng.capex.contingency_share"));
 
   // Country, scenario and sensitivity multipliers act on the whole stack (they are cost levels).
   const routeFactor = `econ.capex_factor_${route}`;
@@ -164,7 +164,7 @@ export function buildCapex(
   const mult = quoteEur !== undefined && unscaled > 0 ? quoteEur * ctx.scenario.capexMult * ctx.mods.capex / unscaled : modelledMult;
   const scaled = lines.map((l) => ({ ...l, eur: l.eur * mult }));
   if (quotedUpgrade && route === "biomethane") scaled.push({ id: "upgrading", label: "Upgrading", eur: (quotedUpgrade.upgradingCapexLocal ?? 0) / ctx.fx * ctx.mods.capex * (1 + (ctx.scenario.id === "conservative" ? 1 : ctx.scenario.id === "optimistic" ? -1 : 0) * quotedUpgrade.uncertaintyPct / 100) });
-  if (process) scaled.unshift({ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)", "Технологічна частина: бюджет монтажу (без перетворення газу)"), eur: process.capexEur });
+  if (process) scaled.unshift({ id: "process", label: T("Upstream process: installed project budget (excludes gas conversion)"), eur: process.capexEur });
   return { lines: scaled, totalEur: scaled.reduce((a, l) => a + l.eur, 0), ...(mult !== modelledMult ? { modelledEur: unscaled * modelledMult } : {}) };
 }
 

@@ -46,14 +46,6 @@ const nextConfig: NextConfig = {
       { source: "/:lang/report/:token*", headers: [{ key: "Referrer-Policy", value: "no-referrer" }] },
     ];
   },
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
 };
 
 export default nextConfig;

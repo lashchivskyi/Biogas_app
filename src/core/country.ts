@@ -53,7 +53,7 @@ export interface SupportScheme {
   minKwEl?: number;
   /** Minimum manure share of fresh mass (e.g. German 80 % rule). */
   minManureShareMass?: number;
-  note: { en: string; uk: string };
+  note: { en: string };
   source: string;
   confidence: Confidence;
   checkedOn: string;
@@ -61,7 +61,7 @@ export interface SupportScheme {
 
 export interface SupportInfo {
   /** Short statement of what is available to NEW projects — shown in the report. */
-  summary: { en: string; uk: string };
+  summary: { en: string };
   /** True only if a mechanism is open and reliably awardable to new small projects. */
   availableForNewSmallProjects: boolean;
   checkedOn: string;
@@ -91,7 +91,7 @@ export interface CountryAdapter {
   biomethaneInjection: boolean;
   regulatory(ctx: RegulatoryContext): RegulatoryItem[];
   /** Country-specific remarks that change the approach (shown in the report). */
-  approachNotes: { en: string[]; uk: string[] };
+  approachNotes: { en: string[] };
   /** Pricing tier of our paid products for projects located in this country. */
   priceTier: "A" | "B" | "C";
 }

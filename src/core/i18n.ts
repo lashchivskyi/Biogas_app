@@ -1,41 +1,44 @@
 import { INTL_TAG, type Locale } from "../i18n/config";
 import { formatMessage, type MessageVars } from "../i18n/message";
+import uk from "../i18n/core/uk";
 
 /**
  * Language of the model's own explanatory text (verdict reasons, warnings, line labels, report sheets).
- * The sentences are authored in English and Ukrainian next to the code (`T(en, uk)`); every other language is a catalog
- * keyed by the English source text (`src/i18n/core/<locale>.ts`, held in the dictionary as `d.core`).
+ * The sentences are authored in English next to the code (`T(en)`) and the English text is the key of every translation:
+ * one catalog per language in `src/i18n/core/<locale>.ts`, Ukrainian included. English has no catalog, the key is the text.
+ * Catalogs of the other languages are held in the dictionary as `d.core`; Ukrainian is bundled with the model because the
+ * owner's language must work wherever `assess()` runs, without a loader.
  * `CORE_LOCALES` (i18n/config) lists the languages whose catalog is complete; any other locale is shown English model text.
  */
 export type CoreLang = Locale;
 
 export type Messages = Readonly<Record<string, string>>;
 
-const CATALOGS = new Map<Locale, Messages>();
+const CATALOGS = new Map<Locale, Messages>([["uk", uk]]);
 
 /** Called wherever a dictionary is loaded or received (idempotent: catalogs are static per locale). */
 export function registerMessages(locale: Locale, messages: Messages | undefined): void {
   if (messages && Object.keys(messages).length) CATALOGS.set(locale, messages);
 }
 
-export type Tr = ((en: string, uk: string, vars?: MessageVars) => string) & { readonly lang: CoreLang };
+export type Tr = ((en: string, vars?: MessageVars) => string) & { readonly lang: CoreLang };
 
 /**
- * `T(en, uk, vars)`: the English template is the catalog key. `{name}` and ICU plural/select follow `src/i18n/message.ts`;
+ * `T(en, vars)`: the English template is the catalog key. `{name}` and ICU plural/select follow `src/i18n/message.ts`;
  * numbers in `vars` are already formatted for the language. A missing catalog entry falls back to the English template.
  */
-export const tr = (lang: CoreLang): Tr => Object.assign((en: string, uk: string, vars?: MessageVars) => {
-  const src = lang === "en" ? en : lang === "uk" ? uk : (CATALOGS.get(lang)?.[en] ?? en);
+export const tr = (lang: CoreLang): Tr => Object.assign((en: string, vars?: MessageVars) => {
+  const src = lang === "en" ? en : (CATALOGS.get(lang)?.[en] ?? en);
   return vars ? formatMessage(src, vars, INTL_TAG[lang]) : src;
 }, { lang });
 
-/** A `{ en, uk }` pair (names, labels, notes) in the model language; other languages read the catalog by the English text. */
-export const locText = (pair: { readonly en: string; readonly uk: string }, lang: CoreLang): string =>
-  lang === "en" ? pair.en : lang === "uk" ? pair.uk : (CATALOGS.get(lang)?.[pair.en] ?? pair.en);
+/** An `{ en }` text (names, labels, notes) in the model language: the catalog is read by the English text. */
+export const locText = (pair: { readonly en: string }, lang: CoreLang): string =>
+  lang === "en" ? pair.en : (CATALOGS.get(lang)?.[pair.en] ?? pair.en);
 
-/** Same for a list of sentences (`{ en: string[]; uk: string[] }`). */
-export const locList = (pair: { readonly en: readonly string[]; readonly uk: readonly string[] }, lang: CoreLang): string[] =>
-  lang === "en" ? [...pair.en] : lang === "uk" ? [...pair.uk] : pair.en.map((s) => CATALOGS.get(lang)?.[s] ?? s);
+/** Same for a list of sentences (`{ en: string[] }`). */
+export const locList = (pair: { readonly en: readonly string[] }, lang: CoreLang): string[] =>
+  lang === "en" ? [...pair.en] : pair.en.map((s) => CATALOGS.get(lang)?.[s] ?? s);
 
 const NF = new Map<string, Intl.NumberFormat>();
 const nf = (lang: CoreLang, o: Intl.NumberFormatOptions) => {

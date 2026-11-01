@@ -720,6 +720,7 @@ const messages: Messages = {
   "Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.": "Το λειτουργικό περιθώριο (≈ €{ebitda}/έτος) είναι πολύ μικρό για επένδυση ≈ €{capex}.",
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "Μεγαλύτερο όφελος — «{label}»: ≈ {share}% του συνόλου των εσόδων και εξοικονομήσεων.",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "Η αρχική έκδοση του υπολογισμού δεν αποθηκεύτηκε για αυτή την παλαιά παραγγελία. Η αναφορά αυτή είναι νέα αξιολόγηση με το τρέχον μοντέλο και τα διαθέσιμα δεδομένα.",
+  "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "Ο υφιστάμενος όγκος αποθήκευσης δεν έχει καταχωριστεί: θεωρείται ότι η τρέχουσα δεξαμενή υγρής κοπριάς της μονάδας χωρά τη δική της κοπριά (≈ {m3} m³) και εξοπλίζεται μόνο με αεροστεγές κάλυμμα. Εισαγάγετε τον πραγματικό όγκο και, αν είναι μικρότερος, το CAPEX αυξάνεται κατά περίπου {perM3} € ανά ελλείπον m³ πριν από τα γενικά έξοδα.",
 };
 
 export default messages;
