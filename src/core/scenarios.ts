@@ -29,17 +29,17 @@ export interface ScenarioDef {
 
 export const SCENARIOS: Record<ScenarioId, ScenarioDef> = {
   conservative: {
-    id: "conservative", label: "Консервативний", yieldBlend: -0.5, processRealisation: 0.85, capexMult: 1.2, opexMult: 1.15,
+    id: "conservative", label: "Conservative", yieldBlend: -0.5, processRealisation: 0.85, capexMult: 1.2, opexMult: 1.15,
     energyPriceMult: 0.85, heatUtilisation: 0.6, chpHours: 7200, leakShare: 0.03, digestateValueFactor: 0.5,
     disposalRealisation: 0.8, feedstockAvailability: 0.9, ensilingLoss: 0.12, biomethanePriceKey: "cons",
   },
   base: {
-    id: "base", label: "Базовий", yieldBlend: 0, processRealisation: 0.9, capexMult: 1.0, opexMult: 1.0,
+    id: "base", label: "Base", yieldBlend: 0, processRealisation: 0.9, capexMult: 1.0, opexMult: 1.0,
     energyPriceMult: 1.0, heatUtilisation: 0.8, chpHours: 7800, leakShare: 0.015, digestateValueFactor: 0.7,
     disposalRealisation: 0.95, feedstockAvailability: 1.0, ensilingLoss: 0.093, biomethanePriceKey: "base",
   },
   optimistic: {
-    id: "optimistic", label: "Оптимістичний", yieldBlend: 0.5, processRealisation: 0.95, capexMult: 0.9, opexMult: 0.95,
+    id: "optimistic", label: "Optimistic", yieldBlend: 0.5, processRealisation: 0.95, capexMult: 0.9, opexMult: 0.95,
     energyPriceMult: 1.1, heatUtilisation: 0.95, chpHours: 8200, leakShare: 0.005, digestateValueFactor: 0.85,
     disposalRealisation: 1.0, feedstockAvailability: 1.0, ensilingLoss: 0.08, biomethanePriceKey: "opt",
   },
