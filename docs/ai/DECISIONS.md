@@ -207,3 +207,5 @@ replace the line rather than adding a contradicting one.
   plain `{n}`; counts in the core text (en/uk only) use `fmtUnit` (months, years, days) and `fmtTimes`; `fmtSig` replaces `toPrecision`
   (it printed `2.34e+4` for VND/THB). New counted strings must be written as plural; `qa-rules.pluralIssues` demands every CLDR
   category the locale uses for 0–1000 and decimals.
+
+- 2026-11-01 — Model catalogs for nl, da, sv, fi added to `CORE_LOCALES`: translated from the English source (718 keys each), machine QA only. The parameter-register source texts stay English in every language until the owner decides (STATUS.md). Not native-reviewed.

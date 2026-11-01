@@ -58,6 +58,10 @@ const coreLoaders: Partial<Record<Locale, () => Promise<{ default: Messages }>>>
   sk: () => import("./core/sk"),
   sr: () => import("./core/sr"),
   bg: () => import("./core/bg"),
+  nl: () => import("./core/nl"),
+  da: () => import("./core/da"),
+  sv: () => import("./core/sv"),
+  fi: () => import("./core/fi"),
 };
 
 /**
