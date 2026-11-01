@@ -209,3 +209,5 @@ replace the line rather than adding a contradicting one.
   category the locale uses for 0–1000 and decimals.
 
 - 2026-11-01 — Model catalogs for nl, da, sv, fi added to `CORE_LOCALES`: translated from the English source (718 keys each), machine QA only. The parameter-register source texts stay English in every language until the owner decides (STATUS.md). Not native-reviewed.
+
+- 2026-11-01 — Model catalogs for it, pt (BR), ro added to `CORE_LOCALES` (718 keys each, machine QA only, no native review). Multi-line request letters (`evidence.ts`) keep their `\n` in the catalog (fr/es were repaired; de, pl, cs, sk, sr, bg, nl, da, sv, fi still lose the line breaks — fix when those are reviewed). Parameter-register texts (review-policy status, source/note texts, parameter labels) are still English in every language.
