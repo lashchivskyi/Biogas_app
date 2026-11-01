@@ -13,7 +13,6 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
   cron re-sends stuck report links + owner alert at 1 h; no PII/tokens in app logs; health `/api/health` (storage check);
   config gate at start; 404 (unknown page/sample/report token) and error/global-error pages; hreflang 25 langs + x-default,
   canonical, sitemap 1 181 URLs, robots; deploy = CI + Vercel, rollback = Vercel instant rollback (migrations append-only).
-- Load (local, 1 process): quote 65 req/s, paid report 20 req/s, static pages 200–480 req/s. Enough for launch; run k6 on staging.
 - RED, owner = owner unless noted (dates proposed 2026-11-01, change freely):
   1. Domain + Vercel prod project + managed Postgres with PITR/daily backups — 2026-11-07.
   2. Resend domain: SPF, DKIM, DMARC (p=none → quarantine after 4 weeks), test to Gmail/Outlook — 2026-11-07.
@@ -29,10 +28,11 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
   11. Search Console: verify domain (`NEXT_PUBLIC_GSC_VERIFICATION`), submit sitemap — after 1, 2026-11-10.
   12. Legal before sales (from security review): seller entity, VAT/OSS, privacy policy + imprint, retention, DPAs — date by owner.
 - AMBER: host access logs contain report URLs (bearer token) — keep Vercel log retention short, access team-only.
+- **Go/No-Go (expert review 2026-11-01): closed beta GO with limits** — staging (RED 1, 3, 4, 8, 9), privacy notice + beta terms, Stripe test mode, free reports, 3–5 countries, en/uk;
+  **public launch NO-GO** until RED 1–12 closed and beta shows ≥ 8 blind cases vs real studies/plants (verdict class agrees ≥ 80 %, no STRONG where the study said no, CAPEX ±30 % in ≥ 70 %; each case → `scripts/benchmark.ts`) and ≥ 3 paid at list price.
 ## Next product work (highest value first) — ranking in PRODUCT.md › Roadmap
 1. EU compliance value for biomethane as support cases (FR CPB, DE THG, NL ERE, UK RTFO).
-2. Maize-plant CAPEX vs DBFZ Kurzfristanalyse 2024 Tab. 4-1: model +22 % CAPEX, yet cost/kWh 5–12 % below (OPEX ≈ 20 % lower);
-   silo/digestate scope unknown → nothing retuned; ask DBFZ/IEE.
+2. Maize-plant CAPEX vs DBFZ 2024 Tab. 4-1: model +22 % CAPEX, cost/kWh 5–12 % below (OPEX ≈ −20 %); scope unknown → not retuned; ask DBFZ/IEE.
 3. Bank pack: construction year + IDC, CIT + depreciation, equity IRR, yearly DSCR, reinvestment, residual value.
 4. Straw pretreatment; grass silage; cattle/swine VS vs IPCC. 5. Injection / grid connection cost by country. 6. Line-item overrides.
 ## Known weaknesses
