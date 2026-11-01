@@ -3,7 +3,7 @@ import type { Dict, Locale } from ".";
 
 const laboratory: Record<Locale, string> = {
   en: "Laboratory DM, VS and BMP results for every feedstock stream",
-  uk: "Лабораторні DM, VS і BMP для кожного потоку сировини",
+  uk: "Лабораторні СР, VS і BMP для кожного потоку сировини",
   pl: "Wyniki laboratoryjne DM, VS i BMP dla każdego strumienia substratów",
   de: "Laborwerte für TS, VS und BMP für jeden Substratstrom",
   fr: "Résultats d’analyse MS, VS et BMP pour chaque flux d’intrants",
@@ -25,7 +25,7 @@ const laboratory: Record<Locale, string> = {
   da: "Laboratorieværdier for TS, VS og BMP for hver biomassestrøm",
   sv: "Laboratorievärden för TS, VS och BMP för varje substratflöde",
   fi: "Jokaisen syötevirran laboratoriossa mitatut KA-, VS- ja BMP-arvot",
-  vi: "Kết quả phân tích DM, VS và BMP trong phòng thí nghiệm cho từng dòng nguyên liệu",
+  vi: "Kết quả phân tích CK, VS và BMP trong phòng thí nghiệm cho từng dòng nguyên liệu",
   th: "ผลตรวจ DM, VS และ BMP จากห้องปฏิบัติการสำหรับวัตถุดิบแต่ละประเภท",
 };
 

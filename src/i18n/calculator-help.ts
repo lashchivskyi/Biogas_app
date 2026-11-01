@@ -14,7 +14,7 @@ const copy: Record<Locale, HelpCopy> = {
     "If you do not know the value, leave the field blank: the model will use a reference assumption.",
   ],
   uk: [
-    "DM — це те, що залишається в сировині після видалення води. За 20% DM у 100 кг свіжої сировини є 20 кг сухої речовини. У лабораторному протоколі шукайте DM або TS.",
+    "СР (DM) — це те, що залишається в сировині після видалення води. За 20 % СР у 100 кг свіжої сировини є 20 кг сухої речовини. У лабораторному протоколі шукайте СР (DM, TS).",
     "VS — органічна частина сухої речовини, з якої може утворюватися біогаз. За 80% VS у 100 кг сухої речовини є 80 кг органіки. Це відсоток від сухої маси, а не від усієї вологої сировини.",
     "BMP — лабораторний потенціал утворення метану: літри CH₄ з одного кілограма VS. Вводьте вихід саме метану, а не всього біогазу. Фактичне виробництво на установці залежить також від режиму роботи та втрат.",
     "Вкажіть, скільки місяців доступна сировина та з якого місяця починається цей період. Так модель розподіляє надходження протягом року. Якщо сезонну сировину зберігають і подають цілий рік, задайте фактичний графік подачі, а в кількості врахуйте втрати зберігання.",
@@ -168,7 +168,7 @@ const copy: Record<Locale, HelpCopy> = {
     "Jos et tiedä arvoa, jätä kenttä tyhjäksi. Malli käyttää viiteoletusta.",
   ],
   vi: [
-    "DM là chất khô còn lại sau khi loại bỏ nước. Với DM 20%, 100 kg nguyên liệu tươi chứa 20 kg chất khô. Trong phiếu phân tích, chỉ tiêu này có thể được ghi là DM, TS hoặc tổng chất rắn.",
+    "CK (DM) là chất khô còn lại sau khi loại bỏ nước. Với CK 20%, 100 kg nguyên liệu tươi chứa 20 kg chất khô. Trong phiếu phân tích, chỉ tiêu này có thể được ghi là DM, TS hoặc tổng chất rắn.",
     "VS là phần hữu cơ của chất khô, có khả năng tạo ra khí sinh học. Với VS 80%, 100 kg chất khô chứa 80 kg chất hữu cơ. Tỷ lệ này tính trên chất khô, không phải toàn bộ khối lượng nguyên liệu ướt.",
     "BMP là tiềm năng sinh metan đo trong phòng thí nghiệm: lít CH₄ trên mỗi kilôgam VS. Hãy nhập sản lượng metan, không phải tổng lượng khí sinh học. Sản lượng thực tế còn phụ thuộc vào điều kiện vận hành và tổn thất.",
     "Nhập số tháng có nguyên liệu và tháng bắt đầu giai đoạn đó. Mô hình sẽ phân bổ nguồn cung trong năm. Nếu nguyên liệu mùa vụ được lưu trữ và nạp quanh năm, hãy dùng lịch nạp thực tế và trừ hao hụt lưu trữ khỏi khối lượng.",

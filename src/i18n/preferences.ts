@@ -27,7 +27,7 @@ const words: Record<Locale, Words> = {
   sv: ["Språk, projekt och valuta", "Visningsvaluta", "Automatiskt", "Betalningsvaluta", "Projektlandet kan skilja sig från faktureringslandet. Kontrollera faktureringsuppgifterna på betalningssidan.", "Byte av projektland raderar lokala priser och fakturabelopp. Fysiska parametrar behålls.", "Tillämpa", "Ändra plats"],
   fi: ["Kieli, hanke ja valuutta", "Näyttövaluutta", "Automaattinen", "Maksuvaluutta", "Hankkeen maa voi poiketa laskutusmaasta. Tarkista laskutustiedot maksusivulla.", "Hankkeen maan vaihtaminen tyhjentää paikalliset hinnat ja laskusummat. Fyysiset parametrit säilyvät.", "Käytä", "Vaihda sijaintia"],
   vi: ["Ngôn ngữ, dự án và tiền tệ", "Tiền tệ hiển thị", "Tự động", "Tiền tệ thanh toán", "Quốc gia của dự án có thể khác quốc gia lập hóa đơn. Kiểm tra thông tin hóa đơn trên trang thanh toán.", "Đổi quốc gia dự án sẽ xóa giá và hóa đơn địa phương. Các thông số vật lý được giữ lại.", "Áp dụng", "Đổi địa điểm"],
-  th: ["ภาษา โครงการ และสกุลเงิน", "สกุลเงินที่แสดง", "อัตโนมัติ", "สกุลเงินที่ชำระ", "ประเทศของโครงการอาจต่างจากประเทศที่ออกใบแจ้งหนี้ โปรดตรวจสอบข้อมูลในหน้าชำระเงิน", "การเปลี่ยนประเทศของโครงการจะล้างราคาและยอดบิลท้องถิ่น โดยเก็บพารามิเตอร์ทางกายภาพไว้", "นำไปใช้", "เปลี่ยนสถานที่"],
+  th: ["ภาษา โครงการ และสกุลเงิน", "สกุลเงินที่แสดง", "อัตโนมัติ", "สกุลเงินที่ชำระ", "ประเทศของโครงการแยกจากประเทศตามที่อยู่เรียกเก็บเงินของผู้ชำระเงิน โปรดตรวจสอบข้อมูลในหน้าชำระเงิน", "การเปลี่ยนประเทศของโครงการจะล้างราคาและยอดบิลท้องถิ่น โดยเก็บพารามิเตอร์ทางกายภาพไว้", "นำไปใช้", "เปลี่ยนสถานที่"],
 };
 const tax: Record<Locale, string> = {
   en: "Any applicable tax is shown on the payment page before you confirm payment.",

@@ -4,7 +4,7 @@ import type { ProcessKind } from "@/core/processes";
 // Same semantic order in every locale: four inlet models, role, four roles, cost scope, input guidance.
 const copy: Record<Locale, readonly string[]> = {
   en: ["Analysed organic residues", "Industrial wastewater", "Gas from a closed landfill", "Existing biogas supply", "Your role in the project", "Feedstock owner", "Waste treatment operator", "Project developer", "Energy buyer", "Enter the project budget for the upstream process, including pretreatment, logistics, storage and final treatment. Gas conversion equipment and energy are calculated separately. Enter zero only for a confirmed zero cost.", "Use laboratory results, operating records and supplier quotations. Values are user inputs, not independently verified measurements. All numeric fields are required; costs use the project’s local currency."],
-  uk: ["Органічні залишки з результатами аналізу", "Промислові стічні води", "Газ закритого полігона відходів", "Наявний потік біогазу", "Ваша роль у проєкті", "Власник сировини", "Підприємство з оброблення відходів", "Розробник проєкту", "Покупець енергії", "Вкажіть бюджет технологічної частини: підготовка, логістика, зберігання та кінцева обробка. Обладнання для використання газу й енергія розраховуються окремо. Нуль означає підтверджену відсутність витрат.", "Використовуйте лабораторні аналізи, експлуатаційні записи та пропозиції постачальників. Введені дані не є незалежно перевіреними вимірюваннями. Усі числові поля обов’язкові; витрати — у місцевій валюті проєкту."],
+  uk: ["Органічні залишки з результатами аналізу", "Промислові стічні води", "Газ закритого полігона відходів", "Наявний потік біогазу", "Ваша роль у проєкті", "Власник сировини", "Підприємство з оброблення відходів", "Девелопер проєкту", "Покупець енергії", "Вкажіть бюджет технологічної частини: підготовка, логістика, зберігання та кінцева обробка. Обладнання для використання газу й енергія розраховуються окремо. Нуль означає підтверджену відсутність витрат.", "Використовуйте лабораторні аналізи, експлуатаційні записи та пропозиції постачальників. Введені дані не є незалежно перевіреними вимірюваннями. Усі числові поля обов’язкові; витрати — у місцевій валюті проєкту."],
   pl: ["Pozostałości organiczne z wynikami badań", "Ścieki przemysłowe", "Gaz z zamkniętego składowiska", "Istniejący strumień biogazu", "Twoja rola w projekcie", "Właściciel substratów", "Operator przetwarzania odpadów", "Deweloper projektu", "Odbiorca energii", "Podaj budżet części technologicznej: przygotowanie, logistyka, magazynowanie i końcowe przetwarzanie. Urządzenia do wykorzystania gazu i energia są liczone osobno. Zero wpisuj tylko przy potwierdzonym braku kosztu.", "Korzystaj z badań laboratoryjnych, danych eksploatacyjnych i ofert dostawców. Dane użytkownika nie są niezależnie zweryfikowanymi pomiarami. Wszystkie pola liczbowe są wymagane; koszty podawaj w lokalnej walucie projektu."],
   de: ["Analysierte organische Reststoffe", "Industrieabwasser", "Gas aus einer stillgelegten Deponie", "Vorhandener Biogasstrom", "Ihre Rolle im Projekt", "Substratbesitzer", "Abfallbehandlungsunternehmen", "Projektentwickler", "Energieabnehmer", "Geben Sie das Budget für Vorbehandlung, Logistik, Lagerung und abschließende Behandlung an. Gasverwertung und Energie werden separat berechnet. Null nur bei nachweislich entfallenden Kosten eintragen.", "Verwenden Sie Laboranalysen, Betriebsdaten und Lieferantenangebote. Eingaben gelten nicht als unabhängig geprüfte Messwerte. Alle Zahlenfelder sind Pflichtfelder; Kosten in der Landeswährung des Projekts."],
   fr: ["Résidus organiques caractérisés", "Effluents industriels", "Gaz d’un site de stockage fermé", "Flux de biogaz existant", "Votre rôle dans le projet", "Détenteur des matières", "Exploitant du traitement des déchets", "Développeur de projet", "Acheteur d’énergie", "Indiquez le budget du procédé amont : prétraitement, logistique, stockage et traitement final. La valorisation du gaz et l’énergie sont calculées séparément. Saisissez zéro uniquement si l’absence de coût est confirmée.", "Utilisez les analyses de laboratoire, les données d’exploitation et les devis. Les données saisies ne sont pas des mesures vérifiées indépendamment. Tous les champs numériques sont obligatoires ; les coûts sont exprimés dans la monnaie locale du projet."],
@@ -123,7 +123,7 @@ const scopeLabels: Record<Locale, readonly [string,string]> = {
     "Älä sisällytä tähän budjettiin; lasketaan erikseen"
   ],
   "vi": [
-    "Nội dung đánh giá",
+    "Cơ sở đánh giá",
     "Không tính vào ngân sách này; được tính riêng"
   ],
   "th": [
@@ -181,6 +181,9 @@ const existingChp: Partial<Record<Locale, readonly [string, string]>> = {
   es: ["Cogeneración (existente) · kWe", "Cogeneración (existente) · revisión general"],
   pt: ["Cogeração (existente) · kWe", "Cogeração (existente) · revisão geral"],
   ro: ["Cogenerare (existentă) · kWe", "Cogenerare (existentă) · revizie"],
+  uk: ["Наявна когенерація · кВт ел.", "Наявна когенерація · капремонт"],
+  vi: ["Đồng phát (hiện có) · kWe", "Đồng phát (hiện có) · đại tu"],
+  th: ["ผลิตไฟฟ้าและความร้อนร่วม (ที่มีอยู่) · kWe", "ผลิตไฟฟ้าและความร้อนร่วม (ที่มีอยู่) · ยกเครื่องใหญ่"],
 };
 /** Words that stay English elsewhere: reactor, biogas upgrading, dry-matter and COD abbreviations (glossary), raw biogas. */
 const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; dm: string; cod?: string; biogas: string }>> = {
@@ -194,6 +197,9 @@ const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; 
   es: { upgrading: "Depuración", dm: "MS", cod: "DQO", biogas: "biogás" },
   pt: { reactor: "Reator", upgrading: "Purificação", dm: "MS", cod: "DQO", biogas: "biogás" },
   ro: { upgrading: "Purificare", dm: "SU", cod: "CCO", biogas: "biogaz" },
+  uk: { reactor: "Реактор", upgrading: "Очищення біогазу", dm: "СР", cod: "ХСК", biogas: "біогаз" },
+  vi: { reactor: "Bể phản ứng", upgrading: "Tinh lọc", dm: "CK", biogas: "biogas" },
+  th: { reactor: "ถังปฏิกรณ์", upgrading: "การปรับปรุงคุณภาพก๊าซ", dm: "TS", biogas: "ไบโอแก๊ส" },
 };
 /** Lower-cases a label inside a sentence; German nouns keep their capital. */
 const lowerUnlessGerman = (locale: Locale, text: string) => (locale === "de" ? text : text.toLocaleLowerCase());

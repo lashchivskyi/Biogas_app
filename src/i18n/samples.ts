@@ -105,7 +105,7 @@ const referenceLabels: Record<Locale,readonly [string,string,string,string,strin
     "Оприлюднене",
     "Проєктна межа",
     "Розраховане",
-    "Дані референсу",
+    "Дані референтного об’єкта",
     "Джерело перевірено"
   ],
   "pl": [

@@ -351,7 +351,7 @@ const messages: Messages = {
   "A gate-fee co-substrate (food waste, fats), a real heat customer, or a cluster with neighbours.": "วัตถุดิบร่วมที่มีค่ารับกำจัด (เศษอาหาร ไขมัน) ผู้ใช้ความร้อนจริง หรือการรวมกลุ่มกับเพื่อนบ้าน",
   "Strong candidate": "มีศักยภาพสูง",
   "Possible with conditions": "เป็นไปได้หากมีเงื่อนไขครบ",
-  "Weak economics": "เศรษฐศาสตร์อ่อน",
+  "Weak economics": "ความคุ้มค่าทางเศรษฐกิจต่ำ",
   "Insufficient data": "ข้อมูลไม่เพียงพอ",
   "Not recommended at current scale": "ไม่แนะนำที่ขนาดนี้",
   "Small agricultural biogas CHP ≤ 1 MW can still enter FIT/FIP until 31.12.2027 (15 years); biomethane FIP for ≤ 1 MWe-eq.; auctions for larger biomethane plants from 2027.": "ระบบผลิตไฟฟ้าและความร้อนร่วมจากก๊าซชีวภาพภาคเกษตรขนาดเล็ก ≤ 1 MW ยังเข้า FIT/FIP ได้จนถึง 31.12.2027 (15 ปี) ส่วน FIP ของไบโอมีเทนสำหรับ ≤ 1 MWe-eq. และการประมูลสำหรับโรงงานไบโอมีเทนขนาดใหญ่กว่าเริ่มตั้งแต่ปี 2027",

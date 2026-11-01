@@ -213,7 +213,7 @@ const messages: Messages = {
   "Manure volumes estimated from head counts, not measured — enter measured tonnes per year": "Обсяги гною оцінені за кількістю голів, а не виміряні — вкажіть виміряні тонни на рік",
   "Most feedstock has low-confidence catalogue parameters — a laboratory analysis replaces them": "Більшість сировини має каталожні параметри низької довіри — лабораторний аналіз їх замінює",
   "Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing": "Немає повного набору лабораторних DM, VS і BMP для кожної сировини — пропущені значення взято з каталогу",
-  "Laboratory DM, VS and BMP for every feedstock stream": "Лабораторні DM, VS і BMP для кожного потоку сировини",
+  "Laboratory DM, VS and BMP for every feedstock stream": "Лабораторні СР, VS і BMP для кожного потоку сировини",
   "An entered price is far from market levels — likely a unit slip; correct it or confirm it with an invoice": "Введена ціна далека від ринкового рівня — ймовірна помилка в одиницях; виправте її або підтвердьте рахунком",
   "At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract": "Принаймні одна ціна, що впливає на цей маршрут, ґрунтується на непідтвердженому ринковому орієнтирі або недоговірному збуті — уточніть застосовний тариф чи контракт із покупцем",
   "Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations": "CAPEX цього маршруту не має незалежного локального підтвердження — отримайте зіставні комерційні пропозиції постачальників",
