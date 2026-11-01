@@ -105,7 +105,7 @@ const copy: Record<Locale, HelpCopy> = {
     "Ако не знаете стойността, оставете полето празно. Моделът ще използва референтно допускане.",
   ],
   sr: [
-    "DM je suva materija koja ostaje nakon uklanjanja vode. Pri 20% DM, 100 kg sveže sirovine sadrži 20 kg suve materije. U laboratorijskom nalazu tražite DM, TS ili suvu materiju.",
+    "SM je suva materija koja ostaje nakon uklanjanja vode. Pri 20% DM, 100 kg sveže sirovine sadrži 20 kg suve materije. U laboratorijskom nalazu tražite DM, TS ili suvu materiju.",
     "VS je organski deo suve materije, iz kojeg može nastati biogas. Pri 80% VS, 100 kg suve materije sadrži 80 kg organske materije. Procenat se odnosi na suvu materiju, a ne na ukupnu vlažnu masu.",
     "BMP je metanski potencijal izmeren u laboratoriji: litri CH₄ po kilogramu VS. Unesite prinos metana, ne ukupnog biogasa. Stvarna proizvodnja zavisi i od uslova rada i gubitaka.",
     "Navedite koliko meseci je sirovina dostupna i prvi mesec tog perioda. Model tako raspoređuje snabdevanje tokom godine. Ako se sezonski materijal skladišti i dozira cele godine, koristite stvarni raspored doziranja i umanjite količinu za gubitke pri skladištenju.",

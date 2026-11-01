@@ -740,7 +740,7 @@ const sr: Record<string, string> = {
   uncertaintyPct: "Koliko stvarne vrednosti mogu da odstupe od unetih. Proširuje konzervativni i optimistični scenario; osnovni scenario ne menja.",
   tonnesYear: "Sveža (vlažna) masa ostatka godišnje, u obliku u kom se isporučuje, uključujući vodu. Nije suva materija.",
   densityKgM3: "Masa jednog kubnog metra vlažnog ostatka. Koristi se za dimenzionisanje rezervoara. Gusta osoka ima oko 1000, čvrst materijal manje.",
-  dmPct: "Suva materija (DM, takođe TS): deo sveže mase koji ostaje posle uklanjanja vode. U laboratorijskom izveštaju navedena je kao DM ili TS.",
+  dmPct: "Suva materija (SM, takođe TS): deo sveže mase koji ostaje posle uklanjanja vode. U laboratorijskom izveštaju navedena je kao DM ili TS.",
   vsPct: "Organska suva materija (VS): organski deo suve materije koji može da se pretvori u biogas. Procenat suve materije, a ne sveže mase.",
   bmp: "Biohemijski metanski potencijal iz laboratorijskog testa: litri metana po kilogramu VS. Unesite metan, a ne ukupan biogas.",
   methanePct: "Zapreminski udeo metana u biogasu. Sirovi biogas obično sadrži 50–65%.",

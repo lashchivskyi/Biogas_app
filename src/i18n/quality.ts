@@ -16,7 +16,7 @@ const laboratory: Record<Locale, string> = {
   hu: "Laboratóriumi DM-, VS- és BMP-értékek minden alapanyagáramhoz",
   ro: "Rezultate de laborator DM, VS și BMP pentru fiecare flux de substrat",
   bg: "Лабораторни стойности на DM, VS и BMP за всеки поток суровина",
-  sr: "Laboratorijske vrednosti DM, VS i BMP za svaki tok sirovine",
+  sr: "Laboratorijske vrednosti SM, VS i BMP za svaki tok sirovine",
   el: "Εργαστηριακές τιμές DM, VS και BMP για κάθε ρεύμα πρώτης ύλης",
   tr: "Her hammadde akışı için laboratuvar DM, VS ve BMP sonuçları",
   lt: "Kiekvieno žaliavos srauto laboratoriniai DM, VS ir BMP duomenys",

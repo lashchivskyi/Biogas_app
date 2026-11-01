@@ -60,7 +60,7 @@ const clamp: Record<Locale, string> = {
   sk: "Žľabové silo pre úrodu",
   hu: "Falközi siló a termésnek",
   ro: "Siloz tip tranșee pentru recoltă",
-  bg: "Силозна траншея за реколтата",
+  bg: "Силажна траншея за реколтата",
   sr: "Trenč silos za useve",
   el: "Τάφρος ενσίρωσης για τη σοδειά",
   tr: "Silaj çukuru (hasat için)",

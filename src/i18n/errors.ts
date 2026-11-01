@@ -17,7 +17,7 @@ export const errorCopy: Record<Locale, ErrorCopy> = {
   hu: ["Az oldal nem található", "Lehet, hogy a hivatkozás hiányos, vagy az oldalt áthelyezték.", "Vissza a főoldalra", "Az oldalt nem sikerült betölteni", "Kérjük, próbálja újra egy kis idő múlva.", "Újrapróbálkozás"],
   ro: ["Pagina nu a fost găsită", "Este posibil ca linkul să fie incomplet sau pagina să fi fost mutată.", "Înapoi la pagina principală", "Pagina nu a putut fi încărcată", "Încercați din nou peste câteva momente.", "Încercați din nou"],
   bg: ["Страницата не е намерена", "Връзката може да е непълна или страницата да е преместена.", "Към началната страница", "Страницата не може да се зареди", "Опитайте отново след малко.", "Опитайте отново"],
-  sr: ["Stranica nije pronađena", "Link je možda nepotpun ili je stranica premeštena.", "Na početnu stranicu", "Stranica nije mogla da se učita", "Pokušajte ponovo za nekoliko trenutaka.", "Pokušaj ponovo"],
+  sr: ["Stranica nije pronađena", "Link je možda nepotpun ili je stranica premeštena.", "Na početnu stranicu", "Stranica nije mogla da se učita", "Pokušajte ponovo za nekoliko trenutaka.", "Pokušajte ponovo"],
   el: ["Η σελίδα δεν βρέθηκε", "Ο σύνδεσμος ίσως είναι ελλιπής ή η σελίδα έχει μετακινηθεί.", "Επιστροφή στην αρχική", "Δεν ήταν δυνατή η φόρτωση της σελίδας", "Δοκιμάστε ξανά σε λίγο.", "Δοκιμάστε ξανά"],
   tr: ["Sayfa bulunamadı", "Bağlantı eksik olabilir veya sayfa taşınmış olabilir.", "Ana sayfaya dön", "Sayfa yüklenemedi", "Lütfen biraz sonra tekrar deneyin.", "Tekrar dene"],
   lt: ["Puslapis nerastas", "Nuoroda gali būti nepilna arba puslapis perkeltas.", "Į pradžią", "Nepavyko įkelti puslapio", "Pabandykite dar kartą po kelių akimirkų.", "Bandyti dar kartą"],
