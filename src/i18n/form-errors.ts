@@ -20,7 +20,7 @@ export const formErrorCopy: Record<Locale, readonly [string, string, string]> = 
   el: ["Εισαγάγετε το email σας για να σας στείλουμε τον σύνδεσμο της αναφοράς.", "Εισαγάγετε έγκυρη διεύθυνση email, π.χ. name@company.com.", "Επιλέξτε αυτό το πλαίσιο για να συνεχίσετε."],
   tr: ["Rapor bağlantısını gönderebilmemiz için e-postanızı girin.", "Geçerli bir e-posta adresi girin, örn. name@company.com.", "Devam etmek için bu kutuyu işaretleyin."],
   lt: ["Įveskite el. paštą, kad galėtume išsiųsti ataskaitos nuorodą.", "Įveskite tinkamą el. pašto adresą, pvz., name@company.com.", "Pažymėkite šį langelį, kad tęstumėte."],
-  lv: ["Ievadiet e-pastu, lai varētu nosūtīt atskaites saiti.", "Ievadiet derīgu e-pasta adresi, piemēram, name@company.com.", "Atzīmējiet šo rūtiņu, lai turpinātu."],
+  lv: ["Ievadiet e-pastu, lai varētu nosūtīt pārskata saiti.", "Ievadiet derīgu e-pasta adresi, piemēram, name@company.com.", "Atzīmējiet šo rūtiņu, lai turpinātu."],
   et: ["Sisestage e-post, et saaksime aruande lingi saata.", "Sisestage kehtiv e-posti aadress, nt name@company.com.", "Jätkamiseks märkige see ruut."],
   da: ["Angiv din e-mail, så vi kan sende linket til rapporten.", "Angiv en gyldig e-mailadresse, f.eks. name@company.com.", "Sæt flueben for at fortsætte."],
   sv: ["Ange din e-postadress så att vi kan skicka rapportlänken.", "Ange en giltig e-postadress, t.ex. name@company.com.", "Kryssa i rutan för att fortsätta."],

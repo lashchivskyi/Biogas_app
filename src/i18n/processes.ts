@@ -18,7 +18,7 @@ const copy: Record<Locale, readonly string[]> = {
   ro: ["Reziduuri organice analizate", "Ape uzate industriale", "Gaz dintr-un depozit de deșeuri închis", "Flux de biogaz existent", "Rolul dumneavoastră în proiect", "Deținător de materii prime", "Operator de tratare a deșeurilor", "Dezvoltator de proiect", "Cumpărător de energie", "Introduceți bugetul pentru pretratare, logistică, stocare și tratare finală. Echipamentele de valorificare a gazului și energia se calculează separat. Introduceți zero doar pentru costuri confirmate ca inexistente.", "Folosiți analize de laborator, date de exploatare și oferte. Datele introduse nu sunt măsurători verificate independent. Toate câmpurile numerice sunt obligatorii; costurile sunt în moneda locală a proiectului."],
   bg: ["Органични остатъци с лабораторен анализ", "Промишлени отпадъчни води", "Газ от закрито депо", "Наличен поток биогаз", "Вашата роля в проекта", "Собственик на суровините", "Оператор за третиране на отпадъци", "Разработчик на проекта", "Купувач на енергия", "Въведете бюджет за предварителна обработка, логистика, съхранение и крайно третиране. Оборудването за оползотворяване на газа и енергията се изчисляват отделно. Нула означава потвърдена липса на разход.", "Използвайте лабораторни анализи, експлоатационни данни и оферти. Въведените данни не са независимо проверени измервания. Всички числови полета са задължителни; разходите са в местната валута на проекта."],
   sr: ["Organski ostaci sa laboratorijskom analizom", "Industrijske otpadne vode", "Gas sa zatvorene deponije", "Postojeći tok biogasa", "Vaša uloga u projektu", "Vlasnik sirovine", "Operater tretmana otpada", "Razvijač projekta", "Kupac energije", "Unesite budžet za predtretman, logistiku, skladištenje i završni tretman. Oprema za iskorišćenje gasa i energija računaju se odvojeno. Nulu unesite samo kada je potvrđeno da trošak ne postoji.", "Koristite laboratorijske analize, podatke o radu i ponude dobavljača. Uneti podaci nisu nezavisno proverena merenja. Sva numerička polja su obavezna; troškovi su u lokalnoj valuti projekta."],
-  el: ["Αναλυμένα οργανικά υπολείμματα", "Βιομηχανικά υγρά απόβλητα", "Αέριο από κλειστό χώρο ταφής", "Υφιστάμενη ροή βιοαερίου", "Ο ρόλος σας στο έργο", "Κάτοχος πρώτων υλών", "Φορέας επεξεργασίας αποβλήτων", "Φορέας ανάπτυξης έργου", "Αγοραστής ενέργειας", "Εισαγάγετε τον προϋπολογισμό προεπεξεργασίας, μεταφοράς, αποθήκευσης και τελικής επεξεργασίας. Ο εξοπλισμός αξιοποίησης αερίου και η ενέργεια υπολογίζονται χωριστά. Μηδέν μόνο για επιβεβαιωμένα μηδενικό κόστος.", "Χρησιμοποιήστε εργαστηριακές αναλύσεις, λειτουργικά στοιχεία και προσφορές. Τα δεδομένα εισόδου δεν αποτελούν ανεξάρτητα επαληθευμένες μετρήσεις. Όλα τα αριθμητικά πεδία είναι υποχρεωτικά· τα κόστη δίνονται στο τοπικό νόμισμα του έργου."],
+  el: ["Αναλυμένα οργανικά υπολείμματα", "Βιομηχανικά υγρά απόβλητα", "Αέριο από κλειστό χώρο ταφής", "Υφιστάμενη ροή βιοαερίου", "Ο ρόλος σας στο έργο", "Κάτοχος πρώτων υλών", "Φορέας επεξεργασίας αποβλήτων", "Φορέας ανάπτυξης έργου", "Αγοραστής ενέργειας", "Εισαγάγετε τον προϋπολογισμό προεπεξεργασίας, μεταφοράς, αποθήκευσης και τελικής επεξεργασίας. Ο εξοπλισμός αξιοποίησης αερίου και η ενέργεια υπολογίζονται χωριστά. Εισαγάγετε μηδέν μόνο για επιβεβαιωμένο μηδενικό κόστος.", "Χρησιμοποιήστε εργαστηριακές αναλύσεις, λειτουργικά στοιχεία και προσφορές. Τα δεδομένα εισόδου δεν αποτελούν ανεξάρτητα επαληθευμένες μετρήσεις. Όλα τα αριθμητικά πεδία είναι υποχρεωτικά· τα κόστη δίνονται στο τοπικό νόμισμα του έργου."],
   tr: ["Analiz edilmiş organik artıklar", "Endüstriyel atık su", "Kapatılmış düzenli depolama sahası gazı", "Mevcut biyogaz akışı", "Projedeki rolünüz", "Hammadde sahibi", "Atık işleme işletmecisi", "Proje geliştiricisi", "Enerji alıcısı", "Ön arıtma, lojistik, depolama ve nihai arıtma bütçesini girin. Gaz değerlendirme ekipmanı ve enerji ayrı hesaplanır. Yalnızca maliyetin olmadığı doğrulandığında sıfır girin.", "Laboratuvar analizlerini, işletme kayıtlarını ve tedarikçi tekliflerini kullanın. Girilen veriler bağımsız doğrulanmış ölçümler değildir. Tüm sayısal alanlar zorunludur; maliyetler projenin yerel para birimindedir."],
   lt: ["Ištirtos organinės liekanos", "Pramoninės nuotekos", "Uždaryto sąvartyno dujos", "Esamas biodujų srautas", "Jūsų vaidmuo projekte", "Žaliavų savininkas", "Atliekų tvarkymo operatorius", "Projekto plėtotojas", "Energijos pirkėjas", "Įveskite pirminio apdorojimo, logistikos, saugojimo ir galutinio apdorojimo biudžetą. Dujų panaudojimo įranga ir energija skaičiuojamos atskirai. Nulį įveskite tik patvirtinus, kad sąnaudų nėra.", "Naudokite laboratorinius tyrimus, eksploatacijos duomenis ir tiekėjų pasiūlymus. Įvesti duomenys nėra nepriklausomai patikrinti matavimai. Visi skaitiniai laukai privalomi; sąnaudos nurodomos vietine projekto valiuta."],
   lv: ["Analizētas organiskās atliekas", "Rūpnieciskie notekūdeņi", "Slēgta poligona gāze", "Esoša biogāzes plūsma", "Jūsu loma projektā", "Izejvielu īpašnieks", "Atkritumu apstrādes operators", "Projekta attīstītājs", "Enerģijas pircējs", "Ievadiet priekšapstrādes, loģistikas, uzglabāšanas un gala apstrādes budžetu. Gāzes izmantošanas iekārtas un enerģiju aprēķina atsevišķi. Nulli ievadiet tikai tad, ja izmaksu nav.", "Izmantojiet laboratorijas analīzes, ekspluatācijas datus un piegādātāju piedāvājumus. Ievadītie dati nav neatkarīgi pārbaudīti mērījumi. Visi skaitliskie lauki ir obligāti; izmaksas norādiet projekta vietējā valūtā."],
@@ -99,7 +99,7 @@ const scopeLabels: Record<Locale, readonly [string,string]> = {
     "Bu bütçeye dahil etmeyin; ayrı hesaplanır"
   ],
   "lt": [
-    "Ką vertiname",
+    "Vertinimo pagrindas",
     "Neįtraukite į šį biudžetą; skaičiuojama atskirai"
   ],
   "lv": [
@@ -183,10 +183,16 @@ const existingChp: Partial<Record<Locale, readonly [string, string]>> = {
   ro: ["Cogenerare (existentă) · kWe", "Cogenerare (existentă) · revizie"],
   uk: ["Наявна когенерація · кВт ел.", "Наявна когенерація · капремонт"],
   vi: ["Đồng phát (hiện có) · kWe", "Đồng phát (hiện có) · đại tu"],
+  hu: ["Kogeneráció (meglévő) · kWe", "Kogeneráció (meglévő) · nagyjavítás"],
+  el: ["ΣΗΘ (υφιστάμενη) · kWe", "ΣΗΘ (υφιστάμενη) · γενική επισκευή"],
+  tr: ["Kojenerasyon (mevcut) · kWe", "Kojenerasyon (mevcut) · revizyon"],
+  lt: ["Kogeneracija (esama) · kWe", "Kogeneracija (esama) · kapitalinis remontas"],
+  lv: ["Koģenerācija (esošā) · kWe", "Koģenerācija (esošā) · kapitālais remonts"],
+  et: ["Koostootmine (olemasolev) · kWe", "Koostootmine (olemasolev) · kapitaalremont"],
   th: ["ผลิตไฟฟ้าและความร้อนร่วม (ที่มีอยู่) · kWe", "ผลิตไฟฟ้าและความร้อนร่วม (ที่มีอยู่) · ยกเครื่องใหญ่"],
 };
 /** Words that stay English elsewhere: reactor, biogas upgrading, dry-matter and COD abbreviations (glossary), raw biogas. */
-const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; dm: string; cod?: string; biogas: string }>> = {
+const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; dm?: string; cod?: string; biogas: string }>> = {
   de: { reactor: "Reaktor", upgrading: "Biogasaufbereitung", dm: "TS", cod: "CSB", biogas: "Biogas" },
   nl: { upgrading: "Opwerking", dm: "DS", cod: "CZV", biogas: "biogas" },
   da: { reactor: "Reaktor", upgrading: "Opgradering", dm: "TS", biogas: "biogas" },
@@ -199,6 +205,12 @@ const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; 
   ro: { upgrading: "Purificare", dm: "SU", cod: "CCO", biogas: "biogaz" },
   uk: { reactor: "Реактор", upgrading: "Очищення біогазу", dm: "СР", cod: "ХСК", biogas: "біогаз" },
   vi: { reactor: "Bể phản ứng", upgrading: "Tinh lọc", dm: "CK", biogas: "biogas" },
+  hu: { reactor: "Reaktor", upgrading: "Biometán-tisztítás", cod: "KOI", biogas: "biogáz" },
+  el: { reactor: "Αντιδραστήρας", upgrading: "Αναβάθμιση βιοαερίου", biogas: "βιοαέριο" },
+  tr: { reactor: "Reaktör", upgrading: "Saflaştırma", dm: "KM", cod: "KOİ", biogas: "biyogaz" },
+  lt: { reactor: "Reaktorius", upgrading: "Biometano išgryninimas", dm: "SM", cod: "ChDS", biogas: "biodujos" },
+  lv: { reactor: "Reaktors", upgrading: "Attīrīšana", dm: "SV", cod: "ĶSP", biogas: "biogāze" },
+  et: { reactor: "Reaktor", upgrading: "Puhastus", cod: "KHT", biogas: "biogaas" },
   th: { reactor: "ถังปฏิกรณ์", upgrading: "การปรับปรุงคุณภาพก๊าซ", dm: "TS", biogas: "ไบโอแก๊ส" },
 };
 /** Lower-cases a label inside a sentence; German nouns keep their capital. */
