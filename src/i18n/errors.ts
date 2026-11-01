@@ -25,7 +25,7 @@ export const errorCopy: Record<Locale, ErrorCopy> = {
   et: ["Lehte ei leitud", "Link võib olla poolik või leht on mujale viidud.", "Avalehele", "Lehte ei õnnestunud laadida", "Palun proovige mõne hetke pärast uuesti.", "Proovi uuesti"],
   da: ["Siden blev ikke fundet", "Linket er muligvis ufuldstændigt, eller siden er blevet flyttet.", "Til forsiden", "Siden kunne ikke indlæses", "Prøv igen om et øjeblik.", "Prøv igen"],
   sv: ["Sidan hittades inte", "Länken kan vara ofullständig eller sidan kan ha flyttats.", "Till startsidan", "Det gick inte att läsa in sidan", "Försök igen om en liten stund.", "Försök igen"],
-  fi: ["Sivua ei löytynyt", "Linkki voi olla puutteellinen tai sivu on siirretty.", "Etusivulle", "Sivua ei voitu ladata", "Yritä hetken kuluttua uudelleen.", "Yritä uudelleen"],
+  fi: ["Sivua ei löytynyt", "Linkki voi olla puutteellinen tai sivu on voitu siirtää.", "Etusivulle", "Sivua ei voitu ladata", "Yritä hetken kuluttua uudelleen.", "Yritä uudelleen"],
   vi: ["Không tìm thấy trang", "Liên kết có thể chưa đầy đủ hoặc trang đã được chuyển sang địa chỉ khác.", "Về trang chủ", "Không thể tải trang", "Vui lòng thử lại sau ít phút.", "Thử lại"],
   th: ["ไม่พบหน้าที่ต้องการ", "ลิงก์อาจไม่ครบถ้วนหรือหน้านี้อาจถูกย้ายแล้ว", "กลับหน้าหลัก", "ไม่สามารถโหลดหน้านี้ได้", "โปรดลองอีกครั้งในอีกสักครู่", "ลองอีกครั้ง"],
 };

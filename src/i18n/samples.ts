@@ -151,7 +151,7 @@ const referenceLabels: Record<Locale,readonly [string,string,string,string,strin
     "Fonte verificada"
   ],
   "nl": [
-    "Gepubliceerd",
+    "Gemeld",
     "Ontwerpgrens",
     "Berekend",
     "Referentiegegevens",

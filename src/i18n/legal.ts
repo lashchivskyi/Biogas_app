@@ -88,7 +88,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
     headings: ["Aanbieder", "Dienst", "Prijzen", "Betaling", "Levering", "Terugbetaling", "Aansprakelijkheid", "Persoonsgegevens"],
     automation: "Beide betaalde rapporten worden automatisch gegenereerd. Beoordeling door een ingenieur en adviesgesprekken zijn niet inbegrepen. De resultaten garanderen geen inkomsten en vormen geen veiligheidsbeoordeling.",
     vat: "Prijzen zijn vastgesteld in euro. Vóór de betaling ziet u het eindbedrag, inclusief eventuele btw, in EUR of USD.",
-    cards: "Wij ontvangen of bewaren geen kaartgegevens. U ontvangt een betaalbewijs of factuur per e-mail.",
+    cards: "Wij ontvangen of bewaren geen kaartgegevens. U ontvangt een betalingsbewijs of factuur per e-mail.",
     withdrawal: "Consumenten in de EU en het Verenigd Koninkrijk behouden hun wettelijke rechten. Door onmiddellijke toegang tot digitale inhoud te vragen, erkent u dat het herroepingsrecht eindigt zodra het rapport is geleverd.",
     liability: "U blijft verantwoordelijk voor investeringsbeslissingen. Onze aansprakelijkheid is beperkt tot de betaalde prijs, tenzij de wet deze beperking niet toestaat.",
     privacy: "Wij verwerken contact- en projectgegevens uitsluitend om de dienst te leveren en contact met u op te nemen. Wij delen ze alleen met de betaaldienstverlener. U kunt op elk moment om verwijdering vragen.",
@@ -193,7 +193,7 @@ export const legalCopy: Record<Locale, LegalCopy> = {
     privacy: "Töötleme kontakt- ja projektiandmeid ainult teenuse osutamiseks ning teiega ühenduse võtmiseks. Jagame neid üksnes makseteenuse pakkujaga. Võite igal ajal taotleda andmete kustutamist.",
   },
   da: {
-    headings: ["Udbyder", "Ydelse", "Priser", "Betaling", "Levering", "Tilbagebetaling", "Ansvar", "Personoplysninger"],
+    headings: ["Udbyder", "Ydelse", "Priser", "Betaling", "Levering", "Refusion", "Ansvar", "Personoplysninger"],
     automation: "Begge betalte rapporter udarbejdes automatisk. Ingeniørgennemgang og rådgivning er ikke inkluderet. Resultaterne garanterer ikke indtægter og udgør ikke en sikkerhedsvurdering.",
     vat: "Priserne er fastsat i euro. Før betaling ser du det endelige beløb, inklusive eventuel moms, i EUR eller USD.",
     cards: "Vi modtager eller opbevarer ikke kortoplysninger. Kvittering eller faktura sendes med e-mail.",
