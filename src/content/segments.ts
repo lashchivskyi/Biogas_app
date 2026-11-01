@@ -1,6 +1,7 @@
 import type { BusinessTypeId } from "@/core/types";
 import { SECTOR_IDS, businessSlug } from "@/core/businesses";
 import { EXAMPLES } from "@/core/examples";
+import { missingProcessInputs } from "@/core/processes";
 
 /**
  * Sector landing pages (/[lang]/biogas/[slug]). Authored English/Ukrainian articles are retained;
@@ -368,12 +369,18 @@ const AUTHORED_SEGMENTS: Segment[] = [
   },
 ];
 
+/** The model case of a sector is a costed example: a reference without disclosed budgets can only show physics. */
+const modelExampleId = (id: BusinessTypeId) => {
+  const own = EXAMPLES.filter(e => e.input.businessType === id);
+  return (own.find(e => !e.input.process || !missingProcessInputs(e.input.process).length) ?? own[0])?.id;
+};
+
 /** All businesses extend the existing sector-page registry and use the same renderer. */
 export const SEGMENTS: Segment[] = [
   ...AUTHORED_SEGMENTS,
   ...SECTOR_IDS.filter(id => !AUTHORED_SEGMENTS.some(s => s.businessType === id && s.id !== "small")).map(id => ({
     id, businessType: id, slug: businessSlug(id),
-    exampleId: (EXAMPLES.find(e => e.input.businessType === id && e.reference) ?? EXAMPLES.find(e => e.input.businessType === id))?.id,
+    exampleId: modelExampleId(id),
   })),
 ];
 

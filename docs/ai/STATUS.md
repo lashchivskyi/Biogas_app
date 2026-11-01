@@ -2,7 +2,7 @@
 
 Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
-- Model 0.6.1; data review 2026-10-30. Tests (1 408), lint, typecheck, build pass. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
+- Model 0.6.1; data review 2026-10-30. Tests (2 017), lint, typecheck, build pass. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
 - UX audit 2026-10-31 (axe WCAG 2.2 AA, Lighthouse desktop 99/100/100/100; mobile calculator/report perf ≈ 79). Offer audit and
   security review 2026-11-01 (0 critical/high; refund replay, admin CSRF, PII in log fixed; CSP; shared rate limit). Not tested: real Stripe, real email.
 - Market data: official sources for 33 countries except LOW items (177 in `audit-sources`). Scenario sweep 13 464 assessments, 0 throws/NaN,
@@ -43,5 +43,6 @@ Updated 2026-11-01. Rewrite at the end of a task; keep under 40 lines.
 3. Bank pack: construction year + IDC, CIT + depreciation, equity IRR, yearly DSCR, reinvestment, residual value.
 4. Straw pretreatment; grass silage; cattle/swine VS vs IPCC. 5. Injection / grid connection cost by country. 6. Line-item overrides.
 ## Known weaknesses
+- Pulp & paper, starch and food-manufacturer sectors have only reference examples without budgets: their model case shows physics and "—" for money. Needs a costed case with an official/peer-reviewed COD-reactor cost basis (none found 2026-11-01).
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL` 1.5, plausibility bands, discount λ = 0.6. Biomethane price LOW everywhere.
 - Only membrane upgrading; gas-stream support "if eligible" only; boiler can be "best" when all routes lose (warned); 54 of 1 287 cases unordered.

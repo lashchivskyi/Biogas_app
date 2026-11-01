@@ -11,6 +11,7 @@ import { decisionCopy } from "@/i18n/decision";
 import { offerCopy } from "@/i18n/offer";
 import { climateCopy } from "@/i18n/climate";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
+import { processCopy, processFieldLabels } from "@/i18n/processes";
 import { makeFormat, sig2 } from "@/lib/format";
 import { reportSheets } from "@/lib/report-export";
 import { ResultView, type ResultViewProps } from "../ResultView";
@@ -336,7 +337,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   const { map: sections } = h2Chunks(html);
   const section = (title: string, w: string) => { const s = sections.get(norm(title)); if (s === undefined) bad(w, `section “${title}” is missing`); return s ?? ""; };
 
-  if (process) return [...out, ...auditProcessRendered(a, html, ctx)];
+  if (process && a.financialsAvailable === false) return [...out, ...auditProcessRendered(a, html, ctx)];
 
   // --- Verdict block ---
   const first = [...sections.values()][0] ?? "";
@@ -369,7 +370,9 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   const summary = section(R.summaryTitle, "summary");
   const rg = (lo: number, hi: number) => range(lo, hi, (x) => compact(sig2(x)));
   const biogas = [cons, base, opt].map((s) => s.feed.biogasM3Year);
-  const lead = f(R.summary, { tonnes: n0(sig2(base.feed.tonnesYear)), biogas: rg(biogas[0], biogas[2]) });
+  // Process inlets share the report; only the feedstock-specific wording and blocks are swapped.
+  const PC = processCopy(locale), fields = processFieldLabels(locale), proc = a.scenarios.base.process;
+  const lead = proc ? `${PC.models[proc.kind]}: ${R.biogas} ${rg(biogas[0], biogas[2])} m³.` : f(R.summary, { tonnes: n0(sig2(base.feed.tonnesYear)), biogas: rg(biogas[0], biogas[2]) });
   has(txt(summary), lead, "summary: feedstock and biogas");
   if (route === "biomethane") has(txt(summary), f(R.summaryBm, { bm: compact(sig2(base.energy.biomethaneNm3)) }), "summary: biomethane");
   else {
@@ -389,7 +392,8 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
     if (s.value !== norm(value)) bad(`key “${label}”`, `shows “${s.value}”, model says “${norm(value)}”`);
     if (note !== undefined && s.note !== norm(note)) bad(`key “${label}” note`, `shows “${s.note}”, model says “${norm(note)}”`);
   };
-  stat(R.feedstock, `${n0(sig2(base.feed.tonnesYear))} ${L.units.tYear}`, f(R.feedNote, { v: n0(base.feed.energyDensityKwhPerTonne) }));
+  if (proc) { if (!stats.has(norm(PC.models[proc.kind]))) bad(`key “${PC.models[proc.kind]}”`, "tile missing"); }
+  else stat(R.feedstock, `${n0(sig2(base.feed.tonnesYear))} ${L.units.tYear}`, f(R.feedNote, { v: n0(base.feed.energyDensityKwhPerTonne) }));
   stat(R.biogas, `${rg(biogas[0], biogas[2])} m³`, f(R.biogasNote, { v: n0(base.feed.biogasM3Year / 8000) }));
   if (route === "biomethane") stat(R.energy, `${range(cons.energy.biomethaneNm3, opt.energy.biomethaneNm3, (x) => compact(sig2(x)))} Nm³`, R.energyBm);
   else stat(R.energy, `${range(cons.energy.elNetKwh / 1000, opt.energy.elNetKwh / 1000)} ${L.units.mwh}`, f(R.energyHeat, { v: range(cons.energy.heatUsefulKwh / 1000, opt.energy.heatUsefulKwh / 1000) }));
@@ -417,6 +421,8 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   const svgText = txt(flowSvg.replace(/<\/text>/g, " </text>").replace(/<[^>]+>/g, " ").replace(/^/, ""));
   const svgTextRaw = norm(decode([...flowSvg.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map((m) => m[1].replace(/<[^>]+>/g, "")).join(" | ")));
   void svgText;
+  if (proc) { if (flowSvg) bad("flow diagram", "a process inlet must not render the feedstock → digestate diagram"); }
+  else {
   has(svgTextRaw, f(d.flow.tYr, { v: n0(sig2(base.feed.tonnesYear)) }), "flow diagram: tonnes");
   has(svgTextRaw, f(d.flow.m3Yr, { v: compact(sig2(base.feed.biogasM3Year)) }), "flow diagram: biogas");
   if (route === "biomethane") has(svgTextRaw, f(d.flow.nm3, { v: compact(sig2(e.biomethaneNm3)) }), "flow diagram: biomethane");
@@ -424,6 +430,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   has(svgTextRaw, f(d.flow.mwh, { v: n0(sig2(e.heatUsefulKwh / 1000)) }), "flow diagram: useful heat");
   has(svgTextRaw, f(d.flow.mwh, { v: n0(sig2(Math.max(0, e.heatNetAvailableKwh - e.heatUsefulKwh) / 1000)) }), "flow diagram: heat without a buyer");
   has(svgTextRaw, f(d.flow.ownHeat, { v: n0(sig2(e.heatDigesterKwh / 1000)) }), "flow diagram: digester heat");
+  }
 
   // --- Tier boundaries ---
   const hasSection = (title: string) => sections.has(norm(title));
@@ -489,7 +496,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
       const srows = (tablesOf(ssec)[0] ?? []).slice(1);
       if (srows.length !== a.supportCases.length) bad("support", `${srows.length} rows for ${a.supportCases.length} schemes`);
       a.supportCases.forEach((s, i) => {
-        const r = srows[i] ?? [], shown = s.eligible || s.status === "closed";
+        const r = srows[i] ?? [], shown = s.eligible || s.status === "closed" || !!s.unconfirmed;
         const cells = [shown ? eur(s.npvEur) : "—", shown ? years(s.paybackYears) : "—", shown ? eur(s.deltaNpvEur) : "—"].map(norm);
         cells.forEach((w, k) => { if (r[3 + k] !== w) bad(`support ${s.schemeId} col ${k}`, `shows “${r[3 + k]}”, model says “${w}”`); });
         has(r[0] ?? "", s.name, `support ${s.schemeId} name`);
@@ -595,11 +602,11 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
 
   // --- Details folds ---
   const details = section(R.detailsTitle, "details");
-  const titles = [R.dFeed, R.dTech, R.dMoney, R.dDigestate, R.dMethane, R.dReg, R.dSafety, f(R.dAssumptions, { n: a.assumptionsUsed.length })];
+  const titles = [proc ? PC.models[proc.kind] : R.dFeed, R.dTech, R.dMoney, proc ? offerCopy[locale].residualsTitle : R.dDigestate, R.dMethane, R.dReg, R.dSafety, f(R.dAssumptions, { n: a.assumptionsUsed.length })];
   const at = titles.map((t) => details.indexOf(`>${t.replace(/&/g, "&amp;")}`));
   const fold = (i: number) => { if (at[i] < 0) { bad(`fold “${titles[i]}”`, "missing"); return ""; } const next = at.slice(i + 1).find((x) => x > at[i]); return details.slice(at[i], next ?? details.length); };
   const money = fold(2);
-  const lines = financialLabels(locale, d);
+  const lines: Record<string, string> = { ...financialLabels(locale, d), ...(proc && { process: PC.models[proc.kind], process_operation: fields.processOpexLocalYear, residual_disposal: fields.residualCostLocalT, gas_supply: fields.gasPriceLocalNm3, treatment: fields.avoidedTreatmentLocalM3 }) };
   const mtables = (money.match(/<table[\s\S]*?<\/table>/g) ?? []).map((t) => tablesOf(t)[0]);
   const groups: [string, { id: string; label: string; eur: number }[], number][] = [[`CAPEX (${F.currency})`, base.capex.lines, base.capex.totalEur], [`${R.rowOpex} (${F.currency})`, base.opexRev.opex, base.opexRev.opexEur], [`${R.rowRevenue} (${F.currency})`, base.opexRev.revenue, base.opexRev.revenueEur]];
   if (mtables.length !== 3) bad("money tables", `${mtables.length} tables, expected 3`);
@@ -612,11 +619,13 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
     if (t.length !== rows.length + 1) bad(`money table ${title}`, `${t.length - 1} lines for ${rows.length} model lines`);
   });
   const dig = a.digestate;
+  if (!proc) {
   has(txt(fold(3)), f(R.dgValue, { v: eur(dig.fertiliserValueEurYear), h: eur(dig.handlingCostEurYear), n: eur(dig.netValueEurYear) }), "digestate values");
   has(txt(fold(3)), f(R.dgLine, { status: R.dgStatus[dig.status], t: n0(dig.tonnesYear), n: n0(dig.nKgYear), ha: n0(dig.landRequiredHa), avail: dig.landAvailableHa !== null ? f(R.dgAvail, { v: n0(dig.landAvailableHa) }) : R.dgUnknown }), "digestate line");
   const m = a.methane;
   has(txt(fold(4)), f(R.mLine, { v: pct(m.lossShare, 1), lo: pct(m.lossShareRange[0], 1), hi: pct(m.lossShareRange[1], 1), co2: n0(m.co2eTonnesYear), disp: n0(m.displacedCo2eTonnesYear) }), "methane line");
-  const feed = tablesOf(fold(0))[0]?.slice(1) ?? [];
+  }
+  const feed = proc ? [] : tablesOf(fold(0))[0]?.slice(1) ?? [];
   if (feed.length !== base.feed.lines.length) bad("feedstock table", `${feed.length} rows for ${base.feed.lines.length} streams`);
   base.feed.lines.forEach((l, i) => {
     const r = feed[i] ?? [];
@@ -626,7 +635,8 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   const feedTotal = feed.reduce((t, r) => t + Number(r[1].replace(/[^\d-]/g, "")), 0);
   if (Math.abs(feedTotal - base.feed.tonnesYear) > feed.length * 1) bad("feedstock table", `rows sum to ${feedTotal} t, the model has ${Math.round(base.feed.tonnesYear)} t`);
   const tech = txt(fold(1)), dz = base.design;
-  has(tech, `≈ ${n0(sig2(dz.workingVolumeM3))} m³`, "digester volume"); has(tech, `${dz.hrtDays} ${R.days}`, "retention time"); has(tech, `${n1(dz.olrKgVsM3Day)} kg VS/(m³·d)`, "loading rate"); has(tech, `≈ ${n0(sig2(dz.storageVolumeM3))} m³`, "storage volume");
+  const techCheck = (v: number, want: string, w: string) => { if (!proc || v > 0) has(tech, want, w); };
+  techCheck(dz.workingVolumeM3, `≈ ${n0(sig2(dz.workingVolumeM3))} m³`, "digester volume"); techCheck(dz.hrtDays, `${dz.hrtDays} ${R.days}`, "retention time"); techCheck(dz.olrKgVsM3Day, `${n1(dz.olrKgVsM3Day)} kg VS/(m³·d)`, "loading rate"); techCheck(dz.storageVolumeM3, `≈ ${n0(sig2(dz.storageVolumeM3))} m³`, "storage volume");
   const safetyFold = txt(fold(6));
   for (const s of a.safety) has(safetyFold, s.hazard, `safety ${s.id}`);
   has(safetyFold, locText(SAFETY_DISCLAIMER, a.lang), "safety disclaimer");

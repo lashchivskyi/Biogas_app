@@ -31,6 +31,14 @@ export function compareExampleEconomics(left: { e: ExampleCase; a: Assessment },
     || left.e.id.localeCompare(right.e.id);
 }
 
+/** One model case per sector, computed the same way for the home picker and the sector page. */
+export function modelCase(exampleId: string | undefined, lang: Locale) {
+  const e = EXAMPLES.find((x) => x.id === exampleId);
+  if (!e) return undefined;
+  const a = assess(e.input, getCountry(e.input.countryCode), { lang, uncertainty: false });
+  return { e, a, economics: a.financialsAvailable !== false };
+}
+
 export function rankedExamples() {
   return EXAMPLES.map((e) => ({ e, a: assess(e.input, getCountry(e.input.countryCode)) })).sort(compareExampleEconomics);
 }

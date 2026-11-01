@@ -1,4 +1,3 @@
-import { ProcessReport } from "./ProcessReport";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { marketBandsFor, minimumGapsForVerdict, SAFETY_DISCLAIMER, VERDICT_MIN_SCORE } from "@/core";
@@ -25,6 +24,8 @@ import { DataConfidence } from "./DataConfidence";
 import { PaidTeaser } from "./PaidTeaser";
 import { SupportTable } from "./SupportTable";
 import { offerCopy } from "@/i18n/offer";
+import { processCopy, processFieldLabels } from "@/i18n/processes";
+import { PROCESS_UNITS, type ProcessKind, type ProcessResult } from "@/core/processes";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
@@ -37,6 +38,9 @@ const VERDICT_STYLE: Record<VerdictId, string> = {
 };
 const CONF_STYLE = { LOW: "bg-red-100 text-red-900", MEDIUM: "bg-amber-100 text-amber-900", HIGH: "bg-brandsoft text-brandink" } as const;
 const SCN: ScenarioId[] = ["conservative", "base", "optimistic"];
+/** Process inlets (COD, landfill, gas, residue) share this report; only the AD-specific blocks are swapped. */
+const PROCESS_INPUT: Record<ProcessKind, [string, string]> = { residue: ["tonnesYear", "bmp"], wastewater: ["flowM3Day", "codMgL"], landfill: ["annualWasteTonnes", "depositionYears"], gas: ["rawGasNm3Hour", "methanePct"] };
+const PROCESS_METRIC_LABELS: Record<string, string> = { nitrogen: "N", effluent: "m out", codIn: "COD in", codOut: "COD out", sludgeCod: "COD → X", methaneCod: "COD → CH₄", sludge: "m sludge (wet)", reactor: "V", effluentCod: "COD out", remainingPotential: "L₀(t)", closingPotential: "L₀(t + 1)", wasteStock: "M", vs: "VS", massIn: "m in", gasMass: "m gas", capturedCh4: "CH₄ → CHP / Upgrading / Boiler", uncapturedCh4: "CH₄ loss", generatedCh4: "CH₄ total", residual: "m residual", hrtDays: "HRT", olr: "OLR" };
 
 function Section({ title, children, id, sub }: { title: string; children: ReactNode; id?: string; sub?: string }) {
   return (
@@ -138,7 +142,6 @@ export interface ResultViewProps {
 
 export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
   registerMessages(locale, core);
-  if (raw.input.process) return <ProcessReport a={raw} d={d} locale={locale} currency={currency} display={display} access={access} unlockSlot={unlockSlot} afterSlot={afterSlot} methodologyHref={methodologyHref} />;
   const stressLabels = sensitivityLabels(locale, d);
   const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
   const a = {
@@ -163,6 +166,14 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
   const qualityGaps = qualityGapCopy(locale, d, currency);
   const minimumGaps = a.verdict.id === "INSUFFICIENT_DATA" && a.confidence.factors ? minimumGapsForVerdict(a.confidence.factors, a.confidence.clientScore ?? a.confidence.score, VERDICT_MIN_SCORE) : [];
   const full = access !== "free";
+  const process = raw.input.process ? best.process : undefined;
+  const economics = a.financialsAvailable !== false;
+  const PC = processCopy(locale);
+  const fields = processFieldLabels(locale);
+  const processValue = (key: string) => {
+    const v = (raw.input.process as Record<string, unknown> | undefined)?.[key];
+    return typeof v === "number" ? `${n0(v)} ${PROCESS_UNITS[key] ?? ""}`.trim() : "—";
+  };
 
   return (
     <div>
@@ -201,23 +212,28 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
       <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
         <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
         <p className="mt-2 text-[17px] leading-relaxed text-ink">
-          {f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
-          {route === "biomethane"
+          {process
+            ? `${PC.models[process.kind]}: ${R.biogas} ${range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³.`
+            : f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
+          {economics && <>{route === "biomethane"
             ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
             : f(R.summaryEl, {
                 el: n0(sig2(e.elNetKwh / 1000)),
                 heat: n0(sig2(e.heatUsefulKwh / 1000)),
                 share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
               })}{" "}
-          {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })} {R.tone[a.verdict.id]}
+          {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })}</>} {R.tone[a.verdict.id]}
         </p>
       </section>
 
       {/* ---------- Key numbers ---------- */}
       <Section title={R.keyTitle} sub={R.keySub}>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Stat label={R.feedstock} value={<>{n0(sig2(r.feedstockTonnes))} {L.units.tYear}</>} note={f(R.feedNote, { v: n0(best.feed.energyDensityKwhPerTonne) })} />
+          {process
+            ? <Stat label={PC.models[process.kind]} value={processValue(PROCESS_INPUT[process.kind][0])} note={`${fields[PROCESS_INPUT[process.kind][1]]}: ${processValue(PROCESS_INPUT[process.kind][1])}`} />
+            : <Stat label={R.feedstock} value={<>{n0(sig2(r.feedstockTonnes))} {L.units.tYear}</>} note={f(R.feedNote, { v: n0(best.feed.energyDensityKwhPerTonne) })} />}
           <Stat label={R.biogas} value={<>{range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³</>} note={f(R.biogasNote, { v: n0(r.biogasM3[1] / 8000) })} />
+          {economics && <>
           <Stat
             label={R.energy}
             value={route === "biomethane" ? <>{range(r.biomethaneNm3[0], r.biomethaneNm3[2], (x) => compact(sig2(x)))} Nm³</> : <>{range(r.electricityMwh[0], r.electricityMwh[2])} {L.units.mwh}</>}
@@ -228,8 +244,16 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
           <Stat label={R.payback} value={<>{years(paybackSorted[0])} – {years(paybackSorted[2])}</>} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
           <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(npvLoHi[0]), hi: eur(npvLoHi[1]) })} />
           <Stat label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
+          </>}
         </div>
         <DataConfidence a={a} d={d} locale={locale} currency={currency} />
+        {process && !economics && (
+          <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
+            <div className="font-semibold text-amber-950">{R.missing}</div>
+            <ul className="mt-1.5 list-disc pl-5 text-sm text-amber-950/90">{process.missingInputs.map((key) => <li key={key}>{fields[key]}</li>)}</ul>
+            <p className="mt-2 text-sm text-amber-950/90">{PC.costHint}</p>
+          </div>
+        )}
         {!a.confidence.factors && a.missingData.length > 0 && (
           <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <div className="font-semibold text-amber-950">{R.missing}</div>
@@ -242,14 +266,14 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
             <ul lang={a.lang} className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-ink2">{a.warnings.map((m) => <li key={m}>{m}</li>)}</ul>
           </div>
         )}
-        {full && <MarketCheck a={a} R={R} F={F} locale={locale} />}
+        {full && !process && <MarketCheck a={a} R={R} F={F} locale={locale} />}
         {full && a.quoteCheck && <QuoteCheckPanel a={a} d={d} F={F} locale={locale} />}
       </Section>
 
       {/* ---------- Energy flow ---------- */}
       <Section title={R.flowTitle} sub={R.flowSub}>
         <div className="card p-3 md:p-5">
-          <FlowDiagram
+          {!process && <FlowDiagram
             t={d.flow}
             n0={n0}
             compact={compact}
@@ -265,13 +289,16 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
               biomethaneNm3: e.biomethaneNm3,
               digestateT: a.digestate.tonnesYear,
             }}
-          />
-          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          />}
+          {economics ? <dl className={`grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4 ${process ? "" : "mt-4"}`}>
             <div><dt className="text-muted">{R.heatProduced}</dt><dd className="num font-semibold">{n0(e.heatProducedKwh / 1000)} {L.units.mwh}</dd></div>
             <div><dt className="text-muted">{R.heatDigester}</dt><dd className="num font-semibold">{n0(e.heatDigesterKwh / 1000)} {L.units.mwh}</dd></div>
             <div><dt className="text-muted">{R.heatUseful}</dt><dd className="num font-semibold">{n0(e.heatUsefulKwh / 1000)} {L.units.mwh} <span className="font-normal text-muted">{R.of} {n0(e.heatNetAvailableKwh / 1000)}</span></dd></div>
             <div><dt className="text-muted">{R.elSplit}</dt><dd className="num font-semibold">{n0(e.elSelfConsumedKwh / 1000)} / {n0(e.elExportedKwh / 1000)} {L.units.mwh}</dd></div>
-          </dl>
+          </dl> : <dl className="grid gap-3 text-sm sm:grid-cols-2">
+            <div><dt className="text-muted">CH₄</dt><dd className="num font-semibold">{n0(best.feed.ch4M3Year)} Nm³/a</dd></div>
+            <div><dt className="text-muted">{R.biogas}</dt><dd className="num font-semibold">{n0(best.feed.biogasM3Year)} Nm³/a</dd></div>
+          </dl>}
         </div>
       </Section>
 
@@ -283,9 +310,9 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
       )}
 
       {!full ? (
-        <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} samplesHref={samplesHref} />
+        economics && <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} samplesHref={samplesHref} />
       ) : (
-        <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} />
+        <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} process={process} economics={economics} />
       )}
 
       {afterSlot}
@@ -510,7 +537,7 @@ function QuoteCheckPanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F:
   );
 }
 
-function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; methodologyHref: string; extended: boolean }) {
+function FullSections({ a, d, F, locale, methodologyHref, extended, process, economics }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; methodologyHref: string; extended: boolean; process?: ProcessResult; economics: boolean }) {
   const registryHref = `${methodologyHref}?${new URLSearchParams({ c: a.countryCode, r: a.input.regionId })}#parameter-group-4`;
   const parameterNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 4 }).format;
   const R = d.result;
@@ -519,11 +546,15 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
   const best = a.scenarios.base;
   const route = a.bestRoute;
   const routes: RouteId[] = ["chp", "boiler", "biomethane"];
-  const moneyLabels = financialLabels(locale, d);
+  const PC = processCopy(locale);
+  const fields = processFieldLabels(locale);
+  const O = offerCopy[locale];
+  const metricNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 6 }).format;
+  const moneyLabels: Record<string, string> = { ...financialLabels(locale, d), ...(process && { process: PC.models[process.kind], process_operation: fields.processOpexLocalYear, residual_disposal: fields.residualCostLocalT, gas_supply: fields.gasPriceLocalNm3, treatment: fields.avoidedTreatmentLocalM3 }) };
   const localRows = (rows: { id: string; label: string; eur: number }[]) => rows.map((row) => ({ ...row, label: moneyLabels[row.id] ?? row.label }));
   return (
     <>
-      {!extended && <Section title={L.scenario.base} sub={f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}>
+      {economics && !extended && <Section title={L.scenario.base} sub={f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label={R.rowRevenue} value={eur(best.opexRev.revenueEur)} />
           <Stat label={R.rowOpex} value={eur(best.opexRev.opexEur)} />
@@ -536,7 +567,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
         </div>
         <div className="card mt-3 p-4"><span className="text-xs text-muted">{F.currency}</span><CashFlowChart scenarios={a.scenarios} t={d.charts} scn={L.scenario} compact={F.monetaryCompact} ids={["base"]} /></div>
       </Section>}
-      {extended && <>
+      {economics && extended && <>
       {/* ---------- Scenarios ---------- */}
       <Section title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
         <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
@@ -649,14 +680,22 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
       {/* ---------- Details ---------- */}
       </>}
+      {economics && <>
       <MeasureFirstPanel a={a} F={F} locale={locale} />
       <BreakEvenPanel a={a} F={F} locale={locale} unreachable={R.unreachable} />
       <MonteCarloPanel a={a} F={F} locale={locale} />
       <ScalePanel a={a} d={d} F={F} locale={locale} />
+      </>}
       <ClimatePanel a={a} F={F} locale={locale} />
       <Section title={R.detailsTitle}>
         <div className="space-y-3">
-          <Fold title={R.dFeed} open>
+          {process ? <Fold title={PC.models[process.kind]} open>
+            <p className="text-sm text-ink2">{PC.inputHint}</p>
+            <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
+              {Object.entries(process.metrics).map(([id, m]) => <div key={id}><dt className="text-muted">{PROCESS_METRIC_LABELS[id] ?? fields[id]}</dt><dd className="num font-semibold">{metricNumber(m.value)} {m.unit}</dd></div>)}
+            </dl>
+            <p className="mt-3 text-xs text-muted">{PC.costHint}</p>
+          </Fold> : <Fold title={R.dFeed} open>
             <div className="overflow-x-auto" tabIndex={0}>
               <table className="num w-full min-w-[640px] text-sm">
                 <thead><tr className="text-left text-xs uppercase tracking-wide text-muted"><th className="py-2">{R.colStream}</th><th className="py-2 text-right">{R.colTonnes}</th><th className="py-2 text-right">{R.colDm}</th><th className="py-2 text-right">{R.colCh4}</th><th className="py-2 text-right">{R.colLogistics}</th><th className="py-2 text-right">{R.colMaxDist}</th></tr></thead>
@@ -678,16 +717,18 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
               </table>
             </div>
             <p className="mt-3 text-xs text-muted">{R.maxDistNote}</p>
-          </Fold>
+          </Fold>}
 
           <Fold title={R.dTech}>
             <p lang={a.lang} className="font-semibold">{best.design.tech.primary}</p>
             <p lang={a.lang} className="mt-1 text-sm text-ink2">{best.design.tech.reactor}</p>
             <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-4">
-              <div><dt className="text-muted">{R.workVol}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.workingVolumeM3))} m³</dd></div>
-              <div><dt className="text-muted">{R.hrt}</dt><dd className="num font-semibold">{best.design.hrtDays} {R.days}</dd></div>
-              <div><dt className="text-muted">{R.olr}</dt><dd className="num font-semibold">{n1(best.design.olrKgVsM3Day)} kg VS/(m³·d)</dd></div>
-              <div><dt className="text-muted">{R.storage}</dt><dd className="num font-semibold">≈ {n0(sig2(best.design.storageVolumeM3))} m³</dd></div>
+              {([
+                [R.workVol, best.design.workingVolumeM3, `≈ ${n0(sig2(best.design.workingVolumeM3))} m³`],
+                [R.hrt, best.design.hrtDays, `${best.design.hrtDays} ${R.days}`],
+                [R.olr, best.design.olrKgVsM3Day, `${n1(best.design.olrKgVsM3Day)} kg VS/(m³·d)`],
+                [R.storage, best.design.storageVolumeM3, `≈ ${n0(sig2(best.design.storageVolumeM3))} m³`],
+              ] as const).filter(([, v]) => !process || v > 0).map(([label, , text]) => <div key={label}><dt className="text-muted">{label}</dt><dd className="num font-semibold">{text}</dd></div>)}
             </dl>
             <ul lang={a.lang} className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.reasons.map((x) => <li key={x}>{x}</li>)}</ul>
             {best.design.tech.alternatives.length > 0 && <><div className="mt-3 text-sm font-semibold">{R.alternatives}</div><ul lang={a.lang} className="list-disc space-y-1 pl-5 text-sm text-ink2">{best.design.tech.alternatives.map((x) => <li key={x}>{x}</li>)}</ul></>}
@@ -696,16 +737,20 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
 
           <MonthlyBalance a={a} locale={locale} n0={n0} />
 
-          <Fold title={R.dMoney}>
+          {economics && <Fold title={R.dMoney}>
             <div className="grid gap-6 md:grid-cols-3">
               <LineTable title={`CAPEX (${F.currency})`} rows={localRows(best.capex.lines)} total={best.capex.totalEur} totalLabel={R.total} compact={F.monetaryCompact} />
               <LineTable title={`${R.rowOpex} (${F.currency})`} rows={localRows(best.opexRev.opex)} total={best.opexRev.opexEur} totalLabel={R.total} compact={F.monetaryCompact} />
               <LineTable title={`${R.rowRevenue} (${F.currency})`} rows={localRows(best.opexRev.revenue)} total={best.opexRev.revenueEur} totalLabel={R.total} compact={F.monetaryCompact} />
             </div>
             <p className="mt-3 text-xs text-muted">{preferenceCopy(locale).costs}</p>
-          </Fold>
+          </Fold>}
 
-          <Fold title={R.dDigestate}>
+          {process ? <Fold title={O.residualsTitle}>
+            <p className="text-sm">{process.kind === "residue" ? f(O.resResidue, { t: n0(a.digestate.tonnesYear), n: n0(a.digestate.nKgYear) })
+              : process.kind === "wastewater" ? f(O.resWastewater, { t: n0(process.metrics.sludge?.value ?? 0), cod: n0(process.metrics.effluentCod?.value ?? 0) })
+              : O.resNone}</p>
+          </Fold> : <Fold title={R.dDigestate}>
             <p className="text-sm">
               {f(R.dgLine, {
                 status: R.dgStatus[a.digestate.status],
@@ -717,13 +762,14 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
             </p>
             <p className="mt-1 text-sm text-ink2">{f(R.dgValue, { v: eur(a.digestate.fertiliserValueEurYear), h: eur(a.digestate.handlingCostEurYear), n: eur(a.digestate.netValueEurYear) })}</p>
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.digestate.advice.map((x) => <li key={x}>{x}</li>)}</ul>
-          </Fold>
+          </Fold>}
 
           <Fold title={R.dMethane}>
             <p className="text-sm">
               {f(R.mLine, { v: pct(a.methane.lossShare, 1), lo: pct(a.methane.lossShareRange[0], 1), hi: pct(a.methane.lossShareRange[1], 1), co2: n0(a.methane.co2eTonnesYear), disp: n0(a.methane.displacedCo2eTonnesYear) })}{" "}
               {a.methane.ratio !== null ? f(R.mRatio, { v: pct(a.methane.ratio) }) : ""}
             </p>
+            {(process?.metrics.uncapturedCh4?.value ?? 0) > 0 && <p className="mt-2 text-sm">{f(O.methaneUncaptured, { v: n0(process!.metrics.uncapturedCh4.value) })}</p>}
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.methane.advice.map((x) => <li key={x}>{x}</li>)}</ul>
             <p className="mt-2 text-xs text-muted">{R.mNote}</p>
           </Fold>
@@ -756,7 +802,11 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
           <Fold title={f(R.dAssumptions, { n: a.assumptionsUsed.length })}>
             <p className="text-sm text-ink2">{R.assumptionsText} <Link className="font-semibold text-brand underline" href={registryHref}>→</Link></p>
             <ul lang={a.lang} className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink2">{a.notes.map((x) => <li key={x}>{x}</li>)}</ul>
-            {extended && !!a.parameterSensitivity?.length && (
+            {process && <div className="mt-4 border-t border-line pt-3">
+              <p lang="en" className="text-sm text-ink2">{a.input.process?.basisReference}</p>
+              <ul className="mt-2 space-y-1 text-xs text-muted">{process.provenance.map((p) => <li key={p.id}>{fields[p.id.replace("process.", "")] ?? p.label}: <span className="num">{parameterNumber(p.value)} {p.unit.replace("local", F.currency)}</span> · {p.origin} · {p.confidence} · {p.date} · {p.country}{p.source.startsWith("https://") && <> · <a href={p.source} className="underline" rel="noreferrer" target="_blank">{p.source}</a></>}</li>)}</ul>
+            </div>}
+            {economics && extended && !!a.parameterSensitivity?.length && (
               <div className="mt-4 border-t border-line pt-3">
                 <p className="text-sm font-semibold">{R.sensTitle}</p>
                 <p className="mt-1 text-xs text-muted">{R.sensSub}</p>
@@ -764,7 +814,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended }: { a: Asses
                   {a.parameterSensitivity.map((s) => {
                     const evidence = a.marketEvidence?.find((p) => p.id === s.parameterId);
                     return <div key={s.parameterId} className="min-w-0 rounded-lg border border-line p-3 text-xs">
-                      <dt lang="en" className="font-semibold">{evidence?.label ?? s.parameterId}</dt>
+                      <dt lang="en" className="font-semibold">{(s.parameterId.startsWith("process.") ? fields[s.parameterId.slice(8)] : undefined) ?? evidence?.label ?? s.parameterId}</dt>
                       <dd className="num mt-1">{parameterNumber(s.lowInput)} … {parameterNumber(s.highInput)} {evidence?.unit}</dd>
                       <dd className="num mt-1">{R.colRange}: {eur(Math.min(s.lowNpvEur, s.highNpvEur))} … {eur(Math.max(s.lowNpvEur, s.highNpvEur))}</dd>
                     </div>;

@@ -15,7 +15,7 @@ import { BUSINESS_TYPES, SECTOR_IDS, defaultProcess } from "../businesses";
 import { getDictionary } from "@/i18n";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ProcessReport } from "@/components/ProcessReport";
+import { ResultView } from "@/components/ResultView";
 import { EXAMPLES } from "../examples";
 
 const common = { operatingDays: 330, monthsActive: 12, startMonth: 1, processCapexLocal: 1800000, processOpexLocalYear: 70000, residualCostLocalT: 15, auxiliaryKwhYear: 100000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 30 };
@@ -180,7 +180,7 @@ describe("process localisation and draft compatibility", () => {
     const d = await getDictionary(locale);
     for (const e of EXAMPLES.filter(e => e.reference && e.input.process)) {
       const a = assess(e.input,COUNTRIES[e.input.countryCode]);
-      const html = renderToStaticMarkup(createElement(ProcessReport,{ a,d,locale,currency:COUNTRIES[e.input.countryCode].currency,access:"full",methodologyHref:`/${locale}/methodology` }));
+      const html = renderToStaticMarkup(createElement(ResultView,{ a,d,locale,currency:COUNTRIES[e.input.countryCode].currency,access:"full",methodologyHref:`/${locale}/methodology` }));
       expect(a.verdict.id,e.id).toBe("INSUFFICIENT_DATA");
       expect(html,e.id).not.toContain("NPV");
       expect(html,e.id).not.toMatch(/<th[^>]*>DSCR/);
@@ -200,7 +200,7 @@ describe("process localisation and draft compatibility", () => {
     const d = await getDictionary(locale);
     for (const p of cases) {
       const a = assess(input({ ...p, basisReference: "https://[invalid-quotation-url" }),COUNTRIES.DE);
-      const html = renderToStaticMarkup(createElement(ProcessReport,{ a,d,locale,currency:"EUR",access:"full",methodologyHref:`/${locale}/methodology` }));
+      const html = renderToStaticMarkup(createElement(ResultView,{ a,d,locale,currency:"EUR",access:"full",methodologyHref:`/${locale}/methodology` }));
       expect(html).not.toMatch(/undefined|NaN|\uFFFD|\?{3}/);
       expect(html).toContain(processCopy(locale).models[p.kind]);
       if (p.kind === "landfill") expect(html).toContain(new Intl.NumberFormat(locale).format(0.05));
@@ -243,15 +243,19 @@ describe("gas-stream support cases and paid sections", () => {
     for (const id of ["ca_brewery_cod","us_closed_landfill","de_existing_biogas","se_ras_sludge"]) {
       const e = EXAMPLES.find(x => x.id === id)!;
       const a = assess(e.input,COUNTRIES[e.input.countryCode]);
-      const render = (access: "standard" | "full") => renderToStaticMarkup(createElement(ProcessReport,{ a,d,locale:"en",currency:"EUR",access,methodologyHref:"/en/methodology" }));
+      const render = (access: "standard" | "full") => renderToStaticMarkup(createElement(ResultView,{ a,d,locale:"en",currency:"EUR",access,methodologyHref:"/en/methodology" }));
       const std = render("standard"), full = render("full");
       for (const html of [std, full]) {
         expect(html,id).toContain(offerCopy.en.residualsTitle);
         expect(html,id).toContain(d.result.dMethane.replaceAll("&","&amp;"));
+        // Same report shell as AD, but a gas inlet or COD reactor never shows the feedstock table or digestate block.
+        expect(html,id).not.toContain(d.result.dFeed.replaceAll("&","&amp;"));
+        expect(html,id).not.toContain(d.result.dDigestate.replaceAll("&","&amp;"));
         expect(html,id).not.toMatch(/undefined|NaN/);
       }
       expect(std,id).not.toContain(d.result.supportTitle);
       expect(full,id).toContain(d.result.supportTitle);
+      expect(full,id).toContain(d.result.scoresTitle.replaceAll("&","&amp;"));
     }
   });
 });
