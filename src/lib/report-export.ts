@@ -45,6 +45,8 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   const headings = new Set<Cell[]>();
   const head = (row: Cell[]): Cell[] => (headings.add(row), row);
 
+  // Same gate as the page (ResultView `economics`): without budgets there are no money numbers to export, only gas.
+  const economics = a.financialsAvailable !== false;
   const summary: Cell[][] = [
     head([T("Methalytics preliminary screening — export"), ""]),
     [T("Pre-tax screening, not a bankable feasibility study. All money in nominal EUR (prices escalated, discounted at the country rate)."), ""],
@@ -56,38 +58,40 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     [T("Data confidence"), `${C(a.confidence.level)} (${a.confidence.score}/100)`],
     [T("Robustness across scenarios"), C(a.robustness)],
     blank,
-    head([T("Base case"), "EUR"]),
-    fm(EUR, [T("CAPEX"), base.capex.totalEur]),
-    fm(EUR, [T("Revenue and savings, year"), base.opexRev.revenueEur]),
-    fm(EUR, [T("OPEX, year"), base.opexRev.opexEur]),
-    fm(EUR, [T("EBITDA, year"), base.fin.ebitdaEurYear]),
-    fm(EUR, [T("NPV"), base.fin.npvEur]),
-    fm(PCT, [T("IRR (share: 0.08 = 8 %)"), base.fin.irr]),
-    fm(N1, [T("Simple payback, years"), base.fin.simplePaybackYears]),
-    fm(N1, [T("Discounted payback at the project discount rate, years (empty: not within the horizon)"), base.fin.discountedPaybackYears ?? null]),
-    fm(N2, [T("Minimum DSCR (EBITDA-based screening ratio)"), base.fin.dscrMin]),
-    fm(EUR, [T("Debt, EUR"), base.fin.debtEur]),
-    fm(EUR, [T("Biogas, m³/year"), base.feed.biogasM3Year]),
-    fm(EUR, [T("Electrical capacity, kWe"), base.kwElEquivalent]),
-    fm(EUR, [T("Net electricity, MWh/year"), base.energy.elNetKwh / 1000]),
-    fm(EUR, [T("Useful heat, MWh/year"), base.energy.heatUsefulKwh / 1000]),
-    fm(EUR, [T("Biomethane, Nm³/year"), base.energy.biomethaneNm3]),
-    blank,
-    head([T("Break-even (NPV = 0, one value at a time)"), ""]),
-    fm(N1, [T("CAPEX reduction needed, %"), be.capexReductionPct]),
-    fm(N1, [T("Energy price increase needed, %"), be.energyPriceIncreasePct]),
-    fm(EUR, [T("Highest installed cost, EUR"), be.maxCapexEur ?? null]),
-    ...(be.product ? [
-      fm(AUTO, [T("Product value now, {unit}", { unit: be.product.unit }), be.product.currentEur]),
-      fm(AUTO, [T("Product value at NPV = 0, {unit}", { unit: be.product.unit }), be.product.breakEvenEur]),
-      ...(be.product.breakEvenEurMwh !== undefined ? [fm(N1, [T("Biomethane at NPV = 0, EUR/MWh LHV"), be.product.breakEvenEurMwh])] : []),
-    ] : []),
-    ...(a.monteCarlo ? [
-      head([T("Monte Carlo ({n} independent draws of the scenario quantities)", { n: a.monteCarlo.n }), ""]),
-      fm(EUR, [T("NPV P10, EUR"), a.monteCarlo.p10NpvEur]), fm(EUR, [T("NPV median, EUR"), a.monteCarlo.p50NpvEur]), fm(EUR, [T("NPV P90, EUR"), a.monteCarlo.p90NpvEur]),
-      fm(PCT0, [T("Chance that NPV > 0"), a.monteCarlo.probPositive]),
-    ] as Cell[][] : []),
-    fm(N1, [T("Feedstock price headroom, EUR/t of every input (+ can pay more, − needs a gate fee)"), be.feedstockEurT ?? null]),
+    ...(economics ? ([
+      head([T("Base case"), "EUR"]),
+      fm(EUR, [T("CAPEX"), base.capex.totalEur]),
+      fm(EUR, [T("Revenue and savings, year"), base.opexRev.revenueEur]),
+      fm(EUR, [T("OPEX, year"), base.opexRev.opexEur]),
+      fm(EUR, [T("EBITDA, year"), base.fin.ebitdaEurYear]),
+      fm(EUR, [T("NPV"), base.fin.npvEur]),
+      fm(PCT, [T("IRR (share: 0.08 = 8 %)"), base.fin.irr]),
+      fm(N1, [T("Simple payback, years"), base.fin.simplePaybackYears]),
+      fm(N1, [T("Discounted payback at the project discount rate, years (empty: not within the horizon)"), base.fin.discountedPaybackYears ?? null]),
+      fm(N2, [T("Minimum DSCR (EBITDA-based screening ratio)"), base.fin.dscrMin]),
+      fm(EUR, [T("Debt, EUR"), base.fin.debtEur]),
+      fm(EUR, [T("Biogas, m³/year"), base.feed.biogasM3Year]),
+      fm(EUR, [T("Electrical capacity, kWe"), base.kwElEquivalent]),
+      fm(EUR, [T("Net electricity, MWh/year"), base.energy.elNetKwh / 1000]),
+      fm(EUR, [T("Useful heat, MWh/year"), base.energy.heatUsefulKwh / 1000]),
+      fm(EUR, [T("Biomethane, Nm³/year"), base.energy.biomethaneNm3]),
+      blank,
+      head([T("Break-even (NPV = 0, one value at a time)"), ""]),
+      fm(N1, [T("CAPEX reduction needed, %"), be.capexReductionPct]),
+      fm(N1, [T("Energy price increase needed, %"), be.energyPriceIncreasePct]),
+      fm(EUR, [T("Highest installed cost, EUR"), be.maxCapexEur ?? null]),
+      ...(be.product ? [
+        fm(AUTO, [T("Product value now, {unit}", { unit: be.product.unit }), be.product.currentEur]),
+        fm(AUTO, [T("Product value at NPV = 0, {unit}", { unit: be.product.unit }), be.product.breakEvenEur]),
+        ...(be.product.breakEvenEurMwh !== undefined ? [fm(N1, [T("Biomethane at NPV = 0, EUR/MWh LHV"), be.product.breakEvenEurMwh])] : []),
+      ] : []),
+      ...(a.monteCarlo ? [
+        head([T("Monte Carlo ({n} independent draws of the scenario quantities)", { n: a.monteCarlo.n }), ""]),
+        fm(EUR, [T("NPV P10, EUR"), a.monteCarlo.p10NpvEur]), fm(EUR, [T("NPV median, EUR"), a.monteCarlo.p50NpvEur]), fm(EUR, [T("NPV P90, EUR"), a.monteCarlo.p90NpvEur]),
+        fm(PCT0, [T("Chance that NPV > 0"), a.monteCarlo.probPositive]),
+      ] as Cell[][] : []),
+      fm(N1, [T("Feedstock price headroom, EUR/t of every input (+ can pay more, − needs a gate fee)"), be.feedstockEurT ?? null]),
+    ] as Cell[][]) : [[a.verdict.reasons[0] ?? "", ""] as Cell[], fm(EUR, [T("Biogas, m³/year"), base.feed.biogasM3Year])]),
     blank,
     head([T("Notes"), ""]),
     ...a.notes.map((n) => [n, ""] as Cell[]),
@@ -120,8 +124,10 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
 
   const sheets: Sheet[] = [
     { name: T("Summary"), rows: summary, widths: [70, 22] },
-    { name: T("Cash flow"), rows: cashflow, widths: [8, ...flowScenarios.flatMap(() => [26, 26])] },
-    { name: T("CAPEX and OPEX"), rows: money, widths: [70, 16] },
+    ...(economics ? [
+      { name: T("Cash flow"), rows: cashflow, widths: [8, ...flowScenarios.flatMap(() => [26, 26])] },
+      { name: T("CAPEX and OPEX"), rows: money, widths: [70, 16] },
+    ] : []),
     { name: T("Assumptions"), rows: assumptions, widths: [50, 14, 14, 22, 12, 12, 90, 40] },
   ];
 
@@ -176,7 +182,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     ] });
   }
 
-  if (full) {
+  if (full && economics) {
     const routes: RouteId[] = ["chp", "boiler", "biomethane"];
     sheets.push({ name: T("Routes"), widths: [16, 16, 16, 16, 16, 12, 14], rows: [
       [T("Route"), T("Scenario"), "CAPEX, EUR", T("EBITDA/year, EUR"), T("NPV, EUR"), "IRR", T("Payback, years")],

@@ -165,7 +165,7 @@ const vi: Translation = {
     storage: "Hồ / bể chứa sẵn có thể phủ bạt", storageHint: "Tiết kiệm chi phí xây bể mới.",
     gasGrid: "Khoảng cách tới đường ống khí (cho biomethane)", gasGridHint: "Để trống nếu không biết.",
     neighbours: "Có nhà dân trong bán kính 300 m", protected: "Gần nguồn nước hoặc khu bảo tồn",
-    lineHead: "Bao nhiêu con / chỗ?", lineTonnes: "Bao nhiêu mỗi năm?", housing: "Hình thức nuôi",
+    lineHead: "Bao nhiêu con / chỗ?", lineTonnes: "Bao nhiêu mỗi năm?", lineMeasured: "Lượng phân đã đo, nếu biết", housing: "Hình thức nuôi",
     handlingQ: "9. Hiện nay chúng được xử lý thế nào?", choose: "— chọn —", disposalCost: "Chi phí xử lý bạn đang trả", disposalHint: "Đây là khoản có thể tiết kiệm.",
     saleValue: "Giá bạn đang bán", saleHint: "Đây là doanh thu mất đi nếu đưa vào bể phân hủy.",
     refine: "Chi tiết hơn (tùy chọn)", dm: "Chất khô, % (thường {v})", dmHint: "Nếu biết từ kết quả phân tích. Phân lỏng loãng cho ít khí hơn.",

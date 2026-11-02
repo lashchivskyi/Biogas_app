@@ -165,7 +165,7 @@ const sk: Translation = {
     storage: "Existujúca lagúna / nádrž, ktorú možno zakryť", storageHint: "Úspora na novom sklade.",
     gasGrid: "Vzdialenosť k plynovodu (pre biometán)", gasGridHint: "Nechajte prázdne, ak neviete.",
     neighbours: "Obytná zástavba do 300 m", protected: "Vodný tok alebo chránené územie v blízkosti",
-    lineHead: "Koľko kusov / miest?", lineTonnes: "Koľko za rok?", housing: "Ustajnenie",
+    lineHead: "Koľko kusov / miest?", lineTonnes: "Koľko za rok?", lineMeasured: "Zmerané množstvo hospodárskych hnojív, ak je známe", housing: "Ustajnenie",
     handlingQ: "9. Čo sa s tým dnes deje?", choose: "— vyberte —", disposalCost: "Koľko platíte za likvidáciu", disposalHint: "To je potenciálna úspora.",
     saleValue: "Za koľko to dnes predávate", saleHint: "To je ušlý príjem, ak to pôjde do fermentora.",
     refine: "Spresniť (nepovinné)", dm: "Sušina, % (zvyčajne {v})", dmHint: "Ak ju poznáte z rozboru. Riedená hnojovica dá menej plynu.",

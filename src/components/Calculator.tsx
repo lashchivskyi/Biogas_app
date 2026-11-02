@@ -504,6 +504,11 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
         <Field label={isAnimal ? C.lineHead : C.lineTonnes} htmlFor={`${id}-q`} tooltip={isAnimal ? T.quantityHead : T.quantityTonnes}>
           <Num id={`${id}-q`} value={line.quantity} onChange={(v) => onChange({ quantity: v })} unit={unit} placeholder={fmt(C.eg, { v: localNumber(isAnimal ? 400 : 3000) })} min={0} />
         </Field>
+        {isAnimal && (
+          <Field label={C.lineMeasured} htmlFor={`${id}-mt`} tooltip={T.measuredTonnes}>
+            <Num id={`${id}-mt`} value={line.measuredTonnes ?? ""} onChange={(v) => onChange({ measuredTonnes: v })} unit={L.units.tYear} min={0} />
+          </Field>
+        )}
         {isAnimal && ["dairy_cow", "cattle_other"].includes(line.animal as string) && (
           <Field label={C.housing} htmlFor={`${id}-h`} tooltip={T.housing}>
             <select id={`${id}-h`} className="field" value={line.housing} onChange={(e) => onChange({ housing: e.target.value as FormLine["housing"] })}>

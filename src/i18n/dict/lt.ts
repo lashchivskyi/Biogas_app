@@ -165,7 +165,7 @@ const lt: Translation = {
     storage: "Esama lagūna / rezervuaras, kurį galima uždengti", storageHint: "Sutaupoma naujai saugyklai.",
     gasGrid: "Atstumas iki dujų tinklo (biometanui)", gasGridHint: "Palikite tuščią, jei nežinote.",
     neighbours: "Gyvenamieji namai 300 m spinduliu", protected: "Netoliese vandens telkinys arba saugoma teritorija",
-    lineHead: "Kiek gyvulių / vietų?", lineTonnes: "Kiek per metus?", housing: "Laikymo būdas",
+    lineHead: "Kiek gyvulių / vietų?", lineTonnes: "Kiek per metus?", lineMeasured: "Išmatuotas mėšlo kiekis, jei žinomas", housing: "Laikymo būdas",
     handlingQ: "9. Kas su jomis daroma dabar?", choose: "— pasirinkite —", disposalCost: "Kiek mokate už tvarkymą", disposalHint: "Tai galimas sutaupymas.",
     saleValue: "Už kiek dabar parduodate", saleHint: "Tai prarastos pajamos, jei žaliava keliaus į fermentatorių.",
     refine: "Patikslinti (neprivaloma)", dm: "Sausosios medžiagos, % (įprastai {v})", dmHint: "Jei žinoma iš analizės. Atskiestos srutos duoda mažiau dujų.",

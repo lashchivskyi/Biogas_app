@@ -18,7 +18,7 @@ import { evpi, latinHypercube, MC_DIMS, percentile, sampleScenario, triangular }
 import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
 import { Params, prov, toMap } from "./params";
 import { CATALOG_VERSION, checkEvidence, DATA_REVIEW_AS_OF, fingerprint, isoDate, MODEL_VERSION } from "./modelAudit";
-import { assessQuality, capQuality } from "./quality";
+import { ADVISORY_CLIENT_FACTORS, assessQuality, capQuality } from "./quality";
 import { safetyRegister } from "./safety";
 import { SCENARIOS, SCENARIO_ORDER, scenarioProvenance } from "./scenarios";
 import { computeScores } from "./scoring";
@@ -330,7 +330,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const priceIds: string[] = [];
   if (!demand.electricityPriceKnown && (base.energy.elSelfConsumedKwh > 0 || base.energy.elPurchasedKwh > 0)) priceIds.push("econ.electricity_retail_eur_kwh");
   if (base.energy.elExportedKwh > 0 && !((input.energy.exportPriceLocalPerKwh ?? 0) > 0)) priceIds.push("econ.electricity_spot_eur_kwh");
-  if (!demand.heatValueKnown && (base.energy.heatUsefulKwh > 0 || base.energy.heatExternalPurchasedKwh > 0)) priceIds.push("econ.heat_value_eur_kwh_th");
+  // Heat value is a client-answerable proxy only where the form shows a heat or gas price (heat sold or used on site).
+  if (!demand.heatValueKnown && base.energy.heatUsefulKwh > 0) priceIds.push("econ.heat_value_eur_kwh_th");
   const bmOffer = (input.energy.biomethanePriceLocalPerMwhHhv ?? 0) > 0;
   if (bestRoute === "biomethane" && !bmOffer) priceIds.push("econ.biomethane_price_base_eur_nm3");
   const capexId = params.has(`econ.capex_factor_${bestRoute}`) ? `econ.capex_factor_${bestRoute}` : "econ.capex_factor";
@@ -384,13 +385,15 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       add("yield", [lo, 1, hi], [npvWith({ methaneYield: lo }), npvWith({ methaneYield: hi })]);
     }
     // Manure quantity per head: the catalogue range for herds (waste streams are entered as tonnes).
-    const herd = input.feedstocks.filter((f) => f.animal && f.quantity > 0);
+    // Measured manure tonnes have no per-head range left.
+    const perHead = (f: (typeof input.feedstocks)[number] | undefined) => Boolean(f?.animal && !((f.measuredTonnesYear ?? 0) > 0));
+    const herd = input.feedstocks.filter((f) => perHead(f) && f.quantity > 0);
     if (herd.length) {
       const share = (end: "rangeLow" | "rangeHigh") => {
         let w = 0, t = 0;
         for (const l of lines) {
           const f = input.feedstocks.find((x) => x.id === l.id);
-          const a = f?.animal ? ANIMALS[f.animal] : undefined;
+          const a = perHead(f) ? ANIMALS[f!.animal!] : undefined;
           w += l.ch4M3Year * (a ? a[end] / a.tonnesPerHeadYear : 1);
           t += l.ch4M3Year;
         }
@@ -512,9 +515,9 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // turn a complete client form into "insufficient data". Caps that exist to withhold a verdict (expired price,
   // future-dated or missing process basis) keep the full score.
   const blocking = quality.factors.some((f) => ["price_expired", "process_basis_date", "process_inputs"].includes(f.id));
-  const advisoryPoints = blocking ? 0 : quality.factors.filter((f) => f.owner === "model").reduce((a, f) => a + f.points, 0);
+  const advisoryPoints = blocking ? 0 : quality.factors.filter((f) => f.owner === "model" || ADVISORY_CLIENT_FACTORS.includes(f.id)).reduce((a, f) => a + f.points, 0);
   const verdict = decideVerdict({
-    base, cons, opt, confidence: { level: quality.level, score: quality.score, clientScore: quality.score + advisoryPoints }, minKwEl: minChp, breakEven, lang,
+    base, cons, opt, confidence: { level: quality.level, score: quality.score, clientScore: quality.score + advisoryPoints, labDone: !input.process && !quality.missingCodes.includes("lab") }, minKwEl: minChp, breakEven, lang,
   });
   if (input.process) verdict.whatWouldChange = [
     T("Verify the inlet analysis and operating history, seasonal availability, and a supplier guarantee for the proposed treatment train."),
@@ -613,7 +616,10 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     warnings.push(T("CHP performance uses a 50 Hz biogas full-load catalogue reference (03/2025), interpolated between ratings; part-load, ambient derating and 60 Hz equipment require supplier confirmation."));
     if (base.energy.chpKwEl < 20 || base.energy.chpKwEl > 2300) warnings.push(T("CHP rating is outside the 20–2300 kW reference curve; endpoint efficiency is only a proxy. Obtain a multi-engine or equipment-specific design."));
   }
-  const reviewChecks = dataAudit.checks.filter((check) => ["EXPIRED", "REVIEW_REQUIRED", "UNDATED"].includes(check.status) && check.parameterId.startsWith("econ."));
+  // The client's own prices replace market data: they are listed as unverified customer inputs in the evidence, but
+  // they are not "market data" to review, and warning about them would penalise the better-documented path.
+  const clientIds = new Set([...actualEvidence.values()].filter((p) => p.origin === "USER_INPUT").map((p) => p.id));
+  const reviewChecks = dataAudit.checks.filter((check) => ["EXPIRED", "REVIEW_REQUIRED", "UNDATED"].includes(check.status) && check.parameterId.startsWith("econ.") && !clientIds.has(check.parameterId));
   if (reviewChecks.length) warnings.push(T("Market data require review ({join}). Observation dates and validity are shown in the evidence; these are not verified current customer quotations.", { join: reviewChecks.map((check) => check.parameterId).join(", ") }));
 
   const supportIncluded = false;

@@ -165,7 +165,7 @@ const sr: Translation = {
     storage: "Postojeća laguna / rezervoar koji se može pokriti", storageHint: "Ušteda na novom skladištu.",
     gasGrid: "Udaljenost do gasne mreže (za biometan)", gasGridHint: "Ostavite prazno ako ne znate.",
     neighbours: "Stambeni objekti u krugu od 300 m", protected: "U blizini je vodotok ili zaštićeno područje",
-    lineHead: "Koliko grla / mesta?", lineTonnes: "Koliko godišnje?", housing: "Način držanja",
+    lineHead: "Koliko grla / mesta?", lineTonnes: "Koliko godišnje?", lineMeasured: "Izmerena količina stajnjaka, ako je poznata", housing: "Način držanja",
     handlingQ: "9. Šta se danas radi s tim?", choose: "— izaberite —", disposalCost: "Koliko plaćate zbrinjavanje", disposalHint: "To je potencijalna ušteda.",
     saleValue: "Po kojoj ceni to danas prodajete", saleHint: "To je izgubljen prihod ako ode u fermentor.",
     refine: "Precizirajte (opciono)", dm: "Suva materija, % (obično {v})", dmHint: "Ako je poznata iz analize. Razblažen stajnjak daje manje gasa.",

@@ -15,7 +15,7 @@ import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, R
  */
 export function biomethaneOfftake(ctx: RunContext, energy: EnergyBalance) {
   const p = ctx.params;
-  const km = ctx.input.site.gasGridKm ?? 2;
+  const km = ctx.input.site.gasGridKm ?? p.get("eng.gas_grid_default_km");
   const purity = ctx.input.process?.kind === "gas" || ctx.input.process?.kind === "landfill" ? ctx.input.process.productMethanePct / 100 : p.get("eng.biomethane_ch4_purity");
   const nm3h = Math.max(energy.rawBiogasDesignNm3PerHour * energy.rawBiogasCh4Share / purity, 5);
   const pipelineEur = km * p.get("eng.capex.pipeline_eur_km");

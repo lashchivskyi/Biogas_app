@@ -23,8 +23,10 @@ describe("minimum fields for a verdict", () => {
     const f = [factor("electricity", 12, "model"), factor(undefined, 20), factor("land", 8)];
     expect(minimumGapsForVerdict(f, 20, 35)).toEqual(["land"]);
   });
-  it("matches the verdict: a dairy with no energy, site or lab data is INSUFFICIENT and the listed minimum clears the gate", () => {
-    const e = EXAMPLES.find((x) => x.id === "dairy_400")!;
+  // Head counts are the standard way to state manure (no deduction since 2026-11-02); a laying-hen farm without energy,
+  // site or lab data still lacks enough of its own data for a conclusion (LOW-confidence catalogue).
+  it("matches the verdict: a hen farm with no energy, site or lab data is INSUFFICIENT and the listed minimum clears the gate", () => {
+    const e = EXAMPLES.find((x) => x.id === "layers_200k")!;
     const input = { ...e.input, energy: { heatNeed: "none" as const, hasGridConnection: true }, site: {}, labAnalysisAvailable: false, feedstocks: e.input.feedstocks.map((f) => ({ id: f.id, animal: f.animal, type: f.type, quantity: f.quantity, housing: f.housing })) };
     const a = assess(input, getCountry(input.countryCode), { uncertainty: false });
     expect(a.verdict.id).toBe("INSUFFICIENT_DATA");

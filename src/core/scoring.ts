@@ -1,5 +1,6 @@
 import type { CustomerDemand } from "./demand";
 import { FEEDSTOCKS } from "./feedstockData";
+import { unpricedCompetingUse } from "./feedstock";
 import { fmtDec, fmtUnit, type Tr } from "./i18n";
 import type { DigestateAssessment, LogisticsAssessment, ProjectInput, ScenarioResult, Score } from "./types";
 
@@ -49,10 +50,14 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   const logisticsScore = worstLogistics >= 0.5 ? 20 : worstLogistics >= 0.25 ? 55 : 100;
   let feedPenalty = 0;
   const feedNotes: string[] = [];
-  const lowShare = feed.tonnesYear > 0 ? feed.lines.filter((l) => FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / feed.tonnesYear : 0;
-  if (lowShare > 0.5) { feedPenalty += 8; feedNotes.push(T("Most feedstock has low-confidence parameters")); }
+  // Fit scores rate the project, not the data: missing or catalogue data is deducted once, in the data-quality score
+  // (quality.ts). The note stays as information. Lab-measured streams no longer count as low-confidence.
+  const labStream = (id: string) => { const f = input.feedstocks.find((x) => x.id === id); return Boolean(input.labAnalysisAvailable && f?.dryMatterPct && f.vsPctOfDm && f.methaneYieldLPerKgVs); };
+  const lowShare = feed.tonnesYear > 0 ? feed.lines.filter((l) => !labStream(l.id) && FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / feed.tonnesYear : 0;
+  if (lowShare > 0.5) feedNotes.push(T("Most feedstock has low-confidence parameters"));
   if (feed.inhibitionFactor < 1) { feedPenalty += 10; feedNotes.push(T("Ammonia / fat inhibition risk lowers the yield")); }
-  if (feed.lines.some((l) => FEEDSTOCKS[l.typeId].flags.includes("competing_use") && l.opportunityCostEurYear === 0)) {
+  const lineInput = (id: string) => input.feedstocks.find((x) => x.id === id);
+  if (feed.lines.some((l) => { const f = lineInput(l.id); const t = FEEDSTOCKS[l.typeId]; return l.opportunityCostEurYear === 0 && unpricedCompetingUse(t.flags, l.delivered, f?.purchasePricePerTonneLocal ?? 0, f?.handling ?? t.defaultHandling); })) {
     feedPenalty += 5;
     feedNotes.push(T("Feedstock has an alternative use; its price is not given"));
   }
@@ -84,8 +89,9 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
     const elShareSelf = e.elNetKwh > 0 ? e.elSelfConsumedKwh / e.elNetKwh : 0;
     energyExpl.push(T("Own consumption absorbs {elShareSelf} % of the electricity produced", { elShareSelf: r0(elShareSelf * 100) }));
     energyExpl.push(T("Useful heat {heatUsefulKwh} MWh of {heatNetAvailableKwh} MWh available after digester needs", { heatUsefulKwh: r0(e.heatUsefulKwh / 1000), heatNetAvailableKwh: r0(e.heatNetAvailableKwh / 1000) }));
-    if (!demand.electricityKnown) { energyValue = Math.max(0, energyValue - 10); energyExpl.push(T("Electricity consumption not given")); }
-    if (demand.heatWanted && !demand.heatKnown) { energyValue = Math.max(0, energyValue - 10); energyExpl.push(T("Heat consumption not given")); }
+    // Unknown consumption already earns nothing in the energy balance and is a data-quality gap; no third deduction here.
+    if (!demand.electricityKnown) energyExpl.push(T("Electricity consumption not given"));
+    if (demand.heatWanted && !demand.heatKnown) energyExpl.push(T("Heat consumption not given"));
     if (!input.energy.hasGridConnection) energyExpl.push(T("No grid connection: surplus cannot be sold"));
   }
 
@@ -95,10 +101,12 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   if (input.site.neighboursWithin300m) { loc -= 25; locExpl.push(T("Neighbours within 300 m: odour, traffic, safety distances")); }
   if (input.site.nearProtectedOrWaterArea) { loc -= 30; locExpl.push(T("Water bodies or protected areas nearby")); }
   if (digestate.adequacy === "SHORT") { loc -= 25; locExpl.push(T("Not enough land for the digestate")); }
-  else if (digestate.adequacy === "UNKNOWN") { loc -= 10; locExpl.push(T("Land for digestate unknown")); }
+  // Unknown land is already priced (half the imported nutrients assumed unplaceable) and is a data-quality gap.
+  else if (digestate.adequacy === "UNKNOWN") locExpl.push(T("Land for digestate unknown"));
   if (logistics.perLine.some((l) => l.distanceKm > 30)) { loc -= 20; locExpl.push(T("Some feedstock comes from more than 30 km")); }
   if (!input.energy.hasGridConnection) { loc -= 10; locExpl.push(T("No electricity grid connection")); }
-  if (base.route === "biomethane" && (input.site.gasGridKm ?? 99) > 10) { loc -= 25; locExpl.push(T("Gas grid more than 10 km away")); }
+  // An empty distance is unknown (the energy-fit note says so), not "more than 10 km".
+  if (base.route === "biomethane" && (input.site.gasGridKm ?? 0) > 10) { loc -= 25; locExpl.push(T("Gas grid more than 10 km away")); }
   if (locExpl.length === 0) locExpl.push(T("No critical site constraints found from your answers"));
   const locValue = clamp(loc);
 
@@ -138,7 +146,7 @@ export function computeScores(s: ScoreInputs): { scores: Score[]; overall: { val
   if (input.site.neighboursWithin300m) { env += 20; envExpl.push(T("Neighbours within 300 m: odour and incident exposure")); }
   if (input.site.nearProtectedOrWaterArea) { env += 20; envExpl.push(T("Water bodies / protected areas nearby")); }
   if (digestate.adequacy === "SHORT") { env += 15; envExpl.push(T("Surplus digestate: risk of nitrogen over-application")); }
-  else if (digestate.adequacy === "UNKNOWN") { env += 5; envExpl.push(T("Unknown where the digestate will go")); }
+  else if (digestate.adequacy === "UNKNOWN") envExpl.push(T("Unknown where the digestate will go"));
   const envRisk = clamp(env);
 
   const scores: Score[] = [

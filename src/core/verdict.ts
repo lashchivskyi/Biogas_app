@@ -13,7 +13,7 @@ export function decideVerdict(args: {
   cons: ScenarioResult;
   opt: ScenarioResult;
   /** `clientScore` excludes advisory model-side deductions: a client cannot fill in the model's own data gaps. */
-  confidence: { level: Confidence; score: number; clientScore?: number };
+  confidence: { level: Confidence; score: number; clientScore?: number; /** Laboratory DM/VS/BMP already entered for every stream. */ labDone?: boolean };
   minKwEl: number;
   breakEven: Assessment["breakEven"];
   lang: CoreLang;
@@ -54,14 +54,15 @@ export function decideVerdict(args: {
 
   const pbCons = cons.fin.simplePaybackYears;
   // "Strong" must survive the conservative case at the country discount rate — otherwise it is a grey-zone project.
+  // No debt (all-equity project) means no debt service to cover: DSCR is not applicable, not zero.
   // Stable fat co-digestion is documented only up to ~30 % of VS (Long et al. 2012, see eng.fat_share_warning): a feed made mostly of grease is untested territory.
   const fatDominated = base.feed.fatDominantShareVs > 0.5;
-  const strong = !fatDominated && pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? 0) >= 1.3 && confidence.level !== "LOW";
+  const strong = !fatDominated && pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? Infinity) >= 1.3 && confidence.level !== "LOW";
   const borderline = npvBase < 0 && npvBase >= -0.1 * base.fin.capexEur && pb !== null && pb <= 8.5 && opt.fin.npvEur >= 0;
   const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
 
   if (strong) {
-    reasons.push(T("Simple payback ≈ {pb} (base) and ≈ {pbCons} in the conservative case; base NPV €{npvBase}; minimum DSCR {dscrMin}.", { pb: y(pb!), pbCons: y(pbCons!), npvBase: fmt(npvBase), dscrMin: D(base.fin.dscrMin ?? 0, 2) }));
+    reasons.push(T("Simple payback ≈ {pb} (base) and ≈ {pbCons} in the conservative case; base NPV €{npvBase}; minimum DSCR {dscrMin}.", { pb: y(pb!), pbCons: y(pbCons!), npvBase: fmt(npvBase), dscrMin: base.fin.dscrMin === null ? "—" : D(base.fin.dscrMin, 2) }));
     whatWouldChange.push(T("Confirm with a laboratory feedstock analysis (BMP) and real energy invoices."));
     return { id: "STRONG_CANDIDATE", reasons, whatWouldChange };
   }
@@ -81,7 +82,8 @@ export function decideVerdict(args: {
     }
     if (confidence.level === "LOW") {
       reasons.push(T("Data confidence is low — the verdict is preliminary."));
-      whatWouldChange.push(T("Fill in missing data and run a laboratory feedstock analysis."));
+      // Never ask for a laboratory analysis the client has already entered.
+      whatWouldChange.push(confidence.labDone ? T("Add the items listed under “What you can add” below.") : T("Fill in missing data and run a laboratory feedstock analysis."));
     }
     if ((base.fin.dscrMin ?? 99) < 1.3) whatWouldChange.push(T("Raise the equity share or obtain concessional finance: DSCR is below bank thresholds."));
     return { id: "POSSIBLE_WITH_CONDITIONS", reasons, whatWouldChange };

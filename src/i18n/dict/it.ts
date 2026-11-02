@@ -165,7 +165,7 @@ const it: Translation = {
     storage: "Vasca / stoccaggio esistente che si può coprire", storageHint: "Risparmio su un nuovo stoccaggio.",
     gasGrid: "Distanza dalla rete del gas (per il biometano)", gasGridHint: "Lascia vuoto se non la conosci.",
     neighbours: "Abitazioni entro 300 m", protected: "Corso d’acqua o area protetta nelle vicinanze",
-    lineHead: "Quanti capi / posti?", lineTonnes: "Quanto all’anno?", housing: "Stabulazione",
+    lineHead: "Quanti capi / posti?", lineTonnes: "Quanto all’anno?", lineMeasured: "Quantità di effluenti misurata, se nota", housing: "Stabulazione",
     handlingQ: "9. Che fine fanno oggi?", choose: "— scegli —", disposalCost: "Quanto paghi per lo smaltimento", disposalHint: "È un potenziale risparmio.",
     saleValue: "A quanto li vendi oggi", saleHint: "È un ricavo perso se finiscono nel digestore.",
     refine: "Affina (facoltativo)", dm: "Sostanza secca, % (tipica {v})", dmHint: "Se nota da un’analisi. Il liquame diluito produce meno gas.",

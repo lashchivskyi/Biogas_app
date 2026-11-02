@@ -165,7 +165,7 @@ const es: Translation = {
     storage: "Balsa / depósito existente que se puede cubrir", storageHint: "Ahorro en almacenamiento nuevo.",
     gasGrid: "Distancia a la red de gas (para biometano)", gasGridHint: "Déjelo vacío si no lo sabe.",
     neighbours: "Viviendas a menos de 300 m", protected: "Cauce o espacio protegido cercano",
-    lineHead: "¿Cuántas cabezas / plazas?", lineTonnes: "¿Cuánto al año?", housing: "Alojamiento del ganado",
+    lineHead: "¿Cuántas cabezas / plazas?", lineTonnes: "¿Cuánto al año?", lineMeasured: "Cantidad de estiércol medida, si la conoce", housing: "Alojamiento del ganado",
     handlingQ: "9. ¿Qué se hace hoy con ellos?", choose: "— elegir —", disposalCost: "Lo que paga por su gestión", disposalHint: "Es un ahorro potencial.",
     saleValue: "Por cuánto lo vende hoy", saleHint: "Es un ingreso perdido si va al digestor.",
     refine: "Afinar (opcional)", dm: "Materia seca, % (típica {v})", dmHint: "Si la conoce por un análisis. El purín diluido da menos gas.",

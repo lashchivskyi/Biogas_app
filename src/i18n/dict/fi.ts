@@ -165,7 +165,7 @@ const fi: Translation = {
     storage: "Olemassa oleva lieteallas / varasto, jonka voi kattaa", storageHint: "Säästää uudelta varastolta.",
     gasGrid: "Etäisyys kaasuverkkoon (biometaania varten)", gasGridHint: "Jätä tyhjäksi, jos et tiedä.",
     neighbours: "Asuinrakennuksia 300 m:n säteellä", protected: "Lähellä vesistö tai suojelualue",
-    lineHead: "Montako eläintä / paikkaa?", lineTonnes: "Paljonko vuodessa?", housing: "Pitotapa",
+    lineHead: "Montako eläintä / paikkaa?", lineTonnes: "Paljonko vuodessa?", lineMeasured: "Mitattu lantamäärä, jos tiedät sen", housing: "Pitotapa",
     handlingQ: "9. Mitä niille tehdään nyt?", choose: "— valitse —", disposalCost: "Mitä maksat käsittelystä", disposalHint: "Se on mahdollinen säästö.",
     saleValue: "Millä hinnalla myyt sen nyt", saleHint: "Se on menetettyä tuloa, jos se menee reaktoriin.",
     refine: "Tarkenna (valinnainen)", dm: "Kuiva-aine, % (tyypillisesti {v})", dmHint: "Jos tiedossa analyysistä. Laimea liete tuottaa vähemmän kaasua.",

@@ -165,7 +165,7 @@ const hu: Translation = {
     storage: "Lefedhető meglévő lagúna / tároló", storageHint: "Megtakarítás az új tárolón.",
     gasGrid: "Távolság a gázhálózattól (biometánhoz)", gasGridHint: "Hagyja üresen, ha nem tudja.",
     neighbours: "Lakóépület 300 m-en belül", protected: "Víztest vagy védett terület a közelben",
-    lineHead: "Hány állat / férőhely?", lineTonnes: "Mennyi évente?", housing: "Tartás",
+    lineHead: "Hány állat / férőhely?", lineTonnes: "Mennyi évente?", lineMeasured: "Mért trágyamennyiség, ha ismert", housing: "Tartás",
     handlingQ: "9. Mi történik vele ma?", choose: "— válasszon —", disposalCost: "Mennyit fizet az ártalmatlanításért", disposalHint: "Ez potenciális megtakarítás.",
     saleValue: "Mennyiért értékesíti ma", saleHint: "Ez elmaradt bevétel, ha a fermentorba kerül.",
     refine: "Pontosítás (opcionális)", dm: "Szárazanyag, % (jellemzően {v})", dmHint: "Ha laborvizsgálatból ismert. A hígított trágya kevesebb gázt ad.",

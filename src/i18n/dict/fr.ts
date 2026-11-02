@@ -165,7 +165,7 @@ const fr: Translation = {
     storage: "Fosse / stockage existant pouvant être couvert", storageHint: "Économie sur un nouveau stockage.",
     gasGrid: "Distance au réseau de gaz (pour le biométhane)", gasGridHint: "Laissez vide si vous ne savez pas.",
     neighbours: "Habitations à moins de 300 m", protected: "Cours d’eau ou zone protégée à proximité",
-    lineHead: "Combien de têtes / places ?", lineTonnes: "Combien par an ?", housing: "Mode d’élevage",
+    lineHead: "Combien de têtes / places ?", lineTonnes: "Combien par an ?", lineMeasured: "Quantité d’effluents mesurée, si connue", housing: "Mode d’élevage",
     handlingQ: "9. Que deviennent-ils aujourd’hui ?", choose: "— choisir —", disposalCost: "Ce que vous payez pour l’élimination", disposalHint: "C’est une économie potentielle.",
     saleValue: "Ce que vous en tirez aujourd’hui", saleHint: "C’est un revenu perdu s’il part au digesteur.",
     refine: "Affiner (facultatif)", dm: "Matière sèche, % (typique {v})", dmHint: "Si connue par analyse. Un lisier dilué produit moins de gaz.",

@@ -1,8 +1,14 @@
 import { missingProcessInputs } from "./processes";
 import type { CustomerDemand } from "./demand";
-import { ANIMALS, FEEDSTOCKS } from "./feedstockData";
+import { ANIMALS, FEEDSTOCKS, PAID_HANDLING } from "./feedstockData";
 import type { Tr } from "./i18n";
 import type { Confidence, ProjectInput, QualityFactor, QualityGapId, ScenarioResult } from "./types";
+
+/**
+ * Gaps the client can close with their own price or supplier quote, but which are evidence about the market, not missing
+ * project data: shown under "What you can add", never counted towards the insufficient-data gate.
+ */
+export const ADVISORY_CLIENT_FACTORS = ["price_proxy", "capex_unvalidated"];
 
 /** Best score a screening can reach: without verified documents it never claims HIGH (≥ 85). */
 export const QUALITY_START = 80;
@@ -47,32 +53,31 @@ export function assessQuality(
   // A stream with its own lab DM/VS/BMP no longer depends on the weak catalogue entry for its type.
   const labIds = new Set(input.labAnalysisAvailable ? input.feedstocks.filter(measured).map((f) => f.id) : []);
 
-  if (input.feedstocks.some((f) => f.animal)) {
-    reason("head_counts", "client", 8, T("Manure volumes estimated from head counts, not measured — enter measured tonnes per year"));
-  }
+  // Manure from head counts × national/IPCC per-head values is the standard screening method (IPCC 2019 Vol. 4 Ch. 10,
+  // AgSTAR, KTBL): no deduction. Its range is in "what to verify first"; a measured quantity goes into the herd line.
   const lowShare =
     base.feed.tonnesYear > 0
       ? base.feed.lines.filter((l) => !labIds.has(l.id) && FEEDSTOCKS[l.typeId].confidence === "LOW").reduce((a, l) => a + l.tonnesYear, 0) / base.feed.tonnesYear
       : 0;
-  if (lowShare > 0.4) {
-    reason("low_catalogue", "client", 12, T("Most feedstock has low-confidence catalogue parameters — a laboratory analysis replaces them"));
-  }
+  // One action (a laboratory analysis) is one item: it weighs more when the catalogue values it replaces are weak.
   if (!measuredFeedstock && !input.process) {
-    score -= 15;
+    const points = 15 + (lowShare > 0.4 ? 12 : 0);
+    score -= points;
     reasons.push(T("Complete laboratory DM, VS and BMP values are unavailable for every feedstock — catalogue estimates are used where missing"));
+    if (lowShare > 0.4) reasons.push(T("Most feedstock has low-confidence catalogue parameters — a laboratory analysis replaces them"));
     missingCodes.push("lab");
     missing.push(T("Laboratory DM, VS and BMP for every feedstock stream"));
-    factors.push({ id: "lab", owner: "client", points: 15, text: missing[missing.length - 1], gap: "lab" });
+    factors.push({ id: "lab", owner: "client", points, text: missing[missing.length - 1], gap: "lab" });
   }
   if (ctx.priceSlips) {
     // At least 10 points, and always down to LOW: a price we think is mistyped must not carry a "strong" verdict.
     reason("price_units", "client", Math.max(10, score - 49), T("An entered price is far from market levels — likely a unit slip; correct it or confirm it with an invoice"));
   }
   if (ctx.profileOnly) {
-    reason("price_proxy", "model", 6, T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract"));
+    reason("price_proxy", "client", 6, T("At least one price affecting this route relies on an unconfirmed market proxy or uncontracted offtake — confirm the applicable tariff or buyer contract"));
   }
   if (ctx.unvalidatedCapital) {
-    reason("capex_unvalidated", "model", 8, T("Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations"));
+    reason("capex_unvalidated", "client", 8, T("Route-specific CAPEX lacks independent local validation — obtain comparable supplier quotations"));
   }
   if (!demand.electricityKnown) {
     gap("electricity", 12, T("Annual electricity consumption (kWh) — without it self-consumption is not credited"));
@@ -83,18 +88,21 @@ export function assessQuality(
   if (demand.heatWanted && !demand.heatKnown) {
     gap("heat", 14, T("Heat consumption (kWh/year or gas m³) — unquantified heat earns no revenue"));
   }
-  if (!demand.heatWanted && (input.energy.gasM3Year ?? 0) > 0) {
-    reason("heat_need", "client", 4, T("Gas is used but a heat need is not confirmed"));
-  }
+  // Gas used without a heat need is a valid answer (cooking, vehicles, a process biogas cannot serve): no deduction.
   if (!input.process && input.site.landHa === undefined) {
     gap("land", 8, T("Land available for digestate spreading (ha)"));
   }
-  if (input.feedstocks.filter((f) => f.delivered).some((f) => !(f.distanceKm && f.distanceKm > 0))) {
+  // 0 km (a neighbouring site) is an answer; only an empty distance is a gap.
+  if (input.feedstocks.filter((f) => f.delivered).some((f) => f.distanceKm === undefined)) {
     gap("distance", 8, T("Distances to delivered feedstock sources"));
   }
   // Delivered streams with a price (gate fee or purchase) are already priced; only own waste has a disposal cost to ask for.
-  const own = new Set(input.feedstocks.filter((f) => !(f.delivered && f.purchasePricePerTonneLocal !== undefined)).map((f) => f.id));
-  const paidLines = base.feed.lines.filter((l) => own.has(l.id) && FEEDSTOCKS[l.typeId].defaultHandling === "paid_disposal");
+  // The client's own handling choice decides it: the disposal-cost field appears only for paid disposal or landfill, and
+  // the saving is credited only for those (feedstock.ts). Asking for it under another handling would be unanswerable.
+  // Delivered streams never earn an avoided-disposal credit (feedstock.ts): their price is the gate fee, not this cost.
+  const own = new Set(input.feedstocks.filter((f) => !f.delivered).map((f) => f.id));
+  const handlingOf = (id: string, typeId: keyof typeof FEEDSTOCKS) => input.feedstocks.find((f) => f.id === id)?.handling ?? FEEDSTOCKS[typeId].defaultHandling;
+  const paidLines = base.feed.lines.filter((l) => own.has(l.id) && PAID_HANDLING.includes(handlingOf(l.id, l.typeId)));
   if (paidLines.length && input.feedstocks.every((f) => !((f.currentDisposalCostPerTonneLocal ?? 0) > 0))) {
     gap("disposal", 5, T("Current disposal cost ({cur}/t) — possible savings not credited", { cur }));
   }
@@ -105,7 +113,7 @@ export function assessQuality(
   if (base.kwElEquivalent < 30 || base.kwElEquivalent > 5000) {
     reason("scale_range", "model", 8, T("Scale outside the CAPEX calibration range (30 kW – 5 MW electrical equivalent)"));
   }
-  if (input.feedstocks.some((f) => f.animal && ANIMALS[f.animal] && f.housing === "seasonal")) {
+  if (input.feedstocks.some((f) => f.animal && ANIMALS[f.animal] && f.housing === "seasonal" && !((f.measuredTonnesYear ?? 0) > 0))) {
     reasons.push(T("Seasonal grazing reduces collectable manure — the collected share is estimated"));
   }
   const q: QualityResult = { level: "LOW", score: Math.max(0, score), reasons, missing, missingCodes, factors };

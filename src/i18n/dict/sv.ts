@@ -165,7 +165,7 @@ const sv: Translation = {
     storage: "Befintlig gödselbassäng / lager som kan täckas", storageHint: "Sparar investering i nytt lager.",
     gasGrid: "Avstånd till gasnätet (för biometan)", gasGridHint: "Lämna tomt om du inte vet.",
     neighbours: "Bostäder inom 300 m", protected: "Vattendrag eller skyddat område i närheten",
-    lineHead: "Hur många djur / platser?", lineTonnes: "Hur mycket per år?", housing: "Stallsystem",
+    lineHead: "Hur många djur / platser?", lineTonnes: "Hur mycket per år?", lineMeasured: "Uppmätt mängd stallgödsel, om du vet den", housing: "Stallsystem",
     handlingQ: "9. Vad händer med det i dag?", choose: "— välj —", disposalCost: "Vad du betalar för omhändertagande", disposalHint: "Det är en möjlig besparing.",
     saleValue: "Vad du säljer det för i dag", saleHint: "Det är förlorad intäkt om det går till rötkammaren.",
     refine: "Förfina (valfritt)", dm: "Torrsubstans, % (normalt {v})", dmHint: "Om känt från en analys. Utspädd flytgödsel ger mindre gas.",

@@ -131,8 +131,9 @@ it("prebuilds each business detail page and preserves old guide URLs", () => {
 });
 
 it("keeps a stable localisation ID for every missing-input rule", () => {
+  // Delivered stream: distance gap; own stream on paid disposal: disposal-cost gap (never asked for delivered streams).
   const input = EXAMPLES[0].input;
-  const a = assess({ ...input, labAnalysisAvailable: false, feedstocks: [{ id: "missing", type: "food_waste", quantity: 10000, delivered: true }], energy: { heatNeed: "year_round_process", hasGridConnection: true }, site: {} }, getCountry(input.countryCode));
+  const a = assess({ ...input, labAnalysisAvailable: false, feedstocks: [{ id: "missing", type: "food_waste", quantity: 10000, delivered: true }, { id: "own", type: "food_waste", quantity: 5000 }], energy: { heatNeed: "year_round_process", hasGridConnection: true }, site: {} }, getCountry(input.countryCode));
   expect(a.missingDataCodes).toHaveLength(a.missingData.length);
   expect(new Set(a.missingDataCodes)).toEqual(new Set(["lab", "electricity", "electricity_price", "heat", "land", "distance", "disposal"]));
 });

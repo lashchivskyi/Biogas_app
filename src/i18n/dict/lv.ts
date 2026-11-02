@@ -165,7 +165,7 @@ const lv: Translation = {
     storage: "Esoša lagūna / krātuve, ko var nosegt", storageHint: "Ietaupījums uz jaunas krātuves.",
     gasGrid: "Attālums līdz gāzes tīklam (biometānam)", gasGridHint: "Atstājiet tukšu, ja nezināt.",
     neighbours: "Dzīvojamās mājas 300 m rādiusā", protected: "Tuvumā ūdenstilpe vai aizsargājama teritorija",
-    lineHead: "Cik dzīvnieku / vietu?", lineTonnes: "Cik gadā?", housing: "Turēšanas veids",
+    lineHead: "Cik dzīvnieku / vietu?", lineTonnes: "Cik gadā?", lineMeasured: "Izmērītais kūtsmēslu daudzums, ja zināms", housing: "Turēšanas veids",
     handlingQ: "9. Kas ar tiem notiek šobrīd?", choose: "— izvēlieties —", disposalCost: "Cik maksājat par utilizāciju", disposalHint: "Tas ir iespējamais ietaupījums.",
     saleValue: "Par cik šobrīd pārdodat", saleHint: "Tie ir zaudēti ienākumi, ja izejviela nonāks fermentatorā.",
     refine: "Precizēt (nav obligāti)", dm: "Sausna, % (parasti {v})", dmHint: "Ja zināma no analīzes. Atšķaidīti šķidrmēsli dod mazāk gāzes.",

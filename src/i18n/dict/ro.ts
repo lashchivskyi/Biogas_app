@@ -165,7 +165,7 @@ const ro: Translation = {
     storage: "Lagună / bazin existent care poate fi acoperit", storageHint: "Economie la un depozit nou.",
     gasGrid: "Distanța până la rețeaua de gaz (pentru biometan)", gasGridHint: "Lăsați gol dacă nu știți.",
     neighbours: "Locuințe la mai puțin de 300 m", protected: "Curs de apă sau arie protejată în apropiere",
-    lineHead: "Câte capete / locuri?", lineTonnes: "Cât pe an?", housing: "Sistem de creștere",
+    lineHead: "Câte capete / locuri?", lineTonnes: "Cât pe an?", lineMeasured: "Cantitatea de dejecții măsurată, dacă o cunoașteți", housing: "Sistem de creștere",
     handlingQ: "9. Ce se întâmplă azi cu ele?", choose: "— alegeți —", disposalCost: "Cât plătiți pentru eliminare", disposalHint: "E o economie potențială.",
     saleValue: "Cu cât le vindeți azi", saleHint: "E venit pierdut dacă merg în fermentator.",
     refine: "Detaliați (opțional)", dm: "Substanță uscată, % (tipic {v})", dmHint: "Dacă o știți dintr-o analiză. Dejecțiile diluate dau mai puțin gaz.",

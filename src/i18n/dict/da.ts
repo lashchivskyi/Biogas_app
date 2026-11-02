@@ -165,7 +165,7 @@ const da: Translation = {
     storage: "Eksisterende lagune / beholder, der kan overdækkes", storageHint: "Sparer nyt lager.",
     gasGrid: "Afstand til gasnettet (for biometan)", gasGridHint: "Lad stå tomt, hvis du ikke ved det.",
     neighbours: "Beboelse inden for 300 m", protected: "Vandløb eller beskyttet natur i nærheden",
-    lineHead: "Hvor mange dyr / stipladser?", lineTonnes: "Hvor meget om året?", housing: "Staldsystem",
+    lineHead: "Hvor mange dyr / stipladser?", lineTonnes: "Hvor meget om året?", lineMeasured: "Målt mængde husdyrgødning, hvis kendt", housing: "Staldsystem",
     handlingQ: "9. Hvad sker der med det i dag?", choose: "— vælg —", disposalCost: "Hvad du betaler for bortskaffelse", disposalHint: "Det er en mulig besparelse.",
     saleValue: "Hvad du sælger det for i dag", saleHint: "Det er tabt indtægt, hvis det kommer i reaktoren.",
     refine: "Uddyb (valgfrit)", dm: "Tørstof, % (typisk {v})", dmHint: "Hvis kendt fra en analyse. Fortyndet gylle giver mindre gas.",

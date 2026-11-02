@@ -165,7 +165,7 @@ const nl: Translation = {
     storage: "Bestaand mestbassin / opslag dat kan worden afgedekt", storageHint: "Bespaart op nieuwe opslag.",
     gasGrid: "Afstand tot het gasnet (voor groen gas)", gasGridHint: "Leeg laten als u het niet weet.",
     neighbours: "Woningen binnen 300 m", protected: "Oppervlaktewater of beschermd natuurgebied in de buurt",
-    lineHead: "Hoeveel dieren / plaatsen?", lineTonnes: "Hoeveel per jaar?", housing: "Huisvesting",
+    lineHead: "Hoeveel dieren / plaatsen?", lineTonnes: "Hoeveel per jaar?", lineMeasured: "Gemeten hoeveelheid mest, indien bekend", housing: "Huisvesting",
     handlingQ: "9. Wat gebeurt er nu mee?", choose: "— kies —", disposalCost: "Wat u betaalt voor afvoer", disposalHint: "Dat is een mogelijke besparing.",
     saleValue: "Wat het nu opbrengt", saleHint: "Dat is gemiste opbrengst als het de vergister in gaat.",
     refine: "Verfijnen (optioneel)", dm: "Droge stof, % (gebruikelijk {v})", dmHint: "Indien bekend uit een analyse. Verdunde drijfmest geeft minder gas.",

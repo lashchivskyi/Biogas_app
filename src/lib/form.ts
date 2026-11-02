@@ -15,6 +15,8 @@ export interface FormLine {
   animal?: AnimalKind;
   type?: FeedstockTypeId;
   quantity: string;
+  /** Animal lines: measured manure, t/year (optional; replaces the per-head estimate). Older drafts lack it. */
+  measuredTonnes?: string;
   housing: Housing;
   dryMatterPct: string;
   vsPctOfDm: string;
@@ -77,7 +79,7 @@ const formNumber = (s: string, locale?: Locale) => locale
 export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
   const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
   if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis") && k !== "reactorTechnology").some(([,v]) => invalid(v))) return 1;
-  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
+  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.measuredTonnes, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
   if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear, f.exportPrice, f.heatPrice, f.biomethanePrice].some(invalid)) return 2;
   if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", f.gasGridKm, ...(f.refineOpen ? [f.operatorWage, f.capexQuote, f.debtSharePct, f.debtRatePct, f.debtTenorYears] : [])].some(invalid)) return 3;
   return null;
@@ -98,7 +100,7 @@ export const newId = () => `l${Date.now().toString(36)}${(counter++).toString(36
 
 export function emptyLine(kind: "animal" | "type", key: AnimalKind | FeedstockTypeId): FormLine {
   const base: FormLine = {
-    id: newId(), kind, quantity: "", housing: "year_round", dryMatterPct: "", vsPctOfDm: "", methaneYieldLPerKgVs: "", monthsActive: "", startMonth: "", delivered: false,
+    id: newId(), kind, quantity: "", measuredTonnes: "", housing: "year_round", dryMatterPct: "", vsPctOfDm: "", methaneYieldLPerKgVs: "", monthsActive: "", startMonth: "", delivered: false,
     distanceKm: "", handling: "", disposalCost: "", opportunityValue: "", purchasePrice: "",
   };
   if (kind === "animal") return { ...base, animal: key as AnimalKind };
@@ -136,7 +138,7 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm", "debtSharePct", "debtRatePct", "debtTenorYears"] as const;
   for (const key of numbers) next[key] = reformat(f[key] ?? "");
   for (const key of ["exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = reformat(f[key] ?? "");
-  for (const line of next.lines) for (const key of ["quantity", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key]);
+  for (const line of next.lines) for (const key of ["quantity", "measuredTonnes", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key] ?? "");
   if (changed) {
     for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice", "exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = "";
     for (const line of next.lines) for (const key of ["disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = "";
@@ -157,6 +159,8 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
     if (l.kind === "animal") {
       line.animal = l.animal;
       line.housing = l.housing;
+      const measured = num(l.measuredTonnes ?? "");
+      if (measured && measured > 0) line.measuredTonnesYear = measured;
     } else line.type = l.type;
     const dm = num(l.dryMatterPct);
     if (dm && dm > 0 && dm <= 95) line.dryMatterPct = dm;
@@ -183,7 +187,8 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
   }
 
   const positive = (s: string | undefined) => { const n = num(s ?? ""); return n !== undefined && n > 0 ? n : undefined; };
-  const pct = (s: string | undefined, max: number) => { const n = positive(s); return n !== undefined && n <= max ? n / 100 : undefined; };
+  // 0 % is an answer for the loan terms (all-equity project, interest-free loan), not a blank field.
+  const pct = (s: string | undefined, max: number) => { const n = num(s ?? ""); return n !== undefined && n >= 0 && n <= max ? n / 100 : undefined; };
   const rf = f.refineOpen ? f : undefined; // terms are ignored until the client ticks the box
   const tenor = positive(rf?.debtTenorYears);
   const finance: NonNullable<ProjectInput["finance"]> = {
@@ -200,13 +205,18 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
   const city = validCity(f.city, country.code) && f.regionId === cityRegionId(f.city) ? f.city : undefined;
   const region = city ? cityRegionId(city) : country.regions.some((r) => r.id === f.regionId) ? f.regionId : "";
 
+  const ad = (f.processKind ?? defaultProcess(f.businessType)) === "ad";
+  // The DM, VS and BMP fields ask for laboratory-report values (calculator help). A stream with all three entered is a
+  // lab-measured stream, so the data-quality check must see the analysis; without this flag it never could.
+  const labAnalysisAvailable = ad && feedstocks.some((l) => l.dryMatterPct !== undefined && l.vsPctOfDm !== undefined && l.methaneYieldLPerKgVs !== undefined);
   return {
     countryCode: country.code,
     regionId: region,
     ...(city ? { city } : {}),
     businessType: f.businessType,
     lang,
-    feedstocks: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? feedstocks : [],
+    ...(labAnalysisAvailable ? { labAnalysisAvailable } : {}),
+    feedstocks: ad ? feedstocks : [],
     ...((f.processKind ?? defaultProcess(f.businessType)) !== "ad" ? { process: processFromForm(f) as ProcessInput } : {}),
     projectRole: f.projectRole ?? BUSINESS_TYPES[f.businessType].role,
     energy: {
@@ -241,6 +251,7 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
       ...base,
       id: l.id + newId(),
       quantity: s(l.quantity),
+      measuredTonnes: s(l.measuredTonnesYear),
       housing: l.housing ?? "year_round",
       dryMatterPct: s(l.dryMatterPct),
       vsPctOfDm: s(l.vsPctOfDm),

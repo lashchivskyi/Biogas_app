@@ -22,6 +22,11 @@ export const PLAUSIBLE_GATE_FEE_EUR_T = 250;
 export const PLAUSIBLE_PURCHASE_EUR_T = 150;
 const zeros = () => new Array(12).fill(0) as number[];
 
+/** An own stream with an alternative use and no price in the form: its sale value is the missing cost. */
+export function unpricedCompetingUse(flags: string[], delivered: boolean, purchasePriceLocal: number, handling: string): boolean {
+  return flags.includes("competing_use") && !delivered && purchasePriceLocal === 0 && !(PAID_HANDLING as string[]).includes(handling);
+}
+
 /** National as-excreted manure (country params `eng.animal.<kind>.*`) replaces the catalogue default for that animal. */
 function nationalManure(line: FeedstockLineInput, params?: Params) {
   const key = (k: string) => `eng.animal.${line.animal}.${k}`;
@@ -36,7 +41,8 @@ export function resolveLine(line: FeedstockLineInput, params?: Params) {
     const collect = line.housing === "seasonal" ? a.collectSeasonal : a.collectYearRound;
     const national = nationalManure(line, params);
     const typeDef = national ? { ...t, dryMatterPct: national.dm, vsPctOfDm: national.vs } : t;
-    return { typeDef, nutrientDm: t.dryMatterPct, tonnesBase: line.quantity * (national?.tonnes ?? a.tonnesPerHeadYear) * collect, isAnimal: true, animalLabel: a.name.en };
+    const measured = (line.measuredTonnesYear ?? 0) > 0 ? line.measuredTonnesYear! : undefined;
+    return { typeDef, nutrientDm: t.dryMatterPct, tonnesBase: measured ?? line.quantity * (national?.tonnes ?? a.tonnesPerHeadYear) * collect, isAnimal: true, animalLabel: a.name.en };
   }
   if (!line.type) throw new Error(`Feedstock line ${line.id} has neither animal nor type`);
   const t = FEEDSTOCKS[line.type];
@@ -117,8 +123,11 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     // Entered lab values far from the type's range usually mean a basis mix-up (dry vs fresh, biogas vs CH₄, per kg FM).
     if (line.dryMatterPct !== undefined && (dm > 2 * t.dryMatterPct || dm < 0.4 * t.dryMatterPct)) w.push(T("Entered dry matter {dm} % is far from the typical {dryMatterPct} % for \"{nm}\": check that it is % of fresh mass.", { dm, dryMatterPct: t.dryMatterPct, nm }));
     if (line.methaneYieldLPerKgVs !== undefined && (yieldL > 1.3 * t.yieldHigh || yieldL < 0.7 * t.yieldLow)) w.push(T("Entered BMP {yieldL} L/kg VS is outside the usual {yieldLow}–{yieldHigh} for \"{nm}\": check that it is methane (not biogas) per kg VS (not per kg fresh mass).", { yieldL, yieldLow: t.yieldLow, yieldHigh: t.yieldHigh, nm }));
-    if (t.confidence === "LOW") w.push(T("Parameters for \"{nm}\" have low confidence — a laboratory analysis (BMP) is needed.", { nm }));
-    if (t.flags.includes("competing_use") && opportunity === 0) w.push(T("\"{nm}\" often has an alternative use (e.g. animal feed) — enter its sale price.", { nm }));
+    const labLine = line.dryMatterPct !== undefined && line.vsPctOfDm !== undefined && line.methaneYieldLPerKgVs !== undefined;
+    if (t.confidence === "LOW" && !labLine) w.push(T("Parameters for \"{nm}\" have low confidence — a laboratory analysis (BMP) is needed.", { nm }));
+    // Ask for a sale value only where it can be entered and would count: an own stream that is neither bought, nor paid
+    // to get rid of (the sale-value field is hidden then), nor delivered (its sale value belongs to the supplier).
+    if (unpricedCompetingUse(t.flags, delivered, purchasePrice, handling) && opportunity === 0) w.push(T("\"{nm}\" often has an alternative use (e.g. animal feed) — enter its sale price.", { nm }));
     if (t.flags.includes("pretreatment")) w.push(T("\"{nm}\": pretreatment (steam explosion, extrusion, milling) is not in the CAPEX of this screening (milling electricity, {pretreatment_milling_kwh_t} kWh/t, is counted; steam, alkali or extrusion steps are not), and the catalogue yield assumes it is done — obtain a pretreatment quotation and a delivered straw price before relying on the result.", { nm, pretreatment_milling_kwh_t: Math.round(params.get("eng.pretreatment_milling_kwh_t")) }));
     if (t.flags.includes("seasonal") && months < 9) w.push(T("Seasonal stream ({month}): equipment sits idle for the rest of the year.", { month: M(months, "month") }));
     // A stream the catalogue treats as year-round but the client enters as seasonal sizes the plant for the peak month.
@@ -131,7 +140,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (ensiled) w.push(T("\"{nm}\": enter the harvested fresh mass that goes into the clamp; {ensilingLoss} % of its dry matter is lost during ensiling (KTBL) and a clamp silo is costed. If you buy finished silage out of another farm's clamp, the loss and the clamp are the seller's and this result is conservative.", { nm, ensilingLoss: Math.round(scenario.ensilingLoss * 100) }));
     if (t.flags.includes("energy_crop")) w.push(T("Energy-crop share is capped in many support schemes (e.g. EEG maize cap, RED III sustainability criteria) — check before relying on it."));
     if (t.abp !== "none") w.push(t.abp === "cat3" ? T("Animal by-products (Cat. 3) → pasteurisation and veterinary approval required.") : T("Animal by-products (Cat. 2) → pasteurisation and veterinary approval required."));
-    if (delivered && !(line.distanceKm && line.distanceKm > 0)) w.push(T("Delivery distance not given — logistics cost is understated."));
+    if (delivered && line.distanceKm === undefined) w.push(T("Delivery distance not given — logistics cost is understated."));
 
     lines.push({
       id: line.id, label: locText(t.name, lang), typeId: t.id, tonnesYear: fed, ...(ensiled ? { ensiledTonnesYear: tonnes } : {}), monthlyTonnes: mt, dryMatterPct: dm,

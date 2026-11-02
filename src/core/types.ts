@@ -117,6 +117,9 @@ export interface FeedstockLineInput {
   type?: FeedstockTypeId;
   /** heads for animals, tonnes/year for waste streams. */
   quantity: number;
+  /** Animal lines only: manure actually collected per year (weighed loads or pit levels), tonnes of fresh mass. Replaces
+   * head count × per-head value × housing share; the head count stays for the record. */
+  measuredTonnesYear?: number;
   housing?: Housing; // cattle only
   /** Overrides catalogue default dry matter (% of fresh matter). */
   dryMatterPct?: number;

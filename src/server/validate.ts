@@ -19,6 +19,7 @@ export const lineSchema = z
     animal: z.enum(key(ANIMALS)).optional(),
     type: z.enum(key(FEEDSTOCKS)).optional(),
     quantity: z.number().gt(0).max(1e9),
+    measuredTonnesYear: optNum(1e9),
     housing: z.enum(["year_round", "seasonal"]).optional(),
     dryMatterPct: z.number().gt(0).max(95).optional(),
     vsPctOfDm: z.number().gt(0).max(100).optional(),

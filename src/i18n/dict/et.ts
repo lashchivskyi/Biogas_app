@@ -165,7 +165,7 @@ const et: Translation = {
     storage: "Olemasolev laguun / hoidla, mida saab katta", storageHint: "Sääst uue hoidla pealt.",
     gasGrid: "Kaugus gaasivõrgust (biometaani jaoks)", gasGridHint: "Jätke tühjaks, kui ei tea.",
     neighbours: "Elamud 300 m raadiuses", protected: "Läheduses veekogu või kaitseala",
-    lineHead: "Mitu looma / kohta?", lineTonnes: "Kui palju aastas?", housing: "Pidamisviis",
+    lineHead: "Mitu looma / kohta?", lineTonnes: "Kui palju aastas?", lineMeasured: "Mõõdetud sõnniku kogus, kui on teada", housing: "Pidamisviis",
     handlingQ: "9. Mis nendega praegu tehakse?", choose: "— valige —", disposalCost: "Kui palju maksate käitlemise eest", disposalHint: "See on võimalik sääst.",
     saleValue: "Mis hinnaga praegu müüte", saleHint: "See on saamata jäänud tulu, kui see läheb reaktorisse.",
     refine: "Täpsusta (valikuline)", dm: "Kuivaine, % (tavaliselt {v})", dmHint: "Kui analüüsist teada. Lahjendatud vedelsõnnik annab vähem gaasi.",

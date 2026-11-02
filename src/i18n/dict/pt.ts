@@ -165,7 +165,7 @@ const pt: Translation = {
     storage: "Lagoa / tanque existente que pode ser coberto", storageHint: "Economia em armazenamento novo.",
     gasGrid: "Distância até a rede de gás (para biometano)", gasGridHint: "Deixe em branco se não souber.",
     neighbours: "Moradias a menos de 300 m", protected: "Curso d'água ou área protegida próxima",
-    lineHead: "Quantas cabeças / vagas?", lineTonnes: "Quanto por ano?", housing: "Sistema de criação",
+    lineHead: "Quantas cabeças / vagas?", lineTonnes: "Quanto por ano?", lineMeasured: "Quantidade de dejetos medida, se conhecida", housing: "Sistema de criação",
     handlingQ: "9. O que é feito com isso hoje?", choose: "— escolha —", disposalCost: "Quanto você paga pela destinação", disposalHint: "É uma economia potencial.",
     saleValue: "Por quanto você vende hoje", saleHint: "É receita perdida se for para o biodigestor.",
     refine: "Refinar (opcional)", dm: "Matéria seca, % (típica {v})", dmHint: "Se souber por análise. Dejeto diluído rende menos gás.",

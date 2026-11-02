@@ -165,7 +165,7 @@ const pl: Translation = {
     storage: "Istniejąca laguna / zbiornik do przykrycia", storageHint: "Oszczędność na nowym zbiorniku.",
     gasGrid: "Odległość do sieci gazowej (dla biometanu)", gasGridHint: "Zostaw puste, jeśli nie wiesz.",
     neighbours: "Zabudowa mieszkalna w promieniu 300 m", protected: "W pobliżu ciek wodny lub obszar chroniony",
-    lineHead: "Ile sztuk / stanowisk?", lineTonnes: "Ile rocznie?", housing: "System utrzymania",
+    lineHead: "Ile sztuk / stanowisk?", lineTonnes: "Ile rocznie?", lineMeasured: "Zmierzona ilość odchodów, jeśli znana", housing: "System utrzymania",
     handlingQ: "9. Co się z tym dzieje dziś?", choose: "— wybierz —", disposalCost: "Ile płacisz za utylizację", disposalHint: "To potencjalna oszczędność.",
     saleValue: "Za ile to dziś sprzedajesz", saleHint: "To utracony przychód, jeśli trafi do komory.",
     refine: "Doprecyzuj (opcjonalnie)", dm: "Sucha masa, % (typowo {v})", dmHint: "Jeśli znana z analizy. Rozcieńczona gnojowica daje mniej gazu.",

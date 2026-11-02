@@ -126,6 +126,7 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.capex.injection_fixed", "Compression, metering, injection station", 350000, "EUR", "ESTIMATE", "GRDF connection presentation, 2018: ≈ 0.4–0.5 M€ equivalent; distribution grid only (transmission ≈ 2 M€)", "LOW", { date: "2018-10-03" }),
   prov("eng.capex.cng_fixed", "Bio-CNG off-grid offtake: filling post + 3–4 cascade trailers (≈ 4 000–5 000 Nm³ each)", 450000, "EUR", "ESTIMATE", JUDGEMENT("virtual-pipeline practice; US EPA LFGcost 2020 CNG station gives the same order"), "LOW", { date: REVIEWED }),
   prov("eng.capex.cng_per_nm3h", "Bio-CNG high-pressure (250 bar) compression", 1000, "EUR per Nm³/h biomethane", "ESTIMATE", JUDGEMENT("reciprocating CNG compressors 100–1 000 Nm³/h; supplier quotes needed"), "LOW", { date: REVIEWED }),
+  prov("eng.gas_grid_default_km", "Distance to the gas grid when the client leaves it empty", 2, "km", "ASSUMPTION", JUDGEMENT("placeholder for an unknown site; the client's distance replaces it — the grid operator's connection point decides"), "LOW", { date: REVIEWED }),
   prov("eng.capex.pipeline_eur_km", "Pipeline to gas main", 200000, "EUR/km", "ESTIMATE", "IBKE, Leitfaden Rohbiogas-Sammelleitungen, 2024: PE lines 80–300 €/m", "MEDIUM", { date: "2024-11-30" }),
 
   // --- engineering OPEX ---

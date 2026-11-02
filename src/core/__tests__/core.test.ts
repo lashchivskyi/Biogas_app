@@ -4,7 +4,7 @@ import { ENGINEERING_PARAMS } from "../engineeringParams";
 import { EXAMPLES } from "../examples";
 import { ANIMALS, BUSINESS_TYPES, FEEDSTOCKS } from "../feedstockData";
 import { buildFinancials, npv, irr } from "../finance";
-import { QUALITY_START } from "../quality";
+import { ADVISORY_CLIENT_FACTORS, QUALITY_START } from "../quality";
 import { decideVerdict } from "../verdict";
 import type { Assessment, ProjectInput } from "../types";
 import { COUNTRIES, getCountry, UA } from "@/countries";
@@ -272,8 +272,8 @@ describe("data quality and honesty", () => {
     const stream = { id: "p", type: "poultry_layer_manure" as const, quantity: 3000, dryMatterPct: 27, vsPctOfDm: 70, methaneYieldLPerKgVs: 220 };
     const typed = assess({ ...PIG_UA, feedstocks: [stream] }, UA);
     const lab = assess({ ...PIG_UA, feedstocks: [stream], labAnalysisAvailable: true }, UA);
-    expect(typed.confidence.factors!.map((x) => x.id)).toContain("low_catalogue");
-    expect(lab.confidence.factors!.map((x) => x.id)).not.toContain("low_catalogue");
+    // One action, one item: the lab gap weighs 15 + 12 when the catalogue entry it replaces is LOW confidence.
+    expect(typed.confidence.factors!.find((x) => x.id === "lab")?.points).toBe(27);
     expect(lab.confidence.factors!.map((x) => x.id)).not.toContain("lab");
     expect(lab.confidence.score).toBe(typed.confidence.score + 27);
   });
@@ -395,9 +395,11 @@ describe("stress-test regressions (2026-10-31)", () => {
   };
 
   it("model-side evidence gaps lower confidence but never turn a client form into 'insufficient data'", () => {
-    const a = run(hens);
-    const client = (a.confidence.factors ?? []).filter((f) => f.owner === "client").reduce((s, f) => s + f.points, 0);
-    expect((a.confidence.factors ?? []).some((f) => f.owner === "model")).toBe(true);
+    const a = run({ ...hens, site: { gasGridKm: 3 } });
+    // Market-evidence gaps (country price proxy, unvalidated CAPEX) are the client's to close but never gate the verdict.
+    const advisory = (f: { owner: string; id: string }) => f.owner === "model" || ADVISORY_CLIENT_FACTORS.includes(f.id);
+    const client = (a.confidence.factors ?? []).filter((f) => !advisory(f)).reduce((s, f) => s + f.points, 0);
+    expect((a.confidence.factors ?? []).some(advisory)).toBe(true);
     expect(a.confidence.score).toBeLessThan(35);
     expect(QUALITY_START - client).toBeGreaterThanOrEqual(35);
     expect(a.verdict.id).not.toBe("INSUFFICIENT_DATA");

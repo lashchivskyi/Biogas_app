@@ -167,7 +167,7 @@ const en = {
     storage: "Existing lagoon / store that could be covered", storageHint: "Saves on new storage.",
     gasGrid: "Distance to the gas grid (for biomethane)", gasGridHint: "Leave empty if unknown.",
     neighbours: "Housing within 300 m", protected: "Water body or protected area nearby",
-    lineHead: "How many head / places?", lineTonnes: "How much per year?", housing: "Housing",
+    lineHead: "How many head / places?", lineTonnes: "How much per year?", lineMeasured: "Measured manure, if known", housing: "Housing",
     handlingQ: "9. What happens to it today?", choose: "— choose —", disposalCost: "What you pay for disposal", disposalHint: "That's a potential saving.",
     saleValue: "What you sell it for today", saleHint: "That's lost revenue if it goes to the digester.",
     refine: "Refine (optional)", dm: "Dry matter, % (typical {v})", dmHint: "If known from an analysis. Diluted slurry gives less gas.",

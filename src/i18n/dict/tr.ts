@@ -165,7 +165,7 @@ const tr: Translation = {
     storage: "Üstü kapatılabilecek mevcut lagün / depo", storageHint: "Yeni depo maliyetinden tasarruf.",
     gasGrid: "Doğal gaz şebekesine mesafe (biyometan için)", gasGridHint: "Bilmiyorsanız boş bırakın.",
     neighbours: "300 m içinde konut", protected: "Yakında su kaynağı veya koruma alanı",
-    lineHead: "Kaç baş / kapasite?", lineTonnes: "Yılda ne kadar?", housing: "Barındırma",
+    lineHead: "Kaç baş / kapasite?", lineTonnes: "Yılda ne kadar?", lineMeasured: "Ölçülen gübre miktarı, biliniyorsa", housing: "Barındırma",
     handlingQ: "9. Bugün bunlarla ne yapılıyor?", choose: "— seçin —", disposalCost: "Bertaraf için ödediğiniz tutar", disposalHint: "Bu potansiyel bir tasarruftur.",
     saleValue: "Bugün kaça satıyorsunuz", saleHint: "Fermantöre giderse bu kayıp gelirdir.",
     refine: "Ayrıntılandır (isteğe bağlı)", dm: "Kuru madde, % (tipik {v})", dmHint: "Analizden biliniyorsa. Seyreltilmiş sıvı gübre daha az gaz verir.",

@@ -165,7 +165,7 @@ const cs: Translation = {
     storage: "Stávající laguna / jímka, kterou lze zakrýt", storageHint: "Úspora na novém skladu.",
     gasGrid: "Vzdálenost k plynovodu (pro biometan)", gasGridHint: "Nechte prázdné, pokud nevíte.",
     neighbours: "Obytná zástavba do 300 m", protected: "Vodní tok nebo chráněné území v blízkosti",
-    lineHead: "Kolik kusů / míst?", lineTonnes: "Kolik za rok?", housing: "Ustájení",
+    lineHead: "Kolik kusů / míst?", lineTonnes: "Kolik za rok?", lineMeasured: "Změřené množství statkových hnojiv, je-li známo", housing: "Ustájení",
     handlingQ: "9. Co se s tím dnes děje?", choose: "— vyberte —", disposalCost: "Kolik platíte za likvidaci", disposalHint: "To je potenciální úspora.",
     saleValue: "Za kolik to dnes prodáváte", saleHint: "To je ušlý příjem, pokud to půjde do fermentoru.",
     refine: "Upřesnit (nepovinné)", dm: "Sušina, % (obvykle {v})", dmHint: "Pokud ji znáte z rozboru. Ředěná kejda dá méně plynu.",

@@ -165,7 +165,7 @@ const de: Translation = {
     storage: "Vorhandenes Lager oder vorhandene Lagune, die sich abdecken lässt", storageHint: "Spart neuen Lagerraum.",
     gasGrid: "Entfernung zum Gasnetz (für Biomethan)", gasGridHint: "Leer lassen, wenn unbekannt.",
     neighbours: "Wohnbebauung im Umkreis von 300 m", protected: "Gewässer oder Schutzgebiet in der Nähe",
-    lineHead: "Wie viele Tiere / Plätze?", lineTonnes: "Wie viel pro Jahr?", housing: "Haltung",
+    lineHead: "Wie viele Tiere / Plätze?", lineTonnes: "Wie viel pro Jahr?", lineMeasured: "Gemessene Wirtschaftsdüngermenge, falls bekannt", housing: "Haltung",
     handlingQ: "9. Was passiert heute damit?", choose: "— bitte wählen —", disposalCost: "Was Sie für die Entsorgung zahlen", disposalHint: "Das ist eine mögliche Einsparung.",
     saleValue: "Was Sie heute dafür erlösen", saleHint: "Das ist entgangener Erlös, wenn es in den Fermenter geht.",
     refine: "Verfeinern (optional)", dm: "Trockensubstanz, % (typisch {v})", dmHint: "Falls aus einer Analyse bekannt. Verdünnte Gülle liefert weniger Gas.",
