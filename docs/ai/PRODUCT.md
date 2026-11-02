@@ -1,5 +1,16 @@
 # Product
 
+## Mission
+
+The client makes one decision: **whether to pay for a detailed feasibility study (€10–100 k and months
+of work), and what to verify first.** A quality product therefore means three things:
+1. it is rarely wrong about that decision (a false "go" wastes the study, a false "no" loses a project);
+2. it shows its own uncertainty honestly (no claimed accuracy, freshness or expert review without proof);
+3. it gives the client a concrete next step (what to check, whom to ask, what would change the answer).
+
+Everything else (model, UI, pricing) serves this. Product decisions start from the client's decision,
+not from the model; "ready" is measured against this mission, never asserted.
+
 ## Who it is for
 
 Owners of organic residues and energy users who must decide whether a biogas/biomethane
