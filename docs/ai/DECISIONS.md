@@ -168,9 +168,13 @@ replace the line rather than adding a contradicting one.
 - Lighthouse locally: build with `NEXT_PUBLIC_LOCAL_IP_GEO=0` (the ipapi.co call delays `ready`); first run per batch is cold, discard it.
 
 ## 2026-11-01 — Offer boundary and payments
-- Free view = the answer (verdict, robustness class, ranges incl. 3 NPVs, driver NAMES); paid = the work behind it (driver NPV
-  amounts, Monte Carlo, line items, request letters, Excel). The free → paid block lists THIS project's counts per plan. A clear
-  no says the report will not change it. — Freemium practice: give the conclusion, sell the detail; honesty keeps trust.
+- Free view = the answer (verdict, reasons, robustness class, ranges incl. 3 NPVs, driver NAMES) + WHAT would help: the advisor's tested
+  levers with the verdict and NPV after each, and the scenario lab (it only speeds up what the free form already allows). Paid = HOW FAR
+  and HOW SURE: break-even sentences (`verdict.thresholds`, never in the free view, since 2026-11-02), the action plan (break-even heat
+  price / gate fee per lever, combination, order of action), driver NPV amounts, Monte Carlo, line items, request letters, Excel. The
+  verdict stays free: it is the honesty filter (a hidden "no" would be sold, then refunded). "In short" = conclusion first + three facts
+  (identical in every tier) + "what the paid report answers for THIS project" (free only, hidden for a clear no). A clear no says the
+  report will not change it. — Freemium practice: give the conclusion and the direction, sell the detail; honesty keeps trust.
 - INSUFFICIENT_DATA is never sold (quote 422 + checkout guard). — A paid "fill in more fields" invites refunds.
 - Standard and Extended are independent purchases: no upgrade, no credit; the client chooses before paying (owner,
   2026-11-01; an upgrade was built and removed). Prices unchanged: owner declined the proposed Standard cut.
@@ -242,3 +246,20 @@ replace the line rather than adding a contradicting one.
   (6) Verdict colours in charts: green #0e7a55 / amber #c98a0b / red #c0392b passed the dataviz palette validator; amber is below 3:1, so every
   mark also has a shape and a legend label. (7) The sample map is drawn in the box's real pixels (ResizeObserver), not a scaled viewBox, so
   axis text stays legible at 360 px; money ticks render after hydration (Node/browser CLDR compact suffixes differ).
+- 2026-11-02 — Advisor (`core/advice.ts`) tests only changes the client controls: a year-round heat buyer for 80 % of the unused heat;
+  food waste up to 30 % of VS from 15 km at a 6 €/t gate fee; neighbours' manure trucked 5 km (×2, ×3); debt share down to DSCR 1.3,
+  only when DSCR is one of the Strong gaps. Never prices, yields, CAPEX or support (stress tests / break-even cover those). Judgement
+  values live in `ADVICE_ASSUMPTIONS` (LOW; gate fee checked against WRAP Gate Fees 2025/26: AD fees fell, several councils pay £0 or
+  less). Food waste at 6 €/t and trucked slurry usually LOSE money here — shown as "also tested", never hidden; the paid break-even gate
+  fee says what it would take. Cluster ≠ plant-size table (that one assumes the extra feedstock on the same terms, no haulage).
+- 2026-11-02 — Previews run `assess(…, { lite: true })` (≈ 13 runs; no stress tests, EVPI, Monte Carlo, plant sizes, quote check,
+  support cases). `advice.test.ts` proves lite = full (verdict, gaps, ranges, route, confidence; 39 examples) and that "Apply" (form
+  round trip, en/de number formats) gives the preview's verdict and NPV. Break-even heat price and gate fee are linear roots on the
+  lever's OWN route (the best-route NPV bends where the route switches). A sold report stores `advice` computed at checkout.
+- 2026-11-02 — OPEN for the owner (pricing; nothing changed in code): keep list prices through the closed beta and measure willingness
+  to pay (Van Westendorp questions in beta interviews, checkout drop-off). Value anchors: a farm biogas feasibility study ≈ CHF 8–12 k
+  (Kanton Thurgau, 2014, 60 % subsidised); ADEME funds 50–70 % of methanisation studies, eligible costs up to €100 k → €160–390 is
+  1–4 % of a farm study and < 1 % of an industrial one. Proposal: (1) a size factor from the server-side quote (CAPEX < €1 M ×1,
+  €1–5 M ×1.5, > €5 M ×2.5) — the flat per-project price is the real mismatch, not the level; (2) Standard = decision report (answer,
+  action plan, checks, Excel), Extended = investor pack (routes × scenarios, stress tests, support schemes) at ≈ 1.5× Standard instead
+  of 1.2×, without cutting Standard (declined 2026-11-01); (3) a discounted re-run of the same project after new evidence.

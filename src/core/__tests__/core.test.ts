@@ -331,9 +331,10 @@ describe("templates produce distinct, explained outcomes (regression: 'always we
     expect(keyDriver(a)).toMatch(/масштаб/);
   });
   it("adding a gate-fee co-substrate shortens the dairy farm payback", async () => {
-    const { LEVERS } = await import("@/lib/whatif");
-    const base = assess(ex("dairy_400"), UA).scenarios.base.fin.simplePaybackYears!;
-    const co = assess(LEVERS.find((l) => l.id === "cosubstrate")!.apply(ex("dairy_400"), UA_FX), UA).scenarios.base.fin.simplePaybackYears!;
+    const { applyLevers, leverContext } = await import("@/core/advice");
+    const a = assess(ex("dairy_400"), UA);
+    const base = a.scenarios.base.fin.simplePaybackYears!;
+    const co = assess(applyLevers(ex("dairy_400"), { cosubTonnes: 3000, gateFeeLocal: Math.round(6 * UA_FX) }, leverContext(a, UA)), UA).scenarios.base.fin.simplePaybackYears!;
     // At a €6/t gate fee the gain is small: food waste needs hygienisation, reception and disposal of ≈ 10 % packaging rejects.
     expect(co).toBeLessThan(base);
   });

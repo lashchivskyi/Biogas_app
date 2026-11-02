@@ -403,6 +403,12 @@ export type VerdictId =
   | "INSUFFICIENT_DATA"
   | "NOT_RECOMMENDED_AT_SCALE";
 
+/**
+ * A condition of the next better verdict that the project misses ("possible" → the Strong rule, "weak" → the Possible
+ * rule): payback, conservative case, DSCR, data confidence, fat share, base NPV. Identifiers; the UI words them.
+ */
+export type VerdictGap = "payback" | "conservative" | "dscr" | "confidence" | "fat" | "npv";
+
 export interface Score {
   id: "feedstock" | "energy" | "location" | "technical" | "economics" | "regulatory" | "environmental";
   label: string;
@@ -460,7 +466,17 @@ export interface Assessment {
   scale?: ScalePoint[];
   scores: Score[];
   overall: { value: number; explanation: string[] };
-  verdict: { id: VerdictId; reasons: string[]; whatWouldChange: string[] };
+  verdict: {
+    id: VerdictId;
+    reasons: string[];
+    whatWouldChange: string[];
+    /** Break-even sentences ("NPV = 0 with ≈ 35 % lower CAPEX"): paid detail. Reports saved before 2026-11-02 carry them in `whatWouldChange`. */
+    thresholds?: string[];
+    /** What separates this verdict from the next better one; absent for strong, insufficient and not-at-scale verdicts and on older reports. */
+    gaps?: VerdictGap[];
+  };
+  /** Levers that would improve the result, tested on the client's own input (src/core/advice.ts). Absent on older reports. */
+  advice?: import("./advice").Advice;
   /**
    * Whether the answer survives the scenario range: positive NPV even in the conservative case (clear_go),
    * negative even in the optimistic case (clear_no), or the sign flips between them (grey).

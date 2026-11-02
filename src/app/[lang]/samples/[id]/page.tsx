@@ -8,7 +8,7 @@ import { decisionCopy } from "@/i18n/decision";
 import { ResultView, type ResultViewProps } from "@/components/ResultView";
 import { CurrencyResultView } from "@/components/CurrencyResultView";
 import { SampleCaseBrief } from "@/components/SampleCaseBrief";
-import { assess } from "@/core";
+import { advise, assess } from "@/core";
 import { locList } from "@/core/i18n";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
@@ -40,7 +40,10 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
   const country = getCountry(ex.input.countryCode);
   const cl = coreLang(locale);
   const core = await getCoreCatalog(locale);
-  const a = assess(ex.input, country, { lang: cl });
+  const assessed = assess(ex.input, country, { lang: cl });
+  // A sample shows the paid report in full, action plan included.
+  const advice = advise(assessed, country, { thresholds: true });
+  const a = advice ? { ...assessed, advice } : assessed;
   const title = exampleTitle(ex, d, lang as Locale);
   const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: locList(country.approachNotes, cl), core, access: "full", methodologyHref: `/${locale}/methodology` };
   return (

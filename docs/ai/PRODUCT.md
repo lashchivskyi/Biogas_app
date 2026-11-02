@@ -43,7 +43,7 @@ as a separate case. Market data per country and, where official data exist, per 
 
 ## Open hypotheses (validate or replace)
 
-- Willingness to pay at €160–390 per report and the tier split by country.
+- Willingness to pay at €160–390 per report, the tier split by country, and whether price should scale with plant size (proposal in DECISIONS 2026-11-02).
 - The free verdict is trusted without a human expert; which evidence raises trust most.
 - German-based CAPEX × country factor is adequate outside the EU (BR, IN, MX use single benchmarks).
 - Inputs the client does not yet control (export price, operator wage, heat price, financing
@@ -81,6 +81,7 @@ Client jobs × who serves them × our position:
 | CHP, heat or biomethane? | Luke (manual split), WSU/KTBL (one route per run) | **edge**: three routes, one run, full energy balance |
 | What does it earn at today's prices here? | one-country tools with frozen prices | **edge**: 33 countries, dated official prices, admin1 |
 | What should I check first? | consultants | **edge**: EVPI + request templates |
+| What would make it work? | consultants (weeks); tools: one manual re-run per idea | **edge**: levers tested on the client's own data, scenario lab (free); break-even per lever + action plan (paid) |
 | Subsidies / credits | KTBL (EEG ≤ 2016), WSU + Penn State (RIN/LCFS), Luke (FI grant) | partial: separate cases; no EU compliance value |
 | Overwrite a cost line I know | Luke, KTBL, WSU (every line editable) | **gap**: one supplier total per route |
 | Lender model, grid connection, GHG certificate | consultants, RETScreen, Anessa; grid operators; BIOGEMIS/NNFCC | **gap**: pre-tax, injection LOW, RED defaults only |

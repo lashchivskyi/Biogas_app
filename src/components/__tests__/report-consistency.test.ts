@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { assess } from "@/core";
+import { advise, assess } from "@/core";
 import type { Assessment } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES, getCountry } from "@/countries";
@@ -27,7 +27,8 @@ const dictionaries = {} as Record<Locale, Dict>;
 const cases = EXAMPLE_IDS.map((id) => {
   const example = EXAMPLES.find((e) => e.id === id)!;
   const country = getCountry(example.input.countryCode);
-  const model = (lang: "en" | "uk") => assess(example.input, country, { lang, asOfDate: AS_OF });
+  // As sold: the snapshot carries its action plan (paid section) and, in the free view, the advisor teaser.
+  const model = (lang: "en" | "uk") => { const a = assess(example.input, country, { lang, asOfDate: AS_OF }); const advice = advise(a, country, { thresholds: true }); return advice ? { ...a, advice } : a; };
   return { id, example, country, en: model("en"), uk: model("uk") };
 });
 

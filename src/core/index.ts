@@ -1,7 +1,9 @@
 export * from "./types";
-export { assess, allProvenance, buildParams, ROUTES } from "./assess";
+export { assess, allProvenance, buildParams, MC_DRAWS, ROUTES } from "./assess";
+export { ADVICE_ASSUMPTIONS, advise, applyLevers, leverContext, outcomeOf, roundSuggestion, runScenario, verdictRank } from "./advice";
+export type { Advice, AdviceCombination, AdviceContext, AdviceLever, LeverId, LeverSettings, ScenarioOutcome } from "./advice";
 export { FEEDSTOCKS, ANIMALS, BUSINESS_TYPES, HANDLING_IDS, feedName } from "./feedstockData";
-export { VERDICT_LABELS, VERDICT_MIN_SCORE } from "./verdict";
+export { POSSIBLE_MAX_PAYBACK_YEARS, STRONG_RULE, VERDICT_LABELS, VERDICT_MIN_SCORE } from "./verdict";
 export { SAFETY_DISCLAIMER } from "./safety";
 export { QUALITY_START, minimumGapsForVerdict } from "./quality";
 export { SCENARIOS, SCENARIO_ORDER } from "./scenarios";

@@ -5,7 +5,7 @@ import { locText, registerMessages, type Messages } from "@/core/i18n";
 import type { Assessment, RouteId, ScenarioId, VerdictId } from "@/core";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
 import { INTL_TAG } from "@/i18n/config";
-import { displayUnit, makeFormat, sig2 } from "@/lib/format";
+import { displayUnit, makeFormat, sig2, tidy } from "@/lib/format";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { marketLabel, marketQuality } from "@/i18n/market";
 import { decisionCopy } from "@/i18n/decision";
@@ -30,6 +30,8 @@ import { PROCESS_UNITS, type ProcessKind, type ProcessResult } from "@/core/proc
 import { Icon, type IconName } from "./brand/Icon";
 import { DecisionRange, SignedBar } from "./Ranges";
 import { ReportNav } from "./ReportNav";
+import { AdvicePlan, AdviceTeaser, ReportAnswers } from "./Advice";
+import { advisorCopy } from "@/i18n/advisor";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
@@ -155,13 +157,13 @@ export interface ResultViewProps {
   access: "free" | "standard" | "full";
   /** Rendered inside the locked teaser (client button opening checkout). */
   unlockSlot?: ReactNode;
-  /** Rendered after the report (what-if, contact…). */
-  afterSlot?: ReactNode;
+  /** Free result: the advisor and scenario lab, between the answer and the offer (calculator only). */
+  labSlot?: ReactNode;
   samplesHref?: string;
   methodologyHref: string;
 }
 
-export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, afterSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
+export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [], access, unlockSlot, labSlot, samplesHref, methodologyHref, display = { currency: "EUR", rate: 1, date: raw.dataAudit?.asOfDate ?? "—" } }: ResultViewProps) {
   registerMessages(locale, core);
   const stressLabels = sensitivityLabels(locale, d);
   const region = COUNTRIES[raw.countryCode]?.regions.find((r) => r.id === raw.input.regionId);
@@ -208,6 +210,7 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
     { id: "energy", label: R.flowTitle },
     ...(economics ? [{ id: "economics", label: access === "full" ? R.scenariosTitle : L.scenario.base }] : []),
     ...(economics && access === "full" ? [{ id: "routes", label: R.routesTitle }, { id: "sensitivity", label: R.sensTitle }] : []),
+    ...(economics && a.advice ? [{ id: "advice", label: advisorCopy[locale].planTitle }] : []),
     ...(economics && a.measureFirst?.length ? [{ id: "measure", label: D.measure.title }] : []),
     { id: "details", label: R.detailsTitle },
   ] : [];
@@ -233,12 +236,14 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
           </div>
           <ul lang={a.lang} className="mt-5 space-y-2 text-[15px]">{a.verdict.reasons.map((x) => <li key={x} className="flex gap-2.5"><span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-60" /><span>{x}</span></li>)}</ul>
           {driver && <p lang={a.lang} className="mt-4 text-[15px] font-semibold">{driver}</p>}
-          {a.verdict.whatWouldChange.length > 0 && (
+          {(a.verdict.whatWouldChange.length > 0 || (full && !!a.verdict.thresholds?.length)) && (
             <div className="mt-4 rounded-xl bg-white/65 p-3.5 text-sm">
               <div className="font-semibold">{R.whatWouldChange}</div>
-              <ul lang={a.lang} className="mt-1.5 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
+              {/* Break-even values are paid detail; the free view names what would help, and the advisor tests it below. */}
+              <ul lang={a.lang} className="mt-1.5 space-y-1">{[...(full ? a.verdict.thresholds ?? [] : []), ...a.verdict.whatWouldChange].map((x) => <li key={x}>→ {x}</li>)}</ul>
             </div>
           )}
+          {!full && a.advice && <AdviceTeaser advice={a.advice} d={d} locale={locale} F={F} />}
           {minimumGaps.length > 0 && (
             <div className="mt-4 rounded-xl bg-white/65 p-3.5 text-sm" role="note">
               <div className="font-semibold">{minimumForVerdict[locale]}</div>
@@ -251,26 +256,34 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
         {a.robustness !== "insufficient" && <Robustness a={a} R={R} scn={L.scenario} eur={eur} stressNote={access !== "free" && a.monteCarlo ? f(D.monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) }) : undefined} lockedNote={access === "free" ? offerCopy[locale].driversLocked : undefined} />}
       </div>
 
-      {/* ---------- Plain summary: what the numbers mean ---------- */}
-      <section id="summary" className="mt-4 flex gap-4 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
-        <span aria-hidden className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl bg-brandsoft text-brand sm:grid"><Icon name="doc" size={20} /></span>
-        <div className="min-w-0">
-          <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
-          <p className="mt-2 text-[17px] leading-relaxed text-ink">
-            {process
+      {/* ---------- In short: the conclusion first, then resource → energy → money (same in every tier) ---------- */}
+      <section id="summary" className="mt-4 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
+        <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
+        <p className="mt-2 text-lg font-semibold leading-snug text-ink md:text-xl">{R.tone[a.verdict.id]}</p>
+        <ul className={`mt-4 grid gap-3 text-[15px] leading-relaxed text-ink2 ${economics ? "md:grid-cols-3" : ""}`}>
+          {([
+            ["drop", process
               ? `${PC.models[process.kind]}: ${R.biogas} ${range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³.`
-              : f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
-            {economics && <>{route === "biomethane"
-              ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
-              : f(R.summaryEl, {
-                  el: n0(sig2(e.elNetKwh / 1000)),
-                  heat: n0(sig2(e.heatUsefulKwh / 1000)),
-                  share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
-                })}{" "}
-            {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })}</>} {R.tone[a.verdict.id]}
-          </p>
-        </div>
+              : f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })],
+            ...(economics ? [
+              [route === "biomethane" ? "flame" : "bolt", route === "biomethane"
+                ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
+                : f(R.summaryEl, {
+                    el: n0(sig2(e.elNetKwh / 1000)),
+                    heat: n0(sig2(e.heatUsefulKwh / 1000)),
+                    share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
+                  })],
+              ["chart", f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })],
+            ] : []),
+          ] as [IconName, string][]).map(([icon, text]) => (
+            <li key={icon} className="flex gap-3 rounded-xl bg-surface2/70 p-3">
+              <span aria-hidden className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface text-brand ring-1 ring-line"><Icon name={icon} size={16} /></span>
+              <span className="min-w-0">{tidy(text)}</span>
+            </li>
+          ))}
+        </ul>
       </section>
+      {!full && economics && <ReportAnswers a={a} locale={locale} samplesHref={samplesHref} seeSample={R.seeSample} />}
 
       {/* ---------- Key numbers: money and output first, the physics behind them second ---------- */}
       <Section id="numbers" title={R.keyTitle} sub={R.keySub}>
@@ -367,12 +380,13 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
       )}
 
       {!full ? (
-        economics && <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} samplesHref={samplesHref} />
+        <>
+          {labSlot}
+          {economics && <PaidTeaser a={a} R={R} locale={locale} unlockSlot={unlockSlot} samplesHref={samplesHref} />}
+        </>
       ) : (
-        <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} process={process} economics={economics} />
+        <FullSections a={a} d={d} F={F} locale={locale} methodologyHref={methodologyHref} extended={access === "full"} process={process} economics={economics} currency={currency} />
       )}
-
-      {afterSlot}
     </div>
   );
 }
@@ -595,7 +609,7 @@ function QuoteCheckPanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F:
   );
 }
 
-function FullSections({ a, d, F, locale, methodologyHref, extended, process, economics }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; methodologyHref: string; extended: boolean; process?: ProcessResult; economics: boolean }) {
+function FullSections({ a, d, F, locale, methodologyHref, extended, process, economics, currency }: { a: Assessment; d: ResultDict; F: ReturnType<typeof makeFormat>; locale: Locale; methodologyHref: string; extended: boolean; process?: ProcessResult; economics: boolean; currency: string }) {
   const registryHref = `${methodologyHref}?${new URLSearchParams({ c: a.countryCode, r: a.input.regionId })}#parameter-group-4`;
   const parameterNumber = new Intl.NumberFormat(INTL_TAG[locale], { maximumSignificantDigits: 4 }).format;
   const R = d.result;
@@ -741,6 +755,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       {/* ---------- Details ---------- */}
       </>}
       {economics && <>
+      <AdvicePlan a={a} d={d} locale={locale} F={F} currency={currency} />
       <MeasureFirstPanel a={a} F={F} locale={locale} />
       <BreakEvenPanel a={a} F={F} locale={locale} unreachable={R.unreachable} />
       <MonteCarloPanel a={a} F={F} locale={locale} />

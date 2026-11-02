@@ -15,6 +15,9 @@ export function alphabetically<T>(items: readonly T[], locale: Locale, label: (i
   return [...items].sort((a, b) => collator.compare(label(a), label(b)));
 }
 
+/** A template ending a sentence after an abbreviated unit ("23,3 р." + ".") prints one dot, not two; an ellipsis stays. */
+export const tidy = (s: string) => s.replace(/(?<!\.)\.\.(?=\s|$)/g, ".");
+
 /** Round to 2 significant digits for ranges — we do not publish fake precision. */
 export function sig2(v: number): number {
   if (!Number.isFinite(v) || v === 0) return 0;
@@ -37,7 +40,8 @@ export function makeFormat(locale: Locale, units: Dict["labels"]["units"], displ
   const nf0 = new Intl.NumberFormat(tag, { maximumFractionDigits: 0 });
   const nf1 = new Intl.NumberFormat(tag, { maximumFractionDigits: 1 });
   const cmp = new Intl.NumberFormat(tag, { notation: "compact", maximumFractionDigits: 1 });
-  const cur = (code: string) => new Intl.NumberFormat(tag, { style: "currency", currency: code, notation: "compact", maximumFractionDigits: 1 });
+  // minimumFractionDigits 0: Node's ICU otherwise keeps a currency's minor-unit digit in compact form ("€590.0K", "890.000,0 €").
+  const cur = (code: string) => new Intl.NumberFormat(tag, { style: "currency", currency: code, notation: "compact", minimumFractionDigits: 0, maximumFractionDigits: 1 });
   const curFull = (code: string) => new Intl.NumberFormat(tag, { style: "currency", currency: code, maximumFractionDigits: 0 });
 
   const n0 = (v: number) => nf0.format(Math.round(v));

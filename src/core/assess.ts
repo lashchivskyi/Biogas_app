@@ -99,7 +99,7 @@ function productValue(r: ScenarioResult, params: Params): { product: ProductBrea
 }
 
 /** Monte Carlo draws (Latin hypercube): stratified, so 160 draws give stable P10–P90 for display. */
-const MC_DRAWS = 160;
+export const MC_DRAWS = 160;
 
 /** Plant sizes shown in the scale comparison, as multiples of the entered feedstock. */
 const SCALE_STEPS = [0.5, 0.75, 1, 1.5, 2, 3];
@@ -109,7 +109,6 @@ const PRICE_BAND = 3;
 /** A supplier CAPEX quote more than this factor above or below the model's own estimate is flagged (judgement). */
 const QUOTE_BAND = 2.5;
 
-/** `uncertainty: false` skips the value-of-information runs and the Monte Carlo (about 300 extra runs) for bulk or what-if use. */
 /** First path of a NaN/±Infinity number in the input, so garbage fails loudly instead of surfacing as NaN in a report. */
 function nonFiniteInputPath(value: unknown, path = "input"): string | undefined {
   if (typeof value === "number") return Number.isFinite(value) ? undefined : path;
@@ -118,7 +117,13 @@ function nonFiniteInputPath(value: unknown, path = "input"): string | undefined 
   return undefined;
 }
 
-export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean } = {}): Assessment {
+/**
+ * `uncertainty: false` skips the value-of-information runs and the Monte Carlo (about 300 extra runs) for bulk or what-if use.
+ * `lite: true` keeps only what a scenario preview shows — verdict, robustness, ranges, routes, data confidence (≈ 13 runs):
+ * no stress tests, parameter sensitivity, break-even search, plant-size table, quote check, support cases, EVPI or Monte
+ * Carlo. Those fields come back empty; `lite.test.ts` proves the verdict, ranges and confidence equal the full run.
+ */
+export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean; lite?: boolean } = {}): Assessment {
   const badPath = nonFiniteInputPath(input);
   if (badPath) throw new Error(`Input contains a non-finite number at ${badPath}`);
   if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
@@ -192,7 +197,8 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     asOfDate,
     checks: [...actualEvidence.values()].map((p) => checkEvidence(p, asOfDate)),
   };
-  const rangeIds = usedMarket.filter((id) => {
+  const lite = opts.lite === true;
+  const rangeIds = lite ? [] : usedMarket.filter((id) => {
     if (!params.prov(id).range) return false;
     if (id === "econ.electricity_retail_eur_kwh") return !demand.electricityPriceKnown;
     if ((id === "eng.invoice_variable_share" || id === "econ.self_consumption_variable_share") && base.energy.elSelfConsumedKwh <= 0) return false;
@@ -212,7 +218,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     };
     return { parameterId: id, lowInput: low, highInput: high, lowNpvEur: npvAt(low), highNpvEur: npvAt(high), basis };
   });
-  if (input.process) {
+  if (input.process && !lite) {
     const process = input.process;
     const keys = process.kind === "landfill" ? ["decayPerYear", "potentialNm3T", "collectionPct"]
       : process.kind === "wastewater" ? ["codMgL", "removalPct", "avoidedTreatmentLocalM3"]
@@ -242,7 +248,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     input.process ? ["process_opex", "OPEX +30 %", { opex: 1.3 }] : ["transport", T("Logistics +50 %"), { transport: 1.5 }],
     ["downtime", T("CHP downtime +10 pp"), { extraDowntimePp: 10 }],
   ];
-  const sensitivity: SensitivityItem[] = tests.map(([id, label, m]) => {
+  const sensitivity: SensitivityItem[] = lite ? [] : tests.map(([id, label, m]) => {
     let r = run(bestRoute, "base", { ...NO_MODS, ...m });
     // Feedstock or yield shortfall shows up after construction: the plant was built for the base case, so CAPEX stays as built.
     if ((m.feedstock !== undefined || m.methaneYield !== undefined) && r.capex.totalEur > 0) r = run(bestRoute, "base", { ...NO_MODS, ...m, capex: base.capex.totalEur / r.capex.totalEur });
@@ -259,19 +265,22 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // ---- break-even ----
   let capexRed: number | null = null;
   let priceInc: number | null = null;
+  // Absolute break-even values. NPV is linear in CAPEX, in the product price and in a per-tonne feedstock cost, so two
+  // runs give the exact root (no search tolerance).
+  const npv0 = base.fin.npvEur;
+  const capexK = zeroAt(1, npv0, 2, run(bestRoute, "base", { ...NO_MODS, capex: 2 }).fin.npvEur);
   if (base.fin.npvEur >= 0) {
     capexRed = 0;
     priceInc = 0;
+  } else if (lite) {
+    // Same root as the bisection below (NPV is linear in the CAPEX multiplier); the energy-price search is skipped.
+    capexRed = capexK !== null && capexK >= 0.05 && capexK <= 1 ? (1 - capexK) * 100 : null;
   } else {
     const x = bisect((c) => run(bestRoute, "base", { ...NO_MODS, capex: c }).fin.npvEur, 0.05, 1);
     capexRed = x === null ? null : (1 - x) * 100;
     const y = bisect((k) => run(bestRoute, "base", { ...NO_MODS, energyPrice: k }).fin.npvEur, 1, 4);
     priceInc = y === null ? null : (y - 1) * 100;
   }
-  // Absolute break-even values. NPV is linear in CAPEX, in the product price and in a per-tonne feedstock cost, so two
-  // runs give the exact root (no search tolerance).
-  const npv0 = base.fin.npvEur;
-  const capexK = zeroAt(1, npv0, 2, run(bestRoute, "base", { ...NO_MODS, capex: 2 }).fin.npvEur);
   const product = productValue(base, params);
   const productK = product ? zeroAt(1, npv0, 2, run(bestRoute, "base", { ...NO_MODS, productPrice: 2 }).fin.npvEur) : null;
   const feedT = !input.process && base.feed.tonnesYear > 0 ? zeroAt(0, npv0, 10, run(bestRoute, "base", { ...NO_MODS, feedstockEurT: 10 }).fin.npvEur) : null;
@@ -367,7 +376,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // Each input's plausible range, three runs (low / base / high), EVPI for the build decision. Inputs the client already
   // supplied (lab yield, supplier quote, own prices) have no range left and do not appear.
   let measureFirst: MeasureItem[] | undefined;
-  const uncertainty = opts.uncertainty !== false && !input.process;
+  const uncertainty = !lite && opts.uncertainty !== false && !input.process;
   if (uncertainty) {
     const items: MeasureItem[] = [];
     const add = (kind: MeasureKind, x: [number, number, number], n: [number, number], parameterId?: string) => {
@@ -457,7 +466,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   }
 
   // Scale: the same mix at other sizes, re-sized from scratch (no quote, since a quote is for one size).
-  const scale: ScalePoint[] | undefined = input.process ? undefined : SCALE_STEPS.map((m) => {
+  const scale: ScalePoint[] | undefined = input.process || lite ? undefined : SCALE_STEPS.map((m) => {
     // Delivered streams come from a supply area that grows with the quantity: haul distance × √size (uniform density).
     const scaled = { ...input, feedstocks: input.feedstocks.map((f) => ({ ...f, quantity: f.quantity * m, ...(f.delivered && f.distanceKm ? { distanceKm: f.distanceKm * Math.sqrt(m) } : {}) })), finance: input.finance && { ...input.finance, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
     const routes = {} as ScalePoint["routes"];
@@ -471,7 +480,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // The quote is compared with the model's own component estimate for the same route, without the quote, so the client
   // sees whether it sits inside the model's optimistic–conservative range and which items a complete scope contains.
   let quoteCheck: QuoteCheck | undefined;
-  if (!input.process && qIn?.capexQuoteRoute && (qIn.capexQuoteLocal ?? 0) > 0) {
+  if (!input.process && !lite && qIn?.capexQuoteRoute && (qIn.capexQuoteLocal ?? 0) > 0) {
     const qr = qIn.capexQuoteRoute;
     const quoted = matrix[qr].base;
     const noQuote = { ...input, finance: { ...qIn, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
@@ -531,7 +540,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // case is computed as "if eligible", never shown as eligible: the scheme's own gas-source category must confirm it.
   const gasSource = input.process && input.process.kind !== "residue" ? input.process.kind : undefined;
   const gasSourceName = gasSource === "wastewater" ? T("wastewater (sewage) gas") : gasSource === "landfill" ? T("landfill gas") : T("an existing biogas stream");
-  const supportCases: SupportCase[] = country.support.schemes.map((sc) => {
+  const supportCases: SupportCase[] = lite ? [] : country.support.schemes.map((sc) => {
     const route = sc.routes.includes(bestRoute) ? bestRoute : sc.routes[0];
     const ref = matrix[route].base;
     const kw = ref.kwElEquivalent;

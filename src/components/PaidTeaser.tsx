@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { Assessment } from "@/core";
+import { MC_DRAWS, type Assessment } from "@/core";
 import { countryName, fmt as f, type Dict, type Locale } from "@/i18n";
 import { offerCopy } from "@/i18n/offer";
+import { advisorCopy } from "@/i18n/advisor";
 import { Icon } from "./brand/Icon";
 
 /**
@@ -11,15 +12,19 @@ import { Icon } from "./brand/Icon";
  */
 export function PaidTeaser({ a, R, locale, unlockSlot, samplesHref }: { a: Assessment; R: Dict["result"]; locale: Locale; unlockSlot?: ReactNode; samplesHref?: string }) {
   const O = offerCopy[locale];
+  const A = advisorCopy[locale];
   const b = a.scenarios.base;
+  const ad = !a.input.process;
   const country = countryName(a.countryCode, locale);
   const lines = b.capex.lines.length + b.opexRev.opex.length + b.opexRev.revenue.length;
+  // The calculator runs without EVPI and Monte Carlo (speed); the paid report always has them for feedstock inputs.
   const standard = [
-    a.measureFirst?.length ? f(O.tChecks, { n: a.measureFirst.length }, locale) : null,
+    a.advice?.levers.some((l) => l.improves) ? A.tPlan : null,
+    a.measureFirst?.length ? f(O.tChecks, { n: a.measureFirst.length }, locale) : ad && !a.measureFirst ? A.tChecksAny : null,
     f(O.tLines, { n: lines }, locale),
     a.input.process ? null : O.tMonthly,
     a.scale?.length ? f(O.tSizes, { n: a.scale.length }, locale) : null,
-    a.monteCarlo ? f(O.tMc, { n: a.monteCarlo.n }, locale) : null,
+    a.monteCarlo ? f(O.tMc, { n: a.monteCarlo.n }, locale) : ad ? f(O.tMc, { n: MC_DRAWS }, locale) : null,
     f(O.tRegister, { n: a.regulatory.items.length }, locale),
     O.tExcel,
   ].filter((x): x is string => !!x);
@@ -31,7 +36,7 @@ export function PaidTeaser({ a, R, locale, unlockSlot, samplesHref }: { a: Asses
   const insufficient = a.verdict.id === "INSUFFICIENT_DATA";
   const list = (items: string[]) => <ul className="mt-3 space-y-2 text-sm text-ink2">{items.map((x) => <li key={x} className="flex gap-2.5"><Icon name="check" size={17} className="mt-0.5 shrink-0 text-brand" strokeWidth={2.2} /><span>{x}</span></li>)}</ul>;
   return (
-    <section className="no-print mt-12 overflow-hidden rounded-3xl border border-line bg-surface shadow-[0_24px_70px_-40px_rgba(11,23,18,0.45)]" aria-labelledby="locked-h">
+    <section id="offer" className="no-print mt-12 scroll-mt-32 overflow-hidden rounded-3xl border border-line bg-surface shadow-[0_24px_70px_-40px_rgba(11,23,18,0.45)]" aria-labelledby="locked-h">
       <div className="hero relative p-6 md:p-8">
         <div className="hero-grid absolute inset-0" aria-hidden />
         <div className="relative max-w-3xl">

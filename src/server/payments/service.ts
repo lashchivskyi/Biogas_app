@@ -2,7 +2,7 @@ import { z } from "zod";
 import { PLAN_IDS, type PlanId } from "@/config/plans";
 import { absoluteUrl } from "@/config/site";
 import { getCountry } from "@/countries";
-import { assess } from "@/core";
+import { advise, assess } from "@/core";
 import { getCoreCatalog } from "@/i18n";
 import { coreLang, isLocale, type Locale } from "@/i18n/config";
 import { offerCopy } from "@/i18n/offer";
@@ -53,6 +53,9 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
   const reportLang = coreLang(locale);
   const assessmentSnapshot = assess({ ...input.input, lang: reportLang }, country, { asOfDate: new Date().toISOString().slice(0, 10) });
   assertSellable(assessmentSnapshot);
+  // The action plan is part of what was sold: computed now, with break-even values, and stored with the snapshot.
+  const advice = advise(assessmentSnapshot, country, { thresholds: true });
+  if (advice) assessmentSnapshot.advice = advice;
 
   const quote = input.quoteToken ? verifyPaymentQuote(input.quoteToken, input) : createPaymentQuote(input);
   const { amountMinor, priceEurCents } = quote;

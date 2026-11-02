@@ -1,4 +1,8 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import type { Assessment } from "@/core";
+import { makeFormat } from "@/lib/format";
+import { AdviceTeaser } from "../Advice";
 import type { Dict, Locale } from "@/i18n";
 import { decisionCopy } from "@/i18n/decision";
 import { offerCopy } from "@/i18n/offer";
@@ -67,6 +71,11 @@ export function auditTiers(a: Assessment, html: Record<Access, string>, ctx: { d
   const mc = new RegExp(`${esc(stress.split("{n}")[0].trim())}.*?${esc(stress.split("{p}")[1].trim())}`, "s");
   const shared = (x: string) => x.replace(offerCopy[ctx.locale].driversLocked, "").replace(mc, "").replace(/\s?\([^()]*\)/g, "").replace(/\s+/g, " ").trim();
   free[1] = shared(free[1]); std[1] = shared(std[1]); full[1] = shared(full[1]);
+  // Verdict: break-even sentences are paid detail; the advisor teaser is the free view's pointer to the scenario lab.
+  const F = makeFormat(ctx.locale, ctx.d.labels.units, { currency: "EUR", rate: 1 });
+  const teaser = a.advice ? txt(renderToStaticMarkup(createElement(AdviceTeaser, { advice: a.advice, d: ctx.d, locale: ctx.locale, F }))) : "";
+  const withoutThresholds = (x: string) => (a.verdict.thresholds ?? []).reduce((acc, t) => acc.replace(norm(`→ ${t}`), ""), x).replace(/\s+/g, " ").trim();
+  free[0] = (teaser ? free[0].replace(teaser, "") : free[0]).replace(/\s+/g, " ").trim(); std[0] = withoutThresholds(std[0]); full[0] = withoutThresholds(full[0]);
   ["verdict", "robustness", "summary", "key numbers", "energy flow"].forEach((name, i) => {
     // A paid report adds model warnings and market checks after the key-number tiles.
     const same = (x: string, y: string) => (i === 3 ? x.startsWith(y) || y.startsWith(x) : x === y);

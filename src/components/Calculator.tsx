@@ -3,9 +3,9 @@
 import { calendarDateAt } from "@/lib/format";
 
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
+import { advise, assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import { locList, registerMessages, type Messages } from "@/core/i18n";
-import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
+import type { Advice, AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES } from "@/countries";
 import { PLAN_IDS, type PlanId } from "@/config/plans";
@@ -20,7 +20,7 @@ import { preferenceCopy } from "@/i18n/preferences";
 import type { FormLine, FormState } from "@/lib/form";
 import { UnlockButton } from "./payments/Checkout";
 import { CurrencyResultView as ResultView } from "./CurrencyResultView";
-import { WhatIf } from "./WhatIf";
+import { ScenarioLab } from "./ScenarioLab";
 import { CountrySelect } from "./CountrySelect";
 import { CountryFlag } from "./CountryFlag";
 import { CitySelect } from "./CitySelect";
@@ -182,6 +182,20 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
     }
   }, [deferredForm, lang, today]);
   const assessment = submitted ? live : null;
+  // The advisor re-runs the model on realistic changes (≈ 10 fast runs): after the result is on screen, never in its render.
+  const adviceKey = assessment ? `${assessment.a.dataAudit?.inputVersion}|${assessment.a.dataAudit?.asOfDate}` : "";
+  const [advice, setAdvice] = useState<{ key: string; value?: Advice }>();
+  useEffect(() => {
+    if (!assessment) return;
+    const timer = setTimeout(() => {
+      let value: Advice | undefined;
+      try { value = advise(assessment.a, assessment.country); } catch { value = undefined; }
+      setAdvice({ key: adviceKey, value });
+      if (value) track("advice_ready", { improving: value.levers.filter((l) => l.improves).length, combined: !!value.combined, verdict: value.base.verdict });
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [assessment, adviceKey]);
+  const currentAdvice = advice && advice.key === adviceKey ? advice.value : undefined;
   // Fold as soon as "Calculate" is pressed, not when the deferred result lands: otherwise the page jumps under the scroll.
   const collapsed = submitted && !editing && (!!live || deferredForm !== form);
 
@@ -283,9 +297,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
     scrollTo(formRef);
   }
 
-  function applyWhatIf(n: ProjectInput) {
+  function applyScenario(n: ProjectInput, source: string) {
     setForm(inputToForm(n, locale));
-    track("whatif_applied");
+    track("whatif_applied", { source });
     scrollTo(resultRef);
   }
 
@@ -548,7 +562,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
             <h2 className="mb-4 text-2xl font-bold tracking-tight md:text-3xl">{C.resultTitle}</h2>
             <ResultView
               core={core}
-              a={assessment.a}
+              a={currentAdvice ? { ...assessment.a, advice: currentAdvice } : assessment.a}
               d={d}
               locale={locale}
               currency={assessment.country.currency}
@@ -557,7 +571,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
               samplesHref={samplesHref}
               methodologyHref={`/${locale}/methodology`}
               unlockSlot={<UnlockButton input={assessment.input} locale={locale} d={d} demo={demo} plan={preferredPlan} label={d.result.unlock} className="btn btn-signal" />}
-              afterSlot={!assessment.a.scenarios.base.process?.missingInputs?.length && <WhatIf input={assessment.input} base={assessment.a} country={assessment.country} locale={locale} d={d} onApply={applyWhatIf} />}
+              labSlot={currentAdvice && <ScenarioLab key={adviceKey} a={assessment.a} advice={currentAdvice} input={assessment.input} country={assessment.country} locale={locale} d={d} currency={assessment.country.currency} onApply={applyScenario} />}
             />
           </div>
         )}

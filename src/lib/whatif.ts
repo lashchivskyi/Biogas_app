@@ -1,48 +1,5 @@
-import type { Assessment, CoreLang, ProjectInput } from "@/core";
+import type { Assessment, CoreLang } from "@/core";
 import { fmtInt, tr } from "@/core/i18n";
-
-/**
- * "What would make it work?" levers shown under a result. Each lever is a concrete, realistic
- * change to the customer's own input — not a magic multiplier — so the user can apply it and keep editing.
- */
-export interface Lever {
-  id: "cosubstrate" | "heat" | "cluster";
-  apply: (i: ProjectInput, fx: number) => ProjectInput;
-}
-
-const clone = (i: ProjectInput): ProjectInput => JSON.parse(JSON.stringify(i));
-
-/** Gate fee assumed for the co-substrate lever, EUR/t (converted to the project currency). */
-export const COSUBSTRATE_GATE_FEE_EUR = 6;
-
-export const LEVERS: Lever[] = [
-  {
-    id: "cosubstrate",
-    apply: (i, fx) => {
-      const n = clone(i);
-      n.feedstocks.push({ id: "whatif-food", type: "food_waste", quantity: 3000, delivered: true, distanceKm: 15, purchasePricePerTonneLocal: -Math.round(COSUBSTRATE_GATE_FEE_EUR * fx), handling: "paid_disposal" });
-      return n;
-    },
-  },
-  {
-    id: "heat",
-    apply: (i) => {
-      const n = clone(i);
-      n.energy.heatNeed = "year_round_process";
-      n.energy.heatKwhYear = Math.max(n.energy.heatKwhYear ?? 0, 1_000_000);
-      return n;
-    },
-  },
-  {
-    id: "cluster",
-    apply: (i) => {
-      const n = clone(i);
-      n.feedstocks = n.feedstocks.map((f) => ({ ...f, quantity: f.quantity * 3 }));
-      if (n.energy.electricityKwhYear) n.energy.electricityKwhYear *= 2;
-      return n;
-    },
-  },
-];
 
 /** Plain-language "why" behind the verdict: the single most important driver (model language). */
 export function keyDriver(a: Assessment, lang: CoreLang = a.lang): string {

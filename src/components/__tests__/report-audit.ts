@@ -12,7 +12,7 @@ import { offerCopy } from "@/i18n/offer";
 import { climateCopy } from "@/i18n/climate";
 import { financialLabels, sensitivityLabels } from "@/i18n/financial-labels";
 import { processCopy, processFieldLabels } from "@/i18n/processes";
-import { makeFormat, sig2 } from "@/lib/format";
+import { makeFormat, sig2, tidy } from "@/lib/format";
 import { reportSheets } from "@/lib/report-export";
 import { ResultView, type ResultViewProps } from "../ResultView";
 
@@ -249,7 +249,7 @@ export function auditVerdictText(a: Assessment): Finding[] {
   const [cons, base, opt] = SCN.map((s) => a.routeMatrix[best][s]);
   const lang = a.lang;
   const npvs = [cons, base, opt].map((s) => Math.round(s.fin.npvEur));
-  const texts = [...a.verdict.reasons, ...a.verdict.whatWouldChange];
+  const texts = [...a.verdict.reasons, ...a.verdict.whatWouldChange, ...(a.verdict.thresholds ?? [])];
   for (const t of texts) {
     for (const m of t.matchAll(/(?<![\d.,])(-?\d{1,3}(?:[,\s  .]\d{3})+)(?![\d])/g)) {
       const n = Number(m[1].replace(/[,\s  .]/g, "").replace(/^(-?)/, "$1"));
@@ -346,6 +346,8 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   has(text, f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score }), "confidence chip");
   for (const reason of a.verdict.reasons) has(text, reason, "verdict reason");
   for (const w of a.verdict.whatWouldChange) has(text, w, "what would change");
+  // Break-even sentences are paid detail (decision 2026-11-02): never in the free result, always in a paid report.
+  for (const t of a.verdict.thresholds ?? []) (full ? has : absent)(text, t, "break-even sentence");
   for (const id of Object.keys(L.verdict) as (keyof typeof L.verdict)[]) if (id !== a.verdict.id) absent(txt((/^<h2[^>]*>([\s\S]*?)<\/h2>/.exec(first) ?? [])[1] ?? ""), L.verdict[id], "other verdict label");
   has(text, a.supportIncluded ? R.assumedSupport : R.noSubsidy, "subsidy statement");
 
@@ -374,13 +376,13 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   // Process inlets share the report; only the feedstock-specific wording and blocks are swapped.
   const PC = processCopy(locale), fields = processFieldLabels(locale), proc = a.scenarios.base.process;
   const lead = proc ? `${PC.models[proc.kind]}: ${R.biogas} ${rg(biogas[0], biogas[2])} m³.` : f(R.summary, { tonnes: n0(sig2(base.feed.tonnesYear)), biogas: rg(biogas[0], biogas[2]) });
-  has(txt(summary), lead, "summary: feedstock and biogas");
-  if (route === "biomethane") has(txt(summary), f(R.summaryBm, { bm: compact(sig2(base.energy.biomethaneNm3)) }), "summary: biomethane");
+  has(txt(summary), tidy(lead), "summary: feedstock and biogas");
+  if (route === "biomethane") has(txt(summary), tidy(f(R.summaryBm, { bm: compact(sig2(base.energy.biomethaneNm3)) })), "summary: biomethane");
   else {
     const own = a.input.energy.electricityKwhYear ?? 0;
-    has(txt(summary), f(R.summaryEl, { el: n0(sig2(base.energy.elNetKwh / 1000)), heat: n0(sig2(base.energy.heatUsefulKwh / 1000)), share: own > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, base.energy.elSelfConsumedKwh / own) * 100) }) : "" }), "summary: electricity, heat, self-use share");
+    has(txt(summary), tidy(f(R.summaryEl, { el: n0(sig2(base.energy.elNetKwh / 1000)), heat: n0(sig2(base.energy.heatUsefulKwh / 1000)), share: own > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, base.energy.elSelfConsumedKwh / own) * 100) }) : "" })), "summary: electricity, heat, self-use share");
   }
-  has(txt(summary), f(R.summaryMoney, { capex: `${eur(capexLH[0])} – ${eur(capexLH[1])}`, payback: years(base.fin.simplePaybackYears) }), "summary: investment and payback");
+  has(txt(summary), tidy(f(R.summaryMoney, { capex: `${eur(capexLH[0])} – ${eur(capexLH[1])}`, payback: years(base.fin.simplePaybackYears) })), "summary: investment and payback");
   has(txt(summary), R.tone[a.verdict.id], "summary: tone follows the verdict");
   for (const id of Object.keys(R.tone) as (keyof typeof R.tone)[]) if (id !== a.verdict.id) absent(txt(summary), R.tone[id], "summary: tone of another verdict");
 

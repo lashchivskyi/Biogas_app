@@ -1,8 +1,13 @@
 import { fmtDec, fmtInt, fmtUnit, type CoreLang, tr } from "./i18n";
-import type { Assessment, Confidence, ScenarioResult, VerdictId } from "./types";
+import type { Assessment, Confidence, ScenarioResult, VerdictGap, VerdictId } from "./types";
 
 /** Below this client-side data score the verdict is INSUFFICIENT_DATA and no report is sold. */
 export const VERDICT_MIN_SCORE = 35;
+
+/** "Strong" thresholds: simple payback (base, conservative case) in years and the lowest DSCR a lender accepts. */
+export const STRONG_RULE = { paybackYears: 6.5, conservativePaybackYears: 10.5, dscrMin: 1.3 } as const;
+/** "Possible" needs a positive base NPV paid back within this many years (or the borderline case below). */
+export const POSSIBLE_MAX_PAYBACK_YEARS = 10;
 
 /**
  * The verdict is rule-based and every branch states the evidence that triggered it.
@@ -57,9 +62,17 @@ export function decideVerdict(args: {
   // No debt (all-equity project) means no debt service to cover: DSCR is not applicable, not zero.
   // Stable fat co-digestion is documented only up to ~30 % of VS (Long et al. 2012, see eng.fat_share_warning): a feed made mostly of grease is untested territory.
   const fatDominated = base.feed.fatDominantShareVs > 0.5;
-  const strong = !fatDominated && pb !== null && pb <= 6.5 && pbCons !== null && pbCons <= 10.5 && cons.fin.npvEur > 0 && (base.fin.dscrMin ?? Infinity) >= 1.3 && confidence.level !== "LOW";
+  // Each "Strong" condition that fails is a gap the advisor can name (ids only; the UI words them).
+  const strongGaps: VerdictGap[] = [
+    ...(fatDominated ? ["fat" as const] : []),
+    ...(pb === null || pb > STRONG_RULE.paybackYears ? ["payback" as const] : []),
+    ...(pbCons === null || pbCons > STRONG_RULE.conservativePaybackYears || cons.fin.npvEur <= 0 ? ["conservative" as const] : []),
+    ...((base.fin.dscrMin ?? Infinity) < STRONG_RULE.dscrMin ? ["dscr" as const] : []),
+    ...(confidence.level === "LOW" ? ["confidence" as const] : []),
+  ];
+  const strong = strongGaps.length === 0;
   const borderline = npvBase < 0 && npvBase >= -0.1 * base.fin.capexEur && pb !== null && pb <= 8.5 && opt.fin.npvEur >= 0;
-  const possible = (npvBase >= 0 && pb !== null && pb <= 10) || borderline;
+  const possible = (npvBase >= 0 && pb !== null && pb <= POSSIBLE_MAX_PAYBACK_YEARS) || borderline;
 
   if (strong) {
     reasons.push(T("Simple payback ≈ {pb} (base) and ≈ {pbCons} in the conservative case; base NPV €{npvBase}; minimum DSCR {dscrMin}.", { pb: y(pb!), pbCons: y(pbCons!), npvBase: fmt(npvBase), dscrMin: base.fin.dscrMin === null ? "—" : D(base.fin.dscrMin, 2) }));
@@ -85,8 +98,8 @@ export function decideVerdict(args: {
       // Never ask for a laboratory analysis the client has already entered.
       whatWouldChange.push(confidence.labDone ? T("Add the items listed under “What you can add” below.") : T("Fill in missing data and run a laboratory feedstock analysis."));
     }
-    if ((base.fin.dscrMin ?? 99) < 1.3) whatWouldChange.push(T("Raise the equity share or obtain concessional finance: DSCR is below bank thresholds."));
-    return { id: "POSSIBLE_WITH_CONDITIONS", reasons, whatWouldChange };
+    if ((base.fin.dscrMin ?? 99) < STRONG_RULE.dscrMin) whatWouldChange.push(T("Raise the equity share or obtain concessional finance: DSCR is below bank thresholds."));
+    return { id: "POSSIBLE_WITH_CONDITIONS", reasons, whatWouldChange, gaps: strongGaps };
   }
 
   const deep = npvBase < -0.1 * base.fin.capexEur;
@@ -101,11 +114,14 @@ export function decideVerdict(args: {
           : T("Simple payback ≈ {pb}; base NPV €{npvBase} (below zero at the country discount rate).", { pb: y(pb), npvBase: fmt(npvBase) }),
   );
   if (opt.fin.npvEur < 0) reasons.push(T("Even the optimistic case has a negative NPV (€{npvEur}).", { npvEur: fmt(opt.fin.npvEur) }));
-  if (breakEven.capexReductionPct !== null) whatWouldChange.push(T("NPV = 0 with ≈ {capexReductionPct} % lower CAPEX (or an equivalent grant).", { capexReductionPct: Math.round(breakEven.capexReductionPct) }));
+  // Break-even values are the paid detail behind the answer (decision 2026-11-02): kept apart from the free advice.
+  const thresholds: string[] = [];
+  if (breakEven.capexReductionPct !== null) thresholds.push(T("NPV = 0 with ≈ {capexReductionPct} % lower CAPEX (or an equivalent grant).", { capexReductionPct: Math.round(breakEven.capexReductionPct) }));
   else whatWouldChange.push(T("Lower CAPEX alone does not fix it — additional revenue streams are needed."));
-  if (breakEven.energyPriceIncreasePct !== null) whatWouldChange.push(T("NPV = 0 with ≈ {energyPriceIncreasePct} % higher energy prices.", { energyPriceIncreasePct: Math.round(breakEven.energyPriceIncreasePct) }));
+  if (breakEven.energyPriceIncreasePct !== null) thresholds.push(T("NPV = 0 with ≈ {energyPriceIncreasePct} % higher energy prices.", { energyPriceIncreasePct: Math.round(breakEven.energyPriceIncreasePct) }));
   whatWouldChange.push(T("A gate-fee co-substrate (food waste, fats), a real heat customer, or a cluster with neighbours."));
-  return { id: "WEAK_ECONOMICS", reasons, whatWouldChange };
+  const gaps: VerdictGap[] = [...(npvBase < 0 ? ["npv" as const] : []), ...(pb === null || pb > POSSIBLE_MAX_PAYBACK_YEARS ? ["payback" as const] : [])];
+  return { id: "WEAK_ECONOMICS", reasons, whatWouldChange, thresholds, gaps };
 }
 
 export const VERDICT_LABELS: Record<VerdictId, { en: string }> = {

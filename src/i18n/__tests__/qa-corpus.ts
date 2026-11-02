@@ -1,5 +1,6 @@
 import { getDictionary, LOCALES, type Dict, type Locale } from "..";
 import { adminCopy } from "../admin";
+import { advisorCopy } from "../advisor";
 import { businessCopy, businessGroupLabel } from "../businesses";
 import { calculatorHelp } from "../calculator-help";
 import { climateCopy } from "../climate";
@@ -40,7 +41,7 @@ export function leaves(o: unknown, path = "", out = new Map<string, string>()): 
 function modules(d: (l: Locale) => Dict): Record<string, (l: Locale) => unknown> {
   return {
     dict: (l) => d(l),
-    admin: adminCopy, business: businessCopy, businessGroups: (l) => ["farm", "food", "other"].map((id) => businessGroupLabel(id, l)),
+    admin: adminCopy, advisor: (l) => advisorCopy[l], business: businessCopy, businessGroups: (l) => ["farm", "food", "other"].map((id) => businessGroupLabel(id, l)),
     calculatorHelp, climate: (l) => climateCopy[l], decision: (l) => decisionCopy[l], delivery: (l) => deliveryCopy[l], retryPayment: (l) => retryPayment[l],
     errors: (l) => errorCopy[l], numberError: (l) => numberError[l],
     financialLabels: (l) => financialLabels(l, d(l)), sensitivityLabels: (l) => sensitivityLabels(l, d(l)),
