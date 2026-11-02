@@ -175,7 +175,7 @@ export const PROFILES: CountryProfile[] = [
     elec: 0.09, exp: 0.05, gas: 50, labour: 30, capex: 1.05, disc: 0.065, debtRate: 0.045, tkm: 0.16, bm: [0.5, 0.65, 0.85], fertN: 1.2, ef: 0.08,
     regions: [region("ostrobothnia", "Ostrobothnia (Seinäjoki)", [-7.0, -7.3, -3.3, 2.6, 9.3, 14.2, 16.9, 14.8, 9.6, 4.2, -0.6, -4.6], { fi: "Pohjanmaa", sv: "Österbotten" })],
     support: sup("Farms get a 50 % investment grant for biogas plants sized to own energy use (up to half may be sold); no operating tariff; larger biomethane relies on case-by-case energy aid.", [
-      sch({ id: "fi.farm", name: "Maatilan investointituki – biokaasulaitos", status: "open", capexGrantShare: 0.5, routes: ["chp", "boiler"], note: { en: "50 % grant for farm biogas plants sized to own energy use; aid cap €1.5 m per farm per 3 years." }, source: "MMM/Ruokavirasto farm investment aid 2026 (10.12.2025); Government decree 16.01.2026", confidence: "MEDIUM" }),
+      sch({ id: "fi.farm", name: "Maatalouden investointituki – biokaasulaitos", status: "open", capexGrantShare: 0.5, routes: ["chp", "boiler"], note: { en: "50 % grant for farm biogas plants sized to own energy use; aid cap €1.5 m per farm per 3 years." }, source: "MMM/Ruokavirasto farm investment aid 2026 (10.12.2025); Government decree 16.01.2026", confidence: "MEDIUM" }),
     ]),
     notes: { en: ["Very cold winters: expect a large share of biogas to heat the digester."] },
     storageMonths: 12,

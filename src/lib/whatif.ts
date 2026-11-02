@@ -65,6 +65,6 @@ export function keyDriver(a: Assessment, lang: CoreLang = a.lang): string {
       return T("Main reason — low feedstock energy (≈ {density} kWh per tonne): mostly water, little organic matter.", { density: fmt(b.feed.energyDensityKwhPerTonne) });
     return T("Operating margin (≈ €{ebitda}/year) is too small for an investment of ≈ €{capex}.", { ebitda: fmt(b.fin.ebitdaEurYear), capex: fmt(b.capex.totalEur) });
   }
-  if (top) return T("Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.", { label: top.label.toLowerCase(), share: Math.round((top.eur / total) * 100) });
+  if (top) return T("Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.", { label: T.lang === "de" ? top.label : top.label.toLowerCase(), share: Math.round((top.eur / total) * 100) });
   return "";
 }

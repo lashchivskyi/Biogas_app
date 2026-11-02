@@ -212,7 +212,7 @@ const sv: Translation = {
     supportTitle: "Nationella stödsystem — separata scenarier", supportSub: "Ingår inte i beskedet: tariffer sänks, auktioner misslyckas, utlysningar stänger. Status och källa för varje.",
     supportNone: "För det här landet finns inget modellerat stöd för nya projekt.",
     colScheme: "Stöd", colStatus: "Status", colEligible: "Berättigad", colDelta: "Δ nuvärde jämfört med utan stöd",
-    status: { open: "öppet", competitive: "auktion", closing: "fasas ut", closed: "stängt", uncertain: "osäkert" },
+    status: { open: "öppet", competitive: "konkurrensutsatt", closing: "fasas ut", closed: "stängt", uncertain: "osäkert" },
     countryNotes: "Förutsättningar i landet",
     scoresTitle: "Poäng per dimension", scoresSub: "Ingen magisk siffra. Totalpoängen kommer med sin förklaring.", risk: "risk", overall: "Projektets samlade bärkraft",
     sensTitle: "Vad som kan knäcka ekonomin", sensSub: "Varje stresstest tillämpat för sig på basscenariot.",

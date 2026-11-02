@@ -201,8 +201,8 @@ export const GLOSSARY: Record<Locale, LocaleGlossary> = {
     style: { address: "du", percent: "space", decimal: ",", quotes: Q.sv },
   },
   fi: {
-    terms: { digester: "Reaktori", digestate: "Mädäte", feedstock: "Syöte", chp: "CHP", biomethane: "Biometaani", payback: "Takaisinmaksu", npv: "Nykyarvo", irr: "Sisäinen korko", cod: "COD", dm: "KA", conservative: "Varovainen", base: "Perus", optimistic: "Optimistinen", planStandard: "Perusraportti", planExtended: "Laajennettu raportti" },
-    forbidden: [...stem("pessimisti", "Varovainen"), ...stem("digester|digestaatti", "Reaktori / Mädäte"), ...stem("feedstock", "Syöte")],
+    terms: { digester: "Reaktori", digestate: "Mädäte", feedstock: "Syöte", chp: "CHP", biomethane: "Biometaani", payback: "Takaisinmaksu", npv: "Nettonykyarvo", irr: "Sisäinen korkokanta", cod: "COD", dm: "KA", conservative: "Varovainen", base: "Perus", optimistic: "Optimistinen", planStandard: "Perusraportti", planExtended: "Laajennettu raportti" },
+    forbidden: [...stem("pessimisti", "Varovainen"), ...stem("digester|digestaatti", "Reaktori / Mädäte"), ...stem("feedstock", "Syöte"), ...stem("mäde|mädävarast|ko-substraat", "Mädäte / Mädätevarasto / Seossyöte")],
     style: { address: "sinä", percent: "space", decimal: ",", quotes: Q.fi },
   },
   vi: {
