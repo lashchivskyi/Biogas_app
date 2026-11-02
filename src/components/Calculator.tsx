@@ -196,6 +196,18 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
     return () => clearTimeout(timer);
   }, [assessment, adviceKey]);
   const currentAdvice = advice && advice.key === adviceKey ? advice.value : undefined;
+  // Owner's test switch (build with NEXT_PUBLIC_PAID_PREVIEW=1): shows the result as a Standard or Extended report would, without paying.
+  const previewEnabled = process.env.NEXT_PUBLIC_PAID_PREVIEW === "1";
+  const [preview, setPreview] = useState<"free" | "standard" | "full">("free");
+  const paidPreview = useMemo(() => {
+    if (!previewEnabled || preview === "free" || !assessment) return null;
+    try {
+      const full = assess(assessment.input, assessment.country, { asOfDate: today });
+      const plan = advise(full, assessment.country, { thresholds: true });
+      return plan ? { ...full, advice: plan } : full;
+    } catch { return null; }
+  }, [previewEnabled, preview, assessment, today]);
+  const access = paidPreview ? preview : "free";
   // Fold as soon as "Calculate" is pressed, not when the deferred result lands: otherwise the page jumps under the scroll.
   const collapsed = submitted && !editing && (!!live || deferredForm !== form);
 
@@ -560,14 +572,21 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
         {assessment && (
           <div className="mt-10">
             <h2 className="mb-4 text-2xl font-bold tracking-tight md:text-3xl">{C.resultTitle}</h2>
+            {previewEnabled && (
+              <div role="group" aria-label={d.pricing.title} className="no-print mb-4 inline-flex gap-1 rounded-full border border-line bg-surface p-1">
+                {([["free", d.pricing.freeName], ["standard", d.pricing.plans.standard.name], ["full", d.pricing.plans.report.name]] as const).map(([id, name]) => (
+                  <button key={id} type="button" aria-pressed={preview === id} onClick={() => setPreview(id)} className={`rounded-full px-4 py-1.5 text-sm font-semibold ${preview === id ? "bg-ink text-white" : "text-ink2 hover:bg-surface2"}`}>{name}</button>
+                ))}
+              </div>
+            )}
             <ResultView
               core={core}
-              a={currentAdvice ? { ...assessment.a, advice: currentAdvice } : assessment.a}
+              a={paidPreview ?? (currentAdvice ? { ...assessment.a, advice: currentAdvice } : assessment.a)}
               d={d}
               locale={locale}
               currency={assessment.country.currency}
               countryNotes={locList(assessment.country.approachNotes, lang)}
-              access="free"
+              access={access}
               samplesHref={samplesHref}
               methodologyHref={`/${locale}/methodology`}
               unlockSlot={<UnlockButton input={assessment.input} locale={locale} d={d} demo={demo} plan={preferredPlan} label={d.result.unlock} className="btn btn-signal" />}
