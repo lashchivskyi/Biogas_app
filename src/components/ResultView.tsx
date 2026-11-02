@@ -180,8 +180,6 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
   return (
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
-      {/* eslint-disable-next-line react/jsx-no-literals -- audit stamp, English by design (lang="en") */}
-      {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
       {a.input.city && <p className="num mb-3 break-words text-xs text-muted">{locationCopy(locale).title}: {a.climate.regionName} · {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.latitude)}, {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.longitude)} · <a href={a.input.city.dataset ? "https://registry.opendata.aws/planette_era5_reanalysis/" : "https://open-meteo.com/en/docs/historical-weather-api"} className="underline" target="_blank" rel="noreferrer">{a.input.city.dataset ? "Copernicus ERA5 / NSF NCAR / Planette · 0.25°" : "ERA5 / Open-Meteo"}</a> {a.input.city.startDate.slice(0, 4)}–{a.input.city.endDate.slice(0, 4)}</p>}
       {/* ---------- Verdict ---------- */}
       <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
@@ -676,8 +674,8 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       <Section title={R.sensTitle} sub={R.sensSub}>
         <div className="card p-4"><Tornado items={a.sensitivity} baseNpv={best.fin.npvEur} t={{ ...d.charts, sensHeader: d.charts.sensHeader.replaceAll("€", F.currency).replaceAll("EUR", F.currency) }} compact={F.monetaryCompact} /></div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <Stat label={R.beCapex} value={a.breakEven.capexReductionPct === null ? R.unreachable : a.breakEven.capexReductionPct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.capexReductionPct)} %`} note={R.beCapexNote} />
-          <Stat label={R.bePrice} value={a.breakEven.energyPriceIncreasePct === null ? R.unreachable : a.breakEven.energyPriceIncreasePct === 0 ? R.alreadyPositive : `${Math.round(a.breakEven.energyPriceIncreasePct)} %`} note={R.bePriceNote} />
+          <Stat label={R.beCapex} value={a.breakEven.capexReductionPct === null ? R.unreachable : a.breakEven.capexReductionPct === 0 ? R.alreadyPositive : F.pct(Math.round(a.breakEven.capexReductionPct) / 100)} note={R.beCapexNote} />
+          <Stat label={R.bePrice} value={a.breakEven.energyPriceIncreasePct === null ? R.unreachable : a.breakEven.energyPriceIncreasePct === 0 ? R.alreadyPositive : F.pct(Math.round(a.breakEven.energyPriceIncreasePct) / 100)} note={R.bePriceNote} />
         </div>
         {a.sensitivity.some((s) => s.breaks) && <p className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-900">{f(R.flips, { list: a.sensitivity.filter((s) => s.breaks).map((s) => s.label).join("; ") })}</p>}
       </Section>

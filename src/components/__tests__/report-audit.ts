@@ -516,7 +516,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
     has(torTexts[0] ?? "", F.monetaryCompact(base.fin.npvEur), "tornado header: base NPV");
     for (const s of a.sensitivity) if (!torTexts.includes(norm(F.monetaryCompact(s.deltaNpvEur)))) bad(`tornado ${s.id}`, `bar value “${F.monetaryCompact(s.deltaNpvEur)}” missing`);
     const bst = statsOf(sens);
-    const beText = (v: number | null) => (v === null ? R.unreachable : v === 0 ? R.alreadyPositive : `${Math.round(v)} %`);
+    const beText = (v: number | null) => (v === null ? R.unreachable : v === 0 ? R.alreadyPositive : F.pct(Math.round(v) / 100));
     if (bst.get(norm(R.beCapex))?.value !== norm(beText(a.breakEven.capexReductionPct))) bad("break-even CAPEX", `shows “${bst.get(norm(R.beCapex))?.value}”, model says “${beText(a.breakEven.capexReductionPct)}”`);
     if (bst.get(norm(R.bePrice))?.value !== norm(beText(a.breakEven.energyPriceIncreasePct))) bad("break-even price", `shows “${bst.get(norm(R.bePrice))?.value}”, model says “${beText(a.breakEven.energyPriceIncreasePct)}”`);
     if (base.fin.npvEur >= 0 && bst.get(norm(R.beCapex))?.value !== norm(R.alreadyPositive)) bad("break-even", "NPV is positive but the report asks for a CAPEX reduction");

@@ -29,3 +29,17 @@ export function parseLocalizedNumber(value: string, locale: Locale): number | un
   const n = Number(s);
   return Number.isFinite(n) ? n : undefined;
 }
+
+/** The text a user sees for a number in their locale: grouping and the locale's decimal mark, no rounding. */
+export function formatLocalizedNumber(n: number, locale: Locale): string {
+  return new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 20 }).format(n);
+}
+
+/**
+ * Tidy a valid entry once the user leaves the field (1234,5 → 1 234,5). The value is unchanged, so what the calculation
+ * reads is what the field shows, and a doubtful separator ("1.234") is shown the way it was understood. Invalid text is kept.
+ */
+export function normalizeNumberText(value: string, locale: Locale): string {
+  const n = parseLocalizedNumber(value, locale);
+  return n === undefined ? value : formatLocalizedNumber(n, locale);
+}

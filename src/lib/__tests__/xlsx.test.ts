@@ -103,3 +103,38 @@ describe.each(LOCALES)("Excel export in %s", (locale) => {
     expect(files.size).toBe(5 + sheets.length);
   });
 });
+
+describe("number formats", () => {
+  it("styles numbers without changing their values", () => {
+    const files = unzip(writeXlsx([{ name: "S", rows: [["Head", "Value"], ["a", 1234567.891234], ["b", 0.0834], ["c", 7], ["d", 0.00004]], formats: [undefined, "#,##0", "0.0%", "auto", "auto"], boldRows: [3] }]));
+    const styles = files.get("xl/styles.xml")!;
+    expect(styles).toContain('<numFmt numFmtId="164" formatCode="#,##0"/>');
+    expect(styles).toContain('formatCode="0.0%"');
+    expect(styles).toContain('formatCode="0.00E+00"');
+    const sheet = files.get("xl/worksheets/sheet1.xml")!;
+    // The raw value is kept (Excel only displays it formatted) and each cell points at an existing style.
+    expect(sheet).toMatch(/<c r="B2" s="\d+"><v>1234567\.891234<\/v><\/c>/);
+    expect(sheet).toMatch(/<c r="B3" s="\d+"><v>0\.0834<\/v><\/c>/);
+    const count = Number(/<cellXfs count="(\d+)"/.exec(styles)![1]);
+    for (const m of sheet.matchAll(/ s="(\d+)"/g)) expect(Number(m[1])).toBeLessThan(count);
+    expect(sheet).toMatch(/<c r="A4" s="1" t="inlineStr">/);
+  });
+
+  it("formats every money, share and year cell of the report export", () => {
+    const ex = EXAMPLES.find((e) => e.id === "de_nawaro")!.input;
+    const a = assess(ex, getCountry(ex.countryCode));
+    const sheets = reportSheets(a, { currency: "EUR", access: "full" });
+    for (const sheet of sheets) {
+      sheet.rows.forEach((row, r) => row.forEach((v, c) => {
+        if (typeof v !== "number" || c === 0) return;
+        const f = sheet.formats?.[r];
+        const code = Array.isArray(f) ? f[c] : f;
+        // Year numbers and the size multiple in other sheets are formatted per column; everything else must carry a code.
+        expect(code, `${sheet.name} row ${r + 1} col ${c + 1}`).toBeTruthy();
+      }));
+    }
+    const summary = sheets[0];
+    const irr = summary.rows.findIndex((row) => typeof row[0] === "string" && row[0].startsWith("IRR"));
+    expect(summary.formats?.[irr]).toBe("0.0%");
+  });
+});

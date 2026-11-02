@@ -2,7 +2,7 @@
 
 import { calendarDateAt } from "@/lib/format";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import { locList, registerMessages, type Messages } from "@/core/i18n";
 import type { AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
@@ -13,9 +13,9 @@ import { countryName, fmt, type Dict, type Locale } from "@/i18n";
 import { coreLang, INTL_TAG } from "@/i18n/config";
 import { track } from "@/lib/analytics";
 import { emptyLine, formToInput, initialForm, inputToForm, invalidNumberStep, linesForBusiness, recontextualizeForm, uiDefaults, processIssues } from "@/lib/form";
-import { parseLocalizedNumber } from "@/lib/localized-number";
 import { numberError } from "@/i18n/errors";
-import { useLocale, usePreferences } from "./LocaleProvider";
+import { NumberInput } from "./NumberInput";
+import { usePreferences } from "./LocaleProvider";
 import { preferenceCopy } from "@/i18n/preferences";
 import type { FormLine, FormState } from "@/lib/form";
 import { UnlockButton } from "./payments/Checkout";
@@ -61,21 +61,7 @@ function Field({ label, hint, tooltip, children, htmlFor }: { label: string; hin
   );
 }
 
-function Num({ value, onChange, placeholder, unit, id }: { value: string; onChange: (v: string) => void; placeholder?: string; unit?: string; id?: string }) {
-  const locale = useLocale();
-  const fallbackId = useId();
-  const errorId = `${id ?? fallbackId}-error`;
-  const invalid = value.trim() !== "" && parseLocalizedNumber(value, locale) === undefined;
-  return (
-    <div>
-      <div className="relative">
-        <input id={id} className="field num pr-24" inputMode="decimal" value={value} placeholder={placeholder} aria-invalid={invalid || undefined} aria-describedby={invalid ? errorId : undefined} onChange={(e) => onChange(e.target.value)} />
-        {unit && <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted">{unit}</span>}
-      </div>
-      {invalid && <p id={errorId} className="mt-1 text-xs text-bad">{numberError[locale]}</p>}
-    </div>
-  );
-}
+const Num = NumberInput;
 
 function Toggle({ checked, onChange, label, tooltip }: { checked: boolean; onChange: (v: boolean) => void; label: string; tooltip?: string }) {
   return (
@@ -148,7 +134,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
   const country = COUNTRIES[form.countryCode] ?? COUNTRIES.GB;
   const cur = country.currency;
   const def = uiDefaults(country);
-  const money2 = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: v < 10 ? 2 : 0 }).format(v);
+  const money2 = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], v < 1000 ? { maximumSignificantDigits: 3 } : { maximumFractionDigits: 0 }).format(v);
+  // A price with the currency where the locale puts it (€1.25 / 1,25 €), never a hand-built "1.25 EUR".
+  const priceText = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { style: "currency", currency: cur, maximumSignificantDigits: 3 }).format(v);
 
   const set = useCallback(<K extends keyof FormState>(k: K, v: FormState[K]) => {
     if (!started.current) {
@@ -320,7 +308,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
               <h2 className="text-xl font-bold">{form.processKind && form.processKind !== "ad" ? processCopy(locale).models[form.processKind] : C.q3}</h2>
               {(!form.processKind || form.processKind === "ad") && <p className="mt-1 text-sm text-muted">{C.q3hint}</p>}
             </div>
-            <ProcessInputs form={form} onChange={patch => { setForm(f => ({ ...f, ...patch })); setSubmitted(false); }} locale={locale} currency={cur} adLabel={d.result.dFeed} />
+            <ProcessInputs form={form} onChange={patch => { setForm(f => ({ ...f, ...patch })); setSubmitted(false); }} locale={locale} currency={cur} adLabel={d.result.dFeed} units={L.units} />
             {(form.processKind ?? defaultProcess(form.businessType)) === "ad" && <>{form.lines.map((l) => (
               <LineEditor key={l.id} line={l} d={d} cur={cur} locale={locale} onChange={(p) => updateLine(l.id, p)} onRemove={() => setForm((f) => ({ ...f, lines: f.lines.filter((x) => x.id !== l.id) }))} />
             ))}
@@ -332,21 +320,21 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
           <div className="space-y-6">
             <h2 className="text-xl font-bold">{C.q6}</h2>
             <div className="grid gap-5 md:grid-cols-2">
-              <Field label={C.elecBill} htmlFor="c-eb" tooltip={T.elecBill} hint={fmt(C.elecBillHint, { price: `${money2(def.electricityPerKwh)} ${cur}` })}>
-                <Num id="c-eb" value={form.elecBillMonthly} onChange={(v) => set("elecBillMonthly", v)} unit={fmt(C.perMonth, { cur })} />
+              <Field label={C.elecBill} htmlFor="c-eb" tooltip={T.elecBill} hint={fmt(C.elecBillHint, { price: priceText(def.electricityPerKwh) })}>
+                <Num id="c-eb" value={form.elecBillMonthly} onChange={(v) => set("elecBillMonthly", v)} unit={fmt(C.perMonth, { cur })} min={0} />
               </Field>
               <Field label={C.elecKwh} htmlFor="c-ek" tooltip={T.elecKwh}>
-                <Num id="c-ek" value={form.elecKwhYear} onChange={(v) => set("elecKwhYear", v)} unit={L.units.kwh} placeholder={fmt(C.eg, { v: money2(500_000) })} />
+                <Num id="c-ek" value={form.elecKwhYear} onChange={(v) => set("elecKwhYear", v)} unit={L.units.kwh} placeholder={fmt(C.eg, { v: money2(500_000) })} min={0} />
               </Field>
               <Field label={C.elecPrice} htmlFor="c-ep" tooltip={T.elecPrice} hint={C.elecPriceHint}>
-                <Num id="c-ep" value={form.elecPrice} onChange={(v) => set("elecPrice", v)} unit={`${cur}/${L.units.kwh}`} placeholder={fmt(C.eg, { v: money2(def.electricityPerKwh) })} />
+                <Num id="c-ep" value={form.elecPrice} onChange={(v) => set("elecPrice", v)} unit={`${cur}/${L.units.kwh}`} placeholder={fmt(C.eg, { v: money2(def.electricityPerKwh) })} min={0} />
               </Field>
               <Field label={C.grid} tooltip={T.grid}>
                 <Toggle checked={form.hasGrid} onChange={(v) => set("hasGrid", v)} label={C.gridToggle} />
               </Field>
               {form.hasGrid && (
                 <Field label={C.exportPrice} htmlFor="c-xp" tooltip={T.exportPrice}>
-                  <Num id="c-xp" value={form.exportPrice ?? ""} onChange={(v) => set("exportPrice", v)} unit={`${cur}/${L.units.kwh}`} />
+                  <Num id="c-xp" value={form.exportPrice ?? ""} onChange={(v) => set("exportPrice", v)} unit={`${cur}/${L.units.kwh}`} min={0} />
                 </Field>
               )}
             </div>
@@ -354,11 +342,11 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
               <div className="md:col-span-2"><Toggle checked={form.gasUsed} onChange={(v) => set("gasUsed", v)} label={C.gasToggle} tooltip={T.gasUsed} /></div>
               {form.gasUsed && (
                 <>
-                  <Field label={C.gasBill} htmlFor="c-gb" tooltip={T.gasBill} hint={fmt(C.gasBillHint, { price: `${money2(def.gasPerM3)} ${cur}` })}>
-                    <Num id="c-gb" value={form.gasBillMonthly} onChange={(v) => set("gasBillMonthly", v)} unit={fmt(C.perMonth, { cur })} />
+                  <Field label={C.gasBill} htmlFor="c-gb" tooltip={T.gasBill} hint={fmt(C.gasBillHint, { price: priceText(def.gasPerM3) })}>
+                    <Num id="c-gb" value={form.gasBillMonthly} onChange={(v) => set("gasBillMonthly", v)} unit={fmt(C.perMonth, { cur })} min={0} />
                   </Field>
-                  <Field label={C.gasM3} htmlFor="c-gm" tooltip={T.gasM3}><Num id="c-gm" value={form.gasM3Year} onChange={(v) => set("gasM3Year", v)} unit={L.units.m3} /></Field>
-                  <Field label={C.gasPrice} htmlFor="c-gp" tooltip={T.gasPrice}><Num id="c-gp" value={form.gasPrice} onChange={(v) => set("gasPrice", v)} unit={`${cur}/${L.units.m3}`} /></Field>
+                  <Field label={C.gasM3} htmlFor="c-gm" tooltip={T.gasM3}><Num id="c-gm" value={form.gasM3Year} onChange={(v) => set("gasM3Year", v)} unit={L.units.m3} min={0} /></Field>
+                  <Field label={C.gasPrice} htmlFor="c-gp" tooltip={T.gasPrice}><Num id="c-gp" value={form.gasPrice} onChange={(v) => set("gasPrice", v)} unit={`${cur}/${L.units.m3}`} min={0} /></Field>
                 </>
               )}
             </div>
@@ -369,13 +357,13 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
                 </select>
               </Field>
               {form.heatNeed !== "none" && (
-                <Field label={C.heatKwh} htmlFor="c-hk" tooltip={T.heatKwh} hint={C.heatKwhHint}><Num id="c-hk" value={form.heatKwhYear} onChange={(v) => set("heatKwhYear", v)} unit={L.units.kwh} /></Field>
+                <Field label={C.heatKwh} htmlFor="c-hk" tooltip={T.heatKwh} hint={C.heatKwhHint}><Num id="c-hk" value={form.heatKwhYear} onChange={(v) => set("heatKwhYear", v)} unit={L.units.kwh} min={0} /></Field>
               )}
               {form.heatNeed !== "none" && (
-                <Field label={C.heatPrice} htmlFor="c-hp" tooltip={T.heatPrice}><Num id="c-hp" value={form.heatPrice ?? ""} onChange={(v) => set("heatPrice", v)} unit={`${cur}/${L.units.kwh}`} /></Field>
+                <Field label={C.heatPrice} htmlFor="c-hp" tooltip={T.heatPrice}><Num id="c-hp" value={form.heatPrice ?? ""} onChange={(v) => set("heatPrice", v)} unit={`${cur}/${L.units.kwh}`} min={0} /></Field>
               )}
               <Field label={C.biomethanePrice} htmlFor="c-bp" tooltip={T.biomethanePrice}>
-                <Num id="c-bp" value={form.biomethanePrice ?? ""} onChange={(v) => set("biomethanePrice", v)} unit={`${cur}/${L.units.mwh}`} />
+                <Num id="c-bp" value={form.biomethanePrice ?? ""} onChange={(v) => set("biomethanePrice", v)} unit={`${cur}/${L.units.mwh}`} min={0} />
               </Field>
             </div>
           </div>
@@ -386,9 +374,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
             <h2 className="text-xl font-bold">{C.siteTitle}</h2>
             <p className="-mt-3 text-sm text-muted">{C.siteHint}</p>
             <div className="grid gap-5 md:grid-cols-2">
-              {!input.process && <><Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={T.land}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} /></Field>
-              <Field label={C.storage} htmlFor="c-st" tooltip={T.storage} hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} /></Field></>}
-              <Field label={C.gasGrid} htmlFor="c-gg" tooltip={T.gasGrid} hint={C.gasGridHint}><Num id="c-gg" value={form.gasGridKm} onChange={(v) => set("gasGridKm", v)} unit={L.units.km} /></Field>
+              {!input.process && <><Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={T.land}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} min={0} /></Field>
+              <Field label={C.storage} htmlFor="c-st" tooltip={T.storage} hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} min={0} /></Field></>}
+              <Field label={C.gasGrid} htmlFor="c-gg" tooltip={T.gasGrid} hint={C.gasGridHint}><Num id="c-gg" value={form.gasGridKm} onChange={(v) => set("gasGridKm", v)} unit={L.units.km} min={0} /></Field>
               <div className="space-y-2">
                 <Toggle checked={form.neighbours} onChange={(v) => set("neighbours", v)} label={C.neighbours} tooltip={T.neighbours} />
                 <Toggle checked={form.protectedArea} onChange={(v) => set("protectedArea", v)} label={C.protected} tooltip={T.protectedArea} />
@@ -398,9 +386,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
             {form.refineOpen && <>
             <p className="-mt-3 text-sm text-muted">{C.refineHint}</p>
             <div className="grid gap-5 md:grid-cols-2">
-              <Field label={C.operatorWage} htmlFor="c-ow" tooltip={T.operatorWage}><Num id="c-ow" value={form.operatorWage ?? ""} onChange={(v) => set("operatorWage", v)} unit={`${cur}/h`} /></Field>
+              <Field label={C.operatorWage} htmlFor="c-ow" tooltip={T.operatorWage}><Num id="c-ow" value={form.operatorWage ?? ""} onChange={(v) => set("operatorWage", v)} unit={`${cur}/h`} min={0} /></Field>
               {!input.process && <>
-                <Field label={C.capexQuote} htmlFor="c-cq" tooltip={T.capexQuote}><Num id="c-cq" value={form.capexQuote ?? ""} onChange={(v) => set("capexQuote", v)} unit={cur} /></Field>
+                <Field label={C.capexQuote} htmlFor="c-cq" tooltip={T.capexQuote}><Num id="c-cq" value={form.capexQuote ?? ""} onChange={(v) => set("capexQuote", v)} unit={cur} min={0} /></Field>
                 <Field label={C.capexQuoteRoute} htmlFor="c-cr" tooltip={T.capexQuoteRoute}>
                   <select id="c-cr" className="field" value={form.capexQuoteRoute ?? ""} onChange={(e) => set("capexQuoteRoute", e.target.value as "" | RouteId)}>
                     <option value="">—</option>
@@ -408,9 +396,9 @@ export function Calculator({ locale, d, examples, demo, samplesHref, core }: { l
                   </select>
                 </Field>
               </>}
-              <Field label={C.debtShare} htmlFor="c-ds" tooltip={T.debtShare}><Num id="c-ds" value={form.debtSharePct ?? ""} onChange={(v) => set("debtSharePct", v)} unit={L.units.pct} /></Field>
-              <Field label={C.debtRate} htmlFor="c-dr" tooltip={T.debtRate}><Num id="c-dr" value={form.debtRatePct ?? ""} onChange={(v) => set("debtRatePct", v)} unit={L.units.pct} /></Field>
-              <Field label={C.debtTenor} htmlFor="c-dt" tooltip={T.debtTenor}><Num id="c-dt" value={form.debtTenorYears ?? ""} onChange={(v) => set("debtTenorYears", v)} unit={L.units.years} /></Field>
+              <Field label={C.debtShare} htmlFor="c-ds" tooltip={T.debtShare}><Num id="c-ds" value={form.debtSharePct ?? ""} onChange={(v) => set("debtSharePct", v)} unit={L.units.pct} min={0} max={90} /></Field>
+              <Field label={C.debtRate} htmlFor="c-dr" tooltip={T.debtRate}><Num id="c-dr" value={form.debtRatePct ?? ""} onChange={(v) => set("debtRatePct", v)} unit={L.units.pct} min={0} max={60} /></Field>
+              <Field label={C.debtTenor} htmlFor="c-dt" tooltip={T.debtTenor}><Num id="c-dt" value={form.debtTenorYears ?? ""} onChange={(v) => set("debtTenorYears", v)} unit={L.units.years} min={0} max={30} /></Field>
             </div></>}
           </div>
         )}
@@ -514,7 +502,7 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
       </div>
       <div className="mt-3 grid gap-4 md:grid-cols-3">
         <Field label={isAnimal ? C.lineHead : C.lineTonnes} htmlFor={`${id}-q`} tooltip={isAnimal ? T.quantityHead : T.quantityTonnes}>
-          <Num id={`${id}-q`} value={line.quantity} onChange={(v) => onChange({ quantity: v })} unit={unit} placeholder={fmt(C.eg, { v: localNumber(isAnimal ? 400 : 3000) })} />
+          <Num id={`${id}-q`} value={line.quantity} onChange={(v) => onChange({ quantity: v })} unit={unit} placeholder={fmt(C.eg, { v: localNumber(isAnimal ? 400 : 3000) })} min={0} />
         </Field>
         {isAnimal && ["dairy_cow", "cattle_other"].includes(line.animal as string) && (
           <Field label={C.housing} htmlFor={`${id}-h`} tooltip={T.housing}>
@@ -533,10 +521,10 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
               </select>
             </Field>
             {(line.handling === "paid_disposal" || line.handling === "landfill") && (
-              <Field label={C.disposalCost} htmlFor={`${id}-dc`} tooltip={T.disposalCost} hint={C.disposalHint}><Num id={`${id}-dc`} value={line.disposalCost} onChange={(v) => onChange({ disposalCost: v })} unit={`${cur}/${L.units.t}`} /></Field>
+              <Field label={C.disposalCost} htmlFor={`${id}-dc`} tooltip={T.disposalCost} hint={C.disposalHint}><Num id={`${id}-dc`} value={line.disposalCost} onChange={(v) => onChange({ disposalCost: v })} unit={`${cur}/${L.units.t}`} min={0} /></Field>
             )}
             {line.handling === "sold_as_feed" && (
-              <Field label={C.saleValue} htmlFor={`${id}-sv`} tooltip={T.saleValue} hint={C.saleHint}><Num id={`${id}-sv`} value={line.opportunityValue} onChange={(v) => onChange({ opportunityValue: v })} unit={`${cur}/${L.units.t}`} /></Field>
+              <Field label={C.saleValue} htmlFor={`${id}-sv`} tooltip={T.saleValue} hint={C.saleHint}><Num id={`${id}-sv`} value={line.opportunityValue} onChange={(v) => onChange({ opportunityValue: v })} unit={`${cur}/${L.units.t}`} min={0} /></Field>
             )}
           </>
         )}
@@ -544,10 +532,10 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
       <details className="mt-3">
         <summary className="text-sm font-semibold text-brand">{C.refine}</summary>
         <div className="mt-3 grid gap-4 md:grid-cols-3">
-          <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint} tooltip={help.dm}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} /></Field>
-          <Field label="VS (% DM)" htmlFor={`${id}-vs`} tooltip={help.vs}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} /></Field>
-          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`} tooltip={help.bmp}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} /></Field>
-          {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`} tooltip={help.season}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} /></Field>}
+          <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint} tooltip={help.dm}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} min={0} max={95} /></Field>
+          <Field label="VS (% DM)" htmlFor={`${id}-vs`} tooltip={help.vs}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} min={0} max={100} /></Field>
+          <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`} tooltip={help.bmp}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} min={0} max={1200} /></Field>
+          {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`} tooltip={help.season}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} min={1} max={12} /></Field>}
           {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`} tooltip={help.season}>
             <select id={`${id}-start`} className="field" value={line.startMonth || String(t.defaultStartMonth)} onChange={(e) => onChange({ startMonth: e.target.value })}>
               {Array.from({ length: 12 }, (_, month) => <option key={month} value={month + 1}>{new Intl.DateTimeFormat(INTL_TAG[locale], { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2025, month, 1)))}</option>)}
@@ -555,9 +543,9 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
           </Field>}
           <div className="space-y-2">
             <Toggle checked={line.delivered} onChange={(v) => onChange({ delivered: v })} label={C.delivered} tooltip={T.delivered} />
-            {line.delivered && <Num value={line.distanceKm} onChange={(v) => onChange({ distanceKm: v })} unit={L.units.km} placeholder={C.distance} />}
+            {line.delivered && <Num min={0} value={line.distanceKm} onChange={(v) => onChange({ distanceKm: v })} unit={L.units.km} placeholder={C.distance} />}
           </div>
-          {!isAnimal && <Field label={C.purchase} htmlFor={`${id}-pp`} tooltip={T.purchase} hint={C.purchaseHint}><Num id={`${id}-pp`} value={line.purchasePrice} onChange={(v) => onChange({ purchasePrice: v })} unit={`${cur}/${L.units.t}`} /></Field>}
+          {!isAnimal && <Field label={C.purchase} htmlFor={`${id}-pp`} tooltip={T.purchase} hint={C.purchaseHint}><Num id={`${id}-pp`} value={line.purchasePrice} onChange={(v) => onChange({ purchasePrice: v })} unit={`${cur}/${L.units.t}`} signed /></Field>}
         </div>
       </details>
     </div>
