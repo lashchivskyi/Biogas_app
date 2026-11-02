@@ -180,6 +180,7 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
   return (
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
+      {/* eslint-disable-next-line react/jsx-no-literals -- audit stamp, English by design (lang="en") */}
       {a.dataAudit && <p lang="en" className="num mb-3 break-words text-xs text-muted">Model {a.dataAudit.modelVersion} · Data {a.dataAudit.dataVersion} · Input {a.dataAudit.inputVersion} · As of {a.dataAudit.asOfDate}</p>}
       {a.input.city && <p className="num mb-3 break-words text-xs text-muted">{locationCopy(locale).title}: {a.climate.regionName} · {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.latitude)}, {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.longitude)} · <a href={a.input.city.dataset ? "https://registry.opendata.aws/planette_era5_reanalysis/" : "https://open-meteo.com/en/docs/historical-weather-api"} className="underline" target="_blank" rel="noreferrer">{a.input.city.dataset ? "Copernicus ERA5 / NSF NCAR / Planette · 0.25°" : "ERA5 / Open-Meteo"}</a> {a.input.city.startDate.slice(0, 4)}–{a.input.city.endDate.slice(0, 4)}</p>}
       {/* ---------- Verdict ---------- */}
@@ -832,6 +833,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
                   {a.marketEvidence.map((p) => <div key={p.id}>
                     <dt className="font-semibold">{p.label}: <span className="num">{parameterNumber(displayUnit(p.value, p.unit, { currency: F.currency, rate: F.exchangeRate }).value)} {displayUnit(p.value, p.unit, { currency: F.currency, rate: F.exchangeRate }).unit}</span> · {p.origin ?? p.kind} · {p.confidence}</dt>
                     <dd className="mt-1 text-muted">{p.source}</dd>
+                    {/* eslint-disable-next-line react/jsx-no-literals -- parameter register is English by design (lang="en") */}
                     {p.evidence && <dd className="mt-1 text-muted">{p.evidence.period} · checked {p.evidence.checkedOn} · {p.evidence.scope}</dd>}
                     {a.dataAudit?.checks.find((check) => check.parameterId === p.id) && <dd className="mt-1 text-muted">{a.dataAudit.checks.find((check) => check.parameterId === p.id)!.status}: {a.dataAudit.checks.find((check) => check.parameterId === p.id)!.reason}</dd>}
                     {p.evidence?.components && <dd className="mt-1 text-muted">{p.evidence.components.map((c) => `${c.name}: ${parameterNumber(c.value)} ${c.unit} (${c.origin})`).join("; ")}</dd>}

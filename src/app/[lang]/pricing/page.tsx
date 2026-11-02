@@ -6,15 +6,16 @@ import { PricingPlans } from "@/components/payments/PricingPlans";
 import { Emblem } from "@/components/three/Emblem";
 import { PLAN_IDS, PLAN_PRICES_EUR_CENTS } from "@/config/plans";
 import { SITE, absoluteUrl } from "@/config/site";
-import { getDictionary, type Locale } from "@/i18n";
-import { alternates } from "@/i18n/seo";
+import { getDictionary, INTL_TAG, type Locale } from "@/i18n";
+import { pageMetadata } from "@/i18n/seo";
+import { seoCopy } from "@/i18n/seo-copy";
 import { paymentsMode } from "@/server/payments/providers";
 import { offerCopy } from "@/i18n/offer";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/pricing">): Promise<Metadata> {
   const { lang } = await params;
   const d = await getDictionary(lang);
-  return { title: d.pricing.title, description: d.pricing.lead, alternates: alternates(lang as Locale, "/pricing") };
+  return pageMetadata(lang as Locale, "/pricing", { title: seoCopy[lang as Locale].pricing, description: d.pricing.lead });
 }
 
 export default async function PricingPage({ params }: PageProps<"/[lang]/pricing">) {
@@ -68,6 +69,17 @@ export default async function PricingPage({ params }: PageProps<"/[lang]/pricing
                 priceSpecification: { "@type": "PriceSpecification", minPrice: PLAN_PRICES_EUR_CENTS[p].C / 100, maxPrice: PLAN_PRICES_EUR_CENTS[p].A / 100, priceCurrency: "EUR" },
               })),
             },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            inLanguage: INTL_TAG[locale],
+            mainEntity: P.faq.map((x) => ({ "@type": "Question", name: x.q, acceptedAnswer: { "@type": "Answer", text: x.a } })),
           }),
         }}
       />

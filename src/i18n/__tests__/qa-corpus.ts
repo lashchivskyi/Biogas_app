@@ -9,6 +9,7 @@ import { errorCopy, numberError } from "../errors";
 import { financialLabels, sensitivityLabels } from "../financial-labels";
 import { formErrorCopy } from "../form-errors";
 import { legalCopy } from "../legal";
+import { marketLabel, marketQuality } from "../market";
 import { locationCopy } from "../location";
 import { methodologyCopy, methodologyTermHelp } from "../methodology";
 import { offerCopy } from "../offer";
@@ -18,6 +19,7 @@ import { processCopy, processFieldLabels, processUsage } from "../processes";
 import { minimumForVerdict, qualityGapCopy, qualityPanelCopy } from "../quality";
 import { reportLinkHelp } from "../report-link";
 import { sampleReferenceCopy } from "../samples";
+import { seoCopy } from "../seo-copy";
 import { stepHelp } from "../step-help";
 import { validationCopy } from "../validation";
 
@@ -41,11 +43,12 @@ function modules(d: (l: Locale) => Dict): Record<string, (l: Locale) => unknown>
     calculatorHelp, climate: (l) => climateCopy[l], decision: (l) => decisionCopy[l], delivery: (l) => deliveryCopy[l], retryPayment: (l) => retryPayment[l],
     errors: (l) => errorCopy[l], numberError: (l) => numberError[l],
     financialLabels: (l) => financialLabels(l, d(l)), sensitivityLabels: (l) => sensitivityLabels(l, d(l)),
+    market: (l) => ({ labels: ["de_small_manure", "task37_manure_200", "de_500_flex", "pl_500_1000", "ua_1mw"].map((id) => marketLabel(l, id)), quality: ["official study", "trade press", "vendor", "single project"].map((v) => marketQuality(l, v)) }),
     formErrors: (l) => formErrorCopy[l], legal: (l) => legalCopy[l], location: locationCopy,
     methodology: (l) => methodologyCopy[l], methodologyTermHelp: (l) => methodologyTermHelp[l], offer: (l) => offerCopy[l],
     preferences: preferenceCopy, processHelp: processFieldHelp, process: processCopy, processLabels: processFieldLabels, processUsage,
     minimumForVerdict: (l) => minimumForVerdict[l], qualityPanel: qualityPanelCopy, qualityGaps: (l) => qualityGapCopy(l, d(l), "EUR"),
-    reportLink: (l) => reportLinkHelp[l], sampleReference: sampleReferenceCopy, stepHelp, validation: (l) => validationCopy[l],
+    reportLink: (l) => reportLinkHelp[l], seo: (l) => seoCopy[l], sampleReference: sampleReferenceCopy, stepHelp, validation: (l) => validationCopy[l],
   };
 }
 

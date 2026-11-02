@@ -12,7 +12,8 @@ import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
 import { countryName, getDictionary, INTL_TAG, type Locale } from "@/i18n";
 import { COUNTRY_COOKIE } from "@/i18n/config";
 import { readPreferenceCookie, resolvePreferences } from "@/lib/preferences";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
+import { seoCopy } from "@/i18n/seo-copy";
 import { methodologyCopy, methodologyTermHelp } from "@/i18n/methodology";
 import { processCopy } from "@/i18n/processes";
 import { validationCopy } from "@/i18n/validation";
@@ -22,7 +23,7 @@ import "./methodology.css";
 export async function generateMetadata({ params }: PageProps<"/[lang]/methodology">): Promise<Metadata> {
   const { lang } = await params;
   const d = await getDictionary(lang);
-  return { title: d.method.title, description: d.method.lead, alternates: alternates(lang as Locale, "/methodology") };
+  return pageMetadata(lang as Locale, "/methodology", { title: seoCopy[lang as Locale].methodology, description: d.method.lead });
 }
 
 const CONF_STYLE = { LOW: "bg-red-100 text-red-900", MEDIUM: "bg-amber-100 text-amber-900", HIGH: "bg-brandsoft text-brandink" } as const;
@@ -130,7 +131,7 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
             <div className="card p-4"><dt className="text-xs text-muted">{V.band}</dt><dd className="text-xl font-bold">{ratio(BACKTEST.electricity.p10)} – {ratio(BACKTEST.electricity.p90)}</dd></div>
             <div className="card p-4"><dt className="text-xs text-muted">{V.within}</dt><dd className="text-xl font-bold">{new Intl.NumberFormat(INTL_TAG[locale], { style: "percent" }).format(BACKTEST.electricity.within30)}</dd></div>
           </dl>
-          <p className="mt-3 text-xs text-muted">{V.caveat} <a className="underline" href={BACKTEST.source}>EPA AgSTAR</a> · {BACKTEST.dataThrough} · model {BACKTEST.modelVersion}</p>
+          <p className="mt-3 text-xs text-muted">{V.caveat} <a className="underline" href={BACKTEST.source}>EPA AgSTAR</a> · {BACKTEST.dataThrough} · v{BACKTEST.modelVersion}</p>
         </section>
 
         <section id="country-conditions" className="methodology-section" aria-labelledby="country-conditions-title">

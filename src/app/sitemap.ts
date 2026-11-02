@@ -6,7 +6,7 @@ import { HREFLANG, LOCALES, type Locale } from "@/i18n/config";
 
 type Freq = MetadataRoute.Sitemap[number]["changeFrequency"];
 
-/** Every localised page with hreflang alternates and x-default. Long-form guide pages exist only in en/uk. */
+/** Every localised page with hreflang alternates and x-default. The guide pages exist in every language (long-form in en/uk, native summaries elsewhere). */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const all: Array<[string, number, Freq, readonly Locale[]]> = [
@@ -17,8 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...EXAMPLES.map((e) => [`/samples/${e.id}`, 0.5, "monthly", LOCALES] as [string, number, Freq, readonly Locale[]]),
     ["/methodology", 0.4, "monthly", LOCALES],
     ["/terms", 0.2, "yearly", LOCALES],
-    ["/biogas", 0.8, "monthly", ["en", "uk"]],
-    ...SEGMENTS.map(s => [`/biogas/${s.slug}`, 0.7, "monthly", ["en", "uk"]] as [string, number, Freq, readonly Locale[]]),
+    ["/biogas", 0.8, "monthly", LOCALES],
+    ...SEGMENTS.map(s => [`/biogas/${s.slug}`, 0.7, "monthly", LOCALES] as [string, number, Freq, readonly Locale[]]),
   ];
   return all.flatMap(([path, priority, changeFrequency, locales]) => {
     // Same set as the page's <link rel="alternate"> (src/i18n/seo.ts), including x-default.

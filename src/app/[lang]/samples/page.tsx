@@ -5,14 +5,15 @@ import { PageHero } from "@/components/PageHero";
 import { CountryFlag } from "@/components/CountryFlag";
 import { DisplayMoney } from "@/components/DisplayMoney";
 import { countryName, getDictionary, type Locale } from "@/i18n";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
+import { seoCopy } from "@/i18n/seo-copy";
 import { makeFormat } from "@/lib/format";
 import { exampleTitle, rankedExamples } from "@/lib/examples";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/samples">): Promise<Metadata> {
   const { lang } = await params;
   const d = await getDictionary(lang);
-  return { title: d.samples.title, description: d.samples.lead, alternates: alternates(lang as Locale, "/samples") };
+  return pageMetadata(lang as Locale, "/samples", { title: seoCopy[lang as Locale].samples, description: d.samples.lead });
 }
 
 const TONE: Record<string, string> = { STRONG_CANDIDATE: "bg-brandsoft text-brandink", POSSIBLE_WITH_CONDITIONS: "bg-amber-50 text-amber-900", WEAK_ECONOMICS: "bg-red-50 text-red-900", NOT_RECOMMENDED_AT_SCALE: "bg-red-100 text-red-950", INSUFFICIENT_DATA: "bg-zinc-100 text-zinc-800" };

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assess } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
+import { coreLang, getCoreCatalog, LOCALES } from "@/i18n";
 import { reportSheets } from "../report-export";
 import { columnName, crc32, writeXlsx } from "../xlsx";
 
@@ -68,5 +69,37 @@ describe("report export", () => {
   it("follows the model language", () => {
     const uk = assess({ ...ex, lang: "uk" }, getCountry(ex.countryCode));
     expect(reportSheets(uk, { currency: "EUR", access: "standard" })[0].name).toBe("Підсумок");
+  });
+});
+
+describe.each(LOCALES)("Excel export in %s", (locale) => {
+  it("sheet names, labels, numbers and dates are safe and in the report language", async () => {
+    const catalog = await getCoreCatalog(locale);
+    const ex = EXAMPLES.find((e) => e.id === "de_nawaro")!.input;
+    const a = assess({ ...ex, lang: coreLang(locale) }, getCountry(ex.countryCode));
+    const sheets = reportSheets(a, { currency: "EUR", access: "full" });
+    const names = sheets.map((s) => s.name);
+    // Excel allows 31 characters and no []:*?/\ ; the writer would silently cut or rename a longer one.
+    for (const n of names) {
+      expect(n.length, `${locale}: sheet name too long: ${n}`).toBeLessThanOrEqual(31);
+      expect(/[[\]:*?/\\]/.test(n), `${locale}: invalid character in sheet name ${n}`).toBe(false);
+    }
+    expect(new Set(names.map((n) => n.toLowerCase())).size, `${locale}: duplicate sheet names`).toBe(names.length);
+    const cells = sheets.flatMap((s) => s.rows.flat());
+    // Numbers stay raw numbers: Excel shows them with the reader's own decimal and thousands separators.
+    expect(cells.filter((c) => typeof c === "string" && /^-?\d{1,3}([ .,\u00a0]\d{3})+([.,]\d+)?$/.test(c)), `${locale}: pre-formatted numbers`).toEqual([]);
+    for (const c of cells) if (typeof c === "number") expect(Number.isFinite(c)).toBe(true);
+    // Dates are ISO text (unambiguous in every locale), never a hand-formatted local date.
+    for (const c of cells) if (typeof c === "string" && /\d{1,2}[./]\d{1,2}[./]\d{2,4}/.test(c) && c.length < 14) throw new Error(`${locale}: locale-specific date ${c}`);
+    const texts = cells.filter((c): c is string => typeof c === "string");
+    for (const t of texts) expect(t, `${locale}: ${t}`).not.toMatch(/undefined|NaN|\{[A-Za-z]+\}|\[object/);
+    if (catalog) {
+      // A label that has a translation must not appear in English.
+      const leaks = texts.filter((t) => catalog[t] !== undefined && catalog[t] !== t);
+      expect(leaks, `${locale}: untranslated labels`).toEqual([]);
+    }
+    // The workbook builds and each sheet reads back through the XML writer.
+    const files = unzip(writeXlsx(sheets));
+    expect(files.size).toBe(5 + sheets.length);
   });
 });

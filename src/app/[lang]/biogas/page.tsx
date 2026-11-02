@@ -6,18 +6,13 @@ import { localizedHub } from "@/content/localized";
 import { BUSINESS_GROUPS, SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { businessCopy, businessGroupLabel } from "@/i18n/businesses";
 import { getDictionary, type Locale } from "@/i18n";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/biogas">): Promise<Metadata> {
   const { lang } = await params;
   const locale = lang as Locale;
   const h = localizedHub(locale, await getDictionary(locale));
-  return {
-    title: h.title,
-    description: h.description,
-    alternates: alternates(locale, "/biogas"),
-    openGraph: { title: h.title, description: h.description, type: "article" },
-  };
+  return pageMetadata(locale, "/biogas", { title: h.title, description: h.description, ogType: "article" });
 }
 
 export default async function BiogasHub({ params }: PageProps<"/[lang]/biogas">) {

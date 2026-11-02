@@ -179,7 +179,12 @@ describe("the audit catches a deliberate discrepancy", () => {
     "a changed headline number": (h) => h.replace(/(<div class="num mt-1[^"]*">)([^<]*)<\/div>/, "$1999 t/yr</div>"),
     "a dropped chart point": (h) => h.replace(/(<path d="M[^"]*?)L[-\d.]+ [-\d.]+ L/, "$1L"),
     "a locked teaser in a paid report": (h) => h.replace("</div></div></main>", "") + `<h3>${d.en.result.lockedTitle}</h3>`,
-    "a changed tornado value": (h) => h.replace(/(<text[^>]*class="num"[^>]*>)-?[\d.,]+[MK]?/, "$1-9.9M"),
+    "a changed tornado value": (h) => {
+      // The tornado bars are the last chart with plain numeric <text class="num"> values (the flow diagram wraps its labels in <tspan>).
+      const hits = [...h.matchAll(/(<text[^>]*class="num"[^>]*>)-?[\d.,]+[MK]?(?=<\/text>)/g)];
+      const last = hits[hits.length - 1];
+      return last ? h.slice(0, last.index) + last[1] + "-9.9M" + h.slice(last.index + last[0].length) : h;
+    },
   };
   for (const [name, mutate] of Object.entries(htmlMutations)) {
     it(`flags ${name} in the rendered report`, () => {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { checkBasicAuth } from "@/server/adminAuth";
-import { deliverPaidReport } from "@/server/notify";
+import { deliverPaidReport, notifyRefund } from "@/server/notify";
 import { orders } from "@/server/orders";
 
 const patchSchema = z.object({
@@ -15,8 +15,10 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/admin/orde
   const { id } = await ctx.params;
   const parsed = patchSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "bad request" }, { status: 400 });
+  const before = await orders.get(id);
   const updated = await orders.update(id, parsed.data, "admin");
   if (!updated) return NextResponse.json({ error: "not found" }, { status: 404 });
+  if (before?.status === "paid" && updated.status === "reversed") await notifyRefund(updated);
   await deliverPaidReport(updated); // Manual "paid" (e.g. bank transfer) delivers the link like a provider payment.
   return NextResponse.json(updated);
 }

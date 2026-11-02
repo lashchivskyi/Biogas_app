@@ -7,7 +7,7 @@ export function localizedHub(locale: Locale, d: Dict): HubContent {
   if (locale === "en" || locale === "uk") return HUB[locale];
   return {
     title: d.footer.hub,
-    description: d.meta.description,
+    description: d.hub.lead,
     cta: d.nav.cta,
     ctaSectors: d.hub.sectors,
     sections: [

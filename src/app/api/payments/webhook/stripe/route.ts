@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { absoluteUrl } from "@/config/site";
 import { reportError } from "@/server/monitoring";
-import { notifyOwner } from "@/server/notify";
+import { notifyOwner, notifyRefund } from "@/server/notify";
 import { orders } from "@/server/orders";
 import { mapStripeSession, paymentIntentId, verifyStripeEvent } from "@/server/payments/providers";
 import { applyProviderStatus } from "@/server/payments/service";
@@ -46,7 +46,10 @@ async function handle(event: StripeEvent): Promise<Record<string, unknown>> {
     if (!match) return { ok: true, ignored: "unknown payment" };
     // Record full refunds automatically; partial refunds are handled manually in the admin.
     const full = c.amount_refunded >= c.amount;
-    if (full) await orders.update(match.id, { status: "reversed" }, "webhook:stripe:refund");
+    if (full) {
+      const reversed = await orders.update(match.id, { status: "reversed" }, "webhook:stripe:refund");
+      if (match.status !== "reversed" && reversed) await notifyRefund(reversed); // a re-delivered event does not email twice
+    }
     else await orders.update(match.id, { notes: `${match.notes}\n[${new Date().toISOString()}] Partial refund ${c.amount_refunded} of ${c.amount} ${c.currency.toUpperCase()} — access unchanged, review manually`.trim() }, "webhook:stripe:refund");
     await notifyOwner(`${full ? "Refund" : "Partial refund"} on order ${match.id}`, [`${c.amount_refunded} of ${c.amount} ${c.currency.toUpperCase()} (minor units)`, `Admin: ${absoluteUrl("/admin")}`]);
   } else if (event.type === "charge.dispute.created") {

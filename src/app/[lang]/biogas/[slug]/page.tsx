@@ -7,7 +7,7 @@ import { localizedHub, localizedSegment } from "@/content/localized";
 import { SEGMENTS, segmentBySlug } from "@/content/segments";
 import { countryName, fmt, getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
 import { makeFormat } from "@/lib/format";
 import { DisplayMoney } from "@/components/DisplayMoney";
 import { exampleTitle, modelCase } from "@/lib/examples";
@@ -24,12 +24,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/biogas/[sl
   if (!s) return {};
   const locale = lang as Locale;
   const seo = localizedSegment(s, locale, await getDictionary(locale));
-  return {
-    title: seo.title,
-    description: seo.description,
-    alternates: alternates(locale, `/biogas/${s.slug}`),
-    openGraph: { title: seo.title, description: seo.description, type: "article" },
-  };
+  return pageMetadata(locale, `/biogas/${s.slug}`, { title: seo.title, description: seo.description, ogType: "article" });
 }
 
 export default async function SegmentPage({ params }: PageProps<"/[lang]/biogas/[slug]">) {

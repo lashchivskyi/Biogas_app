@@ -20,7 +20,7 @@ describe("hreflang", () => {
       expect(map[HREFLANG[l]]).toBe(entry.url);
     }
     const guide = entries.find((e) => e.url.endsWith("/uk/biogas"))!;
-    expect(Object.keys(guide.alternates!.languages!).sort()).toEqual(["en", "uk", "x-default"]);
+    expect(Object.keys(guide.alternates!.languages!).sort()).toEqual([...Object.values(HREFLANG), "x-default"].sort());
     expect(entries.length).toBeLessThan(50_000);
   });
 });

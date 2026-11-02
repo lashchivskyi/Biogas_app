@@ -3,7 +3,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { EXAMPLES } from "@/core/examples";
-import type { Locale } from "@/i18n/config";
+import { LOCALES, type Locale } from "@/i18n/config";
+import { deliveryCopy } from "@/i18n/delivery";
+import { offerCopy } from "@/i18n/offer";
 import { appEnv, configProblems } from "../config";
 import { redact, reportError, sentryEndpoint } from "../monitoring";
 
@@ -140,6 +142,36 @@ describe("report delivery", () => {
     const mails = sent(fetch);
     expect(mails.map((m) => m.to[0])).toEqual(["owner@example.com"]);
     expect(mails[0].subject).toMatch(/mismatch/);
+  });
+});
+
+describe("customer mail in the buyer's language", () => {
+  it.each(LOCALES)("delivery mail %s: localised subject, link and the waiver text the buyer ticked", async (lang) => {
+    const fetch = mailer();
+    const { order } = await checkout(lang);
+    await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: order.currency }, "webhook");
+    const mail = sent(fetch).find((m) => m.to[0] === "buyer@example.com")!;
+    expect(mail.subject).toBe(deliveryCopy[lang][0].replace("{site}", "Methalytics"));
+    expect(mail.text).toContain(`/${lang}/report/${order.reportToken}`);
+    expect(mail.text).toContain(offerCopy[lang].waiver);
+    expect(mail.text).not.toMatch(/\{[a-z]+\}/); // no unfilled placeholder
+  });
+  it("sends the refund notice once, in the order language, and not for a re-delivered refund event", async () => {
+    vi.stubEnv("STRIPE_WEBHOOK_SECRET", "whsec_test");
+    const fetch = mailer();
+    const { order } = await checkout("fr");
+    await S.applyProviderStatus(order, { status: "paid", amountMinor: order.amountMinor, currency: order.currency, paymentRef: "pi_refund_mail" }, "webhook");
+    const refund = () => {
+      vi.stubEnv("STRIPE_SECRET_KEY", "sk_test_local_only"); // after the demo checkout: the webhook client needs a key to exist
+      const payload = JSON.stringify({ id: `evt_${Math.random()}`, type: "charge.refunded", created: Math.floor(Date.now() / 1000), data: { object: { payment_intent: "pi_refund_mail", amount: order.amountMinor, amount_refunded: order.amountMinor, currency: "eur" } } });
+      const signature = P.stripe().webhooks.generateTestHeaderString({ payload, secret: "whsec_test" });
+      return webhook.POST(new Request("https://example.com/api/payments/webhook/stripe", { method: "POST", body: payload, headers: { "stripe-signature": signature } }));
+    };
+    await refund();
+    await refund();
+    const refunds = sent(fetch).filter((m) => m.to[0] === "buyer@example.com" && m.subject.startsWith(deliveryCopy.fr[5]));
+    expect(refunds).toHaveLength(1);
+    expect(refunds[0].text).toContain(deliveryCopy.fr[6]);
   });
 });
 

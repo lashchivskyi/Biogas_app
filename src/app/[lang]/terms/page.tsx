@@ -5,12 +5,12 @@ import { SITE } from "@/config/site";
 import { getDictionary, INTL_TAG, type Locale } from "@/i18n";
 import { legalCopy } from "@/i18n/legal";
 import { offerCopy } from "@/i18n/offer";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/terms">): Promise<Metadata> {
   const { lang } = await params;
   const d = await getDictionary(lang);
-  return { title: d.terms.title, alternates: alternates(lang as Locale, "/terms") };
+  return pageMetadata(lang as Locale, "/terms", { title: d.terms.title, description: d.footer.disclaimer });
 }
 
 /**

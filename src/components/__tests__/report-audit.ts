@@ -419,7 +419,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   dd(R.elSplit, `${n0(e.elSelfConsumedKwh / 1000)} / ${n0(e.elExportedKwh / 1000)} ${L.units.mwh}`);
   const flowSvg = (/<svg[\s\S]*?<\/svg>/.exec(flow) ?? [""])[0];
   const svgText = txt(flowSvg.replace(/<\/text>/g, " </text>").replace(/<[^>]+>/g, " ").replace(/^/, ""));
-  const svgTextRaw = norm(decode([...flowSvg.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map((m) => m[1].replace(/<[^>]+>/g, "")).join(" | ")));
+  const svgTextRaw = norm(decode([...flowSvg.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map((m) => m[1].replace(/<\/tspan>/g, " ").replace(/<[^>]+>/g, "")).join(" | ")));
   void svgText;
   if (proc) { if (flowSvg) bad("flow diagram", "a process inlet must not render the feedstock → digestate diagram"); }
   else {
@@ -512,7 +512,7 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
     // Sensitivity: tornado bars carry the model's Δ NPV; break-even tiles carry the break-even.
     const sens = section(R.sensTitle, "sensitivity");
     const tor = svgByLabel(html, d.charts.sensAria) ?? "";
-    const torTexts = [...tor.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map((m) => norm(decode(m[1].replace(/<[^>]+>/g, ""))));
+    const torTexts = [...tor.matchAll(/<text[^>]*>([\s\S]*?)<\/text>/g)].map((m) => norm(decode(m[1].replace(/<\/tspan>/g, " ").replace(/<[^>]+>/g, ""))));
     has(torTexts[0] ?? "", F.monetaryCompact(base.fin.npvEur), "tornado header: base NPV");
     for (const s of a.sensitivity) if (!torTexts.includes(norm(F.monetaryCompact(s.deltaNpvEur)))) bad(`tornado ${s.id}`, `bar value “${F.monetaryCompact(s.deltaNpvEur)}” missing`);
     const bst = statsOf(sens);

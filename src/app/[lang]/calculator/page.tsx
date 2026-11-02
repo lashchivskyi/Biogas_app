@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import { Calculator, type ExampleSummary } from "@/components/Calculator";
 import { PageHero } from "@/components/PageHero";
 import { getCoreCatalog, getDictionary, type Locale } from "@/i18n";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
+import { seoCopy } from "@/i18n/seo-copy";
 import { paymentsMode } from "@/server/payments/providers";
 import { exampleTitle, rankedExamples } from "@/lib/examples";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/calculator">): Promise<Metadata> {
   const { lang } = await params;
   const d = await getDictionary(lang);
-  return { title: d.calc.title, description: d.meta.description, alternates: alternates(lang as Locale, "/calculator") };
+  return pageMetadata(lang as Locale, "/calculator", { title: seoCopy[lang as Locale].calculator, description: d.calc.lead });
 }
 
 export default async function CalculatorPage({ params }: PageProps<"/[lang]/calculator">) {

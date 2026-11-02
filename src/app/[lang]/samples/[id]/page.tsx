@@ -14,7 +14,7 @@ import { EXAMPLES } from "@/core/examples";
 import { getCountry } from "@/countries";
 import { countryName, getCoreCatalog, getDictionary, type Locale } from "@/i18n";
 import { coreLang } from "@/i18n/config";
-import { alternates } from "@/i18n/seo";
+import { pageMetadata } from "@/i18n/seo";
 import { exampleTitle } from "@/lib/examples";
 
 export function generateStaticParams() {
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/samples/[i
   const d = await getDictionary(lang);
   const ex = EXAMPLES.find((e) => e.id === id);
   const title = ex ? exampleTitle(ex, d, lang as Locale) : id;
-  return { title: `${d.report.sampleEyebrow}: ${title}${ex ? ` · ${countryName(ex.input.countryCode, lang as Locale)}` : ""}`, description: d.samples.lead, alternates: alternates(lang as Locale, `/samples/${id}`) };
+  return pageMetadata(lang as Locale, `/samples/${id}`, { title: `${d.report.sampleEyebrow}: ${title}${ex ? ` · ${countryName(ex.input.countryCode, lang as Locale)}` : ""}`, description: d.report.sampleBanner });
 }
 
 export default async function SamplePage({ params }: PageProps<"/[lang]/samples/[id]">) {

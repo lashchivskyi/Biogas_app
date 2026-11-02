@@ -11,7 +11,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SITE } from "@/config/site";
 import { BUSINESS_GROUPS, SECTOR_IDS, BUSINESS_TYPES, businessHref } from "@/core/businesses";
 import { getDictionary, INTL_TAG, isLocale, LOCALES, type Locale } from "@/i18n";
-import { alternates } from "@/i18n/seo";
+import { alternates, ogLocale } from "@/i18n/seo";
 import { LANGUAGE_OPTIONS } from "@/i18n/language-options";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     description: d.meta.description,
     applicationName: SITE.name,
     alternates: alternates(lang as Locale, ""),
-    openGraph: { title: d.meta.ogTitle, description: d.meta.ogDescription, type: "website", siteName: SITE.name, locale: INTL_TAG[lang as Locale]?.replace(/-[A-Z][a-z]{3}/, "").replace("-", "_") },
-    twitter: { card: "summary_large_image" },
+    openGraph: { title: d.meta.ogTitle, description: d.meta.ogDescription, type: "website", siteName: SITE.name, url: `/${lang}`, locale: ogLocale(lang as Locale) },
+    twitter: { card: "summary_large_image", title: d.meta.ogTitle, description: d.meta.ogDescription },
     robots: { index: true, follow: true, "max-image-preview": "large" },
     verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } : undefined,
   };

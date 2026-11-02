@@ -7,12 +7,14 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "vitest run src/i18n/__tests__/dict.test.ts src/i18n/__tests__/registry.test.ts src/i18n/__tests__/hardcoded.test.ts src/i18n/__tests__/core-catalog.test.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
+    "l10n:export": "tsx scripts/l10n-export.ts",
     "db": "tsx scripts/db.ts"
   },
   "dependencies": {

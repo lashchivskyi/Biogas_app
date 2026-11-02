@@ -79,7 +79,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
     ] : []),
     ...(a.monteCarlo ? [
       [T("Monte Carlo ({n} independent draws of the scenario quantities)", { n: a.monteCarlo.n }), ""],
-      ["NPV P10, EUR", a.monteCarlo.p10NpvEur], [T("NPV median, EUR"), a.monteCarlo.p50NpvEur], ["NPV P90, EUR", a.monteCarlo.p90NpvEur],
+      [T("NPV P10, EUR"), a.monteCarlo.p10NpvEur], [T("NPV median, EUR"), a.monteCarlo.p50NpvEur], [T("NPV P90, EUR"), a.monteCarlo.p90NpvEur],
       [T("Chance that NPV > 0"), a.monteCarlo.probPositive],
     ] as Cell[][] : []),
     [T("Feedstock price headroom, EUR/t of every input (+ can pay more, − needs a gate fee)"), be.feedstockEurT ?? null],
@@ -147,7 +147,7 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   if (a.scale?.length) {
     const routes: RouteId[] = ["chp", "boiler", "biomethane"];
     sheets.push({ name: T("Plant size"), widths: [12, 16, ...routes.flatMap(() => [14, 16, 16])], rows: [
-      [T("Size (× your feedstock)"), T("Feedstock, t/year"), ...routes.flatMap((r) => [`${route(r)}: kWe`, `${route(r)}: CAPEX, EUR`, `${route(r)}: NPV, EUR`])],
+      [T("Size (× your feedstock)"), T("Feedstock, t/year"), ...routes.flatMap((r) => [`${route(r)}: kWe`, `${route(r)}: CAPEX, EUR`, `${route(r)}: ${T("NPV, EUR")}`])],
       ...a.scale.map((p) => [p.multiplier, p.tonnesYear, ...routes.flatMap((r) => [p.routes[r].kwEl, p.routes[r].capexEur, p.routes[r].npvEur])] as Cell[]),
       blank,
       [T("Extra feedstock on the same terms (price, transport rate, disposal saving); delivered streams travel distance × √size. CAPEX is the model estimate, without a supplier quote.")],
@@ -174,21 +174,21 @@ export function reportSheets(a: Assessment, opts: { currency: string; access: "s
   if (full) {
     const routes: RouteId[] = ["chp", "boiler", "biomethane"];
     sheets.push({ name: T("Routes"), widths: [16, 16, 16, 16, 16, 12, 14], rows: [
-      [T("Route"), T("Scenario"), "CAPEX, EUR", T("EBITDA/year, EUR"), "NPV, EUR", "IRR", T("Payback, years")],
+      [T("Route"), T("Scenario"), "CAPEX, EUR", T("EBITDA/year, EUR"), T("NPV, EUR"), "IRR", T("Payback, years")],
       ...routes.flatMap((r) => (["conservative", "base", "optimistic"] as ScenarioId[]).map((s) => {
         const x = a.routeMatrix[r][s];
         return [route(r), scn(s), x.capex.totalEur, x.fin.ebitdaEurYear, x.fin.npvEur, x.fin.irr, x.fin.simplePaybackYears] as Cell[];
       })),
     ] });
     sheets.push({ name: T("Sensitivity"), widths: [48, 18, 18, 16, 12], rows: [
-      [T("Stress test (one at a time)"), "NPV, EUR", T("Change in NPV, EUR"), T("Payback, years"), T("Flips NPV sign")],
+      [T("Stress test (one at a time)"), T("NPV, EUR"), T("Change in NPV, EUR"), T("Payback, years"), T("Flips NPV sign")],
       ...a.sensitivity.map((s) => [s.label, s.npvEur, s.deltaNpvEur, s.paybackYears, s.breaks ? T("yes") : ""]),
       blank,
       [T("Parameter range"), T("Low input"), T("High input"), T("NPV at low, EUR"), T("NPV at high, EUR")],
       ...(a.parameterSensitivity ?? []).map((p) => [p.parameterId, p.lowInput, p.highInput, p.lowNpvEur, p.highNpvEur]),
     ] });
     sheets.push({ name: T("Support cases"), widths: [48, 12, 10, 18, 14, 18, 60], rows: [
-      [T("Scheme (separate case, never in the verdict)"), T("Status"), T("Eligible"), "NPV, EUR", T("Payback, years"), T("Change in NPV, EUR"), T("Source")],
+      [T("Scheme (separate case, never in the verdict)"), T("Status"), T("Eligible"), T("NPV, EUR"), T("Payback, years"), T("Change in NPV, EUR"), T("Source")],
       ...a.supportCases.map((s) => [s.name, C(s.status), s.eligible ? T("yes") : T("no"), s.npvEur, s.paybackYears, s.deltaNpvEur, s.source]),
     ] });
   }

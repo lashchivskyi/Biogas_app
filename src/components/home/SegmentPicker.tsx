@@ -23,7 +23,7 @@ export interface SegmentText {
   whatItTakes: string; modelCase: string; biogas: string; capacity: string; investment: string; payback: string; cta: string; more: string; illustrative: string; ariaLabel: string;
 }
 
-export function SegmentPicker({ segments, t, base }: { segments: SegmentCard[]; t: SegmentText; base: string }) {
+export function SegmentPicker({ segments, t, base, unit }: { segments: SegmentCard[]; t: SegmentText; base: string; unit: string }) {
   const [sel, setSel] = useState(segments[0].id);
   const locale = useLocale();
   const H = businessCopy(locale);
@@ -64,7 +64,7 @@ export function SegmentPicker({ segments, t, base }: { segments: SegmentCard[]; 
           {definition.scope !== "screening" && <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold">{definition.scope === "outside_model" ? H.outside : H.specialist}</span>}
           <h3 className="mt-4 text-xl font-bold leading-snug sm:text-2xl">{s.label}</h3>
           <p className="mt-3 text-white/80">{s.insight}</p>
-          {definition.scaleTonnesYear && <p className="mt-3 text-sm text-white/70">{H.scale}: {definition.scaleTonnesYear.map(number).join("–")} t/a</p>}
+          {definition.scaleTonnesYear && <p className="mt-3 text-sm text-white/70">{H.scale}: {definition.scaleTonnesYear.map(number).join("–")} {unit}</p>}
           {definition.scope === "outside_model" && <p className="mt-4 text-sm text-white/75">{H.scopeNote}</p>}
 
           {definition.scope !== "outside_model" && <div className={`mt-6 grid gap-6 ${s.example ? "md:grid-cols-2" : ""}`}>

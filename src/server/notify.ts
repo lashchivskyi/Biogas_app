@@ -60,3 +60,30 @@ export async function deliverPaidReport(order: Order): Promise<boolean> {
   ]);
   return true;
 }
+
+/**
+ * Tells the buyer, in the interface language of the order, that a full refund was recorded and the report link is closed.
+ * Sent once per refund (provider-side idempotency key); never throws: a failed notice must not fail the refund handling.
+ */
+export async function notifyRefund(order: Order): Promise<void> {
+  if (!emailConfigured()) return;
+  const lang = isLocale(order.lang) ? order.lang : "en";
+  const [, , , , help, title, text] = deliveryCopy[lang];
+  try {
+    await sendMail({
+      to: order.customer.email,
+      replyTo: SITE.supportEmail,
+      idempotencyKey: `refund/${order.id}`,
+      subject: `${title} — ${SITE.name}`,
+      text: `${title}
+
+${text}
+${help}
+
+${SITE.name} · ${SITE.url}`,
+      html: `<p><strong>${escapeHtml(title)}</strong></p><p>${escapeHtml(text)}<br>${escapeHtml(help)}</p><p style="color:#666">${escapeHtml(SITE.name)} · ${escapeHtml(SITE.url)}</p>`,
+    });
+  } catch (error) {
+    await reportError(error, { where: "notifyRefund", orderId: order.id });
+  }
+}

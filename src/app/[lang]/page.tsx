@@ -90,7 +90,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             <p className="mt-4 text-lg text-white/70">{d.fit.sub}</p>
           </Reveal>
           <Reveal className="mt-10">
-            <SegmentPicker segments={segments} base={base} t={{ ...d.fit, illustrative: d.common.illustrative }} />
+            <SegmentPicker segments={segments} base={base} unit={d.labels.units.tYear} t={{ ...d.fit, illustrative: d.common.illustrative }} />
           </Reveal>
         </div>
       </section>

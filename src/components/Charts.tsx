@@ -1,5 +1,6 @@
 import type { ScenarioId, ScenarioResult, SensitivityItem } from "@/core";
 import type { Dict } from "@/i18n";
+import { SvgLabel } from "./SvgLabel";
 
 const SCN_COLOR: Record<ScenarioId, string> = { conservative: "#c0392b", base: "#0e7a55", optimistic: "#2f6fdb" };
 const f = (s: string, v: string) => s.replace("{v}", v);
@@ -44,7 +45,7 @@ export function CashFlowChart({ scenarios, t, scn, compact, ids = ["conservative
         {ids.map((id, i) => (
           <g key={id} transform={`translate(${i * 150},0)`}>
             <line x1="0" x2="16" y1="4" y2="4" stroke={SCN_COLOR[id]} strokeWidth="3" />
-            <text x="22" y="8" fill="#33433c">{scn[id]}</text>
+            <SvgLabel text={scn[id]} x={22} y={4} width={124} size={11.5} maxLines={1} anchor="start" fill="#33433c" />
           </g>
         ))}
       </g>
@@ -54,7 +55,7 @@ export function CashFlowChart({ scenarios, t, scn, compact, ids = ["conservative
 
 /** Δ NPV for each stress test, relative to base. Red = flips the NPV sign. */
 export function Tornado({ items, baseNpv, t, compact }: { items: SensitivityItem[]; baseNpv: number; t: Dict["charts"]; compact: (v: number) => string }) {
-  const rowH = 30, W = 640, labelW = 210, pad = 10;
+  const rowH = 34, W = 640, labelW = 210, pad = 10;
   const H = items.length * rowH + 28;
   const maxAbs = Math.max(1, ...items.map((i) => Math.abs(i.deltaNpvEur)));
   const mid = labelW + (W - labelW - pad) / 2;
@@ -69,9 +70,9 @@ export function Tornado({ items, baseNpv, t, compact }: { items: SensitivityItem
         const neg = it.deltaNpvEur < 0;
         return (
           <g key={it.id}>
-            <text x={labelW - 10} y={yy + 15} textAnchor="end" fontSize="12.5" fill="#33433c">{it.label}</text>
+            <SvgLabel text={it.label} maxLines={2} x={labelW - 10} y={yy + 15} width={labelW - 16} size={12.5} minSize={9.5} anchor="end" fill="#33433c" />
             <rect x={neg ? mid - w : mid} y={yy + 3} width={Math.max(w, 1.5)} height={rowH - 10} rx="3" fill={it.breaks ? "#c0392b" : neg ? "#e08e7d" : "#7fb99f"} />
-            <text x={neg ? mid - w - 6 : mid + w + 6} y={yy + 16} textAnchor={neg ? "end" : "start"} fontSize="11.5" className="num" fill="#33433c">{compact(it.deltaNpvEur)}</text>
+            <text x={neg ? mid - w - 6 : mid + w + 6} y={yy + 19} textAnchor={neg ? "end" : "start"} fontSize="11.5" className="num" fill="#33433c">{compact(it.deltaNpvEur)}</text>
           </g>
         );
       })}
