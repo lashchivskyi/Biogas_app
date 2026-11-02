@@ -249,7 +249,7 @@ const th: Translation = {
     scenario: { conservative: "ระมัดระวัง", base: "ฐาน", optimistic: "มองบวก" },
     route: { chp: "ผลิตไฟฟ้าและความร้อนร่วม", boiler: "หม้อไอน้ำ (ความร้อนอย่างเดียว)", biomethane: "ไบโอมีเทน" },
     plantClass: { micro: "จิ๋ว (< 50 kW)", small: "เล็ก (50–250 kW)", medium: "กลาง (0.25–1 MW)", large: "ใหญ่ (1–5 MW)", industrial: "อุตสาหกรรม (> 5 MW)" },
-    score: { feedstock: "ความเหมาะสมของวัตถุดิบ", energy: "ความสอดคล้องด้านพลังงาน", location: "ที่ตั้งและการขนส่ง", technical: "ความเป็นไปได้ทางเทคนิค", economics: "เศรษฐศาสตร์", regulatory: "ความซับซ้อนของกฎระเบียบ", environmental: "ความเสี่ยงด้านสิ่งแวดล้อม" },
+    score: { feedstock: "ความเหมาะสมของวัตถุดิบ", energy: "ความสอดคล้องด้านพลังงาน", location: "ที่ตั้งและการขนส่ง", technical: "ความเป็นไปได้ทางเทคนิค", economics: "ความคุ้มค่าทางเศรษฐกิจ", regulatory: "ความซับซ้อนของกฎระเบียบ", environmental: "ความเสี่ยงด้านสิ่งแวดล้อม" },
     heat: { none: "ไม่ต้องใช้ความร้อน", seasonal_buildings: "ช่วงอากาศเย็น: ให้ความอบอุ่น", year_round_process: "ตลอดปี: น้ำร้อน ไอน้ำ กระบวนการผลิต", greenhouse: "โรงเรือน" },
     housing: { year_round: "เลี้ยงในคอกตลอดปี", seasonal: "ปล่อยแปลงหญ้าช่วงฤดูร้อน" },
     handling: { field_spreading: "ใส่แปลงเกษตรของเราเอง", lagoon: "เก็บในบ่อ / ถัง", paid_disposal: "จ่ายค่าเก็บขน / กำจัด", sold_as_feed: "ขาย (เช่น เป็นอาหารสัตว์)", landfill: "ส่งไปฝังกลบ", other: "อื่น ๆ / ไม่ทราบ" },

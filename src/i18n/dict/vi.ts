@@ -87,7 +87,7 @@ const vi: Translation = {
     eyebrow: "Bạn nhận được gì sau 3 phút",
     title: "Câu trả lời trước khi bạn trả tiền cho nghiên cứu khả thi",
     items: [
-      { title: "Kết luận", text: "Ứng viên mạnh / Khả thi nếu đủ điều kiện / Hiệu quả kinh tế yếu / Không khuyến nghị — và lý do." },
+      { title: "Kết luận", text: "Ứng viên mạnh / Có thể, nếu đáp ứng điều kiện / Hiệu quả kinh tế yếu / Không khuyến nghị — và lý do." },
       { title: "Khoảng giá trị, không phải độ chính xác giả", text: "Nguyên liệu, biogas, điện và nhiệt, công suất, vốn đầu tư, hoàn vốn, NPV." },
       { title: "Điều gì có thể làm dự án thất bại", text: "Kiểm tra sức chịu đựng: giá, CAPEX, sản lượng metan, mức sử dụng nhiệt, logistics, thời gian dừng máy." },
       { title: "Điều kiện quốc gia", text: "Khí hậu, giá năng lượng và chính sách hỗ trợ của nước bạn — tính thành các kịch bản riêng, không bao giờ đưa vào kết luận." },
@@ -190,7 +190,7 @@ const vi: Translation = {
     tone: {
       STRONG_CANDIDATE: "Đáng nghiên cứu chi tiết: dự án vẫn đứng vững ngay cả với giả định thận trọng.",
       POSSIBLE_WITH_CONDITIONS: "Có thể sinh lời, nhưng chỉ khi đáp ứng các điều kiện trên — hãy xác nhận trong nghiên cứu khả thi.",
-      WEAK_ECONOMICS: "Với điều kiện hiện tại, khoản đầu tư khó hoàn vốn trong thời gian hợp lý. Bên dưới là những gì có thể thay đổi điều đó.",
+      WEAK_ECONOMICS: "Với điều kiện hiện tại, khoản đầu tư sẽ không hoàn vốn trong thời gian hợp lý. Bên dưới là những gì có thể thay đổi điều đó.",
       INSUFFICIENT_DATA: "Chưa đủ dữ liệu để kết luận — hãy bổ sung các mục còn thiếu.",
       NOT_RECOMMENDED_AT_SCALE: "Với lượng nguyên liệu này, xây nhà máy riêng không có ý nghĩa kinh tế.",
     },
@@ -214,7 +214,7 @@ const vi: Translation = {
     colScheme: "Chính sách", colStatus: "Tình trạng", colEligible: "Đủ điều kiện", colDelta: "Δ NPV so với không hỗ trợ",
     status: { open: "đang mở", competitive: "đấu giá", closing: "sắp đóng", closed: "đã đóng", uncertain: "chưa rõ" },
     countryNotes: "Điều kiện quốc gia",
-    scoresTitle: "Điểm theo từng khía cạnh", scoresSub: "Không có con số thần kỳ. Điểm tổng luôn kèm giải thích.", risk: "rủi ro", overall: "Tính khả thi tổng thể của dự án",
+    scoresTitle: "Điểm theo từng khía cạnh", scoresSub: "Không có con số thần kỳ. Điểm tổng luôn kèm giải thích.", risk: "rủi ro", overall: "Triển vọng tổng thể của dự án",
     sensTitle: "Điều gì có thể phá vỡ bài toán kinh tế", sensSub: "Mỗi bài kiểm tra áp dụng riêng lẻ cho kịch bản cơ sở.",
     beCapex: "NPV = 0 nếu CAPEX giảm", beCapexNote: "tài trợ, thuê tài chính, thiết bị rẻ hơn", bePrice: "NPV = 0 nếu giá năng lượng tăng", bePriceNote: "so với kịch bản cơ sở",
     unreachable: "không đạt được", alreadyPositive: "đã dương", flips: "Làm đổi dấu NPV: {list}.",
@@ -244,7 +244,7 @@ const vi: Translation = {
     unlock: "Mở khóa báo cáo đầy đủ", seeSample: "Xem báo cáo mẫu",
   },
   labels: {
-    verdict: { STRONG_CANDIDATE: "Ứng viên mạnh", POSSIBLE_WITH_CONDITIONS: "Khả thi nếu đủ điều kiện", WEAK_ECONOMICS: "Hiệu quả kinh tế yếu", INSUFFICIENT_DATA: "Chưa đủ dữ liệu", NOT_RECOMMENDED_AT_SCALE: "Không khuyến nghị ở quy mô này" },
+    verdict: { STRONG_CANDIDATE: "Ứng viên mạnh", POSSIBLE_WITH_CONDITIONS: "Có thể, nếu đáp ứng điều kiện", WEAK_ECONOMICS: "Hiệu quả kinh tế yếu", INSUFFICIENT_DATA: "Chưa đủ dữ liệu", NOT_RECOMMENDED_AT_SCALE: "Không khuyến nghị ở quy mô này" },
     confidence: { LOW: "Thấp", MEDIUM: "Trung bình", HIGH: "Cao" },
     scenario: { conservative: "Thận trọng", base: "Cơ sở", optimistic: "Lạc quan" },
     route: { chp: "Đồng phát (điện + nhiệt)", boiler: "Lò hơi (chỉ nhiệt)", biomethane: "Biomethane" },
