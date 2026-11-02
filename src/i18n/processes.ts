@@ -200,7 +200,7 @@ const localWords: Partial<Record<Locale, { reactor?: string; upgrading: string; 
   fi: { reactor: "Reaktori", upgrading: "Jalostus", dm: "KA", biogas: "biokaasu" },
   fr: { reactor: "Réacteur", upgrading: "Épuration", dm: "MS", cod: "DCO", biogas: "biogaz" },
   it: { reactor: "Reattore", upgrading: "Upgrading", dm: "SS", biogas: "biogas" },
-  es: { upgrading: "Depuración", dm: "MS", cod: "DQO", biogas: "biogás" },
+  es: { upgrading: "Purificación", dm: "MS", cod: "DQO", biogas: "biogás" },
   pt: { reactor: "Reator", upgrading: "Purificação", dm: "MS", cod: "DQO", biogas: "biogás" },
   ro: { upgrading: "Purificare", dm: "SU", cod: "CCO", biogas: "biogaz" },
   uk: { reactor: "Реактор", upgrading: "Очищення біогазу", dm: "СР", cod: "ХСК", biogas: "біогаз" },

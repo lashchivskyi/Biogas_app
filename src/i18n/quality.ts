@@ -7,7 +7,7 @@ const laboratory: Record<Locale, string> = {
   pl: "Wyniki laboratoryjne DM, VS i BMP dla każdego strumienia substratów",
   de: "Laborwerte für TS, VS und BMP für jeden Substratstrom",
   fr: "Résultats d’analyse MS, VS et BMP pour chaque flux d’intrants",
-  it: "Analisi di laboratorio DM, VS e BMP per ciascuna matrice",
+  it: "Analisi di laboratorio di SS, VS e BMP per ciascuna matrice",
   es: "Resultados de laboratorio de MS, VS y BMP de cada sustrato",
   pt: "Resultados laboratoriais de MS, VS e BMP de cada fluxo de substrato",
   nl: "Laboratoriumwaarden voor DS, VS en BMP van elke reststroom",

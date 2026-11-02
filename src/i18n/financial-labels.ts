@@ -79,7 +79,7 @@ const equipment: Record<Locale, readonly [string, string, string]> = {
   uk: ["Пастеризація", "Подача до газової мережі", "Газопровід"],
   pl: ["Pasteryzacja", "Zatłaczanie do sieci gazowej", "Gazociąg"],
   de: ["Hygienisierung", "Einspeisung ins Gasnetz", "Gasleitung"],
-  fr: ["Hygiénisation", "Injection dans le réseau de gaz", "Canalisation de gaz"],
+  fr: ["Pasteurisation", "Injection dans le réseau de gaz", "Canalisation de gaz"],
   it: ["Pastorizzazione", "Immissione nella rete del gas", "Gasdotto"],
   es: ["Pasteurización", "Inyección en la red de gas", "Gasoducto"],
   pt: ["Pasteurização", "Injeção na rede de gás", "Gasoduto"],

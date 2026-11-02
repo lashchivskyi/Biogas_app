@@ -119,7 +119,7 @@ const it: Translation = {
     title: "L’essenziale",
     items: [
       { q: "La valutazione è davvero gratuita?", a: "I primi risultati sono gratuiti. Il report dettagliato è a pagamento: scegli il calcolo base o il confronto completo di scenari e rischi." },
-      { q: "Vendete impianti?", a: "No. Analizziamo e definiamo le specifiche; i fornitori si scelgono con una gara indipendente. Il nostro interesse è un progetto che rientri dell’investimento." },
+      { q: "Vendete impianti?", a: "No. Analizziamo e definiamo le specifiche; i fornitori si scelgono con una gara indipendente. Il nostro interesse è un progetto che ripaghi l’investimento." },
       { q: "Quanto è preciso?", a: "Una valutazione preliminare (classe AACE 5–4): CAPEX ±30%, resa di gas ±20–30%, rientro circa −30% / +50%. Distingue in modo affidabile i progetti chiaramente non convenienti e chiaramente validi e mostra la zona grigia intermedia — il report dice dove si trova il tuo. Una cifra bancabile (±15%) richiede un test di laboratorio delle matrici, offerte dei fornitori e contratti di vendita." },
       { q: "Funziona per il mio paese?", a: "Sì: 33 paesi. I prezzi provengono da statistiche ufficiali dove esistono (Eurostat, regolatori nazionali, EIA, Banca mondiale), il clima dalla rianalisi ERA5 per ogni regione, il rischio paese da Damodaran. L’Ucraina è inoltre verificata su progetti locali. Senza una serie ufficiale il valore è segnato come stima, e i tuoi prezzi hanno sempre la precedenza." },
       { q: "E le tariffe incentivanti e i contributi?", a: "Non li includiamo mai nel verdetto. Se esiste un regime nazionale, il report ne mostra l’effetto come caso separato, con stato e fonte." },
@@ -252,7 +252,7 @@ const it: Translation = {
     score: { feedstock: "Idoneità delle matrici", energy: "Coerenza energetica", location: "Sito e logistica", technical: "Fattibilità tecnica", economics: "Economia", regulatory: "Complessità normativa", environmental: "Rischio ambientale" },
     heat: { none: "Nessun bisogno di calore", seasonal_buildings: "In inverno: riscaldamento", year_round_process: "Tutto l’anno: acqua calda, vapore, processo", greenhouse: "Serre" },
     housing: { year_round: "Stabulazione tutto l’anno", seasonal: "Pascolo d’estate" },
-    handling: { field_spreading: "Spandimento sui nostri campi", lagoon: "Stoccato in vasca / lagone", paid_disposal: "Paghiamo ritiro / smaltimento", sold_as_feed: "Lo vendiamo (es. come mangime)", landfill: "In discarica", other: "Altro / non so" },
+    handling: { field_spreading: "Spandimento sui nostri campi", lagoon: "Stoccato in vasca / laguna", paid_disposal: "Paghiamo ritiro / smaltimento", sold_as_feed: "Lo vendiamo (es. come mangime)", landfill: "In discarica", other: "Altro / non so" },
     business: {
       central_biogas_plant: { label: "Impianti consortili di biogas e cooperative", hint: "Trattamento condiviso di effluenti zootecnici e residui organici di più fornitori" },
       dairy_farm: { label: "Allevamento da latte", hint: "Vacche, rimonta, liquame" },
@@ -288,15 +288,15 @@ const it: Translation = {
     },
     feedstock: {
       dairy_slurry: "Liquame bovino da latte", cattle_other_slurry: "Liquame bovini da carne / rimonta", cattle_solid_manure: "Letame bovino (con lettiera)", pig_slurry: "Liquame suino",
-      poultry_layer_manure: "Pollina di ovaiole", poultry_broiler_litter: "Pollina di broiler con lettiera", slaughter_residues: "Scarti di macellazione (contenuto ruminale, sangue, flottato)", dairy_whey: "Siero / reflui caseari",
-      dairy_fat_sludge: "Fanghi grassi / flottato caseario", brewery_spent_grain: "Trebbie di birra", fruit_veg_residues: "Scarti ortofrutticoli", food_waste: "FORSU / scarti alimentari differenziati",
+      poultry_layer_manure: "Pollina di ovaiole", poultry_broiler_litter: "Lettiera di polli da carne", slaughter_residues: "Scarti di macellazione (contenuto ruminale, sangue, flottato)", dairy_whey: "Siero / reflui caseari",
+      dairy_fat_sludge: "Grassi caseari / fanghi di flottazione (DAF)", brewery_spent_grain: "Trebbie di birra", fruit_veg_residues: "Scarti ortofrutticoli", food_waste: "FORSU / scarti alimentari differenziati",
       sugar_beet_pulp: "Polpe di barbabietola umide", grease_trap_fat: "Grassi da degrassatori", crop_straw: "Paglia (pretrattata)", vinasse: "Borlande (canna / etanolo)", press_mud: "Fanghi di filtrazione / defecazione",
-      pome: "Reflui di oleificio di palma (POME)", municipal_biowaste: "Rifiuti organici urbani",
+      pome: "Reflui degli oleifici di palma (POME)", municipal_biowaste: "Rifiuti organici urbani",
       sugar_beet_pulp_pressed: "Polpe di barbabietola surpressate (insilate)", potato_processing: "Scarti della lavorazione delle patate", olive_pomace: "Sansa di oliva (bifasica)", sewage_sludge: "Fanghi di depurazione (ispessiti)", grain_stillage: "Borlande di cereali", fish_waste: "Scarti della lavorazione del pesce", maize_silage: "Insilato di mais (coltura energetica)",
     },
     animal: {
       dairy_cow: { label: "Vacche da latte", unit: "capi" }, cattle_other: { label: "Rimonta / bovini da carne", unit: "capi" }, pig_finisher: { label: "Suini all’ingrasso", unit: "posti" },
-      sow: { label: "Scrofe con suinetti", unit: "capi" }, layer_hen: { label: "Galline ovaiole", unit: "capi" }, broiler: { label: "Broiler", unit: "posti" },
+      sow: { label: "Scrofe con suinetti", unit: "capi" }, layer_hen: { label: "Galline ovaiole", unit: "capi" }, broiler: { label: "Polli da carne", unit: "posti" },
     },
     units: { tYear: "t/anno", months: "mesi", years: "anni", yearsN: "{n} anni", never: "nessun rientro", over25: "> 25 anni" },
   },
@@ -340,7 +340,7 @@ const it: Translation = {
   samples: { caseTitle: "Situazione aziendale", operations: "Ipotesi operative", verify: "Cosa verificare", sources: "Riferimenti tecnici", modelledNote: "Valutazione modellata. I dati di riferimento pubblicati sono elencati separatamente; gli altri valori sono ipotesi. I costi non pubblicati restano sconosciuti.", eyebrow: "Report di esempio", title: "Scopri i report di esempio", lead: "Valutazioni complete di progetti tipo, elaborate con lo stesso modello del tuo report.", open: "Apri il report", run: "Valuta il tuo progetto" },
   payment: { title: "Stato del pagamento", paid: "Pagamento ricevuto", paidText: "Grazie! Il tuo report è pronto.", open: "Apri il mio report", pending: "Pagamento in corso", failed: "Pagamento non completato", demoTitle: "Pagamento demo", demoText: "Simula la pagina di una banca nell’ambiente di sviluppo. Nessun movimento di denaro.", demoPay: "Simula pagamento riuscito", demoFail: "Simula errore" },
   method: { eyebrow: "Metodologia", title: "Metodologia e registro delle ipotesi", lead: "Ogni parametro numerico riporta unità, fonte, Paese, data e livello di affidabilità. Le etichette FACT, ASSUMPTION, CALCULATION ed ESTIMATE indicano l’origine del valore.", chainTitle: "Catena di calcolo", notTitle: "Cosa il modello non fa", countryLabel: "Parametri del paese", param: "Parametro", value: "Valore", type: "Tipo", conf: "Affidabilità", source: "Fonte", date: "Data" },
-  hub: { eyebrow: "Guida per imprenditori", title: "Impianto biogas: costi, rientro e come funziona", lead: "Risposte chiare: cos’è il biogas, quanto costa un impianto e quando rientra davvero dell’investimento.", toc: "Indice", sectors: "Biogas per tipo di attività" },
+  hub: { eyebrow: "Guida per imprenditori", title: "Impianto biogas: costi, rientro e come funziona", lead: "Risposte chiare: cos’è il biogas, quanto costa un impianto e quando l’investimento rientra davvero.", toc: "Indice", sectors: "Biogas per tipo di attività" },
   terms: { title: "Condizioni di servizio, pagamento e rimborsi", template: "I dati della società non sono ancora pubblicati. Contattaci prima di effettuare un pagamento." },
   flow: {
     aria: "Schema: matrici, digestore, biogas, conversione in energia, digestato",
