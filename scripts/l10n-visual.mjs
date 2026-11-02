@@ -1,5 +1,5 @@
 /**
- * Visual layout check of every locale at 360 px and 1280 px: home, calculator, result, checkout, pricing, report,
+ * Visual layout check of every locale at 360 px and 1280 px: home, calculator, result, checkout, pricing, samples, report,
  * methodology, terms, 404. Reports page-wide horizontal scroll, text sticking out of the viewport, clipped text,
  * wrapped / overflowing buttons, SVG text outside its box, and the fonts actually used. Screenshots go to <out>.
  *
@@ -118,25 +118,19 @@ async function run(browser, locale, view) {
   try {
     await go(""); await record("home");
     await go("/calculator"); await record("calculator");
-    // result: load first example, step to the end, calculate
+    // result: a typical case from the live-estimate panel opens straight on its result
     try {
-      await page.locator("button:has(span.text-sm.font-semibold)").first().click({ timeout: 5000 });
-      for (let i = 0; i < 9; i++) {
-        const primary = page.locator("button.btn-primary").last();
-        const txt = (await primary.textContent()) ?? "";
-        await primary.click();
-        await page.waitForTimeout(200);
-        if (!txt.includes("→")) break;
-      }
-      await page.waitForSelector("#main h2 ~ * [class*='verdict'], #main h2", { timeout: 8000 });
+      await page.locator("aside button").first().click({ timeout: 5000 });
+      await page.waitForSelector("#decision h2", { timeout: 8000 });
       await page.waitForTimeout(1200);
       await record("result");
-      const unlock = page.locator("button.btn-primary:visible").last();
+      const unlock = page.locator("button.btn-signal:visible").last();
       await unlock.click({ timeout: 4000 });
       await page.waitForTimeout(800);
       await record("checkout");
     } catch (e) { results.push({ locale, w: view.w, page: "result/checkout", issues: [{ k: "flow-failed", d: String(e).slice(0, 160) }], fonts: {} }); }
     await go("/pricing"); await record("pricing");
+    await go("/samples"); await record("samples");
     await go(`/samples/${SAMPLE}`); await record("report");
     await go("/methodology"); await record("methodology");
     await go("/terms"); await record("terms");

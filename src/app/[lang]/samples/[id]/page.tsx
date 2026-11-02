@@ -16,6 +16,8 @@ import { countryName, getCoreCatalog, getDictionary, type Locale } from "@/i18n"
 import { coreLang } from "@/i18n/config";
 import { pageMetadata } from "@/i18n/seo";
 import { exampleTitle } from "@/lib/examples";
+import { workspaceCopy } from "@/i18n/workspace";
+import { Icon } from "@/components/brand/Icon";
 
 export function generateStaticParams() {
   return EXAMPLES.map((e) => ({ id: e.id }));
@@ -50,8 +52,11 @@ export default async function SamplePage({ params }: PageProps<"/[lang]/samples/
         lead={d.report.sampleBanner}
       />
       <div className="container-x py-8">
-        <div className="no-print mb-4 flex flex-wrap justify-between gap-3">
-          <Link href={`/${locale}/calculator`} className="btn btn-primary">{d.samples.run}</Link>
+        <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-3 md:p-4">
+          <div className="flex flex-wrap gap-3">
+            <Link href={`/${locale}/calculator?example=${ex.id}`} className="btn btn-primary"><Icon name="chart" size={18} />{workspaceCopy[locale].openInCalc}</Link>
+            <Link href={`/${locale}/calculator`} className="btn btn-ghost">{d.samples.run}</Link>
+          </div>
           <div className="flex flex-wrap gap-3">
             <ExportButton a={a} currency={country.currency} access="full" label={decisionCopy[locale].exportXlsx} core={core} />
             <PrintButton label={d.report.print} />

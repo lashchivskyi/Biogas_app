@@ -25,16 +25,20 @@ import { PaidTeaser } from "./PaidTeaser";
 import { SupportTable } from "./SupportTable";
 import { offerCopy } from "@/i18n/offer";
 import { processCopy, processFieldLabels, processMetricLabels, processPrimary } from "@/i18n/processes";
+import { workspaceCopy } from "@/i18n/workspace";
 import { PROCESS_UNITS, type ProcessKind, type ProcessResult } from "@/core/processes";
+import { Icon, type IconName } from "./brand/Icon";
+import { DecisionRange, SignedBar } from "./Ranges";
+import { ReportNav } from "./ReportNav";
 
 export type ResultDict = Pick<Dict, "result" | "labels" | "flow" | "charts" | "common" | "calc">;
 
-const VERDICT_STYLE: Record<VerdictId, string> = {
-  STRONG_CANDIDATE: "border-good bg-brandsoft text-brandink",
-  POSSIBLE_WITH_CONDITIONS: "border-amber-400 bg-amber-50 text-amber-900",
-  WEAK_ECONOMICS: "border-red-300 bg-red-50 text-red-900",
-  INSUFFICIENT_DATA: "border-zinc-300 bg-zinc-100 text-zinc-800",
-  NOT_RECOMMENDED_AT_SCALE: "border-red-400 bg-red-100 text-red-950",
+const VERDICT_STYLE: Record<VerdictId, { box: string; badge: string; icon: IconName }> = {
+  STRONG_CANDIDATE: { box: "border-good/50 bg-brandsoft text-brandink", badge: "bg-good text-white", icon: "check" },
+  POSSIBLE_WITH_CONDITIONS: { box: "border-amber-300 bg-amber-50 text-amber-950", badge: "bg-amber-500 text-white", icon: "info" },
+  WEAK_ECONOMICS: { box: "border-red-200 bg-red-50 text-red-950", badge: "bg-bad text-white", icon: "x" },
+  INSUFFICIENT_DATA: { box: "border-zinc-300 bg-zinc-100 text-zinc-900", badge: "bg-zinc-500 text-white", icon: "doc" },
+  NOT_RECOMMENDED_AT_SCALE: { box: "border-red-300 bg-red-100 text-red-950", badge: "bg-red-800 text-white", icon: "x" },
 };
 const CONF_STYLE = { LOW: "bg-red-100 text-red-900", MEDIUM: "bg-amber-100 text-amber-900", HIGH: "bg-brandsoft text-brandink" } as const;
 const SCN: ScenarioId[] = ["conservative", "base", "optimistic"];
@@ -44,20 +48,31 @@ const PROCESS_METRIC_LABELS: Record<string, string> = { nitrogen: "N", effluent:
 
 function Section({ title, children, id, sub }: { title: string; children: ReactNode; id?: string; sub?: string }) {
   return (
-    <section id={id} className="mt-10 break-inside-avoid-page">
-      <h2 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h2>
-      {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
+    <section id={id} className="mt-12 scroll-mt-32 break-inside-avoid-page">
+      <div className="flex items-start gap-3">
+        <span aria-hidden className="mt-2 h-5 w-1 shrink-0 rounded-full bg-brand" />
+        <div className="min-w-0">
+          <h2 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h2>
+          {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
+        </div>
+      </div>
       <div className="mt-4">{children}</div>
     </section>
   );
 }
 
-function Stat({ label, value, note }: { label: string; value: ReactNode; note?: ReactNode }) {
+/**
+ * One figure with its label and note. The data attributes are the contract of the report audit
+ * (`__tests__/report-audit.ts` `statsOf`): label, value and note in this order, nothing between them.
+ */
+function Stat({ label, value, note, icon, size = "md" }: { label: string; value: ReactNode; note?: ReactNode; icon?: IconName; size?: "lg" | "md" | "sm" }) {
+  const box = size === "lg" ? "card p-4 md:p-5" : size === "sm" ? "rounded-2xl bg-surface2 p-4" : "card p-4";
+  const text = size === "lg" ? "mt-2 text-xl font-bold leading-tight tracking-tight sm:text-2xl md:text-[28px]" : "num mt-1.5 text-xl font-bold leading-tight md:text-2xl";
   return (
-    <div className="card p-4">
-      <div className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</div>
-      <div className="num mt-1.5 text-xl font-bold leading-tight md:text-2xl">{value}</div>
-      {note && <div className="mt-1 text-xs text-muted">{note}</div>}
+    <div className={box}>
+      <div data-stat-label="" className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted">{icon && <Icon name={icon} size={15} className="shrink-0 text-brand" />}{label}</div>
+      <div data-stat-value="" className={text}>{value}</div>
+      {note && <div data-stat-note="" className="mt-1 text-xs text-muted">{note}</div>}
     </div>
   );
 }
@@ -85,19 +100,25 @@ const ROBUST_STYLE = {
 const probText = (p: number, F: ReturnType<typeof makeFormat>) => p >= 1 ? `> ${F.pct(0.99)}` : p <= 0 ? `< ${F.pct(0.01)}` : F.pct(p);
 
 /** `lockedNote`: free view — driver names stay (what to check), their NPV amounts and the Monte Carlo certainty are paid detail. */
-function Robustness({ a, R, eur, stressNote, lockedNote }: { a: Assessment; R: ResultDict["result"]; eur: (v: number) => string; stressNote?: string; lockedNote?: string }) {
+function Robustness({ a, R, scn, eur, stressNote, lockedNote }: { a: Assessment; R: ResultDict["result"]; scn: ResultDict["labels"]["scenario"]; eur: (v: number) => string; stressNote?: string; lockedNote?: string }) {
   const status = a.robustness as keyof typeof ROBUST_STYLE;
   const S = ROBUST_STYLE[status];
   const drivers = a.drivers.map((id) => a.sensitivity.find((s) => s.id === id)).filter((s) => s !== undefined);
+  const npv = a.ranges.npvEur;
   return (
-    <section className={`mt-4 rounded-2xl border p-5 md:p-6 ${S.box}`} aria-labelledby="robust-h">
+    <section className={`flex flex-col rounded-2xl border p-5 md:p-6 ${S.box}`} aria-labelledby="robust-h">
       <h2 id="robust-h" className="flex items-center gap-2 text-lg font-bold">
         <span aria-hidden className={`inline-block h-2.5 w-2.5 rounded-full ${S.dot}`} />
         {R.robust.title}
       </h2>
       <p className="mt-2 text-[15px] text-ink">{status === "clear_go" ? R.robust.go : status === "clear_no" ? R.robust.no : R.robust.grey}</p>
-      <p className="num mt-1 text-sm text-ink2">{f(R.robust.npv, { lo: eur(a.ranges.npvEur[0]), base: eur(a.ranges.npvEur[1]), hi: eur(a.ranges.npvEur[2]) })}</p>
-      {stressNote && <p className="mt-2 text-sm text-ink2">{stressNote}</p>}
+      {/* The sentence is what assistive technology reads; the range below draws the same three numbers against zero. */}
+      <p className="num sr-only">{f(R.robust.npv, { lo: eur(npv[0]), base: eur(npv[1]), hi: eur(npv[2]) })}</p>
+      <div className="mt-4 rounded-xl bg-surface/80 p-3">
+        <div aria-hidden className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-muted">{"NPV"}</div>
+        <DecisionRange values={[npv[0], npv[1], npv[2]]} labels={[eur(npv[0]), eur(npv[1]), eur(npv[2])]} names={[scn.conservative, scn.base, scn.optimistic]} />
+      </div>
+      {stressNote && <p className="mt-3 text-sm text-ink2">{stressNote}</p>}
       {status !== "clear_no" && drivers.length > 0 && (
         <div className="mt-3">
           {status === "clear_go" && <div className="text-sm font-semibold">{R.robust.drivers}</div>}
@@ -177,74 +198,102 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
     return typeof v === "number" ? `${n0(v)} ${PROCESS_UNITS[key] ?? ""}`.trim() : "—";
   };
 
+  const D = decisionCopy[locale];
+  const W = workspaceCopy[locale];
+  const VS = VERDICT_STYLE[a.verdict.id];
+  const confidence = f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score });
+  const nav = full ? [
+    { id: "decision", label: R.verdict },
+    { id: "numbers", label: R.keyTitle },
+    { id: "energy", label: R.flowTitle },
+    ...(economics ? [{ id: "economics", label: access === "full" ? R.scenariosTitle : L.scenario.base }] : []),
+    ...(economics && access === "full" ? [{ id: "routes", label: R.routesTitle }, { id: "sensitivity", label: R.sensTitle }] : []),
+    ...(economics && a.measureFirst?.length ? [{ id: "measure", label: D.measure.title }] : []),
+    { id: "details", label: R.detailsTitle },
+  ] : [];
+
   return (
     <div>
       {locale !== a.lang && <p className="mb-4 rounded-xl bg-surface2 p-3 text-sm text-ink2">{d.common.reportLangNote}</p>}
       {a.input.city && <p className="num mb-3 break-words text-xs text-muted">{locationCopy(locale).title}: {a.climate.regionName} · {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.latitude)}, {new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 4 }).format(a.input.city.longitude)} · <a href={a.input.city.dataset ? "https://registry.opendata.aws/planette_era5_reanalysis/" : "https://open-meteo.com/en/docs/historical-weather-api"} className="underline" target="_blank" rel="noreferrer">{a.input.city.dataset ? "Copernicus ERA5 / NSF NCAR / Planette · 0.25°" : "ERA5 / Open-Meteo"}</a> {a.input.city.startDate.slice(0, 4)}–{a.input.city.endDate.slice(0, 4)}</p>}
-      {/* ---------- Verdict ---------- */}
-      <div className={`rounded-2xl border-2 p-5 md:p-7 ${VERDICT_STYLE[a.verdict.id]}`}>
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-bold uppercase tracking-widest opacity-70">{R.verdict}</span>
-          {a.confidence.factors
-            ? <a href="#data-confidence" className={`chip underline decoration-dotted underline-offset-2 ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</a>
-            : <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{f(R.confidence, { level: L.confidence[a.confidence.level], score: a.confidence.score })}</span>}
+      {nav.length > 0 && <ReportNav items={nav} label={W.sections} />}
+
+      {/* ---------- Decision: the verdict and how firm it is, side by side ---------- */}
+      <div id="decision" className={`grid scroll-mt-32 gap-4 ${a.robustness !== "insufficient" ? "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" : ""}`}>
+        <div className={`rounded-2xl border p-5 md:p-7 ${VS.box}`}>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-xs font-bold uppercase tracking-widest opacity-70">{R.verdict}</span>
+            {a.confidence.factors
+              ? <a href="#data-confidence" className={`chip underline decoration-dotted underline-offset-2 ${CONF_STYLE[a.confidence.level]}`}>{confidence}</a>
+              : <span className={`chip ${CONF_STYLE[a.confidence.level]}`}>{confidence}</span>}
+          </div>
+          <div className="mt-3 flex items-start gap-3">
+            <span aria-hidden className={`mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full md:h-12 md:w-12 ${VS.badge}`}><Icon name={VS.icon} size={22} strokeWidth={2.4} /></span>
+            <h2 className="font-display text-3xl font-semibold leading-tight md:text-[40px]">{L.verdict[a.verdict.id]}</h2>
+          </div>
+          <ul lang={a.lang} className="mt-5 space-y-2 text-[15px]">{a.verdict.reasons.map((x) => <li key={x} className="flex gap-2.5"><span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-60" /><span>{x}</span></li>)}</ul>
+          {driver && <p lang={a.lang} className="mt-4 text-[15px] font-semibold">{driver}</p>}
+          {a.verdict.whatWouldChange.length > 0 && (
+            <div className="mt-4 rounded-xl bg-white/65 p-3.5 text-sm">
+              <div className="font-semibold">{R.whatWouldChange}</div>
+              <ul lang={a.lang} className="mt-1.5 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
+            </div>
+          )}
+          {minimumGaps.length > 0 && (
+            <div className="mt-4 rounded-xl bg-white/65 p-3.5 text-sm" role="note">
+              <div className="font-semibold">{minimumForVerdict[locale]}</div>
+              <ul className="mt-1 list-disc space-y-1 pl-5">{minimumGaps.map((id) => <li key={id}>{qualityGaps[id]}</li>)}</ul>
+            </div>
+          )}
+          <p className="mt-5 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
         </div>
-        <h2 className="font-display mt-2 text-3xl font-semibold md:text-[42px]">{L.verdict[a.verdict.id]}</h2>
-        <ul lang={a.lang} className="mt-4 space-y-1.5 text-[15px]">{a.verdict.reasons.map((x) => <li key={x}>• {x}</li>)}</ul>
-        {driver && <p lang={a.lang} className="mt-4 text-[15px] font-semibold">{driver}</p>}
-        {a.verdict.whatWouldChange.length > 0 && (
-          <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm">
-            <div className="font-semibold">{R.whatWouldChange}</div>
-            <ul lang={a.lang} className="mt-1 space-y-1">{a.verdict.whatWouldChange.map((x) => <li key={x}>→ {x}</li>)}</ul>
-          </div>
-        )}
-        {minimumGaps.length > 0 && (
-          <div className="mt-4 rounded-lg bg-white/60 p-3 text-sm" role="note">
-            <div className="font-semibold">{minimumForVerdict[locale]}</div>
-            <ul className="mt-1 list-disc space-y-1 pl-5">{minimumGaps.map((id) => <li key={id}>{qualityGaps[id]}</li>)}</ul>
-          </div>
-        )}
-        <p className="mt-4 text-xs opacity-75">{a.supportIncluded ? R.assumedSupport : R.noSubsidy} {R.prelim}</p>
+
+        {a.robustness !== "insufficient" && <Robustness a={a} R={R} scn={L.scenario} eur={eur} stressNote={access !== "free" && a.monteCarlo ? f(D.monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) }) : undefined} lockedNote={access === "free" ? offerCopy[locale].driversLocked : undefined} />}
       </div>
 
-      {a.robustness !== "insufficient" && <Robustness a={a} R={R} eur={eur} stressNote={access !== "free" && a.monteCarlo ? f(decisionCopy[locale].monteCarlo.stress, { n: a.monteCarlo.n, p: probText(a.monteCarlo.probPositive, F) }) : undefined} lockedNote={access === "free" ? offerCopy[locale].driversLocked : undefined} />}
-
-      {/* ---------- Plain summary ---------- */}
-      <section className="mt-6 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
-        <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
-        <p className="mt-2 text-[17px] leading-relaxed text-ink">
-          {process
-            ? `${PC.models[process.kind]}: ${R.biogas} ${range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³.`
-            : f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
-          {economics && <>{route === "biomethane"
-            ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
-            : f(R.summaryEl, {
-                el: n0(sig2(e.elNetKwh / 1000)),
-                heat: n0(sig2(e.heatUsefulKwh / 1000)),
-                share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
-              })}{" "}
-          {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })}</>} {R.tone[a.verdict.id]}
-        </p>
+      {/* ---------- Plain summary: what the numbers mean ---------- */}
+      <section id="summary" className="mt-4 flex gap-4 rounded-2xl border border-line bg-surface p-5 md:p-6" aria-labelledby="plain-h">
+        <span aria-hidden className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl bg-brandsoft text-brand sm:grid"><Icon name="doc" size={20} /></span>
+        <div className="min-w-0">
+          <h2 id="plain-h" className="eyebrow text-brand">{R.summaryTitle}</h2>
+          <p className="mt-2 text-[17px] leading-relaxed text-ink">
+            {process
+              ? `${PC.models[process.kind]}: ${R.biogas} ${range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³.`
+              : f(R.summary, { tonnes: n0(sig2(r.feedstockTonnes)), biogas: range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x))) })}{" "}
+            {economics && <>{route === "biomethane"
+              ? f(R.summaryBm, { bm: compact(sig2(e.biomethaneNm3)) })
+              : f(R.summaryEl, {
+                  el: n0(sig2(e.elNetKwh / 1000)),
+                  heat: n0(sig2(e.heatUsefulKwh / 1000)),
+                  share: (a.input.energy.electricityKwhYear ?? 0) > 0 ? f(R.summaryShare, { pct: Math.round(Math.min(1, e.elSelfConsumedKwh / (a.input.energy.electricityKwhYear as number)) * 100) }) : "",
+                })}{" "}
+            {f(R.summaryMoney, { capex: `${eur(capexLoHi[0])} – ${eur(capexLoHi[1])}`, payback: years(r.paybackYears[1]) })}</>} {R.tone[a.verdict.id]}
+          </p>
+        </div>
       </section>
 
-      {/* ---------- Key numbers ---------- */}
-      <Section title={R.keyTitle} sub={R.keySub}>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {process
-            ? <Stat label={PC.models[process.kind]} value={processValue(PROCESS_INPUT[process.kind][0])} note={`${fields[PROCESS_INPUT[process.kind][1]]}: ${processValue(PROCESS_INPUT[process.kind][1])}`} />
-            : <Stat label={R.feedstock} value={<>{n0(sig2(r.feedstockTonnes))} {L.units.tYear}</>} note={f(R.feedNote, { v: n0(best.feed.energyDensityKwhPerTonne) })} />}
-          <Stat label={R.biogas} value={<>{range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³</>} note={f(R.biogasNote, { v: n0(r.biogasM3[1] / 8000) })} />
-          {economics && <>
+      {/* ---------- Key numbers: money and output first, the physics behind them second ---------- */}
+      <Section id="numbers" title={R.keyTitle} sub={R.keySub}>
+        {economics && <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Stat size="lg" icon="factory" label={R.capex} value={<>{eur(capexLoHi[0])} – {eur(capexLoHi[1])}</>} note={currency !== "EUR" ? f(R.capexNote, { v: money(r.capexEur[1] * a.fx, currency) }) : undefined} />
+          <Stat size="lg" icon="clock" label={R.payback} value={years(paybackSorted[0]) === years(paybackSorted[2]) ? years(paybackSorted[0]) : `${years(paybackSorted[0])} – ${years(paybackSorted[2])}`} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
+          <Stat size="lg" icon="chart" label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(npvLoHi[0]), hi: eur(npvLoHi[1]) })} />
           <Stat
+            size="lg"
+            icon={route === "biomethane" ? "flame" : "bolt"}
             label={R.energy}
             value={route === "biomethane" ? <>{range(r.biomethaneNm3[0], r.biomethaneNm3[2], (x) => compact(sig2(x)))} Nm³</> : <>{range(r.electricityMwh[0], r.electricityMwh[2])} {L.units.mwh}</>}
             note={route === "biomethane" ? R.energyBm : f(R.energyHeat, { v: range(r.heatUsefulMwh[0], r.heatUsefulMwh[2]) })}
           />
-          <Stat label={R.capacity} value={<>{range(r.kwEl[0], r.kwEl[2])} {L.units.kwe}</>} note={L.plantClass[best.plantClass]} />
-          <Stat label={R.capex} value={<>{eur(capexLoHi[0])} – {eur(capexLoHi[1])}</>} note={currency !== "EUR" ? f(R.capexNote, { v: money(r.capexEur[1] * a.fx, currency) }) : undefined} />
-          <Stat label={R.payback} value={<>{years(paybackSorted[0])} – {years(paybackSorted[2])}</>} note={f(R.paybackNote, { v: years(r.paybackYears[1]) })} />
-          <Stat label={R.npv} value={eur(r.npvEur[1])} note={f(R.npvNote, { lo: eur(npvLoHi[0]), hi: eur(npvLoHi[1]) })} />
-          <Stat label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
+        </div>}
+        <div className={`grid grid-cols-2 gap-3 lg:grid-cols-4 ${economics ? "mt-3" : ""}`}>
+          {process
+            ? <Stat size="sm" label={PC.models[process.kind]} value={processValue(PROCESS_INPUT[process.kind][0])} note={`${fields[PROCESS_INPUT[process.kind][1]]}: ${processValue(PROCESS_INPUT[process.kind][1])}`} />
+            : <Stat size="sm" icon="leaf" label={R.feedstock} value={<>{n0(sig2(r.feedstockTonnes))} {L.units.tYear}</>} note={f(R.feedNote, { v: n0(best.feed.energyDensityKwhPerTonne) })} />}
+          <Stat size="sm" icon="drop" label={R.biogas} value={<>{range(r.biogasM3[0], r.biogasM3[2], (x) => compact(sig2(x)))} m³</>} note={f(R.biogasNote, { v: n0(r.biogasM3[1] / 8000) })} />
+          {economics && <>
+            <Stat size="sm" icon="bolt" label={R.capacity} value={<>{range(r.kwEl[0], r.kwEl[2])} {L.units.kwe}</>} note={L.plantClass[best.plantClass]} />
+            <Stat size="sm" icon="route" label={R.route} value={<span className="text-base md:text-lg">{L.route[route]}</span>} note={f(R.routeNote, { v: L.confidence[a.confidence.level] })} />
           </>}
         </div>
         <DataConfidence a={a} d={d} locale={locale} currency={currency} />
@@ -272,9 +321,9 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
       </Section>
 
       {/* ---------- Energy flow ---------- */}
-      <Section title={R.flowTitle} sub={R.flowSub}>
-        <div className="card p-3 md:p-5">
-          {!process && <FlowDiagram
+      <Section id="energy" title={R.flowTitle} sub={R.flowSub}>
+        <div className="card overflow-hidden">
+          {!process && <div className="border-b border-line bg-[radial-gradient(120%_90%_at_50%_0%,var(--surface-2),var(--surface)_70%)] p-3 md:p-5"><FlowDiagram
             t={d.flow}
             n0={n0}
             compact={compact}
@@ -290,13 +339,20 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
               biomethaneNm3: e.biomethaneNm3,
               digestateT: a.digestate.tonnesYear,
             }}
-          />}
-          {economics ? <dl className={`grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4 ${process ? "" : "mt-4"}`}>
-            <div><dt className="text-muted">{R.heatProduced}</dt><dd className="num font-semibold">{n0(e.heatProducedKwh / 1000)} {L.units.mwh}</dd></div>
-            <div><dt className="text-muted">{R.heatDigester}</dt><dd className="num font-semibold">{n0(e.heatDigesterKwh / 1000)} {L.units.mwh}</dd></div>
-            <div><dt className="text-muted">{R.heatUseful}</dt><dd className="num font-semibold">{n0(e.heatUsefulKwh / 1000)} {L.units.mwh} <span className="font-normal text-muted">{R.of} {n0(e.heatNetAvailableKwh / 1000)}</span></dd></div>
-            <div><dt className="text-muted">{R.elSplit}</dt><dd className="num font-semibold">{n0(e.elSelfConsumedKwh / 1000)} / {n0(e.elExportedKwh / 1000)} {L.units.mwh}</dd></div>
-          </dl> : <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          /></div>}
+          {economics ? <dl className="grid gap-px bg-line text-sm sm:grid-cols-2 lg:grid-cols-4">
+            {([
+              ["var(--heat)", R.heatProduced, <>{n0(e.heatProducedKwh / 1000)} {L.units.mwh}</>],
+              ["var(--gas)", R.heatDigester, <>{n0(e.heatDigesterKwh / 1000)} {L.units.mwh}</>],
+              ["var(--good)", R.heatUseful, <>{n0(e.heatUsefulKwh / 1000)} {L.units.mwh} <span className="font-normal text-muted">{R.of} {n0(e.heatNetAvailableKwh / 1000)}</span></>],
+              ["var(--power)", R.elSplit, <>{n0(e.elSelfConsumedKwh / 1000)} / {n0(e.elExportedKwh / 1000)} {L.units.mwh}</>],
+            ] as const).map(([color, label, value]) => (
+              <div key={label} className="bg-surface p-4">
+                <dt className="flex items-center gap-2 text-muted"><span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: color }} />{label}</dt>
+                <dd className="num mt-1 text-base font-semibold">{value}</dd>
+              </div>
+            ))}
+          </dl> : <dl className="grid gap-3 p-4 text-sm sm:grid-cols-2">
             <div><dt className="text-muted">CH₄</dt><dd className="num font-semibold">{n0(best.feed.ch4M3Year)} Nm³/{perYear}</dd></div>
             <div><dt className="text-muted">{R.biogas}</dt><dd className="num font-semibold">{n0(best.feed.biogasM3Year)} Nm³/{perYear}</dd></div>
           </dl>}
@@ -362,7 +418,7 @@ function BreakEvenPanel({ a, F, locale, unreachable }: { a: Assessment; F: Retur
   const productValue = (v: number) => `${F.unitPrice(v)}/${per}`;
   const feed = be.feedstockEurT;
   return (
-    <Section title={D.title} sub={D.sub}>
+    <Section id="breakeven" title={D.title} sub={D.sub}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {p && (
           <Stat
@@ -383,7 +439,7 @@ function MeasureFirstPanel({ a, F, locale }: { a: Assessment; F: ReturnType<type
   if (!items?.length) return null;
   const M = decisionCopy[locale].measure;
   return (
-    <Section title={M.title} sub={M.sub}>
+    <Section id="measure" title={M.title} sub={M.sub}>
       <div className="card overflow-x-auto p-1" tabIndex={0}>
         <table className="num w-full min-w-[560px] text-sm">
           <thead>
@@ -436,7 +492,7 @@ function MonteCarloPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof
   if (!mc) return null;
   const C = decisionCopy[locale].monteCarlo;
   return (
-    <Section title={C.title} sub={C.sub}>
+    <Section id="uncertainty" title={C.title} sub={C.sub}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <Stat label={C.p10} value={F.eur(mc.p10NpvEur)} />
         <Stat label={C.p50} value={F.eur(mc.p50NpvEur)} />
@@ -456,7 +512,7 @@ function ClimatePanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof ma
   const unit = "g CO₂e/MJ";
   const pctFmt = (v: number) => F.pct(v);
   return (
-    <Section title={C.title} sub={C.sub}>
+    <Section id="climate" title={C.title} sub={C.sub}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label={C.product} value={<>{F.n0(g.productGMJ)} <span className="text-sm font-normal">{unit}</span></>} note={g.digestate === "closed" ? C.closed : C.open} />
         <Stat label={C.comparator} value={<>{F.n0(g.comparatorGMJ)} <span className="text-sm font-normal">{unit}</span></>} />
@@ -478,8 +534,9 @@ function ScalePanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: Retu
   const L = d.labels;
   const best = (p: (typeof a.scale)[number]) => (["chp", "boiler", "biomethane"] as RouteId[]).reduce((x, y) => (p.routes[y].npvEur > p.routes[x].npvEur ? y : x));
   const top = a.scale.reduce((x, y) => (y.routes[best(y)].npvEur > x.routes[best(x)].npvEur ? y : x));
+  const scaleMax = Math.max(...a.scale.map((p) => Math.abs(p.routes[best(p)].npvEur)));
   return (
-    <Section title={S.title} sub={S.sub}>
+    <Section id="scale" title={S.title} sub={S.sub}>
       <div className="card overflow-x-auto p-1" tabIndex={0}>
         <table className="num w-full min-w-[560px] text-sm">
           <thead>
@@ -498,7 +555,7 @@ function ScalePanel({ a, d, F, locale }: { a: Assessment; d: ResultDict; F: Retu
                   <td className="p-3 font-sans">{L.route[r]}</td>
                   <td className="p-3 text-right">{F.n0(v.kwEl)}</td>
                   <td className="p-3 text-right">{F.eur(v.capexEur)}</td>
-                  <td className={`p-3 text-right ${p === top ? "font-bold" : ""} ${v.npvEur >= 0 ? "text-good" : "text-bad"}`}>{F.eur(v.npvEur)}</td>
+                  <td className={`p-3 text-right ${p === top ? "font-bold" : ""} ${v.npvEur >= 0 ? "text-good" : "text-bad"}`}><span className="inline-flex items-center justify-end gap-2.5"><SignedBar value={v.npvEur} max={scaleMax} />{F.eur(v.npvEur)}</span></td>
                 </tr>
               );
             })}
@@ -547,6 +604,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
   const best = a.scenarios.base;
   const route = a.bestRoute;
   const routes: RouteId[] = ["chp", "boiler", "biomethane"];
+  const routeMax = Math.max(...routes.map((x) => Math.abs(a.routeMatrix[x].base.fin.npvEur)));
   const PC = processCopy(locale);
   const fields = processFieldLabels(locale);
   const metricLabels = processMetricLabels(locale);
@@ -556,7 +614,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
   const localRows = (rows: { id: string; label: string; eur: number }[]) => rows.map((row) => ({ ...row, label: moneyLabels[row.id] ?? row.label }));
   return (
     <>
-      {economics && !extended && <Section title={L.scenario.base} sub={f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}>
+      {economics && !extended && <Section id="economics" title={L.scenario.base} sub={f(R.finNote, { debt: pct(best.fin.debtEur / Math.max(1, best.fin.capexEur)) })}>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label={R.rowRevenue} value={eur(best.opexRev.revenueEur)} />
           <Stat label={R.rowOpex} value={eur(best.opexRev.opexEur)} />
@@ -571,7 +629,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       </Section>}
       {economics && extended && <>
       {/* ---------- Scenarios ---------- */}
-      <Section title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
+      <Section id="economics" title={R.scenariosTitle} sub={f(R.scenariosSub, { route: L.route[route] })}>
         <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
           <div className="card overflow-x-auto p-1" tabIndex={0}>
             <table className="w-full min-w-[460px] text-sm">
@@ -611,7 +669,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       </Section>
 
       {/* ---------- Routes ---------- */}
-      <Section title={R.routesTitle} sub={R.routesSub}>
+      <Section id="routes" title={R.routesTitle} sub={R.routesSub}>
         <div className="card overflow-x-auto p-1" tabIndex={0}>
           <table className="num w-full min-w-[560px] text-sm">
             <thead>
@@ -628,7 +686,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
                     <td className="p-3 text-right">{eur(s.base.capex.totalEur)}</td>
                     <td className="p-3 text-right">{eur(s.base.fin.ebitdaEurYear)}</td>
                     <td className="p-3 text-right">{years(s.base.fin.simplePaybackYears)}</td>
-                    <td className="p-3 text-right font-semibold">{eur(s.base.fin.npvEur)}</td>
+                    <td className="p-3 text-right font-semibold"><span className="inline-flex items-center justify-end gap-2.5"><SignedBar value={s.base.fin.npvEur} max={routeMax} />{eur(s.base.fin.npvEur)}</span></td>
                     <td className="p-3 text-right text-muted">{eur(Math.min(s.conservative.fin.npvEur, s.optimistic.fin.npvEur))} … {eur(Math.max(s.conservative.fin.npvEur, s.optimistic.fin.npvEur))}</td>
                   </tr>
                 );
@@ -643,12 +701,12 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       </Section>
 
       {/* ---------- Support cases ---------- */}
-      <Section title={R.supportTitle} sub={R.supportSub}>
+      <Section id="support" title={R.supportTitle} sub={R.supportSub}>
         <SupportTable a={a} d={d} locale={locale} eur={eur} years={years} />
       </Section>
 
       {/* ---------- Scores ---------- */}
-      <Section title={R.scoresTitle} sub={R.scoresSub}>
+      <Section id="scores" title={R.scoresTitle} sub={R.scoresSub}>
         <div className="grid gap-3 md:grid-cols-2">
           {a.scores.map((s) => (
             <div key={s.id} className="card p-4">
@@ -671,7 +729,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       </Section>
 
       {/* ---------- Sensitivity ---------- */}
-      <Section title={R.sensTitle} sub={R.sensSub}>
+      <Section id="sensitivity" title={R.sensTitle} sub={R.sensSub}>
         <div className="card p-4"><Tornado items={a.sensitivity} baseNpv={best.fin.npvEur} t={{ ...d.charts, sensHeader: d.charts.sensHeader.replaceAll("€", F.currency).replaceAll("EUR", F.currency) }} compact={F.monetaryCompact} /></div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <Stat label={R.beCapex} value={a.breakEven.capexReductionPct === null ? R.unreachable : a.breakEven.capexReductionPct === 0 ? R.alreadyPositive : F.pct(Math.round(a.breakEven.capexReductionPct) / 100)} note={R.beCapexNote} />
@@ -689,7 +747,7 @@ function FullSections({ a, d, F, locale, methodologyHref, extended, process, eco
       <ScalePanel a={a} d={d} F={F} locale={locale} />
       </>}
       <ClimatePanel a={a} F={F} locale={locale} />
-      <Section title={R.detailsTitle}>
+      <Section id="details" title={R.detailsTitle}>
         <div className="space-y-3">
           {process ? <Fold title={PC.models[process.kind]} open>
             <p className="text-sm text-ink2">{PC.inputHint}</p>

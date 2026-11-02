@@ -1,19 +1,17 @@
 # Status — updated 2026-11-02. Rewrite at the end of a task; keep under 40 lines.
 ## Current state
 - Model 0.6.1; data review 2026-10-30. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
-- Logic audit 2026-11-02 (rules in DECISIONS): calculator now equals the sample pages for all 39 examples (lab flag from DM/VS/BMP);
-  all-equity project no longer blocked from STRONG; disposal/sale-value prompts only where a field answers them; client prices no longer
-  warned as market data; xlsx hides money when the page does; gas-grid default registered (2 km, LOW); fit scores stop re-deducting data
-  gaps; `land` tooltip in 25 languages now describes digestate spreading land (was "site area"; machine QA only, native review not done).
-  Sweep: 0 verdict / 0 NPV changes in the core; 66 cases +5 data points (disposal gap); via the form +3 STRONG, +45 MEDIUM.
-  Open from the audit: verdict reasons show € amounts while cards may show USD; "Market data require review" lists raw parameter IDs;
-  export price 0 is treated as blank (only "no grid" models unpaid export); `COSUBSTRATE_GATE_FEE_EUR` (6 €/t, What-if) unsourced.
+- Logic audit 2026-11-02 (rules in DECISIONS): calculator equals the sample pages for all 39 examples; sweep 0 verdict / 0 NPV changes in
+  the core, via the form +3 STRONG, +45 MEDIUM. Open: verdict reasons show € while cards may show USD; "Market data require review" lists
+  raw parameter IDs; export price 0 = blank (only "no grid" models unpaid export); `COSUBSTRATE_GATE_FEE_EUR` (6 €/t, What-if) unsourced.
 - Quality audit 2026-11-02 (rules in DECISIONS): every client deduction is closable by a form field (test fills every field for all AD
   examples → 0 client factors left). Head counts no longer deducted (new optional field "measured manure, t/yr" on herd lines, 25 langs,
   machine QA only); lab + LOW-catalogue = one item; gas without heat need, 0 km, delivered disposal not deducted; price proxy and CAPEX
   quote shown as "what you can add". Sweep: 0 verdict/NPV changes; 197 cases +8, 66 +5, 1 +2. Open: price-slip flag cannot be
   "confirmed with an invoice" (a genuine offer > 3× national, e.g. US RNG with attributes, stays LOW).
 - UX/security: axe WCAG 2.2 AA, Lighthouse desktop 99/100/100/100; security review 2026-11-01 (0 critical/high). Not tested: real Stripe, email.
+- UX rebuild 2026-11-02 (rules in DECISIONS): live estimate beside the form, folded inputs bar, verdict + NPV range, KPI tiers, report index,
+  sample map + filters, sample → calculator. Visual check 9 locales × 360/1280: 0 overflow. Not re-run: axe, Lighthouse. Not fixed: el header chip wraps at 360 px.
 - Market data: official sources for 33 countries except LOW items (`audit-sources`). Benchmarks vs KTBL, Luke, WSU, LandGEM (PRODUCT.md).
 - Inputs: one `NumberInput` (locale parse in 25 locales); xlsx with Excel number formats. Open: tenor silently rounded to whole years.
 - L10n: 25 languages, catalogs `src/i18n/core/<locale>.ts`, machine QA + MQM rounds (results and per-language open terms in DECISIONS

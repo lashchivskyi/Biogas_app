@@ -305,7 +305,8 @@ export const h2Chunks = (html: string) => {
 const tablesOf = (html: string) => [...html.matchAll(/<table[\s\S]*?<\/table>/g)].map((t) => [...t[0].matchAll(/<tr[\s\S]*?<\/tr>/g)].map((r) => [...r[0].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)].map((c) => txt(c[1]))));
 export const statsOf = (html: string) => {
   const out = new Map<string, { value: string; note: string }>();
-  for (const m of html.matchAll(/<div class="text-xs font-semibold uppercase tracking-wide text-muted">([\s\S]*?)<\/div><div class="num[^"]*">([\s\S]*?)<\/div>(?:<div class="mt-1 text-xs text-muted">([\s\S]*?)<\/div>)?/g)) out.set(txt(m[1]), { value: txt(m[2]), note: m[3] ? txt(m[3]) : "" });
+  // `Stat` in ResultView marks its three parts; layout classes may change, these attributes may not.
+  for (const m of html.matchAll(/<div data-stat-label=""[^>]*>([\s\S]*?)<\/div><div data-stat-value=""[^>]*>([\s\S]*?)<\/div>(?:<div data-stat-note=""[^>]*>([\s\S]*?)<\/div>)?/g)) out.set(txt(m[1]), { value: txt(m[2]), note: m[3] ? txt(m[3]) : "" });
   return out;
 };
 const svgByLabel = (html: string, label: string) => {
@@ -399,7 +400,8 @@ export function auditRendered(a: Assessment, html: string, ctx: { d: Dict; local
   else stat(R.energy, `${range(cons.energy.elNetKwh / 1000, opt.energy.elNetKwh / 1000)} ${L.units.mwh}`, f(R.energyHeat, { v: range(cons.energy.heatUsefulKwh / 1000, opt.energy.heatUsefulKwh / 1000) }));
   stat(R.capacity, `${range(cons.kwElEquivalent, opt.kwElEquivalent)} ${L.units.kwe}`, L.plantClass[base.plantClass]);
   stat(R.capex, `${eur(capexLH[0])} – ${eur(capexLH[1])}`, currency !== "EUR" ? f(R.capexNote, { v: F.money(base.capex.totalEur * a.fx, currency) }) : undefined);
-  stat(R.payback, `${years(pbSorted[0])} – ${years(pbSorted[2])}`, f(R.paybackNote, { v: years(base.fin.simplePaybackYears) }));
+  // "no payback – no payback" reads as a glitch: equal ends are shown once.
+  stat(R.payback, years(pbSorted[0]) === years(pbSorted[2]) ? years(pbSorted[0]) : `${years(pbSorted[0])} – ${years(pbSorted[2])}`, f(R.paybackNote, { v: years(base.fin.simplePaybackYears) }));
   stat(R.npv, eur(base.fin.npvEur), f(R.npvNote, { lo: eur(npvLH[0]), hi: eur(npvLH[1]) }));
   stat(R.route, L.route[route], f(R.routeNote, { v: L.confidence[a.confidence.level] }));
   const keyStatsCount = stats.size;

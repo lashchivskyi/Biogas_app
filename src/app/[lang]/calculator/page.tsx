@@ -26,9 +26,9 @@ export default async function CalculatorPage({ params }: PageProps<"/[lang]/calc
   const dict = { calc: d.calc, labels: d.labels, result: d.result, flow: d.flow, charts: d.charts, common: d.common, checkout: d.checkout, pricing: d.pricing, country: d.country, audience: d.audience };
   return (
     <main>
-      <PageHero eyebrow={d.calc.eyebrow} title={d.calc.title} lead={d.calc.lead} />
-      <div className="container-x py-8">
-        <Calculator locale={locale} d={dict} examples={examples} demo={paymentsMode().demo} samplesHref={`/${locale}/samples`} core={core} />
+      <PageHero compact eyebrow={d.calc.eyebrow} title={d.calc.title} lead={d.calc.lead} />
+      <div className="container-x py-6 md:py-8">
+        <Calculator locale={locale} d={dict} examples={examples} demo={paymentsMode().demo} samplesHref={`/${locale}/samples`} samplesLabel={d.nav.samples} core={core} />
       </div>
     </main>
   );

@@ -7,10 +7,10 @@ export interface Crumb {
   href: string;
 }
 
-/** Dark page header with breadcrumbs (visible + BreadcrumbList JSON-LD). */
-export function PageHero({ eyebrow, title, lead, wideLead = false, crumbs, children }: { eyebrow?: string; title: string; lead?: ReactNode; wideLead?: boolean; crumbs?: Crumb[]; children?: ReactNode }) {
+/** Dark page header with breadcrumbs (visible + BreadcrumbList JSON-LD). `compact`: a tool page, where the form must start above the fold. */
+export function PageHero({ eyebrow, title, lead, wideLead = false, compact = false, crumbs, children }: { eyebrow?: string; title: string; lead?: ReactNode; wideLead?: boolean; compact?: boolean; crumbs?: Crumb[]; children?: ReactNode }) {
   return (
-    <section className="hero relative overflow-hidden pb-14 pt-28 md:pt-32">
+    <section className={`hero relative overflow-hidden ${compact ? "pb-8 pt-24 md:pb-10 md:pt-28" : "pb-14 pt-28 md:pt-32"}`}>
       <div className="hero-grid absolute inset-0" aria-hidden />
       <div className="container-x relative">
         {crumbs && crumbs.length > 0 && (
@@ -38,8 +38,8 @@ export function PageHero({ eyebrow, title, lead, wideLead = false, crumbs, child
           </>
         )}
         {eyebrow && <p className="eyebrow text-signal">{eyebrow}</p>}
-        <h1 className="font-display mt-3 max-w-4xl text-3xl font-semibold leading-tight md:text-5xl">{title}</h1>
-        {lead && <div className={`mt-4 text-lg text-white/75${wideLead ? "" : " max-w-2xl"}`}>{lead}</div>}
+        <h1 className={`font-display mt-3 max-w-4xl font-semibold leading-tight ${compact ? "text-2xl md:text-4xl" : "text-3xl md:text-5xl"}`}>{title}</h1>
+        {lead && <div className={`mt-4 text-white/75${compact ? " text-base md:text-lg" : " text-lg"}${wideLead ? "" : " max-w-2xl"}`}>{lead}</div>}
         {children}
       </div>
     </section>

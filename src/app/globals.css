@@ -362,6 +362,37 @@ h1, h2, h3, h4, p, li, dd, summary {
 .scroll-cue {
   animation: scroll-cue 1.8s ease-in-out infinite;
 }
+/* Vertical dashed flow (calculator live estimate): colour from currentColor. */
+.flow-v {
+  background-image: linear-gradient(to bottom, currentColor 55%, transparent 0);
+  background-size: 2px 9px;
+  animation: flow-v 1.1s linear infinite;
+}
+@keyframes flow-v {
+  to {
+    background-position: 0 9px;
+  }
+}
+/* A figure that just changed: a short settle instead of a jump. */
+.tick-in {
+  animation: tick-in 0.35s ease-out both;
+}
+@keyframes tick-in {
+  from {
+    opacity: 0.35;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -377,7 +408,9 @@ h1, h2, h3, h4, p, li, dd, summary {
   .pulse-soft,
   .bubble,
   .rise-in,
-  .scroll-cue {
+  .scroll-cue,
+  .flow-v,
+  .tick-in {
     animation: none;
   }
   .reveal {

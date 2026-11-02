@@ -22,6 +22,7 @@ import { sampleReferenceCopy } from "../samples";
 import { seoCopy } from "../seo-copy";
 import { stepHelp } from "../step-help";
 import { validationCopy } from "../validation";
+import { workspaceCopy } from "../workspace";
 
 /** One translatable string: module, path inside it, and the English source at the same path. */
 export interface Entry { module: string; path: string; text: string; en: string | undefined }
@@ -48,7 +49,7 @@ function modules(d: (l: Locale) => Dict): Record<string, (l: Locale) => unknown>
     methodology: (l) => methodologyCopy[l], methodologyTermHelp: (l) => methodologyTermHelp[l], offer: (l) => offerCopy[l],
     preferences: preferenceCopy, processHelp: processFieldHelp, process: processCopy, processLabels: processFieldLabels, processUsage,
     minimumForVerdict: (l) => minimumForVerdict[l], qualityPanel: qualityPanelCopy, qualityGaps: (l) => qualityGapCopy(l, d(l), "EUR"),
-    reportLink: (l) => reportLinkHelp[l], seo: (l) => seoCopy[l], sampleReference: sampleReferenceCopy, stepHelp, validation: (l) => validationCopy[l],
+    reportLink: (l) => reportLinkHelp[l], seo: (l) => seoCopy[l], sampleReference: sampleReferenceCopy, stepHelp, validation: (l) => validationCopy[l], workspace: (l) => workspaceCopy[l],
   };
 }
 

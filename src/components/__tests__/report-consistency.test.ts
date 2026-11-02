@@ -176,7 +176,7 @@ describe("the audit catches a deliberate discrepancy", () => {
   const htmlMutations: Record<string, (h: string, x: Assessment) => string> = {
     "swapped scenario columns": (h) => h.replace(/(<tr[^>]*><td[^>]*>NPV<\/td>)<td([^>]*)>([^<]*)<\/td><td([^>]*)>([^<]*)<\/td>/, "$1<td$2>$5</td><td$4>$3</td>"),
     "a verdict label from another case": (h) => h.replace("Possible with conditions", "Strong candidate"),
-    "a changed headline number": (h) => h.replace(/(<div class="num mt-1[^"]*">)([^<]*)<\/div>/, "$1999 t/yr</div>"),
+    "a changed headline number": (h) => h.replace(/(<div data-stat-value=""[^>]*>)([^<]*)<\/div>/, "$1999 t/yr</div>"),
     "a dropped chart point": (h) => h.replace(/(<path d="M[^"]*?)L[-\d.]+ [-\d.]+ L/, "$1L"),
     "a locked teaser in a paid report": (h) => h.replace("</div></div></main>", "") + `<h3>${d.en.result.lockedTitle}</h3>`,
     "a changed tornado value": (h) => {
@@ -208,7 +208,7 @@ describe("the audit catches a deliberate discrepancy", () => {
 
   it("flags a tier that shows another number than the free result", () => {
     const html = { free: renderReport(a, d.en, "en", "free"), standard: renderReport(a, d.en, "en", "standard"), full: renderReport(a, d.en, "en", "full") };
-    const tampered = { ...html, standard: html.standard.replace(/(<div class="num mt-1[^"]*">)[^<]*<\/div>/, "$17 777 t/yr</div>") };
+    const tampered = { ...html, standard: html.standard.replace(/(<div data-stat-value=""[^>]*>)[^<]*<\/div>/, "$17 777 t/yr</div>") };
     expect(auditTiers(a, tampered, { d: d.en, locale: "en" }).length).toBeGreaterThan(0);
   });
 
