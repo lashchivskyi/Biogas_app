@@ -20,4 +20,6 @@ Go through each lens briefly; report only findings that change a decision, with 
    leaks; payment and report-token flows unchanged unless intended; production config safe.
 8. **CEO** — is this the highest-value use of effort now; what to stop; risk to reputation if wrong.
 
+Tie each finding to a `npm run scorecard` item (contract: DECISIONS 2026-11-03) and say which way it moves it.
+
 End with: the 3 most important actions, what was verified (commands run) and what remains unverified.

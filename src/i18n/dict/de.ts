@@ -287,7 +287,7 @@ const de: Translation = {
       dairy_fat_sludge: "Molkerei-Fettschlamm / Flotat (DAF)", brewery_spent_grain: "Biertreber", fruit_veg_residues: "Obst- und Gemüsereste", food_waste: "Getrennt erfasste Speisereste",
       sugar_beet_pulp: "Nasse Rübenschnitzel", grease_trap_fat: "Fettabscheiderinhalte", crop_straw: "Stroh (aufgeschlossen)", vinasse: "Vinasse (Zuckerrohr / Ethanol)", press_mud: "Filterkuchen / Carbokalk",
       pome: "Palmölmühlenabwasser (POME)", municipal_biowaste: "Kommunaler Bioabfall",
-      sugar_beet_pulp_pressed: "Pressschnitzel (siliert)", potato_processing: "Reststoffe der Kartoffelverarbeitung", olive_pomace: "Oliventrester (Zweiphasen)", sewage_sludge: "Klärschlamm (eingedickt)", grain_stillage: "Getreideschlempe", fish_waste: "Reststoffe der Fischverarbeitung", maize_silage: "Maissilage (Energiepflanze)",
+      sugar_beet_pulp_pressed: "Pressschnitzel (siliert)", potato_processing: "Reststoffe der Kartoffelverarbeitung", olive_pomace: "Oliventrester (Zweiphasen)", sewage_sludge: "Klärschlamm (eingedickt)", grain_stillage: "Getreideschlempe", fish_waste: "Reststoffe der Fischverarbeitung", maize_silage: "Maissilage (Energiepflanze)", grass_silage: "Grassilage (inkl. Kleegras)", whole_crop_silage: "Getreide-Ganzpflanzensilage", cereal_grain: "Getreidekorn, geschrotet", sugar_beet: "Zuckerrüben (frisch)",
     },
     animal: {
       dairy_cow: { label: "Milchkühe", unit: "Tiere" }, cattle_other: { label: "Jungvieh / Mastrinder", unit: "Tiere" }, pig_finisher: { label: "Mastschweine", unit: "Plätze" },

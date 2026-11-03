@@ -410,7 +410,9 @@ export function operatorRatioFor(code: string, regionId?: string): Sourced {
     const own = admin ? o.meanHourlyWage[admin] : undefined;
     const wage = own ?? o.meanHourlyWage.US;
     // Operator cost = wage × (ECEC compensation ÷ wages); the economy-wide cost is ECEC compensation, so the ratio is wage ÷ ECEC wages.
-    return { value: +(wage / o.ecec.wagesUsdH).toFixed(4), kind: "CALCULATION", confidence: "MEDIUM", source: `BLS OEWS May ${o.year}, water & wastewater treatment plant operators, ${own ? stateName(admin!) : "U.S."}: mean $${wage}/h ÷ ECEC private-industry wages $${o.ecec.wagesUsdH}/h (${o.ecec.period})`, date: `${o.year}-05-31` };
+    return { value: +(wage / o.ecec.wagesUsdH).toFixed(4), kind: "CALCULATION", confidence: "MEDIUM", source: `BLS OEWS May ${o.year}, water & wastewater treatment plant operators, ${own ? stateName(admin!) : "U.S."}: mean $${wage}/h ÷ ECEC private-industry wages $${o.ecec.wagesUsdH}/h (${o.ecec.period})`, date: `${o.year}-05-31`,
+      // Fetched from the BLS API with each refresh, so the fetch date confirms this is the latest OEWS release.
+      evidence: { checkedOn: S.fetchedOn, period: `May ${o.year}`, observedThrough: `${o.year}-05-31`, urls: ["https://www.bls.gov/oes/"], scope: own ? stateName(admin!) : "U.S.", method: "BLS OEWS mean hourly wage ÷ ECEC private-industry wages" } };
   }
   const base = m?.ratio ?? (S.labour[code] ? 0.7 : 1);
   const r = REGIONAL[code]?.lab, admin = adminFor(code, regionId), f = admin ? r?.factors[admin] : undefined;

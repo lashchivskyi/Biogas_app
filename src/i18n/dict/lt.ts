@@ -287,7 +287,7 @@ const lt: Translation = {
       dairy_fat_sludge: "Pieninės riebalų dumblas", brewery_spent_grain: "Alaus žlaugtai", fruit_veg_residues: "Vaisių ir daržovių atliekos", food_waste: "Atskirai surinktos maisto atliekos",
       sugar_beet_pulp: "Drėgnos runkelių išspaudos", grease_trap_fat: "Riebalų gaudyklių atliekos", crop_straw: "Šiaudai (paruošti)", vinasse: "Vinasas (cukranendrės / etanolis)", press_mud: "Filtravimo nuosėdos",
       pome: "Palmių aliejaus gamybos nuotekos (POME)", municipal_biowaste: "Komunalinės bioatliekos",
-      sugar_beet_pulp_pressed: "Presuotos runkelių išspaudos (silosuotos)", potato_processing: "Bulvių perdirbimo atliekos", olive_pomace: "Alyvuogių išspaudos (dvifazės)", sewage_sludge: "Nuotekų dumblas (sutankintas)", grain_stillage: "Grūdų žlaugtai", fish_waste: "Žuvų perdirbimo atliekos", maize_silage: "Kukurūzų silosas (energetinis augalas)",
+      sugar_beet_pulp_pressed: "Presuotos runkelių išspaudos (silosuotos)", potato_processing: "Bulvių perdirbimo atliekos", olive_pomace: "Alyvuogių išspaudos (dvifazės)", sewage_sludge: "Nuotekų dumblas (sutankintas)", grain_stillage: "Grūdų žlaugtai", fish_waste: "Žuvų perdirbimo atliekos", maize_silage: "Kukurūzų silosas (energetinis augalas)", grass_silage: "Žolės silosas (įskaitant dobilų ir žolių mišinį)", whole_crop_silage: "Viso augalo javų silosas", cereal_grain: "Malti javų grūdai", sugar_beet: "Cukriniai runkeliai (švieži)",
     },
     animal: {
       dairy_cow: { label: "Melžiamos karvės", unit: "vnt." }, cattle_other: { label: "Prieauglis / mėsiniai galvijai", unit: "vnt." }, pig_finisher: { label: "Penimos kiaulės", unit: "vietų" },

@@ -1,0 +1,25 @@
+{
+  "description": "Swedish official biogas statistics (SCB/Energimyndigheten; report produced by Energigas Sverige): produced biogas per plant category in GWh at the lower heating value (9.97 kWh/Nm³ CH4, report §5) and substrate input in kt wet weight (Tabell 3, 10, 11). Farm plants (gårdsanläggningar) report both quantities; 98 % of their substrate is manure of unknown species and form (slurry vs solid not split). Plants new in the year report part-year input and output alike.",
+  "source": "Produktion och användning av biogas och rötrester år 2024 (ES 2025), Tabell 3, 10, 11 and the digestate table (farm plants 1 153 kt at 6 % DM)",
+  "url": "https://www.svensktvatten.se/globalassets/dokument/va-statistik-och-rapporter/resultatrapporter/biogas/biogasstatistikrapport_2024_slutversion.pdf",
+  "dataYear": 2024,
+  "retrievedOn": "2026-11-03",
+  "farm": {
+    "plants": 108,
+    "substrateKt": 1188,
+    "manureKt": 1166,
+    "biogasGwhLhv": 200,
+    "digestateKt": 1153,
+    "digestateDmPct": 6,
+    "otherSubstrateKt": {
+      "slaughter": 8,
+      "foodIndustry": 7,
+      "agriResidues": 4,
+      "other": 3
+    }
+  },
+  "coDigestion": {
+    "substrateKt": 1810,
+    "biogasGwhLhv": 1233
+  }
+}

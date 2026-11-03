@@ -287,7 +287,7 @@ const pl: Translation = {
       dairy_fat_sludge: "Osad tłuszczowy / flotat mleczarski", brewery_spent_grain: "Młóto browarniane", fruit_veg_residues: "Odpady owocowo-warzywne", food_waste: "Selektywnie zbierane odpady spożywcze",
       sugar_beet_pulp: "Wysłodki buraczane (mokre)", grease_trap_fat: "Tłuszcz z separatorów", crop_straw: "Słoma (po obróbce wstępnej)", vinasse: "Wywar (trzcina / etanol)", press_mud: "Osad filtracyjny / defekacyjny",
       pome: "Ścieki z olejarni palmowych (POME)", municipal_biowaste: "Komunalne bioodpady",
-      sugar_beet_pulp_pressed: "Wysłodki buraczane prasowane (zakiszone)", potato_processing: "Odpady z przetwórstwa ziemniaków", olive_pomace: "Wytłoki z oliwek (dwufazowe)", sewage_sludge: "Osady ściekowe (zagęszczone)", grain_stillage: "Wywar zbożowy", fish_waste: "Odpady z przetwórstwa ryb", maize_silage: "Kiszonka z kukurydzy (uprawa energetyczna)",
+      sugar_beet_pulp_pressed: "Wysłodki buraczane prasowane (zakiszone)", potato_processing: "Odpady z przetwórstwa ziemniaków", olive_pomace: "Wytłoki z oliwek (dwufazowe)", sewage_sludge: "Osady ściekowe (zagęszczone)", grain_stillage: "Wywar zbożowy", fish_waste: "Odpady z przetwórstwa ryb", maize_silage: "Kiszonka z kukurydzy (uprawa energetyczna)", grass_silage: "Kiszonka z traw (w tym z koniczyną)", whole_crop_silage: "Kiszonka z całych roślin zbożowych", cereal_grain: "Ziarno zbóż, śrutowane", sugar_beet: "Buraki cukrowe (świeże)",
     },
     animal: {
       dairy_cow: { label: "Krowy mleczne", unit: "szt." }, cattle_other: { label: "Młodzież / bydło mięsne", unit: "szt." }, pig_finisher: { label: "Tuczniki", unit: "stanowisk" },

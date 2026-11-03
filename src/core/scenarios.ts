@@ -29,17 +29,17 @@ export interface ScenarioDef {
 
 export const SCENARIOS: Record<ScenarioId, ScenarioDef> = {
   conservative: {
-    id: "conservative", label: "Conservative", yieldBlend: -0.5, processRealisation: 0.85, capexMult: 1.2, opexMult: 1.15,
+    id: "conservative", label: "Conservative", yieldBlend: -0.5, processRealisation: 0.95, capexMult: 1.2, opexMult: 1.15,
     energyPriceMult: 0.85, heatUtilisation: 0.6, chpHours: 7200, leakShare: 0.03, digestateValueFactor: 0.5,
     disposalRealisation: 0.8, feedstockAvailability: 0.9, ensilingLoss: 0.12, biomethanePriceKey: "cons",
   },
   base: {
-    id: "base", label: "Base", yieldBlend: 0, processRealisation: 0.9, capexMult: 1.0, opexMult: 1.0,
+    id: "base", label: "Base", yieldBlend: 0, processRealisation: 1.0, capexMult: 1.0, opexMult: 1.0,
     energyPriceMult: 1.0, heatUtilisation: 0.8, chpHours: 7800, leakShare: 0.015, digestateValueFactor: 0.7,
     disposalRealisation: 0.95, feedstockAvailability: 1.0, ensilingLoss: 0.093, biomethanePriceKey: "base",
   },
   optimistic: {
-    id: "optimistic", label: "Optimistic", yieldBlend: 0.5, processRealisation: 0.95, capexMult: 0.9, opexMult: 0.95,
+    id: "optimistic", label: "Optimistic", yieldBlend: 0.5, processRealisation: 1.0, capexMult: 0.9, opexMult: 0.95,
     energyPriceMult: 1.1, heatUtilisation: 0.95, chpHours: 8200, leakShare: 0.005, digestateValueFactor: 0.85,
     disposalRealisation: 1.0, feedstockAvailability: 1.0, ensilingLoss: 0.08, biomethanePriceKey: "opt",
   },
@@ -58,11 +58,12 @@ export function scenarioProvenance(reviewedOn: string): Provenance[] {
   // Values taken from a publication rather than set by the project team.
   const sourced: Record<string, string> = {
     ensilingLoss: "KTBL, Ernte- und Silomanagement, 2021, Tab. 1: bunker silo DM loss 8 % unavoidable (Köhler et al. 2013), 9.3 % with average and 12 % with poor compaction",
+    processRealisation: "Catalogue yields are KTBL/FNR standard yields, already full-scale values (base 1.0, conservative 0.95). Checked 2026-11-03: FNR Biogas-Messprogramm III, 39 German plants, model ÷ measured methane median 0.87; Swedish farm plants (SCB 2024) 0.86; EPA AgSTAR 79 US digesters median ≈ 1.04",
   };
   for (const id of Object.keys(SCENARIOS) as ScenarioId[]) {
     const s = SCENARIOS[id];
     for (const k of Object.keys(u)) {
-      out.push(prov(`scn.${id}.${k}`, `${s.label}: ${k}`, (s as unknown as Record<string, number>)[k], u[k], "ASSUMPTION", sourced[k] ?? src, sourced[k] ? "MEDIUM" : "LOW", { date: sourced[k] ? "2021-12-31" : reviewedOn }));
+      out.push(prov(`scn.${id}.${k}`, `${s.label}: ${k}`, (s as unknown as Record<string, number>)[k], u[k], "ASSUMPTION", sourced[k] ?? src, sourced[k] ? "MEDIUM" : "LOW", { date: sourced[k] ? (k === "processRealisation" ? "2026-11-03" : "2021-12-31") : reviewedOn }));
     }
   }
   return out;

@@ -60,6 +60,8 @@ Do not copy parameters into Markdown.
   then `--diff <before.json> <after.json>` (all 39 examples × 33 countries).
 - Market data refresh: `python -I scripts/data/fetch_statistics.py --output <tmp.json>` (dry run) or `--write`.
 - Data quality audit: `npx tsx scripts/audit-sources.ts` (LOW, undated, non-official sources).
+- Quality contract: `npm run scorecard` (item / threshold / fact / status; `-- --quick` skips tests, tsc, lint;
+  `-- --web <url>` records Lighthouse + axe of a running `APP_ENV=local next start`). Tie every change to an item.
 
 Say what you ran and what you did not.
 

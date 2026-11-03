@@ -39,7 +39,8 @@ export interface FormState {
   businessType: BusinessTypeId;
   processKind?: "ad" | ProcessKind;
   processFields?: Record<string, string>;
-  projectRole?: ProjectInput["projectRole"];
+  /** Analytics only (`calculator_submit`); the model does not read it. */
+  projectRole?: (typeof BUSINESS_TYPES)[keyof typeof BUSINESS_TYPES]["role"];
   lines: FormLine[];
   elecBillMonthly: string;
   elecKwhYear: string;
@@ -218,7 +219,6 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
     ...(labAnalysisAvailable ? { labAnalysisAvailable } : {}),
     feedstocks: ad ? feedstocks : [],
     ...((f.processKind ?? defaultProcess(f.businessType)) !== "ad" ? { process: processFromForm(f) as ProcessInput } : {}),
-    projectRole: f.projectRole ?? BUSINESS_TYPES[f.businessType].role,
     energy: {
       electricityKwhYear: kwh,
       electricityPriceLocalPerKwh: price,
@@ -270,7 +270,7 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
     numberLocale: locale,
     processKind: i.process?.kind ?? "ad",
     processFields: i.process ? Object.fromEntries(Object.entries(i.process).filter(([k]) => k !== "kind").map(([k,v]) => [k,typeof v === "string" ? v : s(v as number)])) : {},
-    projectRole: i.projectRole ?? BUSINESS_TYPES[i.businessType].role,
+    projectRole: BUSINESS_TYPES[i.businessType].role,
     countryCode: i.countryCode,
     regionId: i.regionId,
     ...(i.city ? { city: i.city } : {}),

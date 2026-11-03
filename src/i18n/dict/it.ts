@@ -287,7 +287,7 @@ const it: Translation = {
       dairy_fat_sludge: "Grassi caseari / fanghi di flottazione (DAF)", brewery_spent_grain: "Trebbie di birra", fruit_veg_residues: "Scarti ortofrutticoli", food_waste: "FORSU / scarti alimentari differenziati",
       sugar_beet_pulp: "Polpe di barbabietola umide", grease_trap_fat: "Grassi da degrassatori", crop_straw: "Paglia (pretrattata)", vinasse: "Borlande (canna / etanolo)", press_mud: "Fanghi di filtrazione / defecazione",
       pome: "Reflui degli oleifici di palma (POME)", municipal_biowaste: "Rifiuti organici urbani",
-      sugar_beet_pulp_pressed: "Polpe di barbabietola surpressate (insilate)", potato_processing: "Scarti della lavorazione delle patate", olive_pomace: "Sansa di oliva (bifasica)", sewage_sludge: "Fanghi di depurazione (ispessiti)", grain_stillage: "Borlande di cereali", fish_waste: "Scarti della lavorazione del pesce", maize_silage: "Insilato di mais (coltura energetica)",
+      sugar_beet_pulp_pressed: "Polpe di barbabietola surpressate (insilate)", potato_processing: "Scarti della lavorazione delle patate", olive_pomace: "Sansa di oliva (bifasica)", sewage_sludge: "Fanghi di depurazione (ispessiti)", grain_stillage: "Borlande di cereali", fish_waste: "Scarti della lavorazione del pesce", maize_silage: "Insilato di mais (coltura energetica)", grass_silage: "Insilato d’erba (incl. trifoglio e graminacee)", whole_crop_silage: "Insilato di cereali a pianta intera", cereal_grain: "Granella di cereali macinata", sugar_beet: "Barbabietola da zucchero (fresca)",
     },
     animal: {
       dairy_cow: { label: "Vacche da latte", unit: "capi" }, cattle_other: { label: "Rimonta / bovini da carne", unit: "capi" }, pig_finisher: { label: "Suini all’ingrasso", unit: "posti" },

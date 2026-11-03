@@ -287,7 +287,7 @@ const sv: Translation = {
       dairy_fat_sludge: "Fettslam från mejeri", brewery_spent_grain: "Drav", fruit_veg_residues: "Frukt- och grönsaksrester", food_waste: "Källsorterat matavfall",
       sugar_beet_pulp: "Blöt betmassa", grease_trap_fat: "Fett från fettavskiljare", crop_straw: "Halm (förbehandlad)", vinasse: "Vinass (sockerrör / etanol)", press_mud: "Filterkaka",
       pome: "Avloppsvatten från palmoljebruk (POME)", municipal_biowaste: "Kommunalt matavfall",
-      sugar_beet_pulp_pressed: "Pressad betmassa (ensilerad)", potato_processing: "Rester från potatisförädling", olive_pomace: "Olivpressrester (tvåfas)", sewage_sludge: "Avloppsslam (förtjockat)", grain_stillage: "Spannmålsdrank", fish_waste: "Rester från fiskförädling", maize_silage: "Majsensilage (energigröda)",
+      sugar_beet_pulp_pressed: "Pressad betmassa (ensilerad)", potato_processing: "Rester från potatisförädling", olive_pomace: "Olivpressrester (tvåfas)", sewage_sludge: "Avloppsslam (förtjockat)", grain_stillage: "Spannmålsdrank", fish_waste: "Rester från fiskförädling", maize_silage: "Majsensilage (energigröda)", grass_silage: "Vallensilage (inkl. klövervall)", whole_crop_silage: "Helsädesensilage", cereal_grain: "Krossad spannmål", sugar_beet: "Sockerbetor (färska)",
     },
     animal: {
       dairy_cow: { label: "Mjölkkor", unit: "djur" }, cattle_other: { label: "Ungdjur / köttdjur", unit: "djur" }, pig_finisher: { label: "Slaktsvin", unit: "platser" },

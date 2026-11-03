@@ -287,7 +287,7 @@ const es: Translation = {
       dairy_fat_sludge: "Lodos grasos lácteos", brewery_spent_grain: "Bagazo de cerveza", fruit_veg_residues: "Restos de frutas y hortalizas", food_waste: "Residuos alimentarios de recogida selectiva",
       sugar_beet_pulp: "Pulpa de remolacha húmeda", grease_trap_fat: "Grasas de separadores", crop_straw: "Paja (pretratada)", vinasse: "Vinaza (caña / etanol)", press_mud: "Cachaza / torta de filtración",
       pome: "Efluentes de extractoras de palma (POME)", municipal_biowaste: "Biorresiduos municipales",
-      sugar_beet_pulp_pressed: "Pulpa de remolacha prensada (ensilada)", potato_processing: "Residuos del procesado de patata", olive_pomace: "Alperujo (orujo de dos fases)", sewage_sludge: "Lodos de depuradora (espesados)", grain_stillage: "Vinaza de cereal", fish_waste: "Residuos del procesado de pescado", maize_silage: "Ensilado de maíz (cultivo energético)",
+      sugar_beet_pulp_pressed: "Pulpa de remolacha prensada (ensilada)", potato_processing: "Residuos del procesado de patata", olive_pomace: "Alperujo (orujo de dos fases)", sewage_sludge: "Lodos de depuradora (espesados)", grain_stillage: "Vinaza de cereal", fish_waste: "Residuos del procesado de pescado", maize_silage: "Ensilado de maíz (cultivo energético)", grass_silage: "Ensilado de hierba (incl. trébol y gramíneas)", whole_crop_silage: "Ensilado de cereal de planta entera", cereal_grain: "Grano de cereal molido", sugar_beet: "Remolacha azucarera (fresca)",
     },
     animal: {
       dairy_cow: { label: "Vacas lecheras", unit: "cabezas" }, cattle_other: { label: "Recría / vacuno de carne", unit: "cabezas" }, pig_finisher: { label: "Cerdos de cebo", unit: "plazas" },

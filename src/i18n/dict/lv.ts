@@ -287,7 +287,7 @@ const lv: Translation = {
       dairy_fat_sludge: "Piena pārstrādes tauku dūņas", brewery_spent_grain: "Alus drabiņas", fruit_veg_residues: "Augļu un dārzeņu atkritumi", food_waste: "Dalīti savākti pārtikas atkritumi",
       sugar_beet_pulp: "Mitrie cukurbiešu rauši", grease_trap_fat: "Tauku uztvērēju atkritumi", crop_straw: "Salmi (pirmapstrādāti)", vinasse: "Vināse (cukurniedres / etanols)", press_mud: "Filtrācijas nogulsnes",
       pome: "Palmu eļļas ražošanas notekūdeņi (POME)", municipal_biowaste: "Sadzīves bioatkritumi",
-      sugar_beet_pulp_pressed: "Presēti cukurbiešu rauši (skābēti)", potato_processing: "Kartupeļu pārstrādes atlikumi", olive_pomace: "Olīvu izspaidas (divfāžu)", sewage_sludge: "Notekūdeņu dūņas (sabiezinātas)", grain_stillage: "Graudu barda", fish_waste: "Zivju pārstrādes atlikumi", maize_silage: "Kukurūzas skābbarība (enerģētiskais kultūraugs)",
+      sugar_beet_pulp_pressed: "Presēti cukurbiešu rauši (skābēti)", potato_processing: "Kartupeļu pārstrādes atlikumi", olive_pomace: "Olīvu izspaidas (divfāžu)", sewage_sludge: "Notekūdeņu dūņas (sabiezinātas)", grain_stillage: "Graudu barda", fish_waste: "Zivju pārstrādes atlikumi", maize_silage: "Kukurūzas skābbarība (enerģētiskais kultūraugs)", grass_silage: "Zāles skābbarība (arī āboliņa un zāles)", whole_crop_silage: "Graudaugu veselu augu skābbarība", cereal_grain: "Malti graudi", sugar_beet: "Cukurbietes (svaigas)",
     },
     animal: {
       dairy_cow: { label: "Slaucamās govis", unit: "gab." }, cattle_other: { label: "Jaunlopi / gaļas liellopi", unit: "gab." }, pig_finisher: { label: "Nobarojamās cūkas", unit: "vietas" },

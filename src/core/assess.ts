@@ -600,7 +600,6 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   // ---- warnings ----
   const warnings = [
     ...new Set([
-      ...(input.assumedSupportEurPerKwh ? [T("Legacy assumed support is excluded from the base assessment.")] : []),
       ...base.feed.warnings,
       ...base.feed.lines.flatMap((l) => l.warnings),
       ...base.design.tech.warnings,

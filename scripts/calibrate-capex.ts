@@ -5,76 +5,14 @@
  * in their stated year; unknown dates/scopes never qualify as current engineering validation.
  * Usage: npx tsx scripts/calibrate-capex.ts [--write] (read-only by default).
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { assess } from "../src/core";
-import type { Assessment, ProjectInput, RouteId } from "../src/core/types";
+import type { RouteId } from "../src/core/types";
 import { getCountry } from "../src/countries";
-import { ENGINEERING_MAP } from "../src/core/engineeringParams";
-
-interface Benchmark {
-  id: string;
-  country: string;
-  route: "chp" | "biomethane";
-  /** kWel for chp, Nm³/h biomethane for biomethane */
-  size: number;
-  capexEur: number;
-  year: number;
-  quality: "project" | "company" | "academic" | "press" | "aggregate";
-  source: string;
-  build: "agri_chp" | "agri_biomethane" | "food_waste_chp";
-  publishedOn?: string;
-  costStatus?: "budget" | "realised";
-  sourceGroup?: string;
-  role?: "fit" | "check";
-  url?: string;
-}
+import { BENCHMARKS, capexMetric, sizeFor, type Benchmark } from "./capex-references";
 
 const DIR = resolve(import.meta.dirname ?? ".", "../src/countries/data");
-const bench = JSON.parse(readFileSync(resolve(DIR, "capex-benchmarks.json"), "utf-8")) as { benchmarks: Benchmark[] };
-
-function input(b: Benchmark, q: number): ProjectInput {
-  const code = b.country;
-  const regionId = getCountry(code).regions[0].id;
-  // Agricultural co-digestion plants in PL, TR, FR, ES are typically built around maize silage (energy crop), not manure alone:
-  // a manure-only plant of this capacity would need >100 000 pig places, which is not a comparable configuration.
-  if (b.build === "agri_chp") {
-    return {
-      countryCode: code, regionId, businessType: "dairy_farm",
-      feedstocks: [{ id: "a", type: "maize_silage", quantity: Math.round(q), delivered: true, distanceKm: 5 }],
-      energy: { electricityKwhYear: 0, heatNeed: "year_round_process", heatKwhYear: 3_000_000, hasGridConnection: true },
-      site: { landHa: 500, gasGridKm: 0.5 },
-    };
-  }
-  if (b.build === "agri_biomethane") {
-    return {
-      countryCode: code, regionId, businessType: "dairy_farm",
-      feedstocks: [{ id: "a", type: "maize_silage", quantity: Math.round(q), delivered: true, distanceKm: 5 }],
-      energy: { electricityKwhYear: 0, heatNeed: "year_round_process", heatKwhYear: 1_000_000, hasGridConnection: true },
-      site: { landHa: 1500, gasGridKm: 1 },
-    };
-  }
-  return {
-    countryCode: code, regionId, businessType: "municipal_biowaste",
-    feedstocks: [{ id: "a", type: "food_waste", quantity: Math.round(q), delivered: true, distanceKm: 15 }],
-    energy: { electricityKwhYear: 0, heatNeed: "year_round_process", heatKwhYear: Math.round(q) * 150, hasGridConnection: true },
-    site: { landHa: 50, gasGridKm: 1 },
-  };
-}
-
-const metric = (a: Assessment, b: Benchmark) => (b.route === "chp" ? a.routesBase.chp.energy.chpKwEl : a.routesBase.biomethane.energy.biomethaneNm3 / ENGINEERING_MAP["eng.chp_design_hours"].value);
-
-/** Bisection on the model's own output: smallest input whose output reaches the target. */
-function sizeFor(b: Benchmark): { q: number; a: Assessment } {
-  const f = (q: number) => assess(input(b, q), getCountry(b.country));
-  let lo = 1, hi = 1000;
-  while (metric(f(hi), b) < b.size && hi < 5e6) { lo = hi; hi *= 2; }
-  for (let i = 0; i < 40 && hi - lo > 1; i++) {
-    const mid = Math.floor((lo + hi) / 2);
-    if (metric(f(mid), b) < b.size) lo = mid; else hi = mid;
-  }
-  return { q: hi, a: f(hi) };
-}
+const bench = { benchmarks: BENCHMARKS };
 
 const strength = (b: Benchmark) => (!b.publishedOn || !b.costStatus || b.year < 2024 ? "weak" : b.costStatus === "budget" ? "budget" : "documented");
 
@@ -84,7 +22,7 @@ for (const b of bench.benchmarks) {
   const c = getCountry(b.country);
   const current = c.params.find((p) => p.id === `econ.capex_factor_${b.route}`)?.value ?? c.params.find((p) => p.id === "econ.capex_factor")!.value;
   const modelAt1 = a.routesBase[b.route as RouteId].capex.totalEur / current;
-  const achieved = metric(a, b);
+  const achieved = capexMetric(a, b);
   rows.push({
     id: b.id, country: b.country, route: b.route, size: b.size, achievedSize: Math.round(achieved), input: Math.round(q),
     capexEur: b.capexEur, modelAt1: Math.round(modelAt1), factor: +(b.capexEur / modelAt1).toFixed(4), strength: strength(b), year: b.year, quality: b.quality, source: b.source,

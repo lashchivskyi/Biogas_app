@@ -287,7 +287,7 @@ const fr: Translation = {
       dairy_fat_sludge: "Boues graisseuses de laiterie", brewery_spent_grain: "Drêches de brasserie", fruit_veg_residues: "Résidus de fruits et légumes", food_waste: "Biodéchets alimentaires triés",
       sugar_beet_pulp: "Pulpes de betterave humides", grease_trap_fat: "Graisses de bacs à graisse", crop_straw: "Paille (prétraitée)", vinasse: "Vinasse (canne / éthanol)", press_mud: "Écumes de sucrerie / gâteau de filtration",
       pome: "Effluents d’huilerie de palme (POME)", municipal_biowaste: "Biodéchets municipaux",
-      sugar_beet_pulp_pressed: "Pulpes de betterave surpressées (ensilées)", potato_processing: "Résidus de transformation de pommes de terre", olive_pomace: "Grignons d’olive biphasiques (alperujo)", sewage_sludge: "Boues d’épuration (épaissies)", grain_stillage: "Vinasses de céréales", fish_waste: "Résidus de transformation du poisson", maize_silage: "Ensilage de maïs (culture énergétique)",
+      sugar_beet_pulp_pressed: "Pulpes de betterave surpressées (ensilées)", potato_processing: "Résidus de transformation de pommes de terre", olive_pomace: "Grignons d’olive biphasiques (alperujo)", sewage_sludge: "Boues d’épuration (épaissies)", grain_stillage: "Vinasses de céréales", fish_waste: "Résidus de transformation du poisson", maize_silage: "Ensilage de maïs (culture énergétique)", grass_silage: "Ensilage d’herbe (y compris trèfle-graminées)", whole_crop_silage: "Ensilage de céréales plante entière", cereal_grain: "Grains de céréales broyés", sugar_beet: "Betterave sucrière (fraîche)",
     },
     animal: {
       dairy_cow: { label: "Vaches laitières", unit: "têtes" }, cattle_other: { label: "Génisses / bovins viande", unit: "têtes" }, pig_finisher: { label: "Porcs à l’engrais", unit: "places" },

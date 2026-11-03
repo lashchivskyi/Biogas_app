@@ -13,6 +13,9 @@ export const POSSIBLE_MAX_PAYBACK_YEARS = 10;
  * The verdict is rule-based and every branch states the evidence that triggered it.
  * It never comes from the composite score alone, and it never counts subsidies.
  */
+/** Longest payback shown as a number; the tiles print "> 25 yr" above it (`lib/format.ts`). */
+export const PAYBACK_SHOWN_MAX_YEARS = 25;
+
 export function decideVerdict(args: {
   base: ScenarioResult;
   cons: ScenarioResult;
@@ -109,9 +112,14 @@ export function decideVerdict(args: {
       : npvBase >= 0
         // Positive but thin: the return only just beats the discount rate and capital comes back after more than 10 years.
         ? T("Base NPV is only marginally positive (€{npvBase}) and simple payback ≈ {pb} exceeds 10 years — too thin a margin for a screening go.", { npvBase: fmt(npvBase), pb: y(pb) })
-        : deep
-          ? T("Simple payback ≈ {pb}; base NPV €{npvBase} (well below zero at the country discount rate).", { pb: y(pb), npvBase: fmt(npvBase) })
-          : T("Simple payback ≈ {pb}; base NPV €{npvBase} (below zero at the country discount rate).", { pb: y(pb), npvBase: fmt(npvBase) }),
+        // Beyond the tiles' cap (`lib/format.ts` shows "> 25 yr") the text quotes the cap, not ≈ 1 400 years.
+        : pb > PAYBACK_SHOWN_MAX_YEARS
+          ? deep
+            ? T("Simple payback > {pb}; base NPV €{npvBase} (well below zero at the country discount rate).", { pb: y(PAYBACK_SHOWN_MAX_YEARS), npvBase: fmt(npvBase) })
+            : T("Simple payback > {pb}; base NPV €{npvBase} (below zero at the country discount rate).", { pb: y(PAYBACK_SHOWN_MAX_YEARS), npvBase: fmt(npvBase) })
+          : deep
+            ? T("Simple payback ≈ {pb}; base NPV €{npvBase} (well below zero at the country discount rate).", { pb: y(pb), npvBase: fmt(npvBase) })
+            : T("Simple payback ≈ {pb}; base NPV €{npvBase} (below zero at the country discount rate).", { pb: y(pb), npvBase: fmt(npvBase) }),
   );
   if (opt.fin.npvEur < 0) reasons.push(T("Even the optimistic case has a negative NPV (€{npvEur}).", { npvEur: fmt(opt.fin.npvEur) }));
   // Break-even values are the paid detail behind the answer (decision 2026-11-02): kept apart from the free advice.

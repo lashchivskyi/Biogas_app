@@ -1,0 +1,69 @@
+{
+  "about": "Measurements scripts/scorecard.ts cannot take itself. Record only what was actually measured, with its date and commit; never an estimate. realityCases: real projects with a documented outcome (study conclusion, operator record or official closure notice; never news alone), entered as the client would have entered them before the outcome was known; outcome 'go' = built and running on its own economics or a study advised building, 'no' = abandoned or closed, or a study advised against; reason 'economics' only when the source says so. web is written by `npm run scorecard -- --web <url>`.",
+  "realityCases": [],
+  "web": {
+    "date": "2026-11-03",
+    "commit": "fbc3e54",
+    "uiDiff": "830f57e543d7",
+    "tool": "Lighthouse 12.8.2, mobile (slow 4G, 4× CPU), simulated and applied (DevTools) throttling, local production build",
+    "pages": {
+      "/en": {
+        "lcpMs": 3519,
+        "cls": 0,
+        "tbtMs": 72,
+        "lcpAppliedMs": 2453,
+        "tbtAppliedMs": 225,
+        "axeSerious": []
+      },
+      "/en/calculator": {
+        "lcpMs": 4264,
+        "cls": 0,
+        "tbtMs": 238,
+        "lcpAppliedMs": 1859,
+        "tbtAppliedMs": 597,
+        "axeSerious": []
+      },
+      "/en/samples/de_nawaro": {
+        "lcpMs": 5124,
+        "cls": 0,
+        "tbtMs": 190,
+        "lcpAppliedMs": 2952,
+        "tbtAppliedMs": 997,
+        "axeSerious": []
+      },
+      "/en/pricing": {
+        "lcpMs": 4128,
+        "cls": 0,
+        "tbtMs": 161,
+        "lcpAppliedMs": 1953,
+        "tbtAppliedMs": 254,
+        "axeSerious": []
+      },
+      "/uk/calculator": {
+        "lcpMs": 6637,
+        "cls": 0,
+        "tbtMs": 238,
+        "lcpAppliedMs": 1855,
+        "tbtAppliedMs": 919,
+        "axeSerious": []
+      }
+    }
+  },
+  "keyboard": {
+    "date": "2026-11-03",
+    "commit": "fbc3e54",
+    "uiDiff": "830f57e543d7",
+    "pass": true,
+    "pages": [
+      "/en",
+      "/en/calculator",
+      "/en/samples/de_nawaro",
+      "/en/pricing",
+      "/uk/calculator"
+    ],
+    "notes": "/en 44 stops; /en/calculator 21 stops; /en/samples/de_nawaro 53 stops; /en/pricing 25 stops; /uk/calculator 22 stops"
+  },
+  "usability": null,
+  "stripeE2e": null,
+  "restoreDrill": null
+}

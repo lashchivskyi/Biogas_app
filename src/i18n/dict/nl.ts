@@ -287,7 +287,7 @@ const nl: Translation = {
       dairy_fat_sludge: "Vetslib / flotatieslib zuivel", brewery_spent_grain: "Bierbostel", fruit_veg_residues: "Groente- en fruitresten", food_waste: "Gescheiden ingezamelde voedselresten",
       sugar_beet_pulp: "Natte bietenpulp", grease_trap_fat: "Vet uit vetafscheiders", crop_straw: "Stro (voorbehandeld)", vinasse: "Vinasse (suikerriet / ethanol)", press_mud: "Filterkoek",
       pome: "Afvalwater palmoliemolen (POME)", municipal_biowaste: "Gemeentelijk gft",
-      sugar_beet_pulp_pressed: "Geperste bietenpulp (ingekuild)", potato_processing: "Reststromen van aardappelverwerking", olive_pomace: "Olijfpulp (tweefasen)", sewage_sludge: "Zuiveringsslib (ingedikt)", grain_stillage: "Graanspoeling", fish_waste: "Reststromen van visverwerking", maize_silage: "Maïskuil (energiegewas)",
+      sugar_beet_pulp_pressed: "Geperste bietenpulp (ingekuild)", potato_processing: "Reststromen van aardappelverwerking", olive_pomace: "Olijfpulp (tweefasen)", sewage_sludge: "Zuiveringsslib (ingedikt)", grain_stillage: "Graanspoeling", fish_waste: "Reststromen van visverwerking", maize_silage: "Maïskuil (energiegewas)", grass_silage: "Graskuil (incl. klavergras)", whole_crop_silage: "Graan-gehele-plantsilage", cereal_grain: "Gemalen graan", sugar_beet: "Suikerbieten (vers)",
     },
     animal: {
       dairy_cow: { label: "Melkkoeien", unit: "dieren" }, cattle_other: { label: "Jongvee / vleesvee", unit: "dieren" }, pig_finisher: { label: "Vleesvarkens", unit: "plaatsen" },

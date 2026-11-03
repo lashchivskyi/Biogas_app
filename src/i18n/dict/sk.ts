@@ -287,7 +287,7 @@ const sk: Translation = {
       dairy_fat_sludge: "Tukový kal / flotát z mliekárne", brewery_spent_grain: "Pivovarské mláto", fruit_veg_residues: "Odpady z ovocia a zeleniny", food_waste: "Oddelene zbieraný kuchynský odpad",
       sugar_beet_pulp: "Mokré repné rezky", grease_trap_fat: "Tuky z lapačov", crop_straw: "Slama (predupravená)", vinasse: "Výpalky (trstina / etanol)", press_mud: "Saturačný / filtračný kal",
       pome: "Odpadové vody z lisovní palmového oleja (POME)", municipal_biowaste: "Komunálny bioodpad",
-      sugar_beet_pulp_pressed: "Lisované repné rezky (silážované)", potato_processing: "Odpady zo spracovania zemiakov", olive_pomace: "Olivové výlisky (dvojfázové)", sewage_sludge: "Čistiarenský kal (zahustený)", grain_stillage: "Obilné výpalky", fish_waste: "Odpady zo spracovania rýb", maize_silage: "Kukuričná siláž (energetická plodina)",
+      sugar_beet_pulp_pressed: "Lisované repné rezky (silážované)", potato_processing: "Odpady zo spracovania zemiakov", olive_pomace: "Olivové výlisky (dvojfázové)", sewage_sludge: "Čistiarenský kal (zahustený)", grain_stillage: "Obilné výpalky", fish_waste: "Odpady zo spracovania rýb", maize_silage: "Kukuričná siláž (energetická plodina)", grass_silage: "Trávna siláž (vrátane ďatelinotrávy)", whole_crop_silage: "Siláž z celých rastlín obilnín", cereal_grain: "Šrotované obilie", sugar_beet: "Cukrová repa (čerstvá)",
     },
     animal: {
       dairy_cow: { label: "Dojnice", unit: "ks" }, cattle_other: { label: "Mladý / mäsový dobytok", unit: "ks" }, pig_finisher: { label: "Výkrm ošípaných", unit: "miest" },

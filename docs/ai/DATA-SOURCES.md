@@ -68,3 +68,42 @@ Spot and export haircut dominate where biomethane is not the best route (RO, GR,
 | Biomethane price | LOW everywhere: no official market series (EU formula 0.8 × gas + 20 €/MWh; national estimates elsewhere) | signed offtake; official green-gas tariffs only as support cases |
 | Export haircut 0.85 | Assumption, one value for 33 markets, swing = spot swing | marketer/balancing fee quotes; baseload CHP likely < 15 % |
 | Grid CO₂ factor | Ember via OWID (secondary; derived from official data); UA 2022 | EEA/IEA/national inventory per country; UA: Ukrenergo/MinEconomy |
+
+## Validation datasets (not market data)
+
+| Data | Source | Refresh |
+|---|---|---|
+| Operating digesters (A1, R1, R1b) | EPA AgSTAR database, `agstar-backtest.json` | yearly with the AgSTAR release |
+| Shut-down digesters with closure reason (D1, D2) | AgSTAR sheet "Shutdown", `agstar-shutdown.json` | same |
+| French biomethane, metered output vs plan per site (R3) | ODRÉ "Production annuelle de biométhane par site", `odre-biomethane.json` (export API, no key) | yearly (published ≈ October) |
+| Swedish farm plants, gas per tonne of substrate (A1s) | SCB/Energimyndigheten via Energigas Sverige, report 2024 Tab. 3/10/11, `se-biogas-statistics.json` (LHV) | yearly (≈ autumn) |
+| US landfills: measured gas collection, engine output (A1l, A1g) | EPA LMOP Landfill and Project Database xlsx, `lmop-landfills.json` (2024-09, data 2022) | yearly (≈ September) |
+| Published plant costs (A2, A3, R2) | `capex-benchmarks.json` + `scripts/capex-references.ts`; press and vendor shown, not counted | when a primary cost appears |
+
+Survey of EU/world validation sources (2026-11-03). Per plant = inputs and output per site (what A1e needs).
+| Source | What it gives | Use |
+|---|---|---|
+| FNR Biogas-Messprogramm III (2021, 61 DE plants, data 2016–18) | per plant (ch. 15 data sheets, separate PDFs BGA 01–61): fed t/a and mix, DM/VS, methane, kWh/t, hours, investment | used (A1e, `bmp3-plants.json`, 53 plants; 39 enterable and plausible) |
+| Marktstammdatenregister / netztransparenz EEG master data | per unit: capacity, commissioning, energy carrier, EEG category (§ 44 manure ≤ 75 kW) | candidate: real hours of small manure plants if annual kWh per unit is published (not confirmed) |
+| ODRÉ (FR) | per site metered injection + "theoretical capacity" | used (R3) |
+| SCB/Energimyndigheten (SE) | per plant category: substrate kt and GWh | used (A1s) |
+| DBFZ Report 50 (12/2023) | DE national: upgrading capacity, biomethane, flex hours | recorded (DECISIONS), not per plant |
+| DCA Normtal (DK), LfL Basisdaten (DE) | manure per animal | not applied: DK ex-storage volume overstates digester size (excreted 28.9 t is the candidate); DE volume only |
+| EBA/GIE European Biomethane Map | plant list (capacity, main substrate) as PDF; EBA database on request | context only; no CSV |
+| IEA Bioenergy Task 37 country reports (10/2024) | national production and plant counts | context only |
+| Energistyrelsen (DK) | plant list last updated 2014; current per-plant input not found | not usable |
+| Swiss BFE / WSL EnviDat "Biogas aus Hofdünger" | farm plants (≈ 110–125) and TJ | candidate aggregate like SE |
+| Ofgem Renewables & CHP Register (GB) | per-station output exists in register reports; register being replaced, no open export found | not usable now |
+| ACER CHEST (EU agency) | 2025 biomethane production cost, TTF, GO prices (DK/NL/DE) | recorded (DECISIONS); compliance value belongs in support cases |
+| EBA Statistical Report 2025, EBA Investment Outlook 7/2026, IEA Outlook for biogas and biomethane 2025 | market size, plant counts, cost ranges | context (PRODUCT.md › EU market) |
+| GSE/CIB (IT), CBS (NL), Eurostat nrg_bal | national totals; per-plant not found | not checked in detail |
+| Next, ranked (2026-11-03) | what it adds | access |
+| KOWR register (PL) | national tonnes per coarse substrate class + biogas | rejected 2026-11-03: classes too coarse to map |
+| 2. Ofgem (GB) | output per AD station → real full-load hours | public file ends 2018 (too old); 2024–25 reports only on request to renewable.enquiry@ofgem.gov.uk |
+| 3. Energistyrelsen Biomasseindberetning (DK) | per plant biomass input + energy | not public: request to ENS |
+| 4. CARB LCFS (US) | pathway table: carbon intensity only; herd and gas only in each application's staff summary, partly projected | not used: no clean per-dairy actuals |
+| 5. CRPA / CIB (IT) | residual methane of 16 plants (realisation check), plant data on request | contact |
+| 6. Styria benchmarking DB (AT), BOKU monitoring 41–78 plants | per plant substrate and output | old (2004–09) |
+| 7. Messprogramm III: 8 sheets in another layout | +8 German plants | skipped: data 2016–18 (the 39 used plants are equally old) |
+| 8. Beta clients: meter readings + weighed feedstock | the only blind, current per-plant set | needs clients |
+

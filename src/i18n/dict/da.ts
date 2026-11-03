@@ -287,7 +287,7 @@ const da: Translation = {
       dairy_fat_sludge: "Fedtslam fra mejeri", brewery_spent_grain: "Mask", fruit_veg_residues: "Frugt- og grøntrester", food_waste: "Kildesorteret madaffald",
       sugar_beet_pulp: "Våd roepulp", grease_trap_fat: "Fedt fra fedtudskillere", crop_straw: "Halm (forbehandlet)", vinasse: "Vinasse (sukkerrør / ethanol)", press_mud: "Filterkage",
       pome: "Spildevand fra palmeoliemøller (POME)", municipal_biowaste: "Kommunalt bioaffald",
-      sugar_beet_pulp_pressed: "Presset roepulp (ensileret)", potato_processing: "Rester fra kartoffelforarbejdning", olive_pomace: "Olivenpresserest (tofaset)", sewage_sludge: "Spildevandsslam (fortykket)", grain_stillage: "Kornbærme", fish_waste: "Rester fra fiskeforarbejdning", maize_silage: "Majsensilage (energiafgrøde)",
+      sugar_beet_pulp_pressed: "Presset roepulp (ensileret)", potato_processing: "Rester fra kartoffelforarbejdning", olive_pomace: "Olivenpresserest (tofaset)", sewage_sludge: "Spildevandsslam (fortykket)", grain_stillage: "Kornbærme", fish_waste: "Rester fra fiskeforarbejdning", maize_silage: "Majsensilage (energiafgrøde)", grass_silage: "Græsensilage (inkl. kløvergræs)", whole_crop_silage: "Helsædsensilage af korn", cereal_grain: "Valset korn", sugar_beet: "Sukkerroer (friske)",
     },
     animal: {
       dairy_cow: { label: "Malkekøer", unit: "dyr" }, cattle_other: { label: "Opdræt / kødkvæg", unit: "dyr" }, pig_finisher: { label: "Slagtesvin", unit: "stipladser" },

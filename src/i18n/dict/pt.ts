@@ -287,7 +287,7 @@ const pt: Translation = {
       dairy_fat_sludge: "Lodo de gordura de laticínio", brewery_spent_grain: "Bagaço de malte", fruit_veg_residues: "Resíduos de frutas e hortaliças", food_waste: "Restos de alimentos de coleta seletiva",
       sugar_beet_pulp: "Polpa úmida de beterraba", grease_trap_fat: "Gordura de caixa de gordura", crop_straw: "Palha (pré-tratada)", vinasse: "Vinhaça (cana / etanol)", press_mud: "Torta de filtro",
       pome: "Efluente de extratora de palma (POME)", municipal_biowaste: "Resíduos orgânicos urbanos",
-      sugar_beet_pulp_pressed: "Polpa de beterraba prensada (ensilada)", potato_processing: "Resíduos do processamento de batata", olive_pomace: "Bagaço de azeitona (duas fases)", sewage_sludge: "Lodo de esgoto (adensado)", grain_stillage: "Vinhaça de cereais", fish_waste: "Resíduos do processamento de peixe", maize_silage: "Silagem de milho (cultura energética)",
+      sugar_beet_pulp_pressed: "Polpa de beterraba prensada (ensilada)", potato_processing: "Resíduos do processamento de batata", olive_pomace: "Bagaço de azeitona (duas fases)", sewage_sludge: "Lodo de esgoto (adensado)", grain_stillage: "Vinhaça de cereais", fish_waste: "Resíduos do processamento de peixe", maize_silage: "Silagem de milho (cultura energética)", grass_silage: "Silagem de capim (incl. trevo e gramíneas)", whole_crop_silage: "Silagem de cereal de planta inteira", cereal_grain: "Grão de cereal moído", sugar_beet: "Beterraba açucareira (fresca)",
     },
     animal: {
       dairy_cow: { label: "Vacas leiteiras", unit: "cabeças" }, cattle_other: { label: "Recria / gado de corte", unit: "cabeças" }, pig_finisher: { label: "Suínos em terminação", unit: "vagas" },

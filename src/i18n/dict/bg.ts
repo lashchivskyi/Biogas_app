@@ -287,7 +287,7 @@ const bg: Translation = {
       dairy_fat_sludge: "Мазна утайка / флотат от мандра", brewery_spent_grain: "Пивна дробина", fruit_veg_residues: "Отпадъци от плодове и зеленчуци", food_waste: "Разделно събрани хранителни отпадъци",
       sugar_beet_pulp: "Мокър цвеклов жом", grease_trap_fat: "Мазнини от мазниноуловители", crop_straw: "Слама (предварително обработена)", vinasse: "Винаса (тръстика / етанол)", press_mud: "Филтърна утайка",
       pome: "Отпадъчни води от палмово масло (POME)", municipal_biowaste: "Битови биоотпадъци",
-      sugar_beet_pulp_pressed: "Пресован цвеклов жом (силажиран)", potato_processing: "Отпадъци от преработка на картофи", olive_pomace: "Маслинова джибра (двуфазна)", sewage_sludge: "Утайки от отпадъчни води (сгъстени)", grain_stillage: "Зърнена барда", fish_waste: "Отпадъци от преработка на риба", maize_silage: "Царевичен силаж (енергийна култура)",
+      sugar_beet_pulp_pressed: "Пресован цвеклов жом (силажиран)", potato_processing: "Отпадъци от преработка на картофи", olive_pomace: "Маслинова джибра (двуфазна)", sewage_sludge: "Утайки от отпадъчни води (сгъстени)", grain_stillage: "Зърнена барда", fish_waste: "Отпадъци от преработка на риба", maize_silage: "Царевичен силаж (енергийна култура)", grass_silage: "Тревен силаж (вкл. детелина и треви)", whole_crop_silage: "Силаж от цели растения зърнени", cereal_grain: "Смляно зърно", sugar_beet: "Захарно цвекло (прясно)",
     },
     animal: {
       dairy_cow: { label: "Млечни крави", unit: "глави" }, cattle_other: { label: "Млади / месодайни говеда", unit: "глави" }, pig_finisher: { label: "Угоявани прасета", unit: "места" },

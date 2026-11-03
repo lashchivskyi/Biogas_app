@@ -77,7 +77,6 @@ describe("advisor", () => {
     if (firstQuiet >= 0) expect(ad.levers.slice(firstQuiet).every((l) => !l.improves)).toBe(true);
     for (const l of ad.levers) {
       // Levers change the client's own project, never prices, yields, CAPEX or support.
-      expect(l.input.assumedSupportEurPerKwh).toBeUndefined();
       expect(l.input.finance?.capexQuoteLocal).toBe(a.input.finance?.capexQuoteLocal);
       expect(l.input.energy.electricityPriceLocalPerKwh).toBe(a.input.energy.electricityPriceLocalPerKwh);
       if (l.id === "heat") expect(l.settings.heatKwh!).toBeLessThanOrEqual(ad.context.heatMaxKwh);

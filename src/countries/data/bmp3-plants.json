@@ -1,0 +1,2019 @@
+{
+ "description": "FNR Biogas-Messprogramm III (2021): per-plant data sheets (Tabelle 15-x, Datenblatt) of German agricultural plants, measuring phase 2016–2018: fed substrate per year (fresh mass, as fed, i.e. after silage-clamp losses) and its mass shares, mixture DM and VS, gas composition, mean methane yield of the mix (derived by the programme from metered electricity and the CHP electrical efficiency), electricity per tonne, full-load hours, total investment. Extracted from the published PDFs with pdftotext -raw; 53 of 61 sheets parsed (BGA 30, 32, 54–56, 58–60 have another layout). Volunteer plants: likely better run than average.",
+ "source": "FNR, Biogas-Messprogramm III – Faktoren für einen effizienten Betrieb von Biogasanlagen, 2021, ch. 15 Anlagenbeschreibung",
+ "url": "https://biogas.fnr.de/biogasmessprogramm-iii/03_inhalte.html",
+ "retrievedOn": "2026-11-03",
+ "rows": [
+  {
+   "id": "BGA 01",
+   "kwEl": 800,
+   "commissioned": "11.2007",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 13488,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 82
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 2.2
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 9
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 6.4
+    },
+    {
+     "name": "Gerste-Getreidekorn",
+     "pctFm": 0.5
+    }
+   ],
+   "mixDmPct": 33.2,
+   "mixVsPctOfDm": 96.6,
+   "ch4Pct": 50.6,
+   "ch4M3PerTFm": 127,
+   "ch4M3PerTVs": 412,
+   "kwhElPerTFm": 480,
+   "fullLoadHours": 8171,
+   "investEur": 2967428,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 02",
+   "kwEl": 800,
+   "commissioned": "11.2007",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 12206,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 81.8
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 9.8
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 6
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 1.9
+    },
+    {
+     "name": "Gerste-Getreidekorn",
+     "pctFm": 0.5
+    }
+   ],
+   "mixDmPct": 33.2,
+   "mixVsPctOfDm": 96.6,
+   "ch4Pct": 52.1,
+   "ch4M3PerTFm": 126,
+   "ch4M3PerTVs": 410,
+   "kwhElPerTFm": 480,
+   "fullLoadHours": 7325,
+   "investEur": 3203080,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 03",
+   "kwEl": 400,
+   "commissioned": "11.2009",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 14095,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 9.4
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 22
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 51.4
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 0.3
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 0.2
+    },
+    {
+     "name": "Triticale-Ganzpflanzensilage",
+     "pctFm": 10.9
+    },
+    {
+     "name": "Gerste-Ganzpflanzensilage",
+     "pctFm": 5.9
+    }
+   ],
+   "mixDmPct": 19.6,
+   "mixVsPctOfDm": 91.4,
+   "ch4Pct": 52,
+   "ch4M3PerTFm": 61,
+   "ch4M3PerTVs": 354,
+   "kwhElPerTFm": 236,
+   "fullLoadHours": 8633,
+   "investEur": 1367937,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 04",
+   "kwEl": 590,
+   "commissioned": "05.2011",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 21629,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 5.8
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 33.1
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 55.9
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 1.7
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 2.4
+    }
+   ],
+   "mixDmPct": 19.1,
+   "mixVsPctOfDm": 91.9,
+   "ch4Pct": 51.5,
+   "ch4M3PerTFm": 63,
+   "ch4M3PerTVs": 371,
+   "kwhElPerTFm": 227,
+   "fullLoadHours": 8737,
+   "investEur": 2337400,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 05",
+   "kwEl": 430,
+   "commissioned": "12.2001",
+   "period": "11.2016 - 10.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 10257,
+   "feed": [
+    {
+     "name": "Corn-Cob-Mix",
+     "pctFm": 1.2
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 47.4
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 40.3
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 5.5
+    },
+    {
+     "name": "Gärrest fester Anteil",
+     "pctFm": 0.7
+    }
+   ],
+   "mixDmPct": 21.2,
+   "mixVsPctOfDm": 93.7,
+   "ch4Pct": 60.3,
+   "ch4M3PerTFm": 68,
+   "ch4M3PerTVs": 356,
+   "kwhElPerTFm": 290,
+   "fullLoadHours": 8425,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 06",
+   "kwEl": 2770,
+   "commissioned": "10.2007",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 34203,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 6.7
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 70.1
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 14
+    },
+    {
+     "name": "Mix Gras- und Grünroggensilage",
+     "pctFm": 9
+    }
+   ],
+   "mixDmPct": 32.8,
+   "mixVsPctOfDm": 95.7,
+   "ch4Pct": 52.1,
+   "ch4M3PerTFm": 124,
+   "ch4M3PerTVs": 414,
+   "kwhElPerTFm": 460,
+   "fullLoadHours": 4778,
+   "investEur": 7812878,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 07",
+   "kwEl": 265,
+   "commissioned": "12.2007",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 21460,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 1.7
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 6.3
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 44
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 16.9
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 1
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 3.8
+    }
+   ],
+   "mixDmPct": 21.9,
+   "mixVsPctOfDm": 91.2,
+   "ch4Pct": 47.9,
+   "ch4M3PerTFm": 60,
+   "ch4M3PerTVs": 311,
+   "kwhElPerTFm": 94,
+   "fullLoadHours": 7739,
+   "investEur": 2251035,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 08",
+   "kwEl": 504,
+   "commissioned": "12.2011",
+   "period": "11.2016 - 10.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 11597,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 65.1
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 32.5
+    },
+    {
+     "name": "Eisenpräparate",
+     "pctFm": 2.3
+    }
+   ],
+   "mixDmPct": 28.2,
+   "mixVsPctOfDm": 94.9,
+   "ch4Pct": 52.4,
+   "ch4M3PerTFm": 101,
+   "ch4M3PerTVs": 391,
+   "kwhElPerTFm": 354,
+   "fullLoadHours": null,
+   "investEur": 3520949,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 09",
+   "kwEl": 562,
+   "commissioned": "06.2007",
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 19830,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 57.5
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 28.4
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 4.6
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 4.3
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1.9
+    },
+    {
+     "name": "Wasser (Stallspühlwasser)",
+     "pctFm": 2.8
+    }
+   ],
+   "mixDmPct": 17.9,
+   "mixVsPctOfDm": 77.7,
+   "ch4Pct": 52.7,
+   "ch4M3PerTFm": 63,
+   "ch4M3PerTVs": 453,
+   "kwhElPerTFm": 226,
+   "fullLoadHours": 7961,
+   "investEur": 1917482,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 10",
+   "kwEl": 600,
+   "commissioned": "12.2011",
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 18164,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 52.9
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 40.9
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 3.5
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1.6
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 1.1
+    }
+   ],
+   "mixDmPct": 24,
+   "mixVsPctOfDm": 86.2,
+   "ch4Pct": 52,
+   "ch4M3PerTFm": 76,
+   "ch4M3PerTVs": 368,
+   "kwhElPerTFm": 275,
+   "fullLoadHours": 8331,
+   "investEur": 2527373,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 11",
+   "kwEl": 537,
+   "commissioned": "12.2006",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 8872,
+   "feed": [
+    {
+     "name": "Maissilage",
+     "pctFm": 77.5
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 13.9
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 8.4
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 0.3
+    }
+   ],
+   "mixDmPct": 38.7,
+   "mixVsPctOfDm": 93.5,
+   "ch4Pct": 54.3,
+   "ch4M3PerTFm": 121,
+   "ch4M3PerTVs": 336,
+   "kwhElPerTFm": 475,
+   "fullLoadHours": 7852,
+   "investEur": 2215000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 12",
+   "kwEl": 537,
+   "commissioned": "09.2007",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 10423,
+   "feed": [
+    {
+     "name": "Maissilage",
+     "pctFm": 56.5
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 14.2
+    },
+    {
+     "name": "Putenmist",
+     "pctFm": 13.7
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 10.3
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 5.1
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 0.3
+    }
+   ],
+   "mixDmPct": 40.9,
+   "mixVsPctOfDm": 88.6,
+   "ch4Pct": 52.7,
+   "ch4M3PerTFm": 114,
+   "ch4M3PerTVs": 316,
+   "kwhElPerTFm": 418,
+   "fullLoadHours": 8118,
+   "investEur": 2220000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 13",
+   "kwEl": 590,
+   "commissioned": "04.2008",
+   "period": "10.2016 - 09.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 23158,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 73
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 22
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 4
+    },
+    {
+     "name": "Weizenkleie",
+     "pctFm": 1
+    }
+   ],
+   "mixDmPct": null,
+   "mixVsPctOfDm": null,
+   "ch4Pct": 50.7,
+   "ch4M3PerTFm": 58,
+   "ch4M3PerTVs": 349,
+   "kwhElPerTFm": 211,
+   "fullLoadHours": 8113,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 14",
+   "kwEl": 549,
+   "commissioned": "11.2003",
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 28847,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 70.7
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 13.5
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 6.6
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 4.8
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1.6
+    },
+    {
+     "name": "Kartoffeln",
+     "pctFm": 1.5
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 1.3
+    }
+   ],
+   "mixDmPct": 17.6,
+   "mixVsPctOfDm": 89.5,
+   "ch4Pct": 57.5,
+   "ch4M3PerTFm": 43,
+   "ch4M3PerTVs": 275,
+   "kwhElPerTFm": 161,
+   "fullLoadHours": 8486,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 15",
+   "kwEl": 265,
+   "commissioned": "12.2011",
+   "period": "11.2016 - 10.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 6762,
+   "feed": [
+    {
+     "name": "Maissilage",
+     "pctFm": 38
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 31
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 18.8
+    },
+    {
+     "name": "Schweinemist",
+     "pctFm": 8
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 3
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 1
+    }
+   ],
+   "mixDmPct": null,
+   "mixVsPctOfDm": null,
+   "ch4Pct": 50.8,
+   "ch4M3PerTFm": 63,
+   "ch4M3PerTVs": 289,
+   "kwhElPerTFm": 217,
+   "fullLoadHours": 7641,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 16",
+   "kwEl": 740,
+   "commissioned": "07.2014",
+   "period": "12.2016 - 11.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 36795,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 55.3
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 20.3
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 19.3
+    },
+    {
+     "name": "Milchzuckermelasse",
+     "pctFm": 5.1
+    }
+   ],
+   "mixDmPct": 17.6,
+   "mixVsPctOfDm": 83.9,
+   "ch4Pct": 51.8,
+   "ch4M3PerTFm": 46,
+   "ch4M3PerTVs": 315,
+   "kwhElPerTFm": 170,
+   "fullLoadHours": 8665,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 17",
+   "kwEl": 575,
+   "commissioned": "01.2010",
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 8884,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 7.1
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 29.6
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 29.5
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 5.1
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 6
+    },
+    {
+     "name": "Grünroggensilage",
+     "pctFm": 4.9
+    }
+   ],
+   "mixDmPct": 32.6,
+   "mixVsPctOfDm": 89.6,
+   "ch4Pct": null,
+   "ch4M3PerTFm": null,
+   "ch4M3PerTVs": null,
+   "kwhElPerTFm": 397,
+   "fullLoadHours": 6171,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 18",
+   "kwEl": 1550,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 21479,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 42.9
+    },
+    {
+     "name": "Putenmist",
+     "pctFm": 6.7
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 32.8
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 12.1
+    },
+    {
+     "name": "Weizenkleie",
+     "pctFm": 5.5
+    }
+   ],
+   "mixDmPct": 29.1,
+   "mixVsPctOfDm": 86.5,
+   "ch4Pct": 50.6,
+   "ch4M3PerTFm": 105,
+   "ch4M3PerTVs": 417,
+   "kwhElPerTFm": 398,
+   "fullLoadHours": 4914,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 19",
+   "kwEl": 750,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 19503,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 5.6
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 23.6
+    },
+    {
+     "name": "Pferdemist",
+     "pctFm": 4.9
+    },
+    {
+     "name": "Weizen Getreide und Getreidekorn",
+     "pctFm": 0.7
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 43.9
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 10.2
+    },
+    {
+     "name": "Mischung Roggen und Gerste-Ganzpflanzensilage",
+     "pctFm": 11.4
+    }
+   ],
+   "mixDmPct": 23.2,
+   "mixVsPctOfDm": 90,
+   "ch4Pct": 52.9,
+   "ch4M3PerTFm": 70,
+   "ch4M3PerTVs": 337,
+   "kwhElPerTFm": 85,
+   "fullLoadHours": 1242,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 20",
+   "kwEl": 1000,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 11151,
+   "feed": [
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 2.3
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 28.6
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 45.5
+    },
+    {
+     "name": "Triticale-Ganzpflanzensilage",
+     "pctFm": 22.9
+    },
+    {
+     "name": "Zuckerrübe",
+     "pctFm": 4
+    },
+    {
+     "name": "Feuchtmais",
+     "pctFm": 1
+    }
+   ],
+   "mixDmPct": 34.3,
+   "mixVsPctOfDm": 98.8,
+   "ch4Pct": 52.8,
+   "ch4M3PerTFm": 127,
+   "ch4M3PerTVs": 375,
+   "kwhElPerTFm": 510,
+   "fullLoadHours": null,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 21",
+   "kwEl": 1405,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 20627,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 3.6
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 18.3
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 28.2
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 29.8
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 13.6
+    },
+    {
+     "name": "Grünroggensilage",
+     "pctFm": 2.7
+    }
+   ],
+   "mixDmPct": 25.5,
+   "mixVsPctOfDm": 93.1,
+   "ch4Pct": 53,
+   "ch4M3PerTFm": 134,
+   "ch4M3PerTVs": 563,
+   "kwhElPerTFm": 522,
+   "fullLoadHours": null,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 22",
+   "kwEl": 380,
+   "commissioned": "10.2007",
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 7751,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 22.3
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 9.4
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 37.7
+    },
+    {
+     "name": "Weizen Getreide und Getreidekorn",
+     "pctFm": 4.9
+    },
+    {
+     "name": "Triticale-Ganzpflanzensilage",
+     "pctFm": 20.6
+    },
+    {
+     "name": "Zuckerhirse",
+     "pctFm": 5.4
+    }
+   ],
+   "mixDmPct": 36.2,
+   "mixVsPctOfDm": 89.2,
+   "ch4Pct": 51.2,
+   "ch4M3PerTFm": 101,
+   "ch4M3PerTVs": 312,
+   "kwhElPerTFm": 357,
+   "fullLoadHours": 7510,
+   "investEur": 1739000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 23",
+   "kwEl": 2584,
+   "commissioned": "12.2006",
+   "period": "10.2016 - 9.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 55618,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 36.3
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 27.8
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 6.9
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 1
+    },
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 1
+    },
+    {
+     "name": "Anwelksilage",
+     "pctFm": 0.3
+    }
+   ],
+   "mixDmPct": 24.4,
+   "mixVsPctOfDm": 91.5,
+   "ch4Pct": 51.6,
+   "ch4M3PerTFm": 46,
+   "ch4M3PerTVs": 208,
+   "kwhElPerTFm": 392,
+   "fullLoadHours": 5758,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 24",
+   "kwEl": 355,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 6508,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 22.8
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 16.5
+    },
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 4.7
+    },
+    {
+     "name": "Grünroggen-Ganzpflanzensilage",
+     "pctFm": 3.4
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 33
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 8.9
+    },
+    {
+     "name": "Pferdemist",
+     "pctFm": 10.7
+    }
+   ],
+   "mixDmPct": 28.7,
+   "mixVsPctOfDm": 89.4,
+   "ch4Pct": 51.4,
+   "ch4M3PerTFm": 71,
+   "ch4M3PerTVs": 277,
+   "kwhElPerTFm": 279,
+   "fullLoadHours": 5113,
+   "investEur": 1803866,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 25",
+   "kwEl": 750,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 11901,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 29.7
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 69.7
+    },
+    {
+     "name": "Triticale-Ganzpflanzensilage",
+     "pctFm": 0.5
+    },
+    {
+     "name": "Wasser",
+     "pctFm": 3.6
+    }
+   ],
+   "mixDmPct": 35.4,
+   "mixVsPctOfDm": 95.3,
+   "ch4Pct": 51.8,
+   "ch4M3PerTFm": 138,
+   "ch4M3PerTVs": 410,
+   "kwhElPerTFm": 534,
+   "fullLoadHours": 8401,
+   "investEur": 1469000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 26",
+   "kwEl": 800,
+   "commissioned": "06.2005",
+   "period": "09.2016 bis 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 11320,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 1.6
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 4.2
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 76
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 2.3
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 12.8
+    },
+    {
+     "name": "Maiskornsilage",
+     "pctFm": 3.1
+    }
+   ],
+   "mixDmPct": 42.3,
+   "mixVsPctOfDm": 96,
+   "ch4Pct": 50.5,
+   "ch4M3PerTFm": 157,
+   "ch4M3PerTVs": 386,
+   "kwhElPerTFm": 556,
+   "fullLoadHours": 7722,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 27",
+   "kwEl": 240,
+   "period": "08.2016 - 07.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 4668,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 16.7
+    },
+    {
+     "name": "Putenmist",
+     "pctFm": 10.5
+    },
+    {
+     "name": "Kleegrassilage",
+     "pctFm": 72.8
+    }
+   ],
+   "mixDmPct": 36.4,
+   "mixVsPctOfDm": 90,
+   "ch4Pct": 51.7,
+   "ch4M3PerTFm": 86,
+   "ch4M3PerTVs": 263,
+   "kwhElPerTFm": 393,
+   "fullLoadHours": 7628,
+   "investEur": 1290000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 28",
+   "kwEl": 440,
+   "commissioned": "12.2008",
+   "period": "08.2016 - 07.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 9322,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 5.1
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 33
+    },
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 3
+    },
+    {
+     "name": "Kleegrassilage",
+     "pctFm": 58.9
+    }
+   ],
+   "mixDmPct": 28.3,
+   "mixVsPctOfDm": 89.3,
+   "ch4Pct": 54.1,
+   "ch4M3PerTFm": 95,
+   "ch4M3PerTVs": 374,
+   "kwhElPerTFm": 335,
+   "fullLoadHours": 7510,
+   "investEur": 2494000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 29",
+   "kwEl": 250,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "nein",
+   "feedTonnesYear": 7284,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 30.1
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 63.2
+    },
+    {
+     "name": "Tricitale-Ganzpflanzensilage",
+     "pctFm": 1.6
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 5
+    }
+   ],
+   "mixDmPct": 19.2,
+   "mixVsPctOfDm": 82.6,
+   "ch4Pct": 49.5,
+   "ch4M3PerTFm": 67,
+   "ch4M3PerTVs": 424,
+   "kwhElPerTFm": 272,
+   "fullLoadHours": 7960,
+   "investEur": 1075700,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 31",
+   "kwEl": 795,
+   "period": "09.2016 - 08.2017",
+   "flexPremium": "ja",
+   "feedTonnesYear": 6388,
+   "feed": [
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 15.7
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 19
+    },
+    {
+     "name": "Maiskornsilage",
+     "pctFm": 7.4
+    },
+    {
+     "name": "Kleegrassilage",
+     "pctFm": 57.9
+    }
+   ],
+   "mixDmPct": 41.1,
+   "mixVsPctOfDm": 87,
+   "ch4Pct": 52.3,
+   "ch4M3PerTFm": 109,
+   "ch4M3PerTVs": 305,
+   "kwhElPerTFm": 446,
+   "fullLoadHours": 6132,
+   "investEur": 1573000,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 33",
+   "kwEl": 400,
+   "commissioned": "08.2010",
+   "period": "09.2017 - 08.2018, vollständiger Datensatz nur im Zeitraum 10.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 11753,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 9.3
+    },
+    {
+     "name": "Silosickersaft",
+     "pctFm": 42.6
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 41.5
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 0.1
+    },
+    {
+     "name": "Roggen-Getreidekorn",
+     "pctFm": 1.8
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 1.9
+    },
+    {
+     "name": "Sonstiges",
+     "pctFm": 2.8
+    }
+   ],
+   "mixDmPct": 22.1,
+   "mixVsPctOfDm": 94,
+   "ch4Pct": 52.9,
+   "ch4M3PerTFm": 77,
+   "ch4M3PerTVs": 384,
+   "kwhElPerTFm": 277,
+   "fullLoadHours": 8598,
+   "investEur": 1658036,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 34",
+   "kwEl": 75,
+   "commissioned": "12.2013",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 6148,
+   "feed": [
+    {
+     "name": "Futterreste",
+     "pctFm": 6.7
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 80.2
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 12.2
+    },
+    {
+     "name": "Maiskornsilage",
+     "pctFm": 0.9
+    }
+   ],
+   "mixDmPct": 15,
+   "mixVsPctOfDm": 81.7,
+   "ch4Pct": 51.4,
+   "ch4M3PerTFm": 19,
+   "ch4M3PerTVs": 153,
+   "kwhElPerTFm": 90,
+   "fullLoadHours": 7508,
+   "investEur": 732033,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 35",
+   "kwEl": 0,
+   "commissioned": "12.2014",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 39746,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 23.1
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 35.2
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 20.9
+    },
+    {
+     "name": "Zuckerrüben",
+     "pctFm": 20.2
+    },
+    {
+     "name": "Sonstiges",
+     "pctFm": 0.5
+    }
+   ],
+   "mixDmPct": 29.5,
+   "mixVsPctOfDm": 93.4,
+   "ch4Pct": 53.3,
+   "ch4M3PerTFm": 114,
+   "ch4M3PerTVs": 441,
+   "kwhElPerTFm": null,
+   "fullLoadHours": null,
+   "investEur": 10719584,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 36",
+   "kwEl": 697,
+   "commissioned": "07.2007",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "ja",
+   "feedTonnesYear": 11305,
+   "feed": [
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 10.4
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 64.8
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 3.2
+    },
+    {
+     "name": "Rindergülle fester Anteil",
+     "pctFm": 21.6
+    }
+   ],
+   "mixDmPct": 31.8,
+   "mixVsPctOfDm": 93.3,
+   "ch4Pct": 52.5,
+   "ch4M3PerTFm": 118,
+   "ch4M3PerTVs": 407,
+   "kwhElPerTFm": 399,
+   "fullLoadHours": 7700,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 37",
+   "kwEl": 1768,
+   "commissioned": "12.2007",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 31766,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 7.4
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 78.1
+    },
+    {
+     "name": "Roggenschrot",
+     "pctFm": 12.4
+    },
+    {
+     "name": "Roggenschrot",
+     "pctFm": 2.1
+    }
+   ],
+   "mixDmPct": 33.9,
+   "mixVsPctOfDm": 96,
+   "ch4Pct": 52.5,
+   "ch4M3PerTFm": 129,
+   "ch4M3PerTVs": 416,
+   "kwhElPerTFm": 470,
+   "fullLoadHours": 8463,
+   "investEur": 5533029,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 38",
+   "kwEl": 973,
+   "commissioned": "12.2007",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "ja",
+   "feedTonnesYear": 17334,
+   "feed": [
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 99.7
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 0.3
+    }
+   ],
+   "mixDmPct": 33.4,
+   "mixVsPctOfDm": 96.8,
+   "ch4Pct": 53.2,
+   "ch4M3PerTFm": 128,
+   "ch4M3PerTVs": 412,
+   "kwhElPerTFm": 476,
+   "fullLoadHours": 7058,
+   "investEur": 3401882,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 39",
+   "kwEl": 600,
+   "commissioned": "12.2011",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 14910,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 0.6
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 10.8
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 44.8
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 22
+    },
+    {
+     "name": "Triticale-Ganzpflanzensilage",
+     "pctFm": 21.7
+    }
+   ],
+   "mixDmPct": 26.9,
+   "mixVsPctOfDm": 91.7,
+   "ch4Pct": 52.2,
+   "ch4M3PerTFm": 89,
+   "ch4M3PerTVs": 375,
+   "kwhElPerTFm": 293,
+   "fullLoadHours": 8588,
+   "investEur": 3670926,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 40",
+   "kwEl": 540,
+   "commissioned": "08.2007",
+   "period": "10.2017 - 09.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 23597,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 67.9
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 19.8
+    },
+    {
+     "name": "Futterreste",
+     "pctFm": 5.8
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 5.4
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1
+    }
+   ],
+   "mixDmPct": 15.9,
+   "mixVsPctOfDm": 84.5,
+   "ch4Pct": 52.1,
+   "ch4M3PerTFm": 52,
+   "ch4M3PerTVs": 387,
+   "kwhElPerTFm": 188,
+   "fullLoadHours": 8131,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 41",
+   "kwEl": 1175,
+   "commissioned": "12.2009",
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 26299,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 22.7
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 22.7
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 52.9
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1.8
+    }
+   ],
+   "mixDmPct": 23.2,
+   "mixVsPctOfDm": 94.8,
+   "ch4Pct": 57.6,
+   "ch4M3PerTFm": 78,
+   "ch4M3PerTVs": 356,
+   "kwhElPerTFm": 280,
+   "fullLoadHours": 4963,
+   "investEur": 5102854,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 42",
+   "kwEl": 537,
+   "commissioned": "11.2007",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 34409,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 84.9
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 13
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 1.8
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 0.1
+    },
+    {
+     "name": "Grünhafersilage",
+     "pctFm": 0.2
+    }
+   ],
+   "mixDmPct": 11.2,
+   "mixVsPctOfDm": 81.2,
+   "ch4Pct": 52.2,
+   "ch4M3PerTFm": 35,
+   "ch4M3PerTVs": 380,
+   "kwhElPerTFm": 130,
+   "fullLoadHours": 8354,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 43",
+   "kwEl": 590,
+   "commissioned": "04.2008",
+   "period": "10.2017 - 09.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 23949,
+   "feed": [
+    {
+     "name": "Rindergülle",
+     "pctFm": 76
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 1.7
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 17.9
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 3.8
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 0.6
+    }
+   ],
+   "mixDmPct": null,
+   "mixVsPctOfDm": null,
+   "ch4Pct": 49.8,
+   "ch4M3PerTFm": 47,
+   "ch4M3PerTVs": 290,
+   "kwhElPerTFm": 190,
+   "fullLoadHours": 7581,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 44",
+   "kwEl": 540,
+   "commissioned": "12.2009",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 14656,
+   "feed": [
+    {
+     "name": "Schweinegülle",
+     "pctFm": 38.5
+    },
+    {
+     "name": "Maissilage",
+     "pctFm": 44.8
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 10.5
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 3.3
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 1.5
+    },
+    {
+     "name": "Getreideschrot",
+     "pctFm": 1
+    },
+    {
+     "name": "Pferdemist",
+     "pctFm": 0.4
+    }
+   ],
+   "mixDmPct": 23.3,
+   "mixVsPctOfDm": 76.3,
+   "ch4Pct": 51.9,
+   "ch4M3PerTFm": 71,
+   "ch4M3PerTVs": 402,
+   "kwhElPerTFm": 269,
+   "fullLoadHours": 6874,
+   "investEur": 1425444,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 45",
+   "kwEl": 0,
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 47159,
+   "feed": [
+    {
+     "name": "Maissilage",
+     "pctFm": 69.6
+    },
+    {
+     "name": "Roggen GPS",
+     "pctFm": 18.1
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 12.3
+    }
+   ],
+   "mixDmPct": 31.9,
+   "mixVsPctOfDm": 93.3,
+   "ch4Pct": 51.3,
+   "ch4M3PerTFm": 109,
+   "ch4M3PerTVs": 366,
+   "kwhElPerTFm": null,
+   "fullLoadHours": null,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 46",
+   "kwEl": 75,
+   "commissioned": "11.2016",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 10996,
+   "feed": [
+    {
+     "name": "Rindermist",
+     "pctFm": 0.6
+    }
+   ],
+   "mixDmPct": 6.8,
+   "mixVsPctOfDm": 80,
+   "ch4Pct": 51.5,
+   "ch4M3PerTFm": 16,
+   "ch4M3PerTVs": 299,
+   "kwhElPerTFm": 59,
+   "fullLoadHours": 8683,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 47",
+   "kwEl": 637,
+   "commissioned": "11.2011",
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 17701,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 2.8
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 53.6
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 42
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 1.8
+    },
+    {
+     "name": "Schafmist",
+     "pctFm": 7.7
+    }
+   ],
+   "mixDmPct": 24.9,
+   "mixVsPctOfDm": 89.5,
+   "ch4Pct": 51,
+   "ch4M3PerTFm": 83,
+   "ch4M3PerTVs": 373,
+   "kwhElPerTFm": 314,
+   "fullLoadHours": 8551,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 48",
+   "kwEl": 250,
+   "commissioned": "12.2011",
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 7902,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 47.3
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 46.4
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 6.5
+    }
+   ],
+   "mixDmPct": 18.7,
+   "mixVsPctOfDm": 86,
+   "ch4Pct": 53.2,
+   "ch4M3PerTFm": 59,
+   "ch4M3PerTVs": 367,
+   "kwhElPerTFm": 221,
+   "fullLoadHours": 6971,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 49",
+   "kwEl": 75,
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 4253,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 14
+    },
+    {
+     "name": "Hühnertrockenkot",
+     "pctFm": 9.7
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 5.1
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 71.5
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 6.4
+    }
+   ],
+   "mixDmPct": 17.8,
+   "mixVsPctOfDm": 78.1,
+   "ch4Pct": null,
+   "ch4M3PerTFm": 45,
+   "ch4M3PerTVs": 326,
+   "kwhElPerTFm": 148,
+   "fullLoadHours": 8763,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 50",
+   "kwEl": 75,
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 6180,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 7.8
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 0.7
+    },
+    {
+     "name": "Pferdemist",
+     "pctFm": 25
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 64.7
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 1.7
+    },
+    {
+     "name": "Sonstiges",
+     "pctFm": 0.4
+    }
+   ],
+   "mixDmPct": 18.7,
+   "mixVsPctOfDm": 81.3,
+   "ch4Pct": 54.7,
+   "ch4M3PerTFm": 30,
+   "ch4M3PerTVs": 196,
+   "kwhElPerTFm": 103,
+   "fullLoadHours": 8526,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 51",
+   "kwEl": 1100,
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 12277,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 16.2
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 49.1
+    },
+    {
+     "name": "Rindermist",
+     "pctFm": 34.9
+    }
+   ],
+   "mixDmPct": 31.3,
+   "mixVsPctOfDm": 90.3,
+   "ch4Pct": 51.3,
+   "ch4M3PerTFm": 88,
+   "ch4M3PerTVs": 313,
+   "kwhElPerTFm": 363,
+   "fullLoadHours": 3920,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 52",
+   "kwEl": 1650,
+   "period": "09.2017 - 08.2018",
+   "flexPremium": "ja",
+   "feedTonnesYear": 19339,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 35.9
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 36.4
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 27.9
+    }
+   ],
+   "mixDmPct": 26.1,
+   "mixVsPctOfDm": 87.1,
+   "ch4Pct": 51.5,
+   "ch4M3PerTFm": 78,
+   "ch4M3PerTVs": 342,
+   "kwhElPerTFm": 304,
+   "fullLoadHours": 4198,
+   "investEur": null,
+   "economicYear": null
+  },
+  {
+   "id": "BGA 53",
+   "kwEl": 0,
+   "period": "11.2017 - 10.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 44765,
+   "feed": [
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 5.7
+    },
+    {
+     "name": "Grassilage",
+     "pctFm": 25.6
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 46.1
+    },
+    {
+     "name": "Roggen-Ganzpflanzensilage",
+     "pctFm": 19.9
+    },
+    {
+     "name": "Zuckerrübe",
+     "pctFm": 2.9
+    }
+   ],
+   "mixDmPct": 35.5,
+   "mixVsPctOfDm": 93.1,
+   "ch4Pct": 52.8,
+   "ch4M3PerTFm": 128,
+   "ch4M3PerTVs": 388,
+   "kwhElPerTFm": null,
+   "fullLoadHours": null,
+   "investEur": 3778864,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 57",
+   "kwEl": 75,
+   "commissioned": "01.2016",
+   "period": "08.2017 - 07.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 5554,
+   "feed": [
+    {
+     "name": "Rindermist",
+     "pctFm": 40.9
+    },
+    {
+     "name": "Schweinegülle",
+     "pctFm": 41
+    },
+    {
+     "name": "Getreide und Getreidekorn",
+     "pctFm": 1.2
+    },
+    {
+     "name": "Kleegras",
+     "pctFm": 17.2
+    }
+   ],
+   "mixDmPct": 20.4,
+   "mixVsPctOfDm": 81,
+   "ch4Pct": 55.3,
+   "ch4M3PerTFm": 34,
+   "ch4M3PerTVs": 209,
+   "kwhElPerTFm": 117,
+   "fullLoadHours": 8650,
+   "investEur": 550823,
+   "economicYear": 2017
+  },
+  {
+   "id": "BGA 61",
+   "kwEl": 100,
+   "period": "10.2017 - 09.2018",
+   "flexPremium": "nein",
+   "feedTonnesYear": 35914,
+   "feed": [
+    {
+     "name": "Grassilage",
+     "pctFm": 14.3
+    },
+    {
+     "name": "Mais-Ganzpflanzensilage",
+     "pctFm": 57.1
+    },
+    {
+     "name": "Rindergülle",
+     "pctFm": 5.1
+    },
+    {
+     "name": "Grünroggensilage",
+     "pctFm": 23.8
+    }
+   ],
+   "mixDmPct": 34.7,
+   "mixVsPctOfDm": 93.8,
+   "ch4Pct": 52.5,
+   "ch4M3PerTFm": 136,
+   "ch4M3PerTVs": 418,
+   "kwhElPerTFm": null,
+   "fullLoadHours": null,
+   "investEur": 5430171,
+   "economicYear": 2017
+  }
+ ]
+}

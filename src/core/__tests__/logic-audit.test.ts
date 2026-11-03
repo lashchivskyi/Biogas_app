@@ -177,3 +177,14 @@ describe("data quality: every client deduction can be closed in the form (audit 
     expect(warns({ dryMatterPct: 27, vsPctOfDm: 70, methaneYieldLPerKgVs: 220 })).not.toContain("low confidence");
   });
 });
+
+describe("verdict text and tiles agree (defect found by the scorecard 2026-11-03)", () => {
+  // th_pome in KZ has a simple payback of ≈ 1 420 years: the tiles show "> 25 yr", the text printed "≈ 1,420.6 yrs".
+  it("verdict text never quotes a simple payback beyond the 25-year cap the tiles use", () => {
+    const kz = getCountry("KZ");
+    const a = assess({ ...example("th_pome"), countryCode: "KZ", regionId: kz.regions[0].id, city: undefined }, kz, { uncertainty: false });
+    expect(a.scenarios.base.fin.simplePaybackYears!).toBeGreaterThan(25);
+    const quoted = a.verdict.reasons.flatMap((r) => [...r.matchAll(/payback [≈>] ([\d,.]+)/g)].map((m) => Number(m[1].replace(/,/g, ""))));
+    expect(quoted).toEqual([25]);
+  });
+});

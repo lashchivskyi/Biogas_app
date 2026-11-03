@@ -76,6 +76,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Fixed header is h-16 (4rem): focus and anchor jumps stop below it (WCAG 2.4.11 focus not obscured). */
+  scroll-padding-top: 5rem;
 }
 
 body {

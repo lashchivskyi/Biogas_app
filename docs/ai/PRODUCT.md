@@ -9,7 +9,29 @@ of work), and what to verify first.** A quality product therefore means three th
 3. it gives the client a concrete next step (what to check, whom to ask, what would change the answer).
 
 Everything else (model, UI, pricing) serves this. Product decisions start from the client's decision,
-not from the model; "ready" is measured against this mission, never asserted.
+not from the model; "ready" is measured against this mission, never asserted: `npm run scorecard` measures the
+quality contract (items, thresholds and reasons in DECISIONS 2026-11-03; starting state in STATUS).
+
+## Decision frames by segment (2026-11-03)
+
+| Segment | Decision | Alternative | What convinces | False "yes" costs | False "no" costs | After the report |
+|---|---|---|---|---|---|---|
+| Dairy farm | build an on-farm digester (CHP / heat / biomethane); pay for a study | keep or cover the slurry store; deliver manure to a neighbour's or central plant; pool with neighbours [F] | collected manure, own power/heat use, a heat buyer, payback vs the farm's own target [A §7.2], operator hours, grants; AgSTAR screens from ≥ 500 milking cows unless co-substrates, odour or grants help [A §7.1] | the study (free scoping … > $100 k [A §7.0]); if built, farm debt on a plant that does not pay: poor planning is "the root cause for many failed" US digesters [A §7.0] | lost energy savings and methane cut; the neighbours' cluster forms without them | lab DM/VS/BMP, metered manure, ask neighbours (FNR step 8: more substrate or an operator group, then re-run [F]), utility/grid enquiry, grant check |
+| Pig farm | same; often a covered store vs nothing | open store or lagoon; cover + flare for odour; deliver to a central plant; co-digest | scale and dilution decide: AgSTAR's floor is 2 000 finishing places, "most projects not viable until > 10 000" [A §7.1]; thin slurry (KTBL standard yields [K]) gives little gas per m³; a co-substrate with a gate fee | as dairy, plus a plant sized on head count while the collected slurry is thinner than assumed | missed co-digestion income; odour/ammonia pressure unsolved | measure slurry DM and collected volume; list co-substrates within ~15 km with gate fees |
+| Food / drink processor | digest residues or wastewater on site, or keep paying disposal; often a vendor's build-own-operate offer | today's disposal (gate fee, sewer surcharge, feed sale); a third-party AD plant; aerobic treatment | avoided disposal €/t, year-round streams, process heat use, short payback (industrial hurdle), ABP/food-safety separation; "are you paying for disposal?" is AgSTAR's first economic question [A §7.1]; AD is the treatment of choice for food waste [I-FW] | capital and management time in a non-core asset; production risk | keep paying rising disposal; a Scope 1/2 lever lost | waste audit by month (mass, DM or COD), BMP tests, gate-fee and vendor quotes |
+| Developer | which sites get development money (feedstock contracts, land, grid/gas request, permits) | other sites or countries in the pipeline; sell the project | the same method across sites and countries, feedstock in the radius, offtake price, connection distance, permit risk; 37 investors/developers plan €36 bn and > 1 200 plants in five years [E] → many sites to triage | development spend on a site that dies; studies, permits and licences add 10–15 % to the contractor's price [I-SS] | a good site taken by a competitor | feedstock letters of intent, grid/gas operator request, land option, full study for the top sites |
+| Municipality / wastewater | digest sludge or biowaste (or upgrade) vs alternatives; procure a study | aerobic stabilisation, sludge incineration or export, composting, flaring landfill gas | compliance: plants ≥ 10 000 p.e. need energy audits and energy neutrality by 2045 (Directive (EU) 2024/3019); electricity autonomy 37 % below 10 000 PE, 68–100 % above 100 000 PE, upgrading worth assessing above 100 Nm³/h [I-WW]; life-cycle cost vs the alternative | public money and a procurement cycle; political cost | missed 2045 target and higher operating cost | energy audit, project in the investment plan, study tender written from the report, funding application |
+| Investor / bank | does a developer's project deserve due diligence or a term sheet | other deals; decline | independent, dated numbers with a downside case, DSCR, NPV drivers and provenance; the bankable prospectus is the feasibility study's job [A §7.3], ours is a pre-tax screening | due-diligence fees; credit risk if a screening is read as bankable | a missed deal | ask the developer for the study, an independent engineer and a bank model; use "what to verify first" as the question list |
+
+Sources: [A] EPA AgSTAR Project Development Handbook, 3rd ed., EPA 430-B-20-001, April 2020; [F] FNR Guide to Biogas,
+5th ed. 2010 (French ed. 2013), ch. 11 Project realisation; [K] KTBL Faustzahlen Biogas, 3rd ed. 2013 and KTBL
+Wirtschaftlichkeitsrechner (Preisstand 2025); [I-SS] IEA Bioenergy Task 37, Exploring the viability of small scale
+anaerobic digesters in livestock farming, 2015; [I-WW] Task 37, Sustainable biogas production in municipal wastewater
+treatment plants, 2015; [I-FW] Task 37, Food waste digestion, 2018; [E] EBA, 4th Biomethane Investment Outlook, July 2026.
+What follows for the product: a false "yes" is the costly error in five of six segments (study, then a failing plant), so
+STRONG must be rare on weak evidence (contract D1). Every "after" step is a measurement or a request, which is what
+"what to verify first" and the request letters deliver. Gaps by segment: developers need cross-site comparison (roadmap 8),
+banks an after-tax pack (roadmap 4), municipalities energy-neutrality accounting (not modelled).
 
 ## Who it is for
 
@@ -60,6 +82,27 @@ as a separate case. Market data per country and, where official data exist, per 
 - Inputs the client does not yet control (export price, operator wage, heat price, financing
   terms, vendor quotes) would improve accuracy enough to justify a longer form.
 - Regional (admin1) market data matter enough beyond US, CA, BR, IN, MX, IT.
+
+## EU market and validation evidence (2026-11-03; sources in DATA-SOURCES › validation)
+
+- Size: Europe produced 22 bcm biogas + biomethane in 2024 (19 bcm EU-27), biomethane 5.2 bcm from 1 620 plants averaging 483 m³/h, ≈ 4×
+  a CHP plant (EBA Statistical Report 2025). Pipeline: 37 investors/developers plan €36 bn and > 1 200 plants in five years (EBA, 7/2026).
+- Price signal (ACER 2025): biomethane costs ≈ 61 €/MWh to make; manure biomethane with its certificate sold at ≈ 103 €/MWh, waste-based at
+  ≈ 61, gas (TTF) at ≈ 38. Our EU price fits waste biomethane; manure biomethane is undervalued unless its compliance value is modelled.
+- Validation by segment (2026-11-03; gas output, not money). Two-level accuracy: (1) no systematic bias per segment beyond ±15 %,
+  (2) the single-project range shown honestly and narrowed by the client's measurements.
+  | Segment | Evidence (open, dated) | Model ÷ real | Status |
+  |---|---|---|---|
+  | EU farms: manure + energy crops | Messprogramm III, 39 DE plants (2016–18, metered); SE 108 farm plants (2024) | 0.87 (p10–p90 0.73–0.95); 0.86 | confirmed, ≈ 13 % conservative |
+  | US dairy | AgSTAR 79 digesters (self-reported, half nameplate) | median 1.05, scatter 0.5–2.7 | bias confirmed; per plant not checkable |
+  | Biomethane farm plants FR | ODRÉ 547 sites 2025 (metered, no inputs) | 88 % inside the model spread | spread confirmed, level not |
+  | Food/drink residues (stillage, fruit/veg, food waste, whey) | catalogue vs FNR/KTBL standard yields (3 fixed 2026-11-03) | — | values match primary sources; no real-plant check (no open plant-level data) |
+  | Landfill gas | EPA LMOP 828 sites, 2022 measured collection | method 1.05; with AP-42 defaults 1.90; engines 0.80 | method confirmed; defaults too optimistic |
+  | Wastewater, sewage sludge | no current open per-plant data | — | not validated |
+  | Existing gas → power | LMOP 284 engine projects | 0.80 of datasheet efficiency | model too optimistic |
+  | Other countries (UA, TR, BR, IN, MX, …) | none per plant | — | physics shared, not validated |
+  Residue catalogue aligned to FNR/KTBL 2026-11-03 (stillage, brewer's grain, beet pulp); slaughter, fats, fish, POME have no open primary value.
+- Grass silage, whole-crop cereal silage, grain and fresh beet added to the catalogue (2026-11-03); 8 of 53 measured plants still feed others.
 
 ## Market position (competitor benchmark 2026-10-31; re-check yearly)
 

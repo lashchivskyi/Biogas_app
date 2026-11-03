@@ -287,7 +287,7 @@ const uk: Translation = {
       dairy_fat_sludge: "Жировий флотат молокозаводу", brewery_spent_grain: "Пивна дробина", fruit_veg_residues: "Відходи овочів і фруктів", food_waste: "Роздільно зібрані харчові відходи",
       sugar_beet_pulp: "Сирий буряковий жом", grease_trap_fat: "Жир із жироуловлювачів", crop_straw: "Солома (попередньо оброблена)", vinasse: "Барда (тростина / етанол)", press_mud: "Фільтраційний осад (дефекат)",
       pome: "Стоки олійних заводів (POME)", municipal_biowaste: "Муніципальні біовідходи",
-      sugar_beet_pulp_pressed: "Пресований буряковий жом (силосований)", potato_processing: "Відходи переробки картоплі", olive_pomace: "Оливкові вичавки (двофазні)", sewage_sludge: "Осад стічних вод (згущений)", grain_stillage: "Зернова барда", fish_waste: "Відходи переробки риби", maize_silage: "Кукурудзяний силос (енергетична культура)",
+      sugar_beet_pulp_pressed: "Пресований буряковий жом (силосований)", potato_processing: "Відходи переробки картоплі", olive_pomace: "Оливкові вичавки (двофазні)", sewage_sludge: "Осад стічних вод (згущений)", grain_stillage: "Зернова барда", fish_waste: "Відходи переробки риби", maize_silage: "Кукурудзяний силос (енергетична культура)", grass_silage: "Травосилос (зокрема конюшинно-злаковий)", whole_crop_silage: "Силос цілих рослин зернових", cereal_grain: "Зерно зернових, подрібнене", sugar_beet: "Цукровий буряк (свіжий)",
     },
     animal: {
       dairy_cow: { label: "Дійні корови", unit: "гол." }, cattle_other: { label: "Молодняк / м’ясна ВРХ", unit: "гол." }, pig_finisher: { label: "Свині на відгодівлі", unit: "місць" },

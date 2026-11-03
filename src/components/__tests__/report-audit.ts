@@ -4,6 +4,7 @@ import { assess, buildParams, SAFETY_DISCLAIMER } from "@/core";
 import type { Assessment, RouteId, ScenarioId, ScenarioResult } from "@/core";
 import { QUALITY_START } from "@/core";
 import { npv as npvOf } from "@/core/finance";
+import { PAYBACK_SHOWN_MAX_YEARS } from "@/core/verdict";
 import { fmtInt, locText } from "@/core/i18n";
 import { getCountry } from "@/countries";
 import { fmt as f, type Dict, type Locale } from "@/i18n";
@@ -261,10 +262,13 @@ export function auditVerdictText(a: Assessment): Finding[] {
     sign(/^Base NPV positive|^Base NPV is only marginally positive|^Базовий NPV додатний|^NPV базового сценарію лише ледь додатний/, base.fin.npvEur, "base", true);
     sign(/^Conservative-case NPV is negative|^У консервативному сценарії NPV від'ємний/, cons.fin.npvEur, "conservative", false);
     sign(/^Even the optimistic case has a negative NPV|^Навіть оптимістичний сценарій має від'ємний NPV/, opt.fin.npvEur, "optimistic", false);
-    for (const m of t.matchAll(/(\d+[.,]\d)\s*(?:yr|р\.)/g)) {
-      const shown = m[1].replace(",", ".");
-      const options = [base, cons].map((s) => s.fin.simplePaybackYears).filter((x): x is number => x !== null).map((x) => x.toFixed(1));
-      if (!options.includes(shown)) out.push({ where: "verdict text", message: `“${t}” quotes a payback of ${shown} years; the model has ${options.join(" / ")}` });
+    for (const m of t.matchAll(/(>\s*)?(\d+[.,]\d)\s*(?:yr|р\.)/g)) {
+      const shown = m[2].replace(",", ".");
+      const paybacks = [base, cons].map((s) => s.fin.simplePaybackYears).filter((x): x is number => x !== null);
+      // "> 25.0 yr" quotes the tiles' cap (`PAYBACK_SHOWN_MAX_YEARS`) for a longer payback.
+      if (m[1] && shown === PAYBACK_SHOWN_MAX_YEARS.toFixed(1) && paybacks.some((x) => x > PAYBACK_SHOWN_MAX_YEARS)) continue;
+      const options = paybacks.map((x) => x.toFixed(1));
+      if (m[1] || !options.includes(shown)) out.push({ where: "verdict text", message: `“${t}” quotes a payback of ${shown} years; the model has ${options.join(" / ")}` });
     }
     for (const m of t.matchAll(/(?:DSCR[^\d]*|мін\.\s*)(\d+[.,]\d{2})/g)) {
       if (base.fin.dscrMin === null || m[1].replace(",", ".") !== base.fin.dscrMin.toFixed(2)) out.push({ where: "verdict text", message: `“${t}” quotes DSCR ${m[1]}; the model has ${base.fin.dscrMin}` });

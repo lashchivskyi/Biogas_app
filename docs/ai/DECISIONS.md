@@ -71,7 +71,7 @@ replace the line rather than adding a contradicting one.
 - 2026-10-31 — Supplier-quote position uses the model's own optimistic/conservative CAPEX for the same route as
   the band; no new judgement constant. The 2.5× unit-slip warning stays separate.
 
-- 2026-10-31 — Yield realisation stays a fixed scenario factor (0.85/0.90/0.95): no authoritative per-substrate
+- 2026-10-31 (values replaced 2026-11-03: 0.95/1.00/1.00, see below) — Yield realisation stays a fixed scenario factor: no authoritative per-substrate
   kinetic constants were found (first-order k values vary by test method); an HRT model would move every verdict
   without better evidence. Scale is answered by the plant-size table instead.
 - 2026-10-31 — National manure per head lives in country profiles (`manure`); US dairy uses NRCS AWMFH ch. 4 /
@@ -263,3 +263,130 @@ replace the line rather than adding a contradicting one.
   €1–5 M ×1.5, > €5 M ×2.5) — the flat per-project price is the real mismatch, not the level; (2) Standard = decision report (answer,
   action plan, checks, Excel), Extended = investor pack (routes × scenarios, stress tests, support schemes) at ≈ 1.5× Standard instead
   of 1.2×, without cutting Standard (declined 2026-11-01); (3) a discounted re-run of the same project after new evidence.
+
+## 2026-11-03 — Quality contract (`npm run scorecard`, thresholds in `scripts/scorecard.ts`)
+- Structure: the nine ISO/IEC 25010:2023 characteristics (functional suitability, performance efficiency, compatibility,
+  interaction capability, reliability, security, maintainability, flexibility, safety) plus decision accuracy. Status: GREEN met on
+  valid evidence, AMBER met only on a proxy / small n / stale evidence, RED missed, GREY not measured (counts as not met). Facts are
+  measured by the script or read from `scripts/scorecard-evidence.json` (date + commit, measured values only). A threshold changes only
+  with new evidence, never to turn a row green; a reference never leaves a set because the model misses it.
+- Decision. D1: 0 STRONG on projects closed for economic reasons, green from n ≥ 10 — a false "go" costs the study and at worst a failing
+  plant (AgSTAR 2020 §7.0: poor planning is the root cause of many failed digesters; decision frames in PRODUCT). D2: verdict class
+  (STRONG/POSSIBLE = go, WEAK/NOT = no, INSUFFICIENT = miss) agrees with the documented outcome in ≥ 80 %, n ≥ 8 (= beta launch gate).
+  Cases enter `realityCases` only with a documented outcome (study, operator, official record) and the input known before it. Operating
+  AgSTAR digesters are shown, not counted: their support and profitability are unknown.
+- Accuracy. A1 gas/energy within ±25 % of real plants in ≥ 80 %: AgSTAR 2020 §7.2 puts pre-feasibility at "±25 percent or greater".
+  Today's set = AgSTAR electricity (self-reported, downtime included); metered sets join as they come. A2 CAPEX ±30 % in ≥ 70 % (stretch:
+  near AACE class 4) and A3 within AACE RP 18R-97 class 5 (actual −50 % … +100 % of the estimate) in ≥ 95 % (honest floor for a screening;
+  FNR 2005 survey spread 1 010–6 411 €/kWe, IEA Task 37 2015 Table 9). Ratio = model ÷ published (midpoint of a range). Counted:
+  official, project, company, academic, aggregate sources; press and vendor figures shown, not counted (source policy above).
+- Range honesty. R1/R2: the real value lies inside the conservative–optimistic band in 70–90 % (target ≈ 80 %, the P10–P90 reading
+  clients give it; 100 % = band too wide to inform), green from n ≥ 20.
+- Integrity. I1 balances close; I2 0 contradictions over 39 examples × 33 countries (`auditModel`; unordered scenarios count: a client
+  reads "optimistic" as better); I3 report = model; I4 0 duplicate ids; I5 0 dead input fields (static: read by `src/core`, filled by
+  `src/lib/form.ts`); I6 support never moves the base verdict; I7 0 market values undated or > 400 days old (annual statistics + lag).
+- Performance: Core Web Vitals "good" at p75 (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1). Before launch: Lighthouse mobile lab, 5 key pages,
+  worst page counts (`--web`); INP has no lab metric, so TBT is a proxy and AMBER at best until field data. Browser evidence is stale once
+  any rendered file changed after its commit.
+- Interaction: U1 task success ≥ 90 % and U2 median ≤ 5 min to the first verdict (the "verdict in minutes" promise) in moderated
+  sessions, n ≥ 5 per round; U3 WCAG 2.2 AA = axe 0 serious/critical AND a recorded keyboard pass (axe checks only machine-checkable
+  criteria); U4 0 hard l10n errors = the `qa-known.ts` ratchet at 0.
+- Security S1: OWASP ASVS L1 for the site, L2 for checkout, webhooks and report tokens (money and a bearer link to paid content);
+  needs a checklist run, the 2026-11-01 code review is not one. Compatibility C1: Stripe test-mode end to end (checkout → webhook →
+  email → report); unit tests mock Stripe. Reliability: fault-tolerance tests + restore drill. Maintainability: 0 failing tests, type
+  errors, lint errors. Flexibility: every example runs in every country; all locales and catalogs complete. Safety: hazard register on
+  every case; INSUFFICIENT_DATA never sold.
+- 2026-11-03 (scorecard round 2; model results unchanged: compare-scenarios 0 of 1 287 verdicts, 0 NPV moved).
+  Real outcomes: `src/countries/data/agstar-shutdown.json` = EPA AgSTAR "Shutdown" sheet, farm-scale, one animal, no co-digestion, with a
+  recorded "Reason for Closure" (38; 10 economic: cost, payback, buyback price, bankruptcy). Run at today's prices. D1 = 0 STRONG of 10;
+  D2 stays AMBER until documented "go" cases exist (operating digesters are not "go": support and profit unknown).
+  AgSTAR electricity: 38 of 79 rows are exact multiples of 8 760 h (nameplate × full year, not readings); without them accuracy is still
+  34 %, so the scatter is not only reporting. The scenario band (input uncertainty) is NOT widened: no primary source splits the scatter
+  into downtime vs reporting, and widening would move verdicts on judgement. The report's existing "reality check" (p10–p90 of model ÷
+  reported) is the real-plant range; contract R1b tests it leave-one-out (78 %); R1 stays as a diagnostic.
+  CAPEX references: news-sourced figures are `press` whatever the direction of the miss (ES Calahorra 0.67, GB Coleshill 0.86); the LWK
+  75 kW cases were rebuilt at 75 kW (580 cows; 750 gave 110 kW) and the "new storage" case with existingStorage 0. No recalibration:
+  the only primary maize-CHP anchor (BMWK/IEE/DBFZ 2024 Tab. 4-1) reads 1.15; TR (academic, unit doubt), IT (sector aggregate of
+  2008–12 plants), RO (2015 nominal) do not state scope (silage clamp, storage, grid). New-storage LWK reads 1.75: storage cost open.
+  Unordered scenarios (54): all are plants with negative EBITDA in base and optimistic, where the optimistic volumes lose more. Tried and
+  reverted: purchases at base price (54 → 53) and swapping the stress sets by NPV (breaks CAPEX order). Needs a scenario redesign.
+  Payback: text above 25 years says "> 25 yr" like the tiles (`PAYBACK_SHOWN_MAX_YEARS`; new key in 24 catalogs); the audit had caught 1
+  of 54 such cases (comma thousands). Dead fields removed: `projectRole` (analytics only, stays in form state), `assumedSupportEurPerKwh`.
+  I7: a value > 400 days old is stale unless `evidence.checkedOn` ≤ 400 days confirms it is the latest period (CA Hydro-Québec 2025, VN
+  EVN 10 May 2025, US OEWS May 2025 checked 2026-11-03: no newer release). Still stale: UA grid factor (Ember/OWID 2022), BR/IN CAPEX factors.
+  Web: Lighthouse runs simulated and applied throttling (P1 green needs both); keyboard self-check `scripts/keyboard-check.ts`; ASVS 4.0.3
+  self-assessment `scripts/asvs-checklist.json` (fails: admin login throttling 2.2.1, token in URL 3.1.1, admin MFA 4.3.1). All three
+  are self-assessments, labelled so on the scorecard. `html { scroll-padding-top: 5rem }` fixed focus under the fixed header (2.4.11).
+- 2026-11-03 — Owner: unreliable or old CAPEX references are deleted, not shown as noise. Removed from `capex-benchmarks.json` and
+  `capex-references.ts`: TR academic study (unit doubt), IT sector aggregate (2008–12 plants), RO 2015 plant, all news-sourced figures
+  (PL, CZ, GB, ES, RO 2019, DE topagrar) and the UA vendor quote. Kept: 2 FR issuer filings (2025/26, same developer) and the primary
+  German anchors (BMWK/IEE/DBFZ 2024, LWK, AgSTAR via Cornell). Nothing in the model changes (`applied: false` everywhere). A2/R2 now rest
+  on n = 6: the row says so. New references enter only from official bodies, filings or studies with stated scope and a date ≥ 2024.
+  The earlier line about TR/IT/RO reading 1.45–1.94× no longer applies: those points are gone.
+- 2026-11-03 — First European references. ODRÉ (`odre-biomethane.json`): metered annual injection per French site (GWh HHV) next to the
+  publisher's "capacité théorique de production à date" (basis undefined; agricultural sites inject a median 1.00 of it, so it is a
+  planned output, not nameplate × 8 760 h). It tests the spread, not accuracy: R3 = share of agricultural sites (in service ≥ 1 full year)
+  whose output ÷ plan lies inside the model's conservative–optimistic spread for fr_farm_injection (0.75–1.10): 88 % of 547 in 2025
+  (2024 86 %, 2023 80 %). AMBER at best, because the capacity may be updated to match output. No feedstock per site, so A1 for Europe
+  stays GREY (A1e) and AgSTAR is labelled US. DBFZ Report 50 (18.12.2023): 248 upgrading sites, ≈ 152 484 Nm³/h, ≈ 1.1 bn m³ in 2022
+  → national utilisation ≈ 0.82 vs the model's implied 8 000 / 8 760 = 0.91 (one rounded aggregate, not a per-plant set; recorded,
+  not applied). DBFZ CHP full-load hours (4 282 h with flex premium, 2021) are not comparable: flexible plants double the engines.
+- 2026-11-03 — Swedish official farm-plant aggregate (A1s): 108 farm plants 2024, 1 188 kt substrate (98 % manure) → 200 GWh LHV =
+  168 kWh/t; the model gives 122 kWh/t for the catalogue's dairy slurry (8.5 % DM) = 0.72. Not acted on: the statistics do not split
+  slurry from solid manure (solid gives ≈ 3× per tonne) or species; AgSTAR (0.94) and Danish Normtal DM (7.96 %, below the catalogue)
+  point the other way. Open check: share of solid manure in Swedish farm plants (Jordbruksverket / plant survey) before any yield change.
+- 2026-11-03 — Danish Normtal 2026/27 for dairy manure was tried and reverted: its ex-storage slurry (34.1 t at 7.96 % DM) carries storage
+  water, so the digester and store grew 28–48 % for the same gas (double-counted store). A future swap must use excreted mass (28.9 t,
+  "ab dyr") with the DM, and be compared with compare-scenarios. Manure per head stays IPCC 2006 in every European profile.
+- 2026-11-03 — Sweden A1s refined: farm-plant digestate 1 153 kt at 6 % DM + biogas mass (≈ 41 kt) give a feed of ≈ 9.3 % DM (8.8–9.7),
+  i.e. ≈ 6 % solid manure in the catalogue's slurry/solid blend, not a solid-manure effect. Model ÷ actual = 0.77 (co-substrates, 2 % of
+  the mass, left out, so slightly low). The gap is per kg VS: Sweden implies ≈ 0.22 m³ CH4/kg VS realised vs the model's 0.18.
+- 2026-11-03 — FNR Biogas-Messprogramm III data sheets (`bmp3-plants.json`, 53 of 61 plants, 2016–18, fed mass and methane derived from
+  metered power): 48 plants feed grass, whole-crop cereal silage, grain or beet, which the calculator cannot enter (catalogue gap; the most
+  frequent substrate is grass silage, 31 plants). 3 plants are ≥ 98 % catalogue substrates: model ÷ measured 0.65 / 0.75 / 0.72 (fed silage
+  converted back to harvested mass). Pure-maize BGA 38: 396–412 L CH4/kg VS measured vs model 340 × 0.90 = 306; all 52 plants median
+  368 L/kg VS. Volunteer plants (likely better run) and n = 3, so no change yet.
+- 2026-11-03 — What-if, NOT applied: realisation 0.95 / 1.00 / 1.00 (KTBL standard yields as the base, as KTBL itself uses) moves 39 of 1 287
+  verdicts (34 up, 2 STRONG → POSSIBLE, 3 other), A1e → 0.73 / 0.83 / 0.80, Sweden → 0.86, AgSTAR within ±25 % 34 → 37 %. It raises the
+  false-"yes" risk the decision frames call the costliest, on n = 3 plants + one national aggregate. Apply only with a second per-plant
+  European set (Messprogramm sheets with grass/GPS once the catalogue has those types, or beta meters).
+- 2026-11-03 — ACER (CHEST 2025, slide 27, from S&P Global/ICIS/EEX/IEA): biomethane production cost 61 €/MWh (40–86), TTF 37.7, TTF + GO
+  manure 103 (88–122), waste 60.5, unsubsidised waste 90 (basis not stated; GO = DK/NL/DE). The model's EU price (0.8 × business gas +
+  20 €/MWh LHV premium ≈ 60 €/MWh LHV in DE) matches waste biomethane but is about half the 2025 traded value of manure biomethane with its
+  GO/proof of sustainability. Not applied: GO value is a compliance market (roadmap 2: EU compliance value as a support case).
+- 2026-11-03 — Catalogue: grass silage (incl. clover grass), whole-crop cereal silage, ground cereal grain and fresh sugar beet added from FNR
+  Leitfaden Biogas 2010 Tab. 4.3/4.4 (after KTBL; CH4 310 / 329 / 380 / 350 L/kg VS, DM/VS 35/90, 33/95, 87/97, 23/90; RED pathway = maize,
+  approximated). Labels in 25 locales are machine-written (no native review). Existing results unchanged (0 of 1 287).
+  Messprogramm III re-tested: 39 plants now enterable (BGA 09 and 21 excluded: > 450 L CH4/kg VS, above what agricultural mixes give).
+  Model ÷ measured median 0.78, 62 % within ±25 % (A1e RED). With realisation 0.95 / 1.00 / 1.00 (KTBL/FNR standard yields as the base):
+  median 0.87, 87 % within ±25 % (A1e GREEN), Sweden 0.86, AgSTAR within ±25 % 34 → 37 %, D1 still 0 STRONG on economic closures, R3 86 %;
+  39 of 1 287 verdicts move (list in the earlier what-if line).
+- 2026-11-03 — APPLIED (owner): realisation 0.95 / 1.00 / 1.00. Catalogue yields are KTBL/FNR standard yields, i.e. already full-scale
+  values; × 0.90 counted the shortfall twice. Evidence: 39 Messprogramm III plants (median 0.78 → 0.87, within ±25 % 62 → 87 %), Swedish
+  farm plants 0.77 → 0.86, AgSTAR median 0.94 → 1.05 (within ±30 % 0.44 → 0.42). compare-scenarios: 39 of 1 287 verdicts — 32 up
+  (marginal plants above NPV 0 or POSSIBLE → STRONG: de_starch × 11, dk_cluster × 4, br_vinasse × 6, es_olive × 3, th_pome × 3,
+  ro_pig_complex × 3, …), 2 STRONG → POSSIBLE (pl_frozen_veg@FI boiler → CHP, se_biowaste_fuel@HU CHP → biomethane: more gas makes the
+  costlier route the highest NPV, which misses the STRONG rule), 5 others. Median NPV +0.1–0.2 M€ in the EU, ≈ 0 in US/CA. Slurry test band
+  now 6–19 m³ CH4/t (FNR Tab. 4.2). Conservative 0.95 keeps a margin for a worse-run plant than the volunteer sample.
+- 2026-11-03 — Owner: aggregate national statistics with coarse substrate classes are not a validation source. Poland (KOWR 2025) was
+  tried and deleted: its classes ("food-processing waste", "fruit/vegetable residues") cannot be mapped to a substrate, so the
+  comparison measured the mapping, not the model. Residue accuracy needs plant-level data (beta processors with meters).
+- 2026-11-03 — Residue catalogue checked against primary sources (FNR Leitfaden 2010 Tab. 4.5 EEG standard yields, 4.7, 4.9 after KTBL;
+  LfL Bayern gas-yield database as an upper bound, Baserga). Changed: grain stillage 8 % DM / 92 % VS / 360 → FNR 6 / 94 / 385 L CH4/kg VS
+  (−18 % per tonne; LfL wheat 21, rye 30 m³/t bracket it); brewer's grain 280 → FNR 313 (+12 %); beet pulp pressed 71 → 65 m³ CH4/t (EEG
+  standard; LfL max 65; FNR 49 sets the low bound) and wet pulp likewise. Unchanged, consistent with sources: potato pulp (44 vs FNR 47),
+  whey (19 vs LfL max 18–20), source-separated food waste (IEA Task 37 2018), maize, grass, whole-crop, grain, beet. No primary open
+  value found: slaughter residues, fats, fish, POME, olive pomace (kept, MEDIUM/LOW as before). compare-scenarios: 1 of 1 287 verdicts
+  (gb_whisky@US WEAK → POSSIBLE, NPV −12 k → +3 k €, more gas from draff).
+- 2026-11-03 — Gas-stream inlets checked on EPA LMOP (published 2024-09, data 2022, GHGRP-reported collection; `lmop-landfills.json`).
+  Landfill method: our first-order decay = EPA's own estimate for the same sites (median 1.05). Reality: sites collect a median 60 % of that
+  estimate (p10–p90 24–83 %), so with the AP-42 defaults a client would type (k 0.04, L0 100, 75 % collection) the model reads 1.90 on
+  142 closed sites (A1l RED); the example us_closed_landfill uses 70 %. Engines on landfill gas: real electricity ÷ our TEDOM full-load
+  curve = 0.80 (p10–p90 0.67–0.91, n 284; A1g RED): part load, siloxanes, ageing. Not applied yet (both move gas-stream verdicts):
+  proposed collection guidance ≈ 60 % of generation and a site derate for landfill/existing-gas engines; AD engines keep the datasheet
+  (no open per-plant evidence against it). Wastewater/sludge: no current open per-plant data (A1w GREY).
+- 2026-11-03 — APPLIED (owner): landfill collection guidance ≈ 60 % (EPA LMOP 2022, 25–85 %) in the form help of 25 locales (machine
+  translation, no native review) and the us_closed_landfill example 70 → 60 %. compare-scenarios: 5 of 1 287 verdicts, all this example
+  outside the US (GB, LT, FR, ES, FI: POSSIBLE → WEAK, NPV −0.9…−1.9 M€: less gas for the same upgrader); in the US the boiler case loses
+  less (smaller boiler). The engine derate for gas streams is still open.
+

@@ -287,7 +287,7 @@ const vi: Translation = {
       dairy_fat_sludge: "Bùn béo nhà máy sữa", brewery_spent_grain: "Bã bia", fruit_veg_residues: "Phụ phẩm rau quả", food_waste: "Rác thải thực phẩm phân loại",
       sugar_beet_pulp: "Bã củ cải đường ướt", grease_trap_fat: "Mỡ từ bẫy mỡ", crop_straw: "Rơm rạ (đã tiền xử lý)", vinasse: "Bã rượu vinasse (mía / cồn)", press_mud: "Bùn lọc mía",
       pome: "Nước thải nhà máy dầu cọ (POME)", municipal_biowaste: "Rác hữu cơ đô thị",
-      sugar_beet_pulp_pressed: "Bã củ cải đường ép (ủ chua)", potato_processing: "Phụ phẩm chế biến khoai tây", olive_pomace: "Bã ô liu (hai pha)", sewage_sludge: "Bùn thải (đã cô đặc)", grain_stillage: "Bã rượu ngũ cốc", fish_waste: "Phụ phẩm chế biến cá", maize_silage: "Ngô ủ chua (cây năng lượng)",
+      sugar_beet_pulp_pressed: "Bã củ cải đường ép (ủ chua)", potato_processing: "Phụ phẩm chế biến khoai tây", olive_pomace: "Bã ô liu (hai pha)", sewage_sludge: "Bùn thải (đã cô đặc)", grain_stillage: "Bã rượu ngũ cốc", fish_waste: "Phụ phẩm chế biến cá", maize_silage: "Ngô ủ chua (cây năng lượng)", grass_silage: "Cỏ ủ chua (gồm cả cỏ ba lá)", whole_crop_silage: "Ngũ cốc ủ chua cả cây", cereal_grain: "Hạt ngũ cốc nghiền", sugar_beet: "Củ cải đường (tươi)",
     },
     animal: {
       dairy_cow: { label: "Bò sữa", unit: "con" }, cattle_other: { label: "Bê / bò thịt", unit: "con" }, pig_finisher: { label: "Heo thịt", unit: "chỗ" },

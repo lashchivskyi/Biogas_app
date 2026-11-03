@@ -287,7 +287,7 @@ const sr: Translation = {
       dairy_fat_sludge: "Masni mulj / flotat mlekare", brewery_spent_grain: "Pivski trop", fruit_veg_residues: "Ostaci voća i povrća", food_waste: "Odvojeno sakupljen otpad od hrane",
       sugar_beet_pulp: "Vlažni repin rezanac", grease_trap_fat: "Mast iz separatora", crop_straw: "Slama (prethodno obrađena)", vinasse: "Džibra / vinasa (trska / etanol)", press_mud: "Filter-pogača / saturacioni mulj",
       pome: "Otpadne vode prerade palminog ulja (POME)", municipal_biowaste: "Komunalni biootpad",
-      sugar_beet_pulp_pressed: "Presovani repini rezanci (silirani)", potato_processing: "Ostaci prerade krompira", olive_pomace: "Komina masline (dvofazna)", sewage_sludge: "Kanalizacioni mulj (zgusnut)", grain_stillage: "Žitna džibra", fish_waste: "Ostaci prerade ribe", maize_silage: "Kukuruzna silaža (energetski usev)",
+      sugar_beet_pulp_pressed: "Presovani repini rezanci (silirani)", potato_processing: "Ostaci prerade krompira", olive_pomace: "Komina masline (dvofazna)", sewage_sludge: "Kanalizacioni mulj (zgusnut)", grain_stillage: "Žitna džibra", fish_waste: "Ostaci prerade ribe", maize_silage: "Kukuruzna silaža (energetski usev)", grass_silage: "Travna silaža (uklj. smešu deteline i trava)", whole_crop_silage: "Silaža celih biljaka žitarica", cereal_grain: "Mleveno zrno žitarica", sugar_beet: "Šećerna repa (sveža)",
     },
     animal: {
       dairy_cow: { label: "Mlečne krave", unit: "grla" }, cattle_other: { label: "Podmladak / tovna goveda", unit: "grla" }, pig_finisher: { label: "Tovne svinje", unit: "mesta" },

@@ -287,7 +287,7 @@ const fi: Translation = {
       dairy_fat_sludge: "Meijerin rasvaliete", brewery_spent_grain: "Panimomäski", fruit_veg_residues: "Hedelmä- ja vihannesjäte", food_waste: "Erilliskerätty ruokajäte",
       sugar_beet_pulp: "Märkä sokerijuurikasleike", grease_trap_fat: "Rasvanerotinjäte", crop_straw: "Olki (esikäsitelty)", vinasse: "Vinassi (sokeriruoko / etanoli)", press_mud: "Suodatuskakku",
       pome: "Palmuöljytehtaan jätevesi (POME)", municipal_biowaste: "Yhdyskuntien biojäte",
-      sugar_beet_pulp_pressed: "Puristettu juurikasleike (säilötty)", potato_processing: "Perunanjalostuksen sivuvirrat", olive_pomace: "Oliivipuriste (kaksifaasinen)", sewage_sludge: "Puhdistamoliete (tiivistetty)", grain_stillage: "Viljarankki", fish_waste: "Kalanjalostuksen sivuvirrat", maize_silage: "Maissisäilörehu (energiakasvi)",
+      sugar_beet_pulp_pressed: "Puristettu juurikasleike (säilötty)", potato_processing: "Perunanjalostuksen sivuvirrat", olive_pomace: "Oliivipuriste (kaksifaasinen)", sewage_sludge: "Puhdistamoliete (tiivistetty)", grain_stillage: "Viljarankki", fish_waste: "Kalanjalostuksen sivuvirrat", maize_silage: "Maissisäilörehu (energiakasvi)", grass_silage: "Nurmisäilörehu (myös apilanurmi)", whole_crop_silage: "Kokoviljasäilörehu", cereal_grain: "Murskattu vilja", sugar_beet: "Sokerijuurikas (tuore)",
     },
     animal: {
       dairy_cow: { label: "Lypsylehmät", unit: "kpl" }, cattle_other: { label: "Nuorkarja / lihanaudat", unit: "kpl" }, pig_finisher: { label: "Lihasiat", unit: "paikkaa" },

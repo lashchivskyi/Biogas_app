@@ -54,7 +54,7 @@ export function PreferenceMenu({ locale, label, options }: { locale: Locale; lab
   const names = new Intl.DisplayNames([INTL_TAG[locale]], { type: "region" });
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={open ? p.closeSettings : p.openSettings} aria-expanded={open} aria-haspopup="dialog" aria-label={`${copy.settings}: ${NATIVE_NAME[locale]}, ${p.currency}`} className="flex items-center gap-1.5 rounded-full border border-white/15 px-2.5 py-2 text-[13px] font-semibold text-white/85 hover:border-white/40">
+      <button type="button" onClick={open ? p.closeSettings : p.openSettings} aria-expanded={open} aria-haspopup="dialog" aria-label={`${locale.toUpperCase()} · ${p.currency}. ${copy.settings}: ${NATIVE_NAME[locale]}`} className="flex items-center gap-1.5 rounded-full border border-white/15 px-2.5 py-2 text-[13px] font-semibold text-white/85 hover:border-white/40">
         <CountryFlag code={options.find((option) => option.locale === locale)?.countryCode ?? "GB"} />{locale.toUpperCase()}<span className="hidden items-center gap-1.5 sm:inline-flex">· <CountryFlag code={CURRENCY_FLAGS[p.currency]} />{p.currency}</span>
       </button>
       {open && <div role="dialog" aria-label={copy.settings} className="fixed inset-x-3 top-16 z-50 max-h-[80dvh] overflow-auto rounded-2xl border border-line bg-white p-5 text-ink shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-11 sm:w-[420px]">

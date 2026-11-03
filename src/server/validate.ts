@@ -42,7 +42,6 @@ export const inputSchema = z.object({
   lang: z.enum(LOCALES).optional(),
   businessType: z.enum(key(BUSINESS_TYPES)),
   process: processSchema.optional(),
-  projectRole: z.enum(["feedstock_owner", "waste_operator", "developer", "offtaker"]).optional(),
   feedstocks: z.array(lineSchema).max(16),
   energy: z.object({
     electricityKwhYear: optNum(1e10),
@@ -72,7 +71,6 @@ export const inputSchema = z.object({
     capexQuoteRoute: z.enum(["chp", "boiler", "biomethane"]).optional(),
   }).refine((f) => (f.capexQuoteLocal === undefined) === (f.capexQuoteRoute === undefined), { message: "A supplier quote needs its technology (CHP, boiler or biomethane), and the technology needs a quote" }).optional(),
   labAnalysisAvailable: z.boolean().optional(),
-  assumedSupportEurPerKwh: optNum(1).optional(),
 }).superRefine((input, ctx) => {
   if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad") || (input.process ? input.feedstocks.length > 0 : input.feedstocks.length === 0)) {
     ctx.addIssue({ code: "custom", path: ["process"], message: "Supply one complete input basis appropriate to the selected process" });

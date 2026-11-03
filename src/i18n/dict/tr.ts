@@ -287,7 +287,7 @@ const tr: Translation = {
       dairy_fat_sludge: "Süt sanayi yağlı çamuru", brewery_spent_grain: "Bira posası", fruit_veg_residues: "Meyve ve sebze atıkları", food_waste: "Ayrı toplanmış gıda atığı",
       sugar_beet_pulp: "Yaş şeker pancarı küspesi", grease_trap_fat: "Yağ tutucu atığı", crop_straw: "Saman (ön işlemli)", vinasse: "Vinas (şeker kamışı / etanol)", press_mud: "Filtre keki",
       pome: "Palm yağı tesisi atık suyu (POME)", municipal_biowaste: "Belediye biyoatığı",
-      sugar_beet_pulp_pressed: "Preslenmiş pancar küspesi (silajlanmış)", potato_processing: "Patates işleme atıkları", olive_pomace: "Zeytin pirinası (iki fazlı)", sewage_sludge: "Arıtma çamuru (yoğunlaştırılmış)", grain_stillage: "Tahıl vinası", fish_waste: "Balık işleme atıkları", maize_silage: "Mısır silajı (enerji bitkisi)",
+      sugar_beet_pulp_pressed: "Preslenmiş pancar küspesi (silajlanmış)", potato_processing: "Patates işleme atıkları", olive_pomace: "Zeytin pirinası (iki fazlı)", sewage_sludge: "Arıtma çamuru (yoğunlaştırılmış)", grain_stillage: "Tahıl vinası", fish_waste: "Balık işleme atıkları", maize_silage: "Mısır silajı (enerji bitkisi)", grass_silage: "Çim silajı (yonca-çim karışımı dahil)", whole_crop_silage: "Tahıl bütün bitki silajı", cereal_grain: "Öğütülmüş tahıl tanesi", sugar_beet: "Şeker pancarı (taze)",
     },
     animal: {
       dairy_cow: { label: "Süt inekleri", unit: "baş" }, cattle_other: { label: "Genç / besi sığırı", unit: "baş" }, pig_finisher: { label: "Besi domuzları", unit: "kapasite" },

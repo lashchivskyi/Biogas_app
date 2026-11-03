@@ -287,7 +287,7 @@ const ro: Translation = {
       dairy_fat_sludge: "Nămol gras din fabrica de lactate", brewery_spent_grain: "Borhot de bere", fruit_veg_residues: "Resturi de fructe și legume", food_waste: "Deșeuri alimentare colectate separat",
       sugar_beet_pulp: "Tăiței umezi de sfeclă", grease_trap_fat: "Grăsimi din separatoare", crop_straw: "Paie (pretratate)", vinasse: "Vinasă (trestie / etanol)", press_mud: "Nămol de filtrare / de defecație",
       pome: "Ape uzate de la procesarea uleiului de palmier (POME)", municipal_biowaste: "Biodeșeuri municipale",
-      sugar_beet_pulp_pressed: "Tăiței de sfeclă presați (însilozat)", potato_processing: "Resturi de la procesarea cartofilor", olive_pomace: "Tescovină de măsline (bifazică)", sewage_sludge: "Nămol de epurare (îngroșat)", grain_stillage: "Borhot de cereale", fish_waste: "Resturi de la procesarea peștelui", maize_silage: "Siloz de porumb (cultură energetică)",
+      sugar_beet_pulp_pressed: "Tăiței de sfeclă presați (însilozat)", potato_processing: "Resturi de la procesarea cartofilor", olive_pomace: "Tescovină de măsline (bifazică)", sewage_sludge: "Nămol de epurare (îngroșat)", grain_stillage: "Borhot de cereale", fish_waste: "Resturi de la procesarea peștelui", maize_silage: "Siloz de porumb (cultură energetică)", grass_silage: "Siloz de iarbă (incl. trifoi și graminee)", whole_crop_silage: "Siloz din plantă întreagă de cereale", cereal_grain: "Boabe de cereale măcinate", sugar_beet: "Sfeclă de zahăr (proaspătă)",
     },
     animal: {
       dairy_cow: { label: "Vaci de lapte", unit: "capete" }, cattle_other: { label: "Tineret / bovine de carne", unit: "capete" }, pig_finisher: { label: "Porci la îngrășat", unit: "locuri" },

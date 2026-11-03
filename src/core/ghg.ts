@@ -49,6 +49,8 @@ function redSubstrate(typeId: keyof typeof FEEDSTOCKS): { substrate: Substrate; 
   const t = FEEDSTOCKS[typeId];
   if (t.category === "manure") return { substrate: "manure", approximated: typeId !== "dairy_slurry" && typeId !== "pig_slurry" };
   if (typeId === "maize_silage") return { substrate: "maize", approximated: false };
+  // RED Annex VI has only the maize pathway for crops: other energy crops use it, flagged as approximated.
+  if (["grass_silage", "whole_crop_silage", "cereal_grain", "sugar_beet"].includes(typeId)) return { substrate: "maize", approximated: true };
   return { substrate: "biowaste", approximated: typeId !== "food_waste" && typeId !== "municipal_biowaste" };
 }
 

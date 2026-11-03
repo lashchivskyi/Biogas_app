@@ -1,0 +1,31 @@
+{
+  "about": "SELF-ASSESSMENT by code reading, local headers and tests, not an external audit or penetration test. OWASP ASVS 4.0.3 IDs; L1 requirements that apply to this site (no user accounts: report access is a bearer link, admin is HTTP Basic) plus L2 items for checkout, webhooks and report tokens. status: pass | fail | unverified (cannot be checked before deployment). Read by scripts/scorecard.ts (S1).",
+  "date": "2026-11-03",
+  "standard": "OWASP ASVS 4.0.3",
+  "items": [
+    { "id": "2.2.1", "level": 1, "status": "fail", "check": "Anti-automation on authentication", "evidence": "Admin HTTP Basic (src/server/adminAuth.ts) has no failed-login throttling; checkout/quote/leads are rate limited, /api/admin is not." },
+    { "id": "3.1.1", "level": 1, "status": "fail", "check": "Session tokens never in URLs", "evidence": "Report token is in the path by design (/[lang]/report/[token]); mitigated by Referrer-Policy no-referrer, noindex, Cache-Control no-store; host access logs still record it (STATUS AMBER)." },
+    { "id": "3.2.2", "level": 1, "status": "pass", "check": "Tokens have ≥ 64 bits of entropy", "evidence": "orders.ts: reportToken = randomBytes(24) = 192 bits from the CSPRNG." },
+    { "id": "4.1.1", "level": 1, "status": "pass", "check": "Access control enforced server-side", "evidence": "Every /api/admin route checks adminAuth on the server; reports load only by token lookup." },
+    { "id": "4.2.1", "level": 1, "status": "pass", "check": "No direct object reference to other customers' data", "evidence": "Orders are found by the 192-bit token, never by the order id from the request." },
+    { "id": "4.2.2", "level": 1, "status": "pass", "check": "Anti-CSRF on state-changing requests", "evidence": "State-changing /api/admin calls require Sec-Fetch-Site same-origin (admin-csrf.test.ts)." },
+    { "id": "4.3.1", "level": 1, "status": "fail", "check": "Administrative interfaces use multi-factor authentication", "evidence": "Admin is a single Basic credential from the environment; no MFA." },
+    { "id": "5.1.3", "level": 1, "status": "pass", "check": "All input validated (allow lists, schemas)", "evidence": "zod schemas on all 8 API route groups; src/server/validate.ts bounds every number (hostile-input.test.ts)." },
+    { "id": "5.3.3", "level": 1, "status": "pass", "check": "Context-aware output escaping (XSS)", "evidence": "React escapes output; dangerouslySetInnerHTML only for JSON-LD built from internal strings; JSX literals blocked by lint." },
+    { "id": "7.1.1", "level": 1, "status": "pass", "check": "No credentials or payment details in logs", "evidence": "Redacted JSON logs, no PII in logs (STATUS launch readiness GREEN); card data never touches the server (Stripe Checkout)." },
+    { "id": "8.2.1", "level": 1, "status": "pass", "check": "Anti-caching headers on sensitive pages", "evidence": "Report page: Cache-Control private, no-cache, no-store (measured on local build 2026-11-03)." },
+    { "id": "9.1.1", "level": 1, "status": "unverified", "check": "TLS for all client connectivity", "evidence": "HSTS max-age=63072000 in next.config.ts; production TLS cannot be tested: no domain yet." },
+    { "id": "11.1.1", "level": 1, "status": "pass", "check": "Business flow steps in order, prices server-side", "evidence": "Price set on the server and carried in a signed quote (src/server/payments); INSUFFICIENT_DATA is never sold (payments.test.ts)." },
+    { "id": "11.1.4", "level": 1, "status": "pass", "check": "Anti-automation against excessive calls", "evidence": "Postgres-shared rate limits on checkout, quote and leads (rate-limit.test.ts); they fail open by design." },
+    { "id": "14.2.1", "level": 1, "status": "pass", "check": "Components free of known vulnerabilities", "evidence": "npm audit --omit=dev 2026-11-03: 0 low/moderate/high/critical." },
+    { "id": "14.3.2", "level": 1, "status": "pass", "check": "Debug modes off in production", "evidence": "Next production build; config gate refuses start without production settings (src/server/config.ts)." },
+    { "id": "14.4.3", "level": 1, "status": "pass", "check": "Content-Security-Policy in place", "evidence": "CSP with script-src/connect-src 'self', frame-ancestors 'none'; 'unsafe-inline' scripts kept on purpose (DECISIONS 2026-11-01) — weaker against injected inline script." },
+    { "id": "14.4.4", "level": 1, "status": "pass", "check": "X-Content-Type-Options nosniff", "evidence": "next.config.ts headers." },
+    { "id": "14.4.5", "level": 1, "status": "pass", "check": "Strict-Transport-Security", "evidence": "max-age=63072000; includeSubDomains." },
+    { "id": "14.4.6", "level": 1, "status": "pass", "check": "Referrer-Policy", "evidence": "strict-origin-when-cross-origin site-wide, no-referrer on report pages." },
+    { "id": "14.4.7", "level": 1, "status": "pass", "check": "Framing restricted", "evidence": "CSP frame-ancestors 'none'." },
+    { "id": "Methalytics-webhook", "level": 2, "status": "pass", "check": "Payment webhooks authenticated and idempotent", "evidence": "stripe.webhooks.constructEvent with the signing secret; refunded (reversed) order final against replayed 'paid' events (DECISIONS 2026-11-01, payments.test.ts)." },
+    { "id": "Methalytics-snapshot", "level": 2, "status": "pass", "check": "A sold report cannot change after payment", "evidence": "Assessment JSON stored at checkout, never recomputed (stored-snapshot.test.ts)." },
+    { "id": "Methalytics-stripe-live", "level": 2, "status": "unverified", "check": "Checkout → webhook → email → report against real Stripe test mode", "evidence": "Only mocked in unit tests; needs staging with Stripe test keys (scorecard C1)." }
+  ]
+}

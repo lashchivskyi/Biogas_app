@@ -149,7 +149,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "dk_cluster", title: "Danish centralised plant, slurry + food waste, biomethane", description: "Jutland: farmer-owned plant takes weighed slurry from partner farms and food waste with a gate fee, all with lab BMP; biomethane to the gas grid, digestate returned to the farms' own slurry stores",
     input: {
-      countryCode: "DK", regionId: "jutland", businessType: "central_biogas_plant", projectRole: "developer", labAnalysisAvailable: true,
+      countryCode: "DK", regionId: "jutland", businessType: "central_biogas_plant", labAnalysisAvailable: true,
       feedstocks: [
         { id: "a", type: "dairy_slurry", quantity: 108000, dryMatterPct: 8.5, vsPctOfDm: 80, methaneYieldLPerKgVs: 200, monthsActive: 12, delivered: true, distanceKm: 8, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
         { id: "b", type: "pig_slurry", quantity: 14250, dryMatterPct: 5.5, vsPctOfDm: 77, methaneYieldLPerKgVs: 290, monthsActive: 12, delivered: true, distanceKm: 10, purchasePricePerTonneLocal: 0, handling: "field_spreading" },
@@ -329,7 +329,7 @@ export const EXAMPLES: ExampleCase[] = [
   {
     id: "in_food_40k", title: "Indian biogas cooperative, cattle dung and press mud", description: "Punjab: short-haul purchased dung, seasonal sugar press mud and contracted digestate land, both streams lab-tested; the administered GOBARdhan CBG price is a separate support case, not the base.",
     input: {
-      countryCode: "IN", regionId: "punjab", businessType: "central_biogas_plant", projectRole: "developer", labAnalysisAvailable: true,
+      countryCode: "IN", regionId: "punjab", businessType: "central_biogas_plant", labAnalysisAvailable: true,
       feedstocks: [
         { id: "collected-dung", type: "cattle_solid_manure", quantity: 15000, dryMatterPct: 16, vsPctOfDm: 82, methaneYieldLPerKgVs: 165, monthsActive: 12, delivered: true, distanceKm: 5, purchasePricePerTonneLocal: 200, handling: "field_spreading" },
         { id: "sugar-filter-cake", type: "press_mud", quantity: 8000, dryMatterPct: 25, vsPctOfDm: 75, methaneYieldLPerKgVs: 250, monthsActive: 5, startMonth: 11, delivered: true, distanceKm: 18, purchasePricePerTonneLocal: 600, handling: "field_spreading" },
@@ -374,7 +374,7 @@ export const EXAMPLES: ExampleCase[] = [
     id: "us_closed_landfill", title: "Closed US municipal landfill", description: "Twenty annual waste cohorts; declining gas with no RIN or LCFS credits assumed",
     input: { countryCode: "US", regionId: "wisconsin", businessType: "landfill_operator", feedstocks: [],
       process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "landfill", operatingDays: 350, monthsActive: 12, startMonth: 1, processCapexLocal: 2500000, processOpexLocalYear: 220000, residualCostLocalT: 0, auxiliaryKwhYear: 250000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 35,
-        annualWasteTonnes: 100000, depositionYears: 20, yearsSinceClosure: 3, decayPerYear: 0.05, potentialNm3T: 100, collectionPct: 70, methanePct: 50,
+        annualWasteTonnes: 100000, depositionYears: 20, yearsSinceClosure: 3, decayPerYear: 0.05, potentialNm3T: 100, collectionPct: 60, methanePct: 50,
         nitrogenPct: 6, oxygenPct: 1, h2sPpm: 500, upgradingCapexLocal: 4000000, upgradingRecoveryPct: 96, upgradingKwhNm3: 0.4, productMethanePct: 97 },
       energy: { electricityKwhYear: 200000, heatNeed: "none", hasGridConnection: true }, site: { gasGridKm: 3 } },
   },

@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "l10n:export": "tsx scripts/l10n-export.ts",
-    "db": "tsx scripts/db.ts"
+    "db": "tsx scripts/db.ts",
+    "scorecard": "tsx scripts/scorecard.ts"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

@@ -287,7 +287,7 @@ const hu: Translation = {
       dairy_fat_sludge: "Tejipari zsíros iszap / flotátum", brewery_spent_grain: "Sörtörköly", fruit_veg_residues: "Zöldség- és gyümölcshulladék", food_waste: "Szelektíven gyűjtött ételhulladék",
       sugar_beet_pulp: "Nedves répaszelet", grease_trap_fat: "Zsírfogóból származó zsír", crop_straw: "Szalma (előkezelt)", vinasse: "Vinasz (cukornád / etanol)", press_mud: "Szűrőpogácsa / szaturációs iszap",
       pome: "Pálmaolaj-üzemi szennyvíz (POME)", municipal_biowaste: "Települési biohulladék",
-      sugar_beet_pulp_pressed: "Préselt répaszelet (silózott)", potato_processing: "Burgonyafeldolgozási maradék", olive_pomace: "Olívatörköly (kétfázisú)", sewage_sludge: "Szennyvíziszap (sűrített)", grain_stillage: "Gabonaszeszmoslék", fish_waste: "Halfeldolgozási maradék", maize_silage: "Kukoricaszilázs (energianövény)",
+      sugar_beet_pulp_pressed: "Préselt répaszelet (silózott)", potato_processing: "Burgonyafeldolgozási maradék", olive_pomace: "Olívatörköly (kétfázisú)", sewage_sludge: "Szennyvíziszap (sűrített)", grain_stillage: "Gabonaszeszmoslék", fish_waste: "Halfeldolgozási maradék", maize_silage: "Kukoricaszilázs (energianövény)", grass_silage: "Fűszilázs (lóherés fűvel is)", whole_crop_silage: "Gabona teljesnövény-szilázs", cereal_grain: "Darált gabonamag", sugar_beet: "Cukorrépa (friss)",
     },
     animal: {
       dairy_cow: { label: "Tejelő tehén", unit: "db" }, cattle_other: { label: "Növendék / húsmarha", unit: "db" }, pig_finisher: { label: "Hízósertés", unit: "férőhely" },

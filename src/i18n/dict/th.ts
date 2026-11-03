@@ -287,7 +287,7 @@ const th: Translation = {
       dairy_fat_sludge: "กากไขมัน / ตะกอน DAF ของโรงงานนม", brewery_spent_grain: "กากเบียร์", fruit_veg_residues: "เศษผักผลไม้", food_waste: "เศษอาหารคัดแยก",
       sugar_beet_pulp: "กากหัวบีทเปียก", grease_trap_fat: "ไขมันจากบ่อดักไขมัน", crop_straw: "ฟาง (ผ่านการปรับสภาพ)", vinasse: "น้ำกากส่า (อ้อย / เอทานอล)", press_mud: "กากตะกอนหม้อกรอง",
       pome: "น้ำเสียโรงสกัดน้ำมันปาล์ม (POME)", municipal_biowaste: "ขยะอินทรีย์ชุมชน",
-      sugar_beet_pulp_pressed: "กากหัวบีทอัด (หมักเก็บ)", potato_processing: "กากจากการแปรรูปมันฝรั่ง", olive_pomace: "กากมะกอก (สองเฟส)", sewage_sludge: "ตะกอนน้ำเสีย (ทำข้น)", grain_stillage: "กากส่าธัญพืช", fish_waste: "เศษจากการแปรรูปปลา", maize_silage: "ข้าวโพดหมัก (พืชพลังงาน)",
+      sugar_beet_pulp_pressed: "กากหัวบีทอัด (หมักเก็บ)", potato_processing: "กากจากการแปรรูปมันฝรั่ง", olive_pomace: "กากมะกอก (สองเฟส)", sewage_sludge: "ตะกอนน้ำเสีย (ทำข้น)", grain_stillage: "กากส่าธัญพืช", fish_waste: "เศษจากการแปรรูปปลา", maize_silage: "ข้าวโพดหมัก (พืชพลังงาน)", grass_silage: "หญ้าหมัก (รวมหญ้าผสมโคลเวอร์)", whole_crop_silage: "ธัญพืชหมักทั้งต้น", cereal_grain: "เมล็ดธัญพืชบด", sugar_beet: "หัวบีทน้ำตาล (สด)",
     },
     animal: {
       dairy_cow: { label: "แม่โครีดนม", unit: "ตัว" }, cattle_other: { label: "ลูกโค / โคเนื้อ", unit: "ตัว" }, pig_finisher: { label: "สุกรขุน", unit: "ตัว (ตามความจุ)" },

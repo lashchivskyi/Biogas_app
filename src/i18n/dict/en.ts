@@ -290,7 +290,7 @@ const en = {
       sugar_beet_pulp: "Wet sugar-beet pulp", grease_trap_fat: "Grease-trap fat", crop_straw: "Straw (pretreated)", vinasse: "Vinasse (sugarcane / ethanol)", press_mud: "Press mud / filter cake",
       pome: "Palm-oil mill effluent (POME)", municipal_biowaste: "Municipal biowaste",
       sugar_beet_pulp_pressed: "Pressed sugar-beet pulp (ensiled)", potato_processing: "Potato processing residues", olive_pomace: "Olive pomace (two-phase)",
-      sewage_sludge: "Sewage sludge (thickened)", grain_stillage: "Grain stillage", fish_waste: "Fish processing residues", maize_silage: "Maize silage (energy crop)",
+      sewage_sludge: "Sewage sludge (thickened)", grain_stillage: "Grain stillage", fish_waste: "Fish processing residues", maize_silage: "Maize silage (energy crop)", grass_silage: "Grass silage (incl. clover grass)", whole_crop_silage: "Whole-crop cereal silage", cereal_grain: "Cereal grain, ground", sugar_beet: "Sugar beet (fresh)",
     },
     animal: {
       dairy_cow: { label: "Dairy cows", unit: "head" }, cattle_other: { label: "Young / beef cattle", unit: "head" }, pig_finisher: { label: "Finishing pigs", unit: "places" },

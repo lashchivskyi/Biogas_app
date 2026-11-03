@@ -287,7 +287,7 @@ const et: Translation = {
       dairy_fat_sludge: "Meierei rasvamuda", brewery_spent_grain: "Õllepraak", fruit_veg_residues: "Puu- ja köögiviljajäätmed", food_waste: "Liigiti kogutud toidujäätmed",
       sugar_beet_pulp: "Märg peedimass", grease_trap_fat: "Rasvapüüdurite jäätmed", crop_straw: "Põhk (eeltöödeldud)", vinasse: "Vinass (suhkruroog / etanool)", press_mud: "Filtrikook",
       pome: "Palmiõlitootmise reovesi (POME)", municipal_biowaste: "Olmebiojäätmed",
-      sugar_beet_pulp_pressed: "Pressitud peedimass (silo)", potato_processing: "Kartulitöötlemise jäägid", olive_pomace: "Oliivipressi jääk (kahefaasiline)", sewage_sludge: "Reoveesete (tihendatud)", grain_stillage: "Teraviljapraak", fish_waste: "Kalatöötlemise jäägid", maize_silage: "Maisisilo (energiakultuur)",
+      sugar_beet_pulp_pressed: "Pressitud peedimass (silo)", potato_processing: "Kartulitöötlemise jäägid", olive_pomace: "Oliivipressi jääk (kahefaasiline)", sewage_sludge: "Reoveesete (tihendatud)", grain_stillage: "Teraviljapraak", fish_waste: "Kalatöötlemise jäägid", maize_silage: "Maisisilo (energiakultuur)", grass_silage: "Rohusilo (sh ristikheinasilo)", whole_crop_silage: "Teravilja täistaimesilo", cereal_grain: "Jahvatatud teravili", sugar_beet: "Suhkrupeet (värske)",
     },
     animal: {
       dairy_cow: { label: "Piimalehmad", unit: "tk" }, cattle_other: { label: "Noorkari / lihaveised", unit: "tk" }, pig_finisher: { label: "Nuumsead", unit: "kohta" },

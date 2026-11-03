@@ -96,7 +96,11 @@ export type FeedstockTypeId =
   | "sewage_sludge"
   | "grain_stillage"
   | "fish_waste"
-  | "maize_silage";
+  | "maize_silage"
+  | "grass_silage"
+  | "whole_crop_silage"
+  | "cereal_grain"
+  | "sugar_beet";
 
 export type HandlingId =
   | "field_spreading"
@@ -189,7 +193,6 @@ export interface FinanceInput {
 
 export interface ProjectInput {
   process?: ProcessInput;
-  projectRole?: "feedstock_owner" | "waste_operator" | "developer" | "offtaker";
   countryCode: string;
   regionId: string;
   city?: CityClimate;
@@ -200,11 +203,6 @@ export interface ProjectInput {
   finance?: FinanceInput;
   /** True only if laboratory analysis of the feedstock is available (not collected in MVP). */
   labAnalysisAvailable?: boolean;
-  /**
-   * Optional support payment, local currency per kWh of electricity, NOT guaranteed.
-   * Defaults to 0. Only used when explicitly set, and always flagged in output.
-   */
-  assumedSupportEurPerKwh?: number;
   /** Language of the model's explanatory text. Default "en". */
   lang?: CoreLang;
 }
