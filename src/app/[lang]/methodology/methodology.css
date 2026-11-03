@@ -496,3 +496,13 @@
     break-inside: avoid;
   }
 }
+
+/* "How accurate we are": model ÷ real per reference set */
+.methodology-accuracyTable th[scope="row"] { min-width: 14rem; font-weight: 600; text-align: left; }
+.methodology-accuracySource { min-width: 14rem; font-size: 12px; color: var(--muted); }
+.methodology-accuracyStrip { display: block; }
+.methodology-accuracyBand { fill: var(--brand-soft); }
+.methodology-accuracyOne { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 2; }
+.methodology-accuracyRange { stroke: var(--brand); stroke-width: 2; stroke-linecap: round; }
+.methodology-accuracyIqr { fill: var(--brand); }
+.methodology-accuracyMedian { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }

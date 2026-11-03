@@ -374,7 +374,7 @@ export const EXAMPLES: ExampleCase[] = [
     id: "us_closed_landfill", title: "Closed US municipal landfill", description: "Twenty annual waste cohorts; declining gas with no RIN or LCFS credits assumed",
     input: { countryCode: "US", regionId: "wisconsin", businessType: "landfill_operator", feedstocks: [],
       process: { basisOrigin: "ENGINEERING_ASSUMPTION", basisDate: "2026-10-28", basisReference: "Illustrative project assumptions, not an operator account or supplier quotation", kind: "landfill", operatingDays: 350, monthsActive: 12, startMonth: 1, processCapexLocal: 2500000, processOpexLocalYear: 220000, residualCostLocalT: 0, auxiliaryKwhYear: 250000, auxiliaryHeatKwhYear: 0, uncertaintyPct: 35,
-        annualWasteTonnes: 100000, depositionYears: 20, yearsSinceClosure: 3, decayPerYear: 0.05, potentialNm3T: 100, collectionPct: 60, methanePct: 50,
+        annualWasteTonnes: 100000, depositionYears: 20, yearsSinceClosure: 3, decayPerYear: 0.05, potentialNm3T: 100, collectionPct: 50, methanePct: 50,
         nitrogenPct: 6, oxygenPct: 1, h2sPpm: 500, upgradingCapexLocal: 4000000, upgradingRecoveryPct: 96, upgradingKwhNm3: 0.4, productMethanePct: 97 },
       energy: { electricityKwhYear: 200000, heatNeed: "none", hasGridConnection: true }, site: { gasGridKm: 3 } },
   },

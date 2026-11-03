@@ -18,6 +18,7 @@ import { methodologyCopy, methodologyTermHelp } from "@/i18n/methodology";
 import { processCopy } from "@/i18n/processes";
 import { validationCopy } from "@/i18n/validation";
 import { BACKTEST } from "@/countries/backtest";
+import ACCURACY from "@/countries/data/accuracy-summary.json";
 import "./methodology.css";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/methodology">): Promise<Metadata> {
@@ -43,6 +44,20 @@ const TECHNICAL_NOTES = [
   "Monthly energy balance: CHP / boiler / biomethane; digester heat first.",
   "Component CAPEX × country factor; OPEX; own use / export / heat / disposal / digestate. Pre-tax, nominal EUR, 15 years: NPV, IRR, simple and discounted payback, DSCR = EBITDA ÷ debt annuity. Not a bankable model (no tax, depreciation, working capital).",
 ] as const;
+/** Model ÷ real on a log scale 0.25–4: p10–p90 line, p25–p75 bar, median mark, the tolerance band shaded. Numbers are in the row. */
+function AccuracyStrip({ s }: { s: (typeof ACCURACY.sets)[number] }) {
+  const W = 160, H = 22, x = (r: number) => Math.max(0, Math.min(W, (Math.log(r / 0.25) / Math.log(16)) * W));
+  return (
+    <svg className="methodology-accuracyStrip" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+      <rect x={x(1 - s.tolerance)} y={2} width={x(1 + s.tolerance) - x(1 - s.tolerance)} height={H - 4} className="methodology-accuracyBand" />
+      <line x1={x(1)} x2={x(1)} y1={0} y2={H} className="methodology-accuracyOne" />
+      <line x1={x(s.p10)} x2={x(s.p90)} y1={H / 2} y2={H / 2} className="methodology-accuracyRange" />
+      <rect x={x(s.p25)} y={H / 2 - 4} width={Math.max(2, x(s.p75) - x(s.p25))} height={8} rx={2} className="methodology-accuracyIqr" />
+      <line x1={x(s.median)} x2={x(s.median)} y1={H / 2 - 8} y2={H / 2 + 8} className="methodology-accuracyMedian" />
+    </svg>
+  );
+}
+
 /** Value with its confidence dot; the source is in the tooltip. */
 function Cell({ c, id, locale, percentage = false }: { c: (typeof COUNTRIES)[string]; id: string; locale: Locale; percentage?: boolean }) {
   const p = c.params.find((x) => x.id === id);
@@ -76,7 +91,8 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
   // A chosen city shows its state/province market data; signature is irrelevant for this read-only view.
   const all = allProvenance(country, selection.region, undefined, selection.city);
   const V = validationCopy[locale];
-  const ratio = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { maximumFractionDigits: 2 }).format(v);
+  const ratio = (v: number) => new Intl.NumberFormat(INTL_TAG[locale], { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+  const pctFmt = new Intl.NumberFormat(INTL_TAG[locale], { style: "percent" });
   const registryHref = (code: string) => `/${locale}/methodology?${new URLSearchParams({ c: code })}#parameter-group-4`;
   return (
     <main>
@@ -124,14 +140,30 @@ export default async function MethodologyPage({ params, searchParams }: PageProp
 
         <section id="validation" className="methodology-section" aria-labelledby="validation-title">
           <h2 id="validation-title" className="methodology-panelTitle">{V.title}</h2>
-          <p className="mt-2 text-sm text-ink2">{V.lead}</p>
-          <dl className="num mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="card p-4"><dt className="text-xs text-muted">{V.n}</dt><dd className="text-xl font-bold">{BACKTEST.electricity.n}</dd></div>
-            <div className="card p-4"><dt className="text-xs text-muted">{V.median}</dt><dd className="text-xl font-bold">{ratio(BACKTEST.electricity.median)}</dd></div>
-            <div className="card p-4"><dt className="text-xs text-muted">{V.band}</dt><dd className="text-xl font-bold">{ratio(BACKTEST.electricity.p10)} – {ratio(BACKTEST.electricity.p90)}</dd></div>
-            <div className="card p-4"><dt className="text-xs text-muted">{V.within}</dt><dd className="text-xl font-bold">{new Intl.NumberFormat(INTL_TAG[locale], { style: "percent" }).format(BACKTEST.electricity.within30)}</dd></div>
-          </dl>
-          <p className="mt-3 text-xs text-muted">{V.caveat} <a className="underline" href={BACKTEST.source}>EPA AgSTAR</a> · {BACKTEST.dataThrough} · v{BACKTEST.modelVersion}</p>
+          <p className="mt-2 max-w-3xl text-sm text-ink2">{V.lead}</p>
+          <div className="methodology-tableFrame mt-4" role="region" aria-labelledby="validation-title" tabIndex={0}>
+            <table className="num methodology-table methodology-accuracyTable">
+              <thead><tr>
+                <th scope="col">{V.set}</th><th scope="col">{V.n}</th><th scope="col">{V.median}</th><th scope="col">{V.band}</th>
+                <th scope="col">{V.within.replace("{tol}", "25")}</th><th scope="col">{V.distribution}</th><th scope="col">{V.source}</th>
+              </tr></thead>
+              <tbody>
+                {ACCURACY.sets.map((s) => <tr key={s.id}>
+                  <th scope="row">{V.sets[s.id as keyof typeof V.sets]}</th>
+                  <td>{s.n}</td>
+                  <td>{ratio(s.median)}</td>
+                  <td>{ratio(s.p10)} – {ratio(s.p90)}</td>
+                  <td>{pctFmt.format(s.withinShare)}{s.tolerance !== 0.25 && <span className="text-muted"> ({V.within.replace("{tol}", String(s.tolerance * 100))})</span>}</td>
+                  <td><AccuracyStrip s={s} /></td>
+                  <td className="methodology-accuracySource">{s.url ? <a className="underline" href={s.url}>{s.source}</a> : s.source} · {s.period} · {V.basis[s.basis as keyof typeof V.basis]}</td>
+                </tr>)}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 text-xs text-muted">{V.legend}</p>
+          <p className="mt-3 max-w-3xl text-sm text-ink2">{V.likeForLike}</p>
+          <p className="mt-2 max-w-3xl text-sm text-ink2">{V.gaps}</p>
+          <p className="mt-2 max-w-3xl text-xs text-muted">{V.caveat} · {`v${BACKTEST.modelVersion}`} · {ACCURACY.generatedOn}</p>
         </section>
 
         <section id="country-conditions" className="methodology-section" aria-labelledby="country-conditions-title">

@@ -106,9 +106,10 @@ function nawaro510(): ProjectInput {
   };
 }
 
-/** Herd that gives the LWK reference plant's 75 kWe in this model (750 cows gave ≈ 110 kWe, half again the published plant). */
+/** Herd that gives the LWK reference plant's 75 kWe in this model (750 cows gave ≈ 110 kWe; 580 gave 85 kWe after the realisation
+ * 1.0 change of 2026-11-03, so the reference was a bigger plant than published: re-sized to 510 cows on 2026-11-04). */
 // "New digestate storage" needs existingStorage 0: an empty field means the farm's store already holds its slurry (DECISIONS 2026-10-31).
-const LWK_COWS = 580;
+const LWK_COWS = 510;
 
 export interface PlantCostCase { id: string; route?: RouteId; name: string; input: ProjectInput; country: typeof DE; published: string; low: number; high: number; quality: CostQuality; note: string }
 

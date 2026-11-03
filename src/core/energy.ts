@@ -115,6 +115,8 @@ export function runEnergy(
     const qInstalled = etaEl > 0 ? chpKw / etaEl : 0;
     const hoursEff = Math.max(0, Math.min(HOURS_PER_YEAR, scenario.chpHours - (mods.extraDowntimePp / 100) * HOURS_PER_YEAR));
     const heatPerGas = recovery * etaTh;
+    // Landfill gas: real engines deliver 0.80 of the datasheet (EPA LMOP); the installed rating stays the datasheet one.
+    const siteFactor = input.process?.kind === "landfill" ? p.get("eng.chp_landfill_site_factor") : 1;
 
     for (let i = 0; i < 12; i++) {
       const G = gasM[i];
@@ -145,7 +147,7 @@ export function runEnergy(
       gasToChp += gC;
       gasToBoiler += gB;
       flared += gFlare;
-      const gen = gC * etaEl;
+      const gen = gC * etaEl * siteFactor;
       const par = parasiticMonth(i);
       elGross += gen;
       elPar += par;

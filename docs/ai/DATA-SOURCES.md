@@ -40,7 +40,7 @@ of a number. A Wayback snapshot of an official page is acceptable; state its dat
 | Support schemes | legal texts listed in each scheme's `source` | before each release |
 | Back-test set | EPA AgSTAR Livestock AD Database xlsx: `python -I scripts/data/extract_agstar.py --write`, then `npx tsx scripts/backtest.ts --write` | when AgSTAR updates (≈ twice a year) |
 | US dairy manure per head | USDA NRCS AWMFH ch. 4 Table 4-5 (ASAE D384.2) in the US profile | on a new ASABE D384 edition |
-| EU dairy manure per head | IPCC 2006 GL Vol. 4 Table 10A-4 (VS); DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (volume); swap to the IPCC 2019 Refinement Table 10.13A when retrieved | on a new IPCC or DüV edition |
+| EU dairy manure per head | IPCC 2019 Refinement Vol. 4 Tab. 10.13A × 10A.5 (VS, applied 2026-11-04); DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (volume); next: national Tier 2 VS from each NID | on a new IPCC/DüV edition or NID |
 | Silage loss / clamp | KTBL Ernte- und Silomanagement 2021; LfL density guide; clamp €/m³ LOW (no cost study found) | when KTBL publishes building costs |
 | RED climate defaults | Directive (EU) 2018/2001 Annex VI (legislation.gov.uk copy; EUR-Lex blocks scripts) in `src/core/ghg.ts` | when Annexes V–VI are revised |
 
@@ -77,7 +77,8 @@ Spot and export haircut dominate where biomethane is not the best route (RO, GR,
 | Shut-down digesters with closure reason (D1, D2) | AgSTAR sheet "Shutdown", `agstar-shutdown.json` | same |
 | French biomethane, metered output vs plan per site (R3) | ODRÉ "Production annuelle de biométhane par site", `odre-biomethane.json` (export API, no key) | yearly (published ≈ October) |
 | Swedish farm plants, gas per tonne of substrate (A1s) | SCB/Energimyndigheten via Energigas Sverige, report 2024 Tab. 3/10/11, `se-biogas-statistics.json` (LHV) | yearly (≈ autumn) |
-| US landfills: measured gas collection, engine output (A1l, A1g) | EPA LMOP Landfill and Project Database xlsx, `lmop-landfills.json` (2024-09, data 2022) | yearly (≈ September) |
+| US landfills: measured gas collection, engine output (A1l, A1g) | EPA LMOP composite xlsx (epa.gov/system/files/documents/2024-09/lmopcompositedata.xlsx), `lmop-landfills.json` (2024-09, data 2022; MW "actual or estimated") | yearly (≈ September) |
+| Accuracy summary on /methodology | all sets above → `accuracy-summary.json` via `npx tsx scripts/accuracy.ts --write` | after any reference or model change (`accuracy.test.ts` fails on drift) |
 | Published plant costs (A2, A3, R2) | `capex-benchmarks.json` + `scripts/capex-references.ts`; press and vendor shown, not counted | when a primary cost appears |
 
 Survey of EU/world validation sources (2026-11-03). Per plant = inputs and output per site (what A1e needs).

@@ -21,16 +21,14 @@ import { EXAMPLES } from "../src/core/examples";
 import { FEEDSTOCKS } from "../src/core/feedstockData";
 import { DATA_REVIEW_AS_OF, isoDate } from "../src/core/modelAudit";
 import { COUNTRIES, COUNTRY_ORDER, getCountry } from "../src/countries";
-import agstar from "../src/countries/data/agstar-backtest.json";
 import agstarShutdown from "../src/countries/data/agstar-shutdown.json";
 import odre from "../src/countries/data/odre-biomethane.json";
 import seStats from "../src/countries/data/se-biogas-statistics.json";
 import bmp3 from "../src/countries/data/bmp3-plants.json";
-import lmop from "../src/countries/data/lmop-landfills.json";
-import { landfillMethane } from "../src/core/processes";
-import { chpEtaEl } from "../src/core/energy";
+import { BMP3_MAX_L_PER_KG_VS } from "./accuracy-references";
 import { ENGINEERING_MAP } from "../src/core/engineeringParams";
 import { agstarInput, type AgstarRow } from "../src/countries/backtest";
+import { agstarPlants, bmp3Plants, likeForLike, lmopEngines, lmopLandfills, quantile } from "./accuracy-references";
 import { auditModel } from "../src/components/__tests__/report-audit";
 import { KNOWN } from "../src/i18n/__tests__/qa-known";
 import { capexReferenceRows } from "./capex-references";
@@ -149,16 +147,12 @@ const matrix = (["STRONG_CANDIDATE", "POSSIBLE_WITH_CONDITIONS", "WEAK_ECONOMICS
 
 /* ---------- accuracy and range honesty against real plants (AgSTAR) and published plant costs ---------- */
 
-const US = getCountry("US");
-const plants = (agstar.rows as AgstarRow[]).filter((r) => r.electricityKwhYear).map((row) => {
-  const a = assess(agstarInput(row), US, { uncertainty: false });
-  const m = a.routeMatrix.chp, actual = row.electricityKwhYear!;
-  const lo = Math.min(m.conservative.energy.elGrossKwh, m.optimistic.energy.elGrossKwh), hi = Math.max(m.conservative.energy.elGrossKwh, m.optimistic.energy.elGrossKwh);
-  return { ratio: m.base.energy.elGrossKwh / actual, nameplate: actual % 8760 === 0, inside: actual >= lo && actual <= hi, below: actual < lo, verdict: a.verdict.id };
-});
+const plants = agstarPlants();
+// Like-for-like (rules fixed before the ratio is seen): dairy, electricity the only gas use, a heated tank, physically possible.
+const lfl = plants.filter(likeForLike);
 /** The "reality check" band the report prints (actual = 1/p90 … 1/p10 × estimate), tested out of sample: each plant against
  * the p10–p90 of the other 78, so the band cannot cover a plant only because that plant helped set it. */
-const q = (xs: number[], p: number) => { const s2 = [...xs].sort((a, b) => a - b), i = (s2.length - 1) * p, lo = Math.floor(i); return s2[lo] + (s2[Math.ceil(i)] - s2[lo]) * (i - lo); };
+const q = quantile;
 const insideField = plants.filter((p, i) => { const rest = plants.filter((_, j) => j !== i).map((x) => x.ratio); return p.ratio >= q(rest, 0.1) && p.ratio <= q(rest, 0.9); }).length;
 const within25 = plants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length;
 // An "output" that is an exact multiple of 8 760 h is nameplate kW × a full year, not a reading (48 % of the AgSTAR rows).
@@ -200,60 +194,23 @@ const seRatio = seModelGwhPerKt / seActualGwhPerKt;
 
 /* ---------- Europe: FNR Biogas-Messprogramm III, 53 German plants with fed substrate and measured methane ---------- */
 
-// Substrates the calculator can enter (grass, whole-crop cereal silage, grain and beet since 2026-11-03). A plant counts
-// only when ≥ 98 % of its fed mass maps (water and additives map to nothing). Fed silage is converted back to harvested mass,
-// because the model deducts the KTBL clamp loss from what is entered.
-const BMP3_TYPES: Record<string, string> = {
-  "Rindergülle": "dairy_slurry", "Rindergülle fester Anteil": "cattle_solid_manure", "Schweinegülle": "pig_slurry", "Rindermist": "cattle_solid_manure",
-  "Pferdemist": "cattle_solid_manure", "Schafmist": "cattle_solid_manure", "Schweinemist": "cattle_solid_manure", "Hühnertrockenkot": "poultry_layer_manure",
-  "Putenmist": "poultry_broiler_litter", "Mais-Ganzpflanzensilage": "maize_silage", "Maissilage": "maize_silage", "Kartoffeln": "potato_processing",
-  "Grassilage": "grass_silage", "Kleegrassilage": "grass_silage", "Kleegras": "grass_silage", "Anwelksilage": "grass_silage", "Mix Gras- und Grünroggensilage": "grass_silage",
-  "Roggen-Ganzpflanzensilage": "whole_crop_silage", "Triticale-Ganzpflanzensilage": "whole_crop_silage", "Tricitale-Ganzpflanzensilage": "whole_crop_silage", "Roggen GPS": "whole_crop_silage",
-  "Gerste-Ganzpflanzensilage": "whole_crop_silage", "Mischung Roggen und Gerste-Ganzpflanzensilage": "whole_crop_silage", "Grünroggensilage": "whole_crop_silage",
-  "Grünroggen-Ganzpflanzensilage": "whole_crop_silage", "Grünhafersilage": "whole_crop_silage",
-  "Getreideschrot": "cereal_grain", "Getreide und Getreidekorn": "cereal_grain", "Weizen Getreide und Getreidekorn": "cereal_grain", "Roggenschrot": "cereal_grain",
-  "Roggen-Getreidekorn": "cereal_grain", "Gerste-Getreidekorn": "cereal_grain", "Zuckerrüben": "sugar_beet", "Zuckerrübe": "sugar_beet",
-  "Wasser": "", "Wasser (Stallspühlwasser)": "", "Silosickersaft": "", "Eisenpräparate": "",
-};
-const DEc = getCountry("DE"), CLAMP_LOSS = 0.093;
-// A methane yield above 450 L/kg VS is above what carbohydrate/protein mixes can give (Buswell: ≈ 415 for carbohydrates): a reporting error.
-const BMP3_MAX_L_PER_KG_VS = 450;
-const bmpImplausible = bmp3.rows.filter((x) => (x.ch4M3PerTVs ?? 0) > BMP3_MAX_L_PER_KG_VS).map((x) => x.id);
-const bmpRows = bmp3.rows.filter((x) => x.feedTonnesYear && x.ch4M3PerTFm && x.feed.length && !bmpImplausible.includes(x.id));
-const bmpUnmappable = bmpRows.filter((x) => x.feed.filter((f) => !(f.name in BMP3_TYPES)).reduce((a, f) => a + f.pctFm, 0) > 2).length;
-const bmpPlants = bmpRows.filter((x) => { const sum = x.feed.reduce((a, f) => a + f.pctFm, 0); return sum > 90 && sum < 110 && x.feed.filter((f) => f.name in BMP3_TYPES).reduce((a, f) => a + f.pctFm, 0) / sum >= 0.98; })
-  .map((x) => {
-    const sum = x.feed.reduce((a, f) => a + f.pctFm, 0);
-    const feedstocks = x.feed.filter((f) => BMP3_TYPES[f.name]).map((f, i) => ({ id: String(i), type: BMP3_TYPES[f.name] as "maize_silage", monthsActive: 12,
-      quantity: Math.round(x.feedTonnesYear! * f.pctFm / sum / (FEEDSTOCKS[BMP3_TYPES[f.name] as "maize_silage"].flags.includes("energy_crop") ? 1 - CLAMP_LOSS : 1)) }));
-    const a = assess({ countryCode: "DE", regionId: DEc.regions[0].id, businessType: "dairy_farm", feedstocks, energy: { heatNeed: "none", hasGridConnection: true }, site: { existingStorageM3: 1e6 } }, DEc, { uncertainty: false });
-    return { id: x.id, ratio: a.routesBase.chp.energy.ch4ProducedM3 / (x.ch4M3PerTFm! * x.feedTonnesYear!) };
-  });
+const { plants: bmpPlants, implausible: bmpImplausible, unmappable: bmpUnmappable } = bmp3Plants();
 const bmpMedianVs = (() => { const v = bmp3.rows.map((x) => x.ch4M3PerTVs).filter((x): x is number => !!x).sort((a, b) => a - b); return { n: v.length, median: v[Math.floor(v.length / 2)] }; })();
 
 /* ---------- Landfill gas: EPA LMOP, measured collection 2022 ---------- */
 
-// Inputs a client would know: waste in place, years open, closure year. k, L0 and collection are the client's own fields; the check uses
-// the EPA AP-42 defaults (k 0.04/a, L0 100 m³ CH4/t, 75 % collection) a client would most likely type.
-const SCF_NM3 = 0.0283168 * 273.15 / 288.71; // standard cubic foot (60 °F) → Nm³ (0 °C)
-const lmopRows = lmop.landfills.map((x) => {
-  const end = x.closed && x.closed <= 2021 ? x.closed : 2022, years = Math.max(1, end - x.opened + 1), t = x.wipTons * 0.90718;
-  const base = { kind: "landfill" as const, annualWasteTonnes: t / years, depositionYears: years, yearsSinceClosure: Math.max(0, 2022 - end), decayPerYear: 0.04, potentialNm3T: 100 };
-  const actual = x.collectedMmscfd * 1e6 * 365 * SCF_NM3 * x.ch4Pct! / 100;
-  return { closed: x.status === "Closed" && !!x.closed && x.closed <= 2021, captured: landfillMethane({ ...base, collectionPct: 75 } as never).captured / actual,
-    method: x.generatedMmscfd ? landfillMethane({ ...base, collectionPct: 100 } as never).generated / (x.generatedMmscfd * 1e6 * 365 * SCF_NM3 * 0.5) : NaN,
-    collectedShare: x.generatedMmscfd ? x.collectedMmscfd / x.generatedMmscfd : NaN };
-});
-const med = (a: number[]) => { const v = a.filter((x) => Number.isFinite(x)).sort((x, y) => x - y); return { n: v.length, m: v[Math.floor(v.length / 2)], p10: v[Math.round((v.length - 1) * 0.1)], p90: v[Math.round((v.length - 1) * 0.9)] }; };
-const lfMethod = med(lmopRows.map((x) => x.method)), lfReal = med(lmopRows.filter((x) => x.closed).map((x) => x.captured)), lfShare = med(lmopRows.map((x) => x.collectedShare));
-// Engines on landfill gas: electricity ÷ methane energy delivered (LHV 9.97 kWh/Nm³), against the model's datasheet curve at the engine size.
-const lfCh4 = new Map(lmop.landfills.map((x) => [x.id, x.ch4Pct!]));
-const engines = lmop.projects.filter((x) => lfCh4.has(x.landfillId)).map((x) => {
-  const eta = x.actualMw * 1000 / (x.flowMmscfd * 1e6 * SCF_NM3 / 24 * lfCh4.get(x.landfillId)! / 100 * 9.97);
-  const unitKw = x.ratedMw * 1000 / Math.max(1, Math.round(x.ratedMw / 1.6));
-  return eta > 0.15 && eta < 0.6 ? eta / chpEtaEl(unitKw, (id) => ENGINEERING_MAP[id as keyof typeof ENGINEERING_MAP].value) : NaN;
-});
-const lfEngine = med(engines);
+// Inputs a client would know: waste in place, years open, closure year; k 0.04/a and L0 100 m³ CH4/t (AP-42), and the methane
+// recovery our form help gives (≈ 50 %, EPA LMOP 2022); AP-42's 75 % default is shown next to it.
+const LF_GUIDANCE_PCT = 50;
+const med = (a: number[]) => ({ n: a.filter(Number.isFinite).length, m: quantile(a, 0.5), p10: quantile(a, 0.1), p90: quantile(a, 0.9) });
+const lmopRows = lmopLandfills(LF_GUIDANCE_PCT), lmopAp42 = lmopLandfills(75);
+const lfMethod = med(lmopRows.map((x) => x.method)), lfReal = med(lmopRows.filter((x) => x.closed).map((x) => x.captured)), lfAp42 = med(lmopAp42.filter((x) => x.closed).map((x) => x.captured));
+const lfRecovery = med(lmopRows.map((x) => x.methaneRecovery));
+// Engines on landfill gas against the model's datasheet × site factor; the factor was fitted on the even-numbered projects,
+// so the odd-numbered half is the out-of-sample check.
+const siteFactor = ENGINEERING_MAP["eng.chp_landfill_site_factor"].value;
+const engines = lmopEngines();
+const lfEngine = med(engines.map((x) => x.ratio / siteFactor)), lfEngineOut = med(engines.filter((x) => x.i % 2 === 1).map((x) => x.ratio / siteFactor));
 
 const capex = capexReferenceRows();
 const counted = capex.filter((r) => r.counted);
@@ -263,7 +220,7 @@ const capex30 = counted.filter((r) => Math.abs(capexRatio(r) - 1) <= 0.3).length
 const capexClass5 = counted.filter((r) => capexRatio(r) >= 0.5 && capexRatio(r) <= 2).length;
 const smallN = counted.length < 10 ? `; n = ${counted.length} is too few to conclude` : "";
 const capexInside = counted.filter((r) => r.publishedEur >= r.lowEur && r.publishedEur <= r.highEur).length;
-const capexMedian = [...counted.map(capexRatio)].sort((a, b) => a - b)[Math.floor(counted.length / 2)];
+const capexMedian = quantile(counted.map(capexRatio), 0.5);
 
 /** ≈ 80 % of real outcomes inside the conservative–optimistic band: too few means overconfident, all means uninformative. */
 const coverage = (k: number, n: number, minN: number): Status => (!n ? "GREY" : k / n < 0.7 || k / n > 0.9 ? "RED" : n < minN ? "AMBER" : "GREEN");
@@ -349,11 +306,11 @@ const groups: Group[] = [
     { id: "D2", item: "Verdict vs reality (go/no), matrix verdict: go/no", threshold: "≥ 80 % agree, n ≥ 8", fact: `${share(agree, judged.length)}; ${matrix}${oneSided ? "; ONE-SIDED: no documented 'go' yet" : ""}; ${reality.length - judged.length} non-economic closures not counted. Not counted: ${plants.length} operating AgSTAR digesters → ${agstarVerdicts} (base excludes support; operating ≠ economic)`, status: judged.length === 0 ? "GREY" : agree / judged.length < 0.8 ? "RED" : judged.length < 8 || oneSided ? "AMBER" : "GREEN" },
   ] },
   { name: "Functional suitability — accuracy, range honesty, integrity", rows: [
-    { id: "A1", item: "Gas / energy within ±25 % of real plants — US (AgSTAR)", threshold: "≥ 80 % of references", fact: `${share(within25, plants.length)} AgSTAR electricity (self-reported); ${plants.length - read.length} rows are nameplate × 8 760 h; on the other ${read.length}: ${pct(read.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / read.length)}; ±30 %: ${pct(plants.filter((p) => Math.abs(p.ratio - 1) <= 0.3).length / plants.length)}`, status: within25 / plants.length >= 0.8 ? "GREEN" : "RED" },
+    { id: "A1", item: "Gas / energy within ±25 % of real plants — US (AgSTAR)", threshold: "≥ 80 % of references", fact: `${share(within25, plants.length)} AgSTAR electricity (self-reported); ${plants.length - read.length} rows are nameplate × 8 760 h; on the other ${read.length}: ${pct(read.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / read.length)}; ±30 %: ${pct(plants.filter((p) => Math.abs(p.ratio - 1) <= 0.3).length / plants.length)}; like-for-like (dairy, electricity only use, heated tank, ≤ manure ceiling) ${share(lfl.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, lfl.length)}, median ${q(lfl.map((p) => p.ratio), 0.5).toFixed(2)}; excluded: ${plants.filter((p) => p.aboveCeiling).length} above the manure ceiling (co-digestion or herd mismatch), ${plants.filter((p) => !p.soleUse).length} with other gas uses (median ${q(plants.filter((p) => !p.soleUse).map((p) => p.ratio), 0.5).toFixed(2)}), ${plants.filter((p) => !p.heatedTank).length} unheated lagoons / liquid-fraction reactors (median ${q(plants.filter((p) => !p.heatedTank).map((p) => p.ratio), 0.5).toFixed(2)})`, status: within25 / plants.length >= 0.8 ? "GREEN" : "RED" },
     { id: "A1e", item: "Methane within ±25 % of real plants — Europe (FNR Messprogramm III)", threshold: "≥ 80 % of references, n ≥ 10", fact: `${share(bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, bmpPlants.length)}; median ${(() => { const r = bmpPlants.map((p) => p.ratio).sort((x, y) => x - y); return r[Math.floor(r.length / 2)]?.toFixed(2); })()}; excluded as implausible (> ${BMP3_MAX_L_PER_KG_VS} L CH4/kg VS): ${bmpImplausible.join(", ") || "—"}; ${bmpUnmappable} plants feed substrates the calculator cannot enter; all ${bmpMedianVs.n} plants: median ${bmpMedianVs.median} L CH4/kg VS (model maize 306, dairy slurry 180 after realisation)`, status: !bmpPlants.length ? "GREY" : bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / bmpPlants.length < 0.8 ? "RED" : bmpPlants.length < 10 ? "AMBER" : "GREEN" },
     { id: "A1s", item: "EU aggregate: farm-plant gas per tonne — Sweden (official, all plants)", threshold: "model ÷ actual 0.75–1.25", fact: `model ${(seModelGwhPerKt * 1000).toFixed(0)} kWh/t ÷ actual ${(seActualGwhPerKt * 1000).toFixed(0)} kWh/t (${seStats.farm.plants} farm plants, ${seStats.dataYear}) = ${seRatio.toFixed(2)}; mix from DM balance: feed ${seFeed.feedDm.toFixed(1)} % DM → ${(seFeed.solidShare * 100).toFixed(0)} % solid manure; aggregate, so a proxy`, status: Math.abs(seRatio - 1) > 0.25 ? "RED" : "AMBER" },
-    { id: "A1l", item: "Landfill gas: model with EPA AP-42 defaults ÷ measured collection (closed sites)", threshold: "median 0.75–1.25", fact: `median ${lfReal.m.toFixed(2)} (p10–p90 ${lfReal.p10.toFixed(2)}–${lfReal.p90.toFixed(2)}, n ${lfReal.n}, LMOP 2022); method = EPA's own estimate ${lfMethod.m.toFixed(2)}; sites collect ${(lfShare.m * 100).toFixed(0)} % of EPA-estimated generation (p10–p90 ${(lfShare.p10 * 100).toFixed(0)}–${(lfShare.p90 * 100).toFixed(0)} %), not the 75 % default`, status: Math.abs(lfReal.m - 1) > 0.25 ? "RED" : "GREEN" },
-    { id: "A1g", item: "Gas engines: real electricity ÷ model efficiency (LMOP landfill-gas engines)", threshold: "median 0.85–1.15", fact: `median ${lfEngine.m.toFixed(2)} (p10–p90 ${lfEngine.p10.toFixed(2)}–${lfEngine.p90.toFixed(2)}, n ${lfEngine.n}); model = TEDOM datasheet at full load`, status: Math.abs(lfEngine.m - 1) > 0.15 ? "RED" : "GREEN" },
+    { id: "A1l", item: "Landfill gas: model with AP-42 k, L0 and our collection guidance ÷ measured collection (closed sites)", threshold: "median 0.75–1.25", fact: `median ${lfReal.m.toFixed(2)} at ${LF_GUIDANCE_PCT} % (p10–p90 ${lfReal.p10.toFixed(2)}–${lfReal.p90.toFixed(2)}, n ${lfReal.n}, LMOP 2022); AP-42 75 %: ${lfAp42.m.toFixed(2)}; method = EPA's own estimate ${lfMethod.m.toFixed(2)} (p10–p90 ${lfMethod.p10.toFixed(2)}–${lfMethod.p90.toFixed(2)}: even waste over the open years); methane recovered ${(lfRecovery.m * 100).toFixed(0)} % of EPA-estimated generation (p10–p90 ${(lfRecovery.p10 * 100).toFixed(0)}–${(lfRecovery.p90 * 100).toFixed(0)} %; volume share × CH4 ÷ 50 %: air dilution)`, status: Math.abs(lfReal.m - 1) > 0.25 ? "RED" : "GREEN" },
+    { id: "A1g", item: "Gas engines: real electricity ÷ model (LMOP landfill-gas engines)", threshold: "median 0.85–1.15", fact: `median ${lfEngine.m.toFixed(2)} (p10–p90 ${lfEngine.p10.toFixed(2)}–${lfEngine.p90.toFixed(2)}, n ${lfEngine.n}); out of sample (odd half, factor fitted on even) ${lfEngineOut.m.toFixed(2)}, n ${lfEngineOut.n}; model = TEDOM datasheet × site factor ${siteFactor}; AD engines keep the datasheet`, status: Math.abs(lfEngine.m - 1) > 0.15 ? "RED" : lfEngineOut.n < 100 ? "AMBER" : "GREEN" },
     { id: "A1w", item: "Wastewater / sewage sludge: model ÷ real plants", threshold: "≥ 80 % within ±25 %", fact: "no current open per-plant data (DWA benchmarks 2022–25 omit gas; the 2017 gas edition is too old); COD → CH4 is stoichiometric (IPCC)", status: "GREY" },
     { id: "A2", item: "CAPEX within ±30 % of published plant cost", threshold: "≥ 70 % of references", fact: `${share(capex30, counted.length)}; median model ÷ published ${capexMedian.toFixed(2)}${smallN}`, status: capex30 / counted.length >= 0.7 ? "GREEN" : "RED" },
     { id: "A3", item: "CAPEX within AACE class 5 (−50 % … +100 %)", threshold: "≥ 95 % of references", fact: `${share(capexClass5, counted.length)}${counted.length - capexClass5 ? `; outside: ${counted.filter((r) => capexRatio(r) < 0.5 || capexRatio(r) > 2).map((r) => `${r.id} ${capexRatio(r).toFixed(2)}`).join(", ")}` : ""}`, status: capexClass5 / counted.length >= 0.95 ? "GREEN" : "RED" },
@@ -386,7 +343,7 @@ const groups: Group[] = [
     { id: "U4", item: "Hard l10n errors (QA ratchet KNOWN, 25 locales)", threshold: "0", fact: `${knownL10n} known (dnt, units, abbreviations), of which ${ownerUnits} fi/vi/th unit words kept by owner decision; new ones fail qa.test.ts`, status: knownL10n ? "RED" : "GREEN" },
   ] },
   { name: "Reliability", rows: [
-    testRow("Re1", "Fault tolerance: hostile input, properties, sweeps", ["src/core/__tests__/hostile-input.test.ts", "src/core/__tests__/properties.test.ts", "src/core/__tests__/regressions-sweep.test.ts", "src/server/__tests__/operations.test.ts"]),
+    testRow("Re1", "Fault tolerance: hostile input, properties, sweeps, synthetic variations (≥ 2 000 runs)", ["src/core/__tests__/hostile-input.test.ts", "src/core/__tests__/properties.test.ts", "src/core/__tests__/regressions-sweep.test.ts", "src/core/__tests__/synthetic-variations.test.ts", "src/server/__tests__/operations.test.ts"]),
     { id: "Re2", item: "Database restore drill (PITR)", threshold: "passed", fact: evidence.restoreDrill ? `${evidence.restoreDrill.pass ? "passed" : "FAILED"} ${evidence.restoreDrill.date}, ${evidence.restoreDrill.minutes} min` : "not done (no production database yet)", status: !evidence.restoreDrill ? "GREY" : evidence.restoreDrill.pass ? "GREEN" : "RED" },
   ] },
   { name: "Security", rows: [

@@ -390,3 +390,60 @@ replace the line rather than adding a contradicting one.
   outside the US (GB, LT, FR, ES, FI: POSSIBLE → WEAK, NPV −0.9…−1.9 M€: less gas for the same upgrader); in the US the boiler case loses
   less (smaller boiler). The engine derate for gas streams is still open.
 
+- 2026-11-04 — Accuracy root causes per reference (`scripts/accuracy.ts` prints them; shared code `scripts/accuracy-references.ts`, used by
+  the scorecard too). AgSTAR (79, self-reported): heated tanks median 0.95, unheated covered lagoons 1.54 (19; the model designs a heated
+  tank and has no ambient-temperature yield), induced blanket / fixed film 2.3–2.9 (liquid fraction only), extra gas uses (CNG, pipeline,
+  boiler) 1.39 (18: electricity is part of the gas), 4 plants report more power than the herd's manure can give at 100 % collection and
+  Bo (AWMFH 2008 Table 4-5(a), highest yield 125 lb milk/d: 20 lb VS/d = 9.07 kg × IPCC Bo 0.24 × datasheet η: co-digestion or herd
+  mismatch, model 0.20–0.51). Like-for-like rule (fixed before ratios, both directions): dairy, electricity only, heated tank, ≤ ceiling
+  → 40 plants, median 0.95, 53 % within ±25 %; the rest of the misses are plants far below their herd's gas (Ravenna 72 kWh/head vs
+  ≥ 1 600): downtime / partial collection, which the report's real-plant range (R1b) carries. A1 status stays on all 79.
+  Messprogramm III misses (5 plants at 0.70–0.73): energy-crop plants measuring 390–418 L CH4/kg VS vs KTBL standard 306–337 (volunteer,
+  long retention); no change (realisation already 1.0). Landfills (LMOP): our first-order decay = EPA's estimate (1.05), but per site
+  0.70–1.97 because the client enters total waste ÷ years (uniform deposition); methane recovered = volume share × CH4 ÷ 50 %: closed sites
+  collect 68 % of the gas by volume at 40 % CH4 → 48 % of the methane (open 54 %). The earlier 60 % guidance was a volume share.
+  CAPEX: LWK reference rebuilt at 510 cows (the realisation change had made 580 cows an 85 kW plant: 1.43 → 1.31); "new storage" 1.60 is
+  0.64 M€ of storage incl. the TA Luft 2021 150-day gas-tight store a ≈ 2014 concept did not need; CHP 2 400 €/kW at 100 kW.
+- 2026-11-04 — APPLIED: `eng.chp_landfill_site_factor` 0.80 on landfill-gas engine output (EPA LMOP 2024-09, 284 projects; same in every
+  load band; fitted on even-numbered projects 0.80, odd half 0.79; installed rating stays the datasheet one, heat unchanged). AD engines
+  keep the datasheet (AgSTAR heated tanks 0.95–1.00). Landfill help "≈ 50 % (12–83 %)" of the modelled methane in 25 locales and
+  us_closed_landfill 60 → 50 %. compare-scenarios: 14 of 1 287 verdicts, all us_closed_landfill outside the US (PL HU IT SK DE AT CZ RO
+  EE LV GR RS MD BG: POSSIBLE → WEAK, NPV −1.8 … −2.7 M€); US/CA/BR/IN NPV +0.05 … +0.3 M€ (smaller kit). A1g 0.80 → 0.99, A1l 1.89 → 1.26.
+- 2026-11-04 — Synthetic variations (`synthetic-variations.test.ts`, seed 20261104, ≥ 2 000 runs, part of Re1): the 39 examples varied in
+  size (× 0.05–20), data completeness (quantities only vs as entered), country (33 + regions) and seasonality. Invariants: balance audit,
+  VS ≤ DM, CH4 ≤ biogas, power ≤ 50 % of CHP fuel, N not created. Metamorphic: size (feed × k exactly), typed catalogue DM/VS/BMP =
+  empty fields, start month of a year-round feed, 25 languages give identical numbers, FX × k with local inputs × k gives the same EUR
+  result, display EUR → USD conversion. A mutation (local inputs not scaled) fails it at once.
+- 2026-11-04 — /methodology "How accurate we are" replaces the single AgSTAR block: six sets (AgSTAR all + like for like, Messprogramm III,
+  LMOP engines, LMOP closed landfills, CAPEX) with n, median, p10–p90, share within ±25 % (CAPEX ±30 %), a log-scale strip (p10–p90,
+  middle half, median, tolerance band) and source · period · basis; untested segments are named. Text machine-written in 25 locales.
+- 2026-11-04 — Pig manure per place checked, NOT changed. Primary: IPCC 2006 Vol. 4 Table 10A-7 market swine VS 0.27 (NA, 46 kg) / 0.30
+  kg/head·d (W/E Europe, 50 kg) and AWMFH 2008 Table 4-10 grow-to-finish 0.377 kg VS/d at 154 lb, both AS EXCRETED; LfL Basisdaten Tab. 4b
+  (11/2024) gives DüV storage volume 1.83–1.89 m³ per average finisher (no DM). Slurry reaching a digester is lower: LfL Schwarzenau
+  measured 1.28 m³ per place·a at 5 % TS (via top agrar; LfL report "31611 bericht sommer") ≈ 0.14 kg VS/d vs the catalogue's 0.16 →
+  Europe confirmed. US: as-excreted would be × 2.3 (1.75 t at 9.5 % TS), but AgSTAR NC covered-lagoon swine farms read 35–57 kWh/head
+  vs model 52–55 today (would become 2.3 × too high) while 4 heated US swine plants read higher than the model (0.27–0.61 and 3.28):
+  conflicting, n tiny, sows mixed into head counts → no change; needs per-place metered US data.
+- 2026-11-04 — Lagoon temperature checked, NOT changed. IPCC 2006 Table 10A-7 (van't Hoff–Arrhenius, Mangino et al. 2001, retention
+  up to a year): anaerobic-lagoon MCF 66 % at 10 °C, 78 % at 15 °C, 80 % from 18 °C. The model designs a covered lagoon only where the
+  annual mean is ≥ 20 °C, i.e. at the IPCC maximum: a temperature factor would be 1.0 for every case the model can produce. The AgSTAR
+  lagoon gap (19 US lagoons, 1.54; California ≈ 17–18 °C, MCF 79–80 %) is therefore NOT temperature. Open hypotheses (unverified):
+  flush dairies separate solids before the lagoon, partial herd, sludge build-up; the backtest enters every plant as a heated tank.
+- 2026-11-04 — Landfill help rewritten in 25 locales: share of the modelled METHANE (≈ 50 %; closed ≈ 48 %, operating ≈ 54 %; 21–82 %),
+  with the note that drawn-in air makes a volume share read higher. Numbers in the model unchanged.
+- 2026-11-04 — Source audit since commit 065f9e3 (primary documents re-read, extracts re-matched by script). Verified exactly: LMOP extract
+  (828 landfills, 305 projects) = EPA composite xlsx 2024-09; AgSTAR extract (161 rows: head, electricity, digester) = EPA xlsx; the 10
+  "economic" closures read as recorded (two are weak: developer bankrupt, "to be reconfigured"); Messprogramm III BGA 38 = FNR data sheet
+  (17 334 t, 33.4 % DM, 96.8 % VS, 128 m³/t, 412 L/kg VS; methane derived from metered power ÷ CHP η); Swedish farm plants 108 / 1 166 kt
+  manure / 1 188 kt / 200 GWh / digestate 1 153 kt at 6 % DM = report Tab. 4, 14; Eurostat DE electricity 0.2366 €/kWh and gas 81.1 €/MWh
+  (2026-S1) = live API; LfL 20 m³ per 8 000-kg cow; IPCC 2006 dairy VS 5.1 / 4.5; FNR grass, beet, grain, stillage, brewer's grain.
+  Corrected (FNR guide, French ed. 2013, Tab. 4.4, 4.7, 4.9; IPCC 2019 Refinement Tab. 10.13A × 10A.5): pressed/wet beet pulp typical
+  285 → 218 L CH4/kg VS (the measured FNR mean; 285 was the EEG 2009 legal standard yield, outside the measured 181–254, now the high
+  end); cattle solid manure 22 % / 82 % / 165 → 25 % / 80 % / 250 (FNR Tab. 4.9); whole-crop silage high 380 → 350; dairy VS per cow
+  Western Europe 5.1 → 5.0, Eastern Europe 4.5 → 3.7 kg/d (latest IPCC default; the 2006 table was 13 years older). LMOP engine factor
+  provenance now says MW is "actual or estimated" and flow "current or planned" (LMOP field definitions). compare-scenarios: 2 of 1 287
+  verdicts (us_dairy_rng@LT, @RS POSSIBLE → WEAK: Eastern dairy VS); NPV down to −0.49 M€ for Eastern dairy cases. Validation moved the
+  right way: Sweden 0.86 → 0.90, Messprogramm p90 0.95 → 1.02, median 0.87. Not changed, flagged: maize silage nutrients (model 4.5 kg N/t
+  vs FNR Tab. 4.3 2.8 % DM = 9.2 kg/t; other German tables are lower), poultry manure (model 27 % DM/220 L vs FNR 40 %/280 L, different
+  products), pig slurry VS-specific 290 vs FNR 250 at equal m³/t; Eastern dairy needs national Tier 2 VS (Poland NID 2025 not downloadable
+  here); support schemes, ODRÉ, Damodaran CRP and AP-42 k/L0 not re-read in this audit.

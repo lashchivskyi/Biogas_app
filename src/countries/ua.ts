@@ -72,7 +72,7 @@ export const UA_PARAMS = [
     prov("eng.animal.dairy_cow.t_head_year", "Manure as excreted per dairy cow and year", m.tonnesHeadYear, "t/head·a", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
     prov("eng.animal.dairy_cow.dm_pct", "Dry matter of dairy cow manure as excreted", m.dryMatterPct, "% FM", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
     prov("eng.animal.dairy_cow.vs_pct_dm", "Volatile solids of dairy cow manure", m.vsPctOfDm, "% DM", "FACT", m.source, m.confidence, { country: "UA", date: m.date }),
-  ])(dairyManure(4.5, "Eastern Europe").dairy_cow),
+  ])(dairyManure(3.7, "Eastern Europe", 6.7, 550).dairy_cow),
 ];
 
 export const UA: CountryAdapter = {

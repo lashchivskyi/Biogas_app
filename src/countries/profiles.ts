@@ -21,15 +21,15 @@ const NO_GRID_BM: [number, number, number] = [0.3, 0.4, 0.55];
 
 /**
  * European dairy-cow manure: slurry volume per DüV Anlage 9 Tab. 1 (20 m³ ≈ 20 t a year at 8 000 kg milk) with the dry
- * matter set so that volatile solids match the IPCC 2006 regional default. The catalogue's 8.5 % DM gave 3.7 kg VS per
- * cow and day, 27 % below the Western and 18 % below the Eastern European default.
+ * matter set so that volatile solids match the latest IPCC regional default (2019 Refinement: VS rate × typical mass).
+ * A national inventory (Tier 2) value per country should replace it; the regional default does not know herd yield.
  */
-export const dairyManure = (vsKgDay: number, region: string) => ({
-  dairy_cow: { tonnesHeadYear: 20, dryMatterPct: +(vsKgDay * 365 / (20 * 1000 * 0.8) * 100).toFixed(1), vsPctOfDm: 80, confidence: "MEDIUM" as const, date: "2006-12-31",
-    source: `IPCC 2006 GL Vol. 4 Table 10A-4, ${region}: ${vsKgDay} kg VS/cow·d (600 kg cow, older herd yields: a floor for today's cows); volume 20 m³/a per DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (Nov 2024, 8 000 kg milk); DM = VS ÷ (volume × 80 % VS of DM)` },
+export const dairyManure = (vsKgDay: number, region: string, rate: number, massKg: number) => ({
+  dairy_cow: { tonnesHeadYear: 20, dryMatterPct: +(vsKgDay * 365 / (20 * 1000 * 0.8) * 100).toFixed(1), vsPctOfDm: 80, confidence: "MEDIUM" as const, date: "2019-05-31",
+    source: `IPCC 2019 Refinement Vol. 4 ch. 10, Table 10.13A (${rate} kg VS per 1 000 kg mass·d) × Table 10A.5 (${massKg} kg), ${region}: ${vsKgDay} kg VS/cow·d (regional default, not herd-specific; IPCC 2006 Table 10A-4 gave ${region === "Western Europe" ? "5.1" : "4.5"}); volume 20 m³/a per DüV Anlage 9 Tab. 1 via LfL Basisdaten Tab. 4b (Nov 2024, 8 000 kg milk); DM = VS ÷ (volume × 80 % VS of DM)` },
 });
-const MANURE_WEST = dairyManure(5.1, "Western Europe");
-const MANURE_EAST = dairyManure(4.5, "Eastern Europe");
+const MANURE_WEST = dairyManure(5.0, "Western Europe", 8.4, 600);
+const MANURE_EAST = dairyManure(3.7, "Eastern Europe", 6.7, 550);
 
 export const PROFILES: CountryProfile[] = [
   // ---------------- Central & Eastern Europe ----------------
