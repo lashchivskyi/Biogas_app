@@ -14,7 +14,8 @@ description: Refresh or correct Methalytics market data (prices, tariffs, FX, wa
 6. Run `npx tsx scripts/compare-scenarios.ts --save $TEMP/after.json` and
    `--diff $TEMP/before.json $TEMP/after.json`; explain every verdict change by its cause.
 7. Run all checks (`npm test`, `npm run lint`, `npm run typecheck`, `npm run build`).
-8. Update `docs/ai/DATA-SOURCES.md` (sources, blocks, cadence) and `docs/ai/STATUS.md`.
+8. Update `docs/ai/DATA-SOURCES.md` only if a source, block or cadence changed, and `docs/ai/STATUS.md` only if
+   a scorecard item or a next step changed (gate: AGENTS › Project memory). Values and verdict counts go in the commit.
 
 Parallel research helpers are worth it only for several independent countries; give each the full
 source policy, ask for a compact table (value | unit/basis | period | official URL | access | confidence).

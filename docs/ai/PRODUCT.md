@@ -1,5 +1,8 @@
 # Product
 
+Who the client is, what decision we serve, market position and roadmap. Changes only when the product or the
+market evidence changes; one-off research write-ups and unconfirmed findings do not belong here.
+
 ## Mission
 
 The client makes one decision: **whether to pay for a detailed feasibility study (€10–100 k and months
@@ -82,6 +85,8 @@ as a separate case. Market data per country and, where official data exist, per 
 - Inputs the client does not yet control (export price, operator wage, heat price, financing
   terms, vendor quotes) would improve accuracy enough to justify a longer form.
 - Regional (admin1) market data matter enough beyond US, CA, BR, IN, MX, IT.
+- Developers, consultants and plants after their tariff pay more and more often than farms; a "check the vendor's
+  offer" input turns the main substitute into demand (test in beta interviews).
 
 ## EU market and validation evidence (2026-11-03; sources in DATA-SOURCES › validation)
 
@@ -101,8 +106,7 @@ as a separate case. Market data per country and, where official data exist, per 
   | Wastewater, sewage sludge | no current open per-plant data | — | not validated |
   | Existing gas → power | LMOP 284 engine projects | 0.80 of datasheet efficiency | model too optimistic |
   | Other countries (UA, TR, BR, IN, MX, …) | none per plant | — | physics shared, not validated |
-  Residue catalogue aligned to FNR/KTBL 2026-11-03 (stillage, brewer's grain, beet pulp); slaughter, fats, fish, POME have no open primary value.
-- Grass silage, whole-crop cereal silage, grain and fresh beet added to the catalogue (2026-11-03); 8 of 53 measured plants still feed others.
+  Slaughter residues, fats, fish, POME and olive pomace have no open primary yield value (kept MEDIUM/LOW).
 
 ## Market position (competitor benchmark 2026-11-04 from primary sources; re-check yearly)
 
@@ -116,9 +120,9 @@ Nobody else sells self-serve, multi-country screening with a verdict (searched E
 | WSU/USDA-ERS AD Budget Calculator (2018) | WSU, free Excel | dairy AD, CHP/RNG | US · en | ~25 · 20 min | none; 2013 costs | open | all free |
 | EPA LFGcost-Web v3.6 (09/2023) | EPA LMOP, free Excel | landfill gas: engine, turbine, boiler, RNG, CNG | US · en | ~10 · 15 min | none; 2013/2019 cost curves | open formulas | all free |
 | EPA LandGEM | EPA, free Excel | landfill gas generation | any · en | ~6 · 10 min | method = AP-42 | open | all free |
-| BiogasFlux (GrowDiesel) | free now, paid tiers "planned", no price | biogas/CBG/RNG yield, revenue, payback | any (INR/USD/EUR/CNY) · 10 languages | ~6 · 2 min | none; **method not disclosed** | none | all free today (account to save) |
+| BiogasFlux (GrowDiesel, IN vendor; lead channel) | free now, paid tiers "planned", no price | biogas/CBG/RNG yield, revenue, payback | any (INR/USD/EUR/CNY) · 10 languages | ~6 · 2 min | none; **method not disclosed** | none | all free today (account to save) |
 | RETScreen Expert | NRCan, CAD 869/yr (third-party copies of the NRCan price) | all energy projects | any · many languages | 50+ · hours | none biogas-specific | generic | viewer free, save/print paid |
-| Anessa AD•A/AD•O/AD•M | sales-led, no public price | AD development → operations | 16 countries · en | data room · weeks | self-reported impact only | closed | none free |
+| Anessa AD•A/AD•O/AD•M (operator SaaS) | sales-led, no public price | AD development → operations | 16 countries · en | data room · weeks | self-reported impact only | closed | none free |
 | IEA BioGRAM (07/2026) | IEA, free map | regional potential + cost | world · en | area · 5 min | none per project | method note | all free; no project economics |
 | Feasibility study (consultant) | ADEME 2025 eligible cost ≤ €100 k (diagnostic ≤ €50 k), 50–70 % funded; Thurgau CHF 8–12 k (2014); AgSTAR "free scoping … > $100 k" | any | local · local | site data · weeks–months | site-specific, bankable | report | all paid |
 | **Methalytics** | free screening; €160–390 per report | 50+ feedstocks, gas streams, 3 routes | 33 · 25 | 6–30 · ≈ 5 min (U2 not yet measured) | AgSTAR, FNR MP III, SE, LMOP, ODRÉ back-tests (A1 RED, see STATUS) | all parameters with source on /methodology | verdict + levers free; HOW FAR / HOW SURE paid |
@@ -158,10 +162,17 @@ back-tested on several open real-plant sets with the result published on /method
 on > 100 digesters, so claim "checked against real plants in five datasets", never "the only one". Weaker: biomethane offtake value,
 no EU compliance value, pre-tax only, one site at a time, CAPEX anchored on German plants, no line-item override (every free tool has it).
 
+Wider market (2026-11-04; full write-up in the owner's Claude doc "Methalytics — міжнародне маркетингове дослідження"):
+- The main substitute is not software but vendors'/EPCs' free feasibility offers; then free state tools and free neutral
+  advisers (C.A.R.M.E.N. DE, ADBA UK, chambers FR), then a subsidised study. Channel hypothesis: be the advisers' tool.
+- Decision flow (official/association counts): EU 1 975 biomethane plants mid-2026 (+327/yr); DE 9 315 CHP plants, many
+  leaving the 20-year EEG tariff; USDA paused loan guarantees for new digesters 04–12/2026 (lenders need honest screening).
+- Proposed position (owner to confirm, STATUS): "independent second opinion before a study or a vendor contract"; revenue
+  from developers, consultants and plants after their tariff; farms stay the free top of the funnel; never sell leads to vendors.
+
 ## Roadmap (Impact × Accuracy gain × Client value × Competitive edge ÷ Complexity; audit 2026-10-31)
 
-1. Done 2026-10-31: honest uncertainty, buyer's biomethane offer, evidence requests ("how to check"), silage clamp
-   and ensiling loss, EU dairy manure per head (IPCC) with a Danish per-tonne check.
+Numbers are stable ids referenced elsewhere; a done item is deleted, not renumbered.
 2. EU compliance value as support cases from legal texts (FR CPB, DE THG, NL ERE, UK RTFO).
 3. Next step of the evidence loop: upload of lab / quote documents and a visible evidence level per input.
 4. Bank pack (construction year, CIT, depreciation, equity IRR, yearly DSCR, reinvestment, residual value).

@@ -81,6 +81,99 @@ export const LOCALISED_ABBREVIATIONS: readonly { en: string; term: keyof Terms }
   { en: "NPV", term: "npv" }, { en: "IRR", term: "irr" }, { en: "CHP", term: "chp" }, { en: "COD", term: "cod" },
 ];
 
+export interface FixedTerm {
+  /** English concept. */
+  concept: string;
+  /** Approved term; must appear in the locale's UI or model text. */
+  term: string;
+  /** Stems that must not appear in that text (matched like `forbidden`). */
+  rejected?: readonly string[];
+  why?: string;
+}
+
+/**
+ * Terms fixed in the MQM rounds of 2026-11-01/02 without a native reviewer: change one only with a native, and together
+ * with every string that uses it. Checked over UI and model catalogs by `__tests__/fixed-terms.test.ts`.
+ * Everywhere: Monte Carlo is a probability range, never "certainty".
+ */
+export const FIXED_TERMS: Partial<Record<Locale, readonly FixedTerm[]>> = {
+  uk: [
+    { concept: "Monte Carlo range", term: "Діапазон ймовірностей" },
+    { concept: "EBITDA", term: "Операційна маржа", why: "\"прибуток\" reads as EBIT" },
+    { concept: "confidence", term: "Достовірність" },
+  ],
+  de: [
+    { concept: "EBITDA", term: "Betriebsergebnis vor Abschreibungen", why: "the bare word means EBIT" },
+    { concept: "confidence", term: "Vertrauensniveau" },
+    { concept: "verdict", term: "Einschätzung" },
+  ],
+  nl: [
+    { concept: "EBITDA", term: "Bedrijfsresultaat vóór afschrijvingen" },
+    { concept: "confidence", term: "betrouwbaarheid" },
+    { concept: "biomethane", term: "groen gas" },
+    { concept: "upgrading", term: "opwerking" },
+  ],
+  da: [
+    { concept: "EBITDA", term: "Driftsresultat før afskrivninger" },
+    { concept: "confidence", term: "pålidelighed", rejected: ["datasikkerhed"], why: "Datasikkerhed = IT security" },
+    { concept: "refund", term: "refusion", why: "tilbagebetaling = payback" },
+  ],
+  sv: [
+    { concept: "verdict", term: "Besked" },
+    { concept: "screening", term: "översiktlig bedömning", why: "förstudie is the feasibility study" },
+    { concept: "confidence", term: "", rejected: ["datasäkerhet"], why: "Datasäkerhet = IT security" },
+  ],
+  fi: [
+    { concept: "verdict", term: "Arvio" },
+    { concept: "NPV", term: "nettonykyarvo" },
+    { concept: "feedstock mix", term: "seossyöte" },
+  ],
+  pt: [
+    { concept: "slurry", term: "dejeto líquido", rejected: ["chorume"], why: "chorume = landfill leachate" },
+    { concept: "EBITDA", term: "Resultado operacional" },
+    { concept: "DSCR", term: "DSCR", rejected: ["ICSD"] },
+  ],
+  es: [
+    { concept: "upgrading", term: "purificación", why: "depuración = wastewater treatment" },
+    { concept: "permit difficulty", term: "dificultad" },
+  ],
+  fr: [
+    { concept: "never pays back", term: "non atteint" },
+    { concept: "pasteurisation", term: "pasteurisation" },
+    { concept: "FR biomethane scheme", term: "Tarif d’achat du biométhane injecté" },
+    { concept: "UK planning", term: "Autorisation d’urbanisme" },
+  ],
+  it: [
+    { concept: "route", term: "percorso", why: "filiera only for the supply chain" },
+    { concept: "palm oil mills", term: "oleifici di palma" },
+  ],
+  ro: [
+    { concept: "upgrading", term: "purificare", why: "epurare = wastewater treatment" },
+    { concept: "gate fee", term: "taxă de primire" },
+    { concept: "Monte Carlo range", term: "interval de probabilitate", rejected: ["certitudine"] },
+  ],
+  cs: [{ concept: "gate fee", term: "poplatek za převzetí" }],
+  sk: [{ concept: "slurry", term: "hnojovica", rejected: ["kejd"], why: "kejda is Czech" }],
+  bg: [
+    { concept: "verdict", term: "Заключение", why: "Оценка also means score" },
+    { concept: "upgrading", term: "Обогатяване до биометан" },
+  ],
+  sr: [
+    { concept: "verdict", term: "Zaključak", why: "Procena also means score" },
+    { concept: "economics", term: "ekonomika", why: "ekonomija = economy" },
+  ],
+  vi: [
+    { concept: "Monte Carlo range", term: "Khoảng xác suất" },
+    { concept: "Possible with conditions", term: "Có thể, nếu đáp ứng điều kiện", why: "khả thi reads as a feasibility study" },
+  ],
+  th: [
+    { concept: "Monte Carlo range", term: "ช่วงความน่าจะเป็น" },
+    { concept: "economics", term: "ความคุ้มค่าทางเศรษฐกิจ", why: "เศรษฐศาสตร์ = the discipline" },
+    { concept: "whey", term: "เวย์" },
+    { concept: "slurry", term: "สเลอร์รี" },
+  ],
+};
+
 const Q = {
   en: "“”‘’", uk: "«»„“", pl: "„”«»", de: "„“»«‚‘", fr: "«»“”", it: "«»“”", es: "«»“”", pt: "“”‘’", nl: "“”„‘’", cs: "„“‚‘", sk: "„“‚‘",
   hu: "„”»«", ro: "„”«»", bg: "„“", sr: "„“”’", el: "«»“”", tr: "“”‘’", lt: "„“‚‘", lv: "„“«»", et: "„“", da: "„“»«”", sv: "”»’", fi: "”»’",

@@ -93,7 +93,7 @@ no-break space), dot (de it es pt nl ro sr el tr da vi), comma (en th).
 2. **Context for the translator**: `npm run l10n:export -- <folder>` writes `translator-brief.csv` (key, English, where used, placeholders to keep, length budget, note). Give it with the glossary table above, a screenshot set from the visual check, and the rule "sentence case, no full stop on buttons, +40 % room".
 3. **Layers** (ISO 17100 + LISA): translator → second linguist (revise) → domain reader (a biogas or energy engineer of that country, for terms such as digestate, upgrading, CHP, tariff names) → owner. Machine QA never replaces the first three. Say "native review not done" until a named person signs off.
 4. **Legal texts** (waiver, terms, consent, order button, privacy, refund/waiver emails) are a separate track: lawyer plus sworn/certified translator per market, checklist in `docs/legal/LAWYER-BRIEF.md` §6. A language is not "legally ready" because it passed QA.
-5. **Search copy** (`src/i18n/seo-copy.ts`, home `meta.*`): written as the native speaker searches (3 phrases per language in `queries`), no invented volumes. After launch check Search Console queries per language and adjust; record the change in DECISIONS.
+5. **Search copy** (`src/i18n/seo-copy.ts`, home `meta.*`): written as the native speaker searches (3 phrases per language in `queries`), no invented volumes. After launch check Search Console queries per language and adjust; the evidence goes in the commit message, DECISIONS only if a rule changes.
 
 ## Visual check (do after any change to UI text, fonts or layout)
 Needs a browser, so it is not in CI. Setup and commands are at the top of `scripts/l10n-visual.mjs` and `scripts/l10n-print.mjs`.

@@ -5,7 +5,8 @@
 - Reply to the owner in plain Ukrainian: practical answer first, technical detail after.
 - Path rules load automatically from `.claude/rules/`; procedures live in `.claude/skills/`.
 - Subagents only for independent parallel research or an unbiased review; give them the full
-  quality bar up front, ask for a short result, and save findings to code or `docs/ai/`.
+  quality bar up front, ask for a short result; findings go into code or tests, and into `docs/ai/` only
+  through the gate in AGENTS › Project memory.
 
 # Compact instructions
 

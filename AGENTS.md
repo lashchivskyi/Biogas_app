@@ -69,11 +69,23 @@ Say what you ran and what you did not.
 
 - Start with `git status`; never touch others' unfinished changes; never read `.env*`.
 - One-off scripts, downloads and screenshots go to the system temp folder, never the repo.
-- No new reports or analysis files. Persistent knowledge lives only in `docs/ai/` (4 files) and
-  skills. Before finishing a task that changed direction, data or a rule: update
-  `docs/ai/STATUS.md` (rewrite, ≤ 40 lines) and append to `DECISIONS.md` only what a future
-  session must not rediscover. Delete stale lines instead of adding new ones.
-- Research done by helper agents must end in code, tests or `docs/ai/`, never only in chat.
+- No new reports, analysis or data-dump files anywhere in the repo; research write-ups for the owner go to chat or
+  the owner's documents, not to `docs/`.
+
+## Project memory (`docs/ai/`): default is to write nothing
+
+Write a line only if ALL four hold; otherwise leave the files untouched and say "docs/ai not changed" in the answer:
+1. **Changes future behaviour**: a decision taken, a constraint, an open owner decision, a blocked source, or a change
+   tried and reverted, without which a later session would act differently or redo the work.
+2. **Not recorded elsewhere**: not in code, tests, a parameter's `source`, the commit message or git history.
+3. **Verified**: primary source read or measured by a script. "Not opened", "from listings", "assumption",
+   "unconfirmed" are not findings; a gap worth tracking is one line in STATUS "Next work".
+4. **Not a log**: no session summaries, "done" items, verdict/NPV counts of a change (commit message) or chat answers.
+
+Where: STATUS = current state and next steps, overwritten, ≤ 40 lines. DECISIONS = `date — decision — why — where
+enforced`, ≤ 4 lines, replaces the line it supersedes. PRODUCT = client, decision, market position, roadmap.
+DATA-SOURCES = where to get data, blocks, cadence. Before adding, delete what the change made stale.
+`src/__tests__/project-docs.test.ts` enforces the size limits and the file list.
 - **Every user-facing text, in all 25 languages, is written as a native specialist of that language would write it**
   (names, headings, buttons, emails, SEO, reports): start from the meaning and the reader, use that country's own terms
   and word order, never a word-for-word copy of the English. Then revise it as a second native linguist would. It is still

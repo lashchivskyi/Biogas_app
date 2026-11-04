@@ -88,14 +88,14 @@ Survey of EU/world validation sources (2026-11-03). Per plant = inputs and outpu
 | Marktstammdatenregister / netztransparenz EEG master data | per unit: capacity, commissioning, energy carrier, EEG category (§ 44 manure ≤ 75 kW) | candidate: real hours of small manure plants if annual kWh per unit is published (not confirmed) |
 | ODRÉ (FR) | per site metered injection + "theoretical capacity" | used (R3) |
 | SCB/Energimyndigheten (SE) | per plant category: substrate kt and GWh | used (A1s) |
-| DBFZ Report 50 (12/2023) | DE national: upgrading capacity, biomethane, flex hours | recorded (DECISIONS), not per plant |
+| DBFZ Report 50 (12/2023) | DE national: upgrading capacity, biomethane, flex hours | context: national utilisation ≈ 0.82 vs model 0.91 (one aggregate, not applied) |
 | DCA Normtal (DK), LfL Basisdaten (DE) | manure per animal | not applied: DK ex-storage volume overstates digester size (excreted 28.9 t is the candidate); DE volume only |
 | EBA/GIE European Biomethane Map | plant list (capacity, main substrate) as PDF; EBA database on request | context only; no CSV |
 | IEA Bioenergy Task 37 country reports (10/2024) | national production and plant counts | context only |
 | Energistyrelsen (DK) | plant list last updated 2014; current per-plant input not found | not usable |
 | Swiss BFE / WSL EnviDat "Biogas aus Hofdünger" | farm plants (≈ 110–125) and TJ | candidate aggregate like SE |
 | Ofgem Renewables & CHP Register (GB) | per-station output exists in register reports; register being replaced, no open export found | not usable now |
-| ACER CHEST (EU agency) | 2025 biomethane production cost, TTF, GO prices (DK/NL/DE) | recorded (DECISIONS); compliance value belongs in support cases |
+| ACER CHEST (EU agency) | 2025 biomethane production cost, TTF, GO prices (DK/NL/DE) | context (PRODUCT › EU market); compliance value belongs in support cases |
 | EBA Statistical Report 2025, EBA Investment Outlook 7/2026, IEA Outlook for biogas and biomethane 2025 | market size, plant counts, cost ranges | context (PRODUCT.md › EU market) |
 | GSE/CIB (IT), CBS (NL), Eurostat nrg_bal | national totals; per-plant not found | not checked in detail |
 | Next, ranked (2026-11-03) | what it adds | access |
