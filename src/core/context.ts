@@ -20,6 +20,10 @@ export interface Modifiers {
   productPrice: number;
   /** Added net feedstock cost, EUR per tonne of every input stream (negative = gate fee); used for break-even feedstock prices. */
   feedstockEurT: number;
+  /** Share of the tonnage promised by third parties (delivered streams) that actually arrives; own streams unchanged. */
+  deliveredFeedstock: number;
+  /** Change of every traded line's net price as a share of its size: +0.25 = purchases 25 % dearer and gate fees 25 % lower. */
+  tradedPriceShift: number;
 }
 
 export const NO_MODS: Modifiers = {
@@ -34,6 +38,8 @@ export const NO_MODS: Modifiers = {
   extraDowntimePp: 0,
   productPrice: 1,
   feedstockEurT: 0,
+  deliveredFeedstock: 1,
+  tradedPriceShift: 0,
 };
 
 export interface RunContext {
@@ -48,4 +54,6 @@ export interface RunContext {
   t: Tr;
   /** Set only for the "with support" case; the base verdict never uses it. */
   support?: SupportScheme;
+  /** Digester technology to evaluate where a covered lagoon is eligible (see `lagoonEligible`); default a heated tank. */
+  reactor?: "tank" | "lagoon";
 }

@@ -1,6 +1,6 @@
 import { existingPlant, processBounds, processSchema } from "./processes";
 import { modelsForBusiness } from "./businesses";
-import { climateSummary } from "./climate";
+import { climateSummary, lagoonEligible, meanTemp } from "./climate";
 import { projectRegion, type CityClimate } from "./location";
 import { biomethaneOfftake } from "./capex";
 import { NO_MODS, type Modifiers, type RunContext } from "./context";
@@ -123,7 +123,41 @@ function nonFiniteInputPath(value: unknown, path = "input"): string | undefined 
  * no stress tests, parameter sensitivity, break-even search, plant-size table, quote check, support cases, EVPI or Monte
  * Carlo. Those fields come back empty; `lite.test.ts` proves the verdict, ranges and confidence equal the full run.
  */
-export function assess(input: Assessment["input"], country: CountryAdapter, opts: { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean; lite?: boolean } = {}): Assessment {
+type AssessOptions = { lang?: CoreLang; asOfDate?: string; uncertainty?: boolean; lite?: boolean; reactor?: "tank" | "lagoon" };
+
+/**
+ * Where a covered lagoon is eligible (liquid feed, warm enough: `lagoonEligible`), both digester types are assessed and the
+ * other one is reported as `technologyAlternative`. From a 20 °C annual mean the higher base NPV is the headline; between
+ * `eng.lagoon_min_mean_c` and 20 °C the lagoon yield rests on 7 US plants (LOW), so it is shown but never the headline.
+ */
+export function assess(input: Assessment["input"], country: CountryAdapter, opts: AssessOptions = {}): Assessment {
+  // Invalid input goes straight to the single run, which raises the proper error.
+  if (opts.reactor || input.process || !input.feedstocks.length || input.countryCode !== country.code || nonFiniteInputPath(input) || !BUSINESS_TYPES[input.businessType]) return assessOne(input, country, opts);
+  const region = projectRegion(input, country);
+  const params = buildParams(country, input.regionId, input.energy, input.city);
+  const warm = meanTemp(region.monthlyTempC) >= 20;
+  if (meanTemp(region.monthlyTempC) < params.get("eng.lagoon_min_mean_c")) return assessOne(input, country, opts);
+  // A supplier quote is for one technology: keep the climate default (lagoon from 20 °C) instead of re-choosing.
+  if ((input.finance?.capexQuoteLocal ?? 0) > 0) return assessOne(input, country, { ...opts, reactor: warm ? "lagoon" : "tank" });
+  const quick = { ...opts, lite: true, uncertainty: false };
+  const tank = assessOne(input, country, { ...quick, reactor: "tank" });
+  const dm = tank.routesBase[tank.bestRoute].feed.dryMatterPct;
+  if (!lagoonEligible(dm, { input, region, params })) return assessOne(input, country, { ...opts, reactor: "tank" });
+  const lagoon = assessOne(input, country, { ...quick, reactor: "lagoon" });
+  const npv = (a: Assessment) => a.routesBase[a.bestRoute].fin.npvEur;
+  const pick = warm && npv(lagoon) >= npv(tank) ? "lagoon" : "tank";
+  const other = pick === "lagoon" ? tank : lagoon;
+  const out = assessOne(input, country, { ...opts, reactor: pick });
+  const o = other.routesBase[other.bestRoute], c = out.routesBase[out.bestRoute];
+  const T = tr(opts.lang ?? input.lang ?? "en"), D = fmtDec(opts.lang ?? input.lang ?? "en");
+  out.technologyAlternative = { digestion: o.design.tech.digestion, label: o.design.tech.primary, npvEur: o.fin.npvEur, capexEur: o.capex.totalEur, ch4M3Year: o.feed.ch4M3Year };
+  out.warnings.push(T("Both digester types were assessed for this liquid feed and climate. Chosen: {chosen} (NPV €{npvChosen}); alternative: {other} (NPV €{npvOther}, CAPEX €{capexOther}). A covered lagoon is cheaper but gives ≈ {lagoonPct} % of a heated tank's gas (EPA AgSTAR) and needs land.", {
+    chosen: c.design.tech.primary, npvChosen: D(Math.round(c.fin.npvEur)), other: o.design.tech.primary, npvOther: D(Math.round(o.fin.npvEur)), capexOther: D(Math.round(o.capex.totalEur)),
+    lagoonPct: meanTemp(region.monthlyTempC) < 20 ? Math.round(params.get("eng.lagoon_yield_factor") * 100) : 100 }));
+  return out;
+}
+
+function assessOne(input: Assessment["input"], country: CountryAdapter, opts: AssessOptions = {}): Assessment {
   const badPath = nonFiniteInputPath(input);
   if (badPath) throw new Error(`Input contains a non-finite number at ${badPath}`);
   if (!BUSINESS_TYPES[input.businessType]) throw new Error("Unknown business");
@@ -138,9 +172,10 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const routeWord: Record<RouteId, string> = { chp: T("CHP"), boiler: T("boiler"), biomethane: T("biomethane") };
   const D = fmtDec(lang);
   const params = buildParams(country, input.regionId, input.energy, input.city);
+  const ctxOf = (...a: Parameters<typeof makeCtx>): RunContext => ({ ...makeCtx(...a), reactor: opts.reactor });
   const fx = params.get("econ.fx_local_per_eur");
   const run = (route: RouteId, scn: ScenarioId, mods: Modifiers = NO_MODS, support?: SupportScheme) =>
-    runScenarioRoute(makeCtx(input, country, params, scn, mods, lang, support), route);
+    runScenarioRoute(ctxOf(input, country, params, scn, mods, lang, support), route);
 
   // ---- full route × scenario matrix ----
   const matrix = {} as Assessment["routeMatrix"];
@@ -164,11 +199,11 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
   const base = matrix[bestRoute].base;
   const cons = matrix[bestRoute].conservative;
   const opt = matrix[bestRoute].optimistic;
-  const ctxBase = makeCtx(input, country, params, "base", NO_MODS, lang);
+  const ctxBase = ctxOf(input, country, params, "base", NO_MODS, lang);
   const demand = customerDemand(ctxBase);
   // Isolate evidence for the selected base route; the main usage log also includes alternatives and what-if runs.
   const selectedParams = params.fork();
-  runScenarioRoute(makeCtx(input, country, selectedParams, "base", NO_MODS, lang), bestRoute);
+  runScenarioRoute(ctxOf(input, country, selectedParams, "base", NO_MODS, lang), bestRoute);
   const usedMarket = selectedParams.usedIds().filter((id) => id.startsWith("econ.") || id === "eng.invoice_variable_share");
   const marketEvidence = usedMarket.filter((id) => id !== "econ.electricity_retail_eur_kwh" || !demand.electricityPriceKnown).map((id) => params.prov(id));
   if (demand.electricityPriceKnown) marketEvidence.push(prov(
@@ -214,7 +249,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
         const fixed = params.get(id) * (1 - params.get("econ.self_consumption_variable_share"));
         overrides["econ.self_consumption_variable_share"] = Math.max(0, Math.min(1, (value - fixed) / value));
       }
-      return runScenarioRoute(makeCtx(input, country, params.with(overrides), "base", NO_MODS, lang), bestRoute).fin.npvEur;
+      return runScenarioRoute(ctxOf(input, country, params.with(overrides), "base", NO_MODS, lang), bestRoute).fin.npvEur;
     };
     return { parameterId: id, lowInput: low, highInput: high, lowNpvEur: npvAt(low), highNpvEur: npvAt(high), basis };
   });
@@ -232,7 +267,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       const upper = processSchema.safeParse({ ...process, [key]: high });
       // A bounded physical parameter is never extended beyond its schema to fabricate a range.
       if (!lower.success || !upper.success) continue;
-      const at = (next: typeof process) => runScenarioRoute(makeCtx({ ...input, process: next }, country, params.fork(), "base", NO_MODS, lang), bestRoute).fin.npvEur;
+      const at = (next: typeof process) => runScenarioRoute(ctxOf({ ...input, process: next }, country, params.fork(), "base", NO_MODS, lang), bestRoute).fin.npvEur;
       parameterSensitivity.push({ parameterId: `process.${key}`, lowInput: low, highInput: high, lowNpvEur: at(lower.data), highNpvEur: at(upper.data), basis: "engineering" });
     }
   }
@@ -411,6 +446,16 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       const lo = share("rangeLow"), hi = share("rangeHigh");
       add("quantity", [lo, 1, hi], [npvWith({ feedstock: lo }), npvWith({ feedstock: hi })]);
     }
+    // Third-party streams: promised tonnage may not arrive (contracts, competition, seasons). Experts list supply security first.
+    if (input.feedstocks.some((f) => f.delivered && f.quantity > 0)) {
+      const lo = params.get("eng.supply_shortfall_low");
+      add("supply", [lo, 1, 1], [npvWith({ deliveredFeedstock: lo }), npv0]);
+    }
+    // Purchased streams and gate fees move over the loan period even when today's price is known.
+    if (base.feed.lines.some((l) => Math.abs(l.purchaseCostEurYear) > 0)) {
+      const s = params.get("eng.feed_price_shift");
+      add("feed_price", [-s, 0, s], [npvWith({ tradedPriceShift: -s }), npvWith({ tradedPriceShift: s })]);
+    }
     // Market evidence ranges already run per parameter; CAPEX without a quote is the supplier-quote item.
     const kindOf = (id: string): MeasureKind => id.startsWith("econ.capex_factor") ? "capex" : id === "econ.electricity_retail_eur_kwh" ? "electricity_price" : id === "econ.electricity_spot_eur_kwh" ? "export_price"
       : id === "econ.heat_value_eur_kwh_th" ? "heat_price" : id.startsWith("econ.fert_") ? "fertiliser" : id.includes("variable_share") ? "bill_structure" : "market";
@@ -451,7 +496,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
       const { scenario, biomethaneU, solidsU, labU } = sampleScenario(u);
       const bm = (k: string) => params.get(`econ.biomethane_price_${k}_eur_nm3`);
       const priced = params.with({ "econ.biomethane_price_base_eur_nm3": triangular(biomethaneU, Math.min(bm("cons"), bm("opt")), bm("base"), Math.max(bm("cons"), bm("opt"))) });
-      const ctx = { ...makeCtx(input, country, priced, "base", { ...NO_MODS, methaneYield: methaneFactor(solidsU, labU) }, lang), scenario };
+      const ctx = { ...ctxOf(input, country, priced, "base", { ...NO_MODS, methaneYield: methaneFactor(solidsU, labU) }, lang), scenario };
       return runScenarioRoute(ctx, bestRoute).fin;
     });
     const npvs = draws.map((f) => f.npvEur).sort((x, y) => x - y);
@@ -471,7 +516,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const scaled = { ...input, feedstocks: input.feedstocks.map((f) => ({ ...f, quantity: f.quantity * m, ...(f.delivered && f.distanceKm ? { distanceKm: f.distanceKm * Math.sqrt(m) } : {}) })), finance: input.finance && { ...input.finance, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
     const routes = {} as ScalePoint["routes"];
     for (const rt of ROUTES) {
-      const x = runScenarioRoute(makeCtx(scaled, country, params.fork(), "base", NO_MODS, lang), rt);
+      const x = runScenarioRoute(ctxOf(scaled, country, params.fork(), "base", NO_MODS, lang), rt);
       routes[rt] = { npvEur: x.fin.npvEur, capexEur: x.capex.totalEur, kwEl: x.kwElEquivalent, irr: x.fin.irr };
     }
     return { multiplier: m, tonnesYear: base.feed.tonnesYear * m, routes };
@@ -484,7 +529,7 @@ export function assess(input: Assessment["input"], country: CountryAdapter, opts
     const qr = qIn.capexQuoteRoute;
     const quoted = matrix[qr].base;
     const noQuote = { ...input, finance: { ...qIn, capexQuoteLocal: undefined, capexQuoteRoute: undefined } };
-    const modelled = (scn: ScenarioId) => runScenarioRoute(makeCtx(noQuote, country, params.fork(), scn, NO_MODS, lang), qr).capex;
+    const modelled = (scn: ScenarioId) => runScenarioRoute(ctxOf(noQuote, country, params.fork(), scn, NO_MODS, lang), qr).capex;
     const [mOpt, mBase, mCons] = (["optimistic", "base", "conservative"] as const).map(modelled);
     const k = zeroAt(1, quoted.fin.npvEur, 2, run(qr, "base", { ...NO_MODS, capex: 2 }).fin.npvEur);
     quoteCheck = {

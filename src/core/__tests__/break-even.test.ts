@@ -11,10 +11,10 @@ import { getCountry } from "@/countries";
 
 const ex = (id: string) => EXAMPLES.find((e) => e.id === id)!.input;
 
-function npvWith(input: ProjectInput, route: RouteId, mods: Partial<Modifiers>): number {
+function npvWith(input: ProjectInput, route: RouteId, mods: Partial<Modifiers>, reactor?: "lagoon"): number {
   const country = getCountry(input.countryCode);
   const params = buildParams(country, input.regionId, input.energy, input.city);
-  const ctx = { input, country, params, scenario: SCENARIOS.base, mods: { ...NO_MODS, ...mods }, region: projectRegion(input, country), fx: params.get("econ.fx_local_per_eur"), lang: "en" as const, t: tr("en") };
+  const ctx = { input, country, params, scenario: SCENARIOS.base, mods: { ...NO_MODS, ...mods }, region: projectRegion(input, country), fx: params.get("econ.fx_local_per_eur"), lang: "en" as const, t: tr("en"), reactor };
   return runScenarioRoute(ctx, route).fin.npvEur;
 }
 
@@ -25,12 +25,14 @@ describe("absolute break-even values", () => {
       const base = a.scenarios.base;
       const tolerance = Math.max(1, base.capex.totalEur * 1e-9);
       const be = a.breakEven;
-      if (be.maxCapexEur != null) expect(npvWith(input, a.bestRoute, { capex: be.maxCapexEur / base.capex.totalEur }), `${id}: CAPEX`).toBeCloseTo(0, -Math.log10(tolerance));
+      // The headline digester type (lagoon or heated tank) is part of the design the break-even refers to.
+      const reactor = base.design.tech.digestion === "covered_lagoon" ? "lagoon" as const : undefined;
+      if (be.maxCapexEur != null) expect(npvWith(input, a.bestRoute, { capex: be.maxCapexEur / base.capex.totalEur }, reactor), `${id}: CAPEX`).toBeCloseTo(0, -Math.log10(tolerance));
       if (be.product) {
         expect(be.product.currentEur, `${id}: product value`).toBeGreaterThan(0);
-        expect(npvWith(input, a.bestRoute, { productPrice: be.product.breakEvenEur / be.product.currentEur }), `${id}: product`).toBeCloseTo(0, -Math.log10(tolerance));
+        expect(npvWith(input, a.bestRoute, { productPrice: be.product.breakEvenEur / be.product.currentEur }, reactor), `${id}: product`).toBeCloseTo(0, -Math.log10(tolerance));
       }
-      if (be.feedstockEurT != null) expect(npvWith(input, a.bestRoute, { feedstockEurT: be.feedstockEurT }), `${id}: feedstock`).toBeCloseTo(0, -Math.log10(tolerance));
+      if (be.feedstockEurT != null) expect(npvWith(input, a.bestRoute, { feedstockEurT: be.feedstockEurT }, reactor), `${id}: feedstock`).toBeCloseTo(0, -Math.log10(tolerance));
       // Signs agree with the base NPV: a positive project has headroom, a negative one needs a better price.
       if (be.product && base.fin.npvEur > 0) expect(be.product.breakEvenEur, id).toBeLessThan(be.product.currentEur);
       if (be.product && base.fin.npvEur < 0) expect(be.product.breakEvenEur, id).toBeGreaterThan(be.product.currentEur);

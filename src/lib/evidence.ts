@@ -55,6 +55,18 @@ export function evidenceRequest(a: Assessment, item: MeasureItem, locale: Locale
         ],
         enterIn: T("Feedstock step: quantity and DM of each stream"),
       };
+    case "supply":
+    case "feed_price": {
+      const delivered = r.feed.lines.filter((s) => s.delivered || Math.abs(s.purchaseCostEurYear) > 0)
+        .map((s) => `- ${s.label}: ${sig(s.tonnesYear)} ${T("t/year")}, ${GLOSSARY[l].terms.dm} ≈ ${D(s.dryMatterPct, 1)} %`).join("\n");
+      return {
+        steps: item.kind === "supply"
+          ? [T("List every stream you do not produce yourself: supplier, tonnes per month, season and contract term."), T("Get letters of intent or contracts for at least the loan period, and size the plant on the tonnage that is signed, not promised.")]
+          : [T("For every purchased stream and every gate fee, note today's price and its range over the last three years."), T("Fix prices or gate fees with indexation for the loan period, and check that the plan still pays with prices 25 % worse.")],
+        request: T("Request for a feedstock supply agreement\nSite: {country}. A biogas plant would take:\n{streams}\nPlease confirm the tonnes per month you can deliver, the dry matter, the delivery season, the price or gate fee per tonne with its indexation, and the term you can commit to.", { country, streams: delivered || streams }),
+        enterIn: T("Feedstock step: quantity and price of each delivered stream"),
+      };
+    }
     case "capex":
       return {
         steps: [

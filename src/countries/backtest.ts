@@ -32,13 +32,18 @@ const STATE_REGION: Record<string, string> = {
   GA: "north-carolina", SC: "north-carolina", VA: "north-carolina", TN: "north-carolina", KY: "north-carolina", AR: "north-carolina", FL: "texas",
 };
 
+/** Electricity a confined dairy uses, kWh per cow and year: barn-based farms, Mohsenimanesh et al., Applied Engineering in
+ * Agriculture 37(5) 977–990 (2021), doi 10.13031/aea.14621 (global review; pasture-based 475). A client enters the bill; AgSTAR does
+ * not list it, and without it every kWh would be valued as export. Swine: no reviewed figure, left out. */
+export const BARN_DAIRY_KWH_COW = 769;
+
 export function agstarInput(row: AgstarRow): ProjectInput {
   return {
     countryCode: "US",
     regionId: STATE_REGION[row.state] ?? "iowa",
     businessType: row.animal === "dairy" ? "dairy_farm" : "pig_farm",
     feedstocks: [{ id: "herd", animal: row.animal === "dairy" ? "dairy_cow" : "pig_finisher", quantity: row.head, ...(row.animal === "dairy" ? { housing: "year_round" as const } : {}) }],
-    energy: { heatNeed: "none", hasGridConnection: true },
+    energy: { ...(row.animal === "dairy" ? { electricityKwhYear: Math.round(row.head * BARN_DAIRY_KWH_COW) } : {}), heatNeed: "none", hasGridConnection: true },
     site: {},
   };
 }
@@ -58,8 +63,10 @@ export interface BacktestSummary {
   dataThrough: string;
   retrievedOn: string;
   source: string;
-  /** Model gross electricity ÷ AgSTAR electricity generated (CHP/electricity digesters). */
+  /** Model gross electricity ÷ AgSTAR electricity generated (CHP/electricity digesters), read values only. */
   electricity: BacktestStat;
+  /** Rows left out because the listed output is nameplate kW × 8 760 h, not a reading. */
+  nameplateRows: number;
 }
 
 function stat(ratios: number[]): BacktestStat {
@@ -72,6 +79,9 @@ function stat(ratios: number[]): BacktestStat {
   const r3 = (v: number) => Math.round(v * 1000) / 1000;
   return { n: s.length, median: r3(q(0.5)), p10: r3(q(0.1)), p90: r3(q(0.9)), within30: r3(s.filter((x) => x >= 0.7 && x <= 1.3).length / s.length) };
 }
+
+/** An "output" that is an exact multiple of 8 760 h is nameplate kW × a full year, not a reading (38 of 79 AgSTAR rows). */
+export const isNameplate = (row: AgstarRow) => !!row.electricityKwhYear && row.electricityKwhYear % 8760 === 0;
 
 export function runAgstarBacktest(): BacktestSummary & { rows: { row: AgstarRow; electricityRatio?: number; biogasRatio?: number }[] } {
   const country = getCountry("US");
@@ -92,7 +102,8 @@ export function runAgstarBacktest(): BacktestSummary & { rows: { row: AgstarRow;
     dataThrough: agstar.dataThrough,
     retrievedOn: agstar.retrievedOn,
     source: agstar.source,
-    electricity: stat(rows.flatMap((r) => (r.electricityRatio === undefined ? [] : [r.electricityRatio]))),
+    electricity: stat(rows.flatMap((r) => (r.electricityRatio === undefined || isNameplate(r.row) ? [] : [r.electricityRatio]))),
+    nameplateRows: rows.filter((r) => isNameplate(r.row)).length,
     rows,
   };
 }

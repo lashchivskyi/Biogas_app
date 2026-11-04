@@ -1,5 +1,5 @@
 import { fmtDec, fmtTimes, fmtUnit, locText } from "./i18n";
-import { activeMonths, DAYS_IN_MONTH } from "./climate";
+import { activeMonths, DAYS_IN_MONTH, lagoonEligible, meanTemp } from "./climate";
 import type { RunContext } from "./context";
 import { ANIMALS, FEEDSTOCKS, isEffluentLike, PAID_HANDLING } from "./feedstockData";
 import type { Params } from "./params";
@@ -76,7 +76,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   for (const line of input.feedstocks) {
     if (!(line.quantity > 0)) continue;
     const { typeDef: t, nutrientDm, tonnesBase, isAnimal } = resolveLine(line, params);
-    const tonnes = tonnesBase * scenario.feedstockAvailability * mods.feedstock;
+    const tonnes = tonnesBase * scenario.feedstockAvailability * mods.feedstock * (line.delivered ? mods.deliveredFeedstock : 1);
     // Ensiled crops lose dry matter in the clamp: purchase and haulage are paid on the harvested mass, gas comes from what is
     // left (nutrients stay in the silage). The digester is fed the remaining mass.
     const ensiled = t.flags.includes("energy_crop");
@@ -187,7 +187,10 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     warnings.push(T("Fats are {fs} % of the organic matter: risk of foaming and long-chain fatty-acid inhibition; dose gradually.", { fs }));
   }
 
-  const real = scenario.processRealisation * inhibition;
+  // Unheated lagoons digest at ambient temperature and lose gas in the cold months. The AgSTAR factor was measured at annual
+  // means of 15–18 °C and is applied below 20 °C only; warmer sites keep the full yield (no measured data there).
+  const lagoon = ctx.reactor === "lagoon" && tonnesTotal > 0 && lagoonEligible(dmWeighted, ctx) && meanTemp(ctx.region.monthlyTempC) < 20 ? params.get("eng.lagoon_yield_factor") : 1;
+  const real = scenario.processRealisation * inhibition * lagoon;
   const ch4Total = ch4Raw * real;
   const biogasTotal = biogasRaw * real;
   const monthlyCh4Scaled = monthlyCh4.map((x) => x * real);

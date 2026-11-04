@@ -31,8 +31,8 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   // The plant is built once, for the base case. Conservative and optimistic scenarios (and Monte Carlo draws, stress
   // tests) change what the built plant earns and what it costs to buy, never its size: the digester, the engine, the
   // upgrader and the storage stay those of the base design. Otherwise a bigger "optimistic" plant could lose more money.
-  const baseSized = !installed && (ctx.scenario !== SCENARIOS.base || ctx.mods.feedstock !== 1 || ctx.mods.methaneYield !== 1);
-  const designCtx: RunContext = baseSized ? { ...ctx, scenario: SCENARIOS.base, mods: { ...ctx.mods, feedstock: 1, methaneYield: 1 } } : ctx;
+  const baseSized = !installed && (ctx.scenario !== SCENARIOS.base || ctx.mods.feedstock !== 1 || ctx.mods.deliveredFeedstock !== 1 || ctx.mods.methaneYield !== 1);
+  const designCtx: RunContext = baseSized ? { ...ctx, scenario: SCENARIOS.base, mods: { ...ctx.mods, feedstock: 1, deliveredFeedstock: 1, methaneYield: 1 } } : ctx;
   const designPrepared = baseSized && input.process ? prepareProcess(designCtx, operatingYear) : undefined;
   const designFeed = designPrepared?.feed ?? (baseSized ? analyseFeedstock(designCtx) : feed);
   const design = designPrepared?.design ?? prepared?.design ?? designDigester(designFeed, designCtx);
@@ -118,7 +118,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   ox("upgrading_maintenance", T("Upgrading unit maintenance"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
   ox("insurance", T("Insurance"), gross.totalEur * p.get("eng.opex.insurance_share"));
   ox("monitoring", T("Lab tests, safety inspections, leak monitoring"), p.get("eng.opex.monitoring_fixed") * opexMult);
-  ox("feedstock", T("Feedstock purchase (net of gate fees)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear, 0) + feed.tonnesYear * mods.feedstockEurT);
+  ox("feedstock", T("Feedstock purchase (net of gate fees)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear + Math.abs(l.purchaseCostEurYear) * mods.tradedPriceShift, 0) + feed.tonnesYear * mods.feedstockEurT);
   ox("opportunity", T("Lost revenue from alternative feedstock use"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
   ox("transport", T("Feedstock logistics (and digestate return)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
   // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled.

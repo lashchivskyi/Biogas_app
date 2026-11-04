@@ -424,6 +424,23 @@ describe("stress-test regressions (2026-10-31)", () => {
     // Delivered or solid manure is not the farm's existing slurry store.
     const bought = run({ ...dairy, feedstocks: [{ id: "a", type: "dairy_slurry", quantity: 54000, delivered: true, distanceKm: 5 }] }).scenarios.base.design;
     expect(bought.storageNew).toBeGreaterThan(0);
+    const solid = run({ ...dairy, feedstocks: [{ id: "a", type: "cattle_solid_manure", quantity: 20000 }] }).scenarios.base.design;
+    expect(solid.storageNew + solid.storageOpenNew).toBeGreaterThan(0);
+    // US as-excreted dairy manure is 12.8 % DM (NRCS) but stored as liquid: still the farm's existing store.
+    const us = run({ countryCode: "US", regionId: "new-york", businessType: "dairy_farm", feedstocks: [{ id: "a", animal: "dairy_cow", quantity: 600 }],
+      energy: { heatNeed: "none", hasGridConnection: true }, site: {} }).scenarios.base.design;
+    expect(us.storageNew + us.storageOpenNew).toBeLessThan(1);
+  });
+
+  it("compares a covered lagoon with a heated tank where a lagoon is eligible, and never makes a temperate lagoon the headline", () => {
+    const pig = (code: string, regionId: string): ProjectInput => ({ countryCode: code, regionId, businessType: "pig_farm", feedstocks: [{ id: "a", type: "pig_slurry", quantity: 60000 }],
+      energy: { heatNeed: "none", hasGridConnection: true }, site: { landHa: 3000 } });
+    const warm = run(pig("TH", getCountry("TH").regions[0].id));
+    expect(warm.technologyAlternative).toBeDefined();
+    const temperate = run(pig("IT", "lazio"));
+    expect(temperate.technologyAlternative?.digestion).toBe("covered_lagoon");
+    expect(temperate.scenarios.base.design.tech.digestion).not.toBe("covered_lagoon");
+    expect(run(pig("DE", "sachsen")).technologyAlternative).toBeUndefined();
   });
 
   it("stores dilute effluent for at most a month even in a heated tank", () => {

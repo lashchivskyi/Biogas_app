@@ -156,7 +156,8 @@ export function electricityVariableShareFor(code: string): number {
  * `lab` is the final operator cost in €/h (method in labourFor); `capex` overrides the labour-based factor only
  * where a market benchmark shows the formula is off.
  */
-type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number; route?: RouteId; gasBasis?: "HHV" | "LHV" };
+/** `checked`: the value is old, but a later search confirmed it is still the latest usable primary point (what was searched, where). */
+type Manual = { v: number; src: string; conf: Confidence; date: string; ratio?: number; route?: RouteId; gasBasis?: "HHV" | "LHV"; checked?: { on: string; note: string; urls: string[] } };
 const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "capex", Manual>>> = {
   UA: {
     spot: { v: 0.126, src: "Market Operator (OREE), DAM BASE index, IPS of Ukraine, mean of monthly values Oct 2025 – Sep 2026: 6 377 UAH/MWh excl. VAT", conf: "HIGH", date: "2026-09-30" },
@@ -207,7 +208,8 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     spot: { v: 0.038, src: "CCEE PLD monthly mean, Sudeste/Centro-Oeste, Oct 2025 – Sep 2026: 227.9 BRL/MWh", conf: "HIGH", date: "2026-09-30" },
     lab: { v: 5.8, src: "IBGE PNAD Contínua (SIDRA 5436), 2Q2026: average habitual income, all jobs, R$ 3 738/month × 13.33 × 1.358 employer costs ÷ 1 950 h", conf: "MEDIUM", date: "2026-06-30" },
     gas: { v: 44.9, gasBasis: "HHV", src: "Gasmig industrial tariff R$ 3.089/m³ (Minas Gerais, 2025 revision) at 10.9 kWh/m³ (GCV) = 283 R$/MWh; CNI: industrial gas ≈ US$ 20/MMBtu incl. taxes (2025) — state tariffs differ", conf: "MEDIUM", date: "2025-12-31" },
-    capex: { v: 0.95, route: "chp", src: "BNDES-financed 2.15 MW biogas plant, Elias Fausto (SP): R$ 56.2 M ≈ 4 150 €/kW — at German level despite low labour cost (import duties on engines, upgrading and membranes); single project", conf: "LOW", date: "2024-03-01" },
+    capex: { v: 0.95, route: "chp", src: "BNDES-financed 2.15 MW biogas plant, Elias Fausto (SP): R$ 56.2 M ≈ 4 150 €/kW — at German level despite low labour cost (import duties on engines, upgrading and membranes); single project", conf: "LOW", date: "2024-03-01",
+      checked: { on: "2026-11-04", note: "No later BNDES CHP project with capacity and total cost; EPE PDE 2034 cost book (R$ 10 000/kW, Dec-2022 prices, sugar-cane residue plants) read only from a copy, PDE 2035 book unreachable (epe.gov.br HTTP 500)", urls: ["https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-894/PDE%202035_Caderno%20Par%C3%A2metros%20de%20Custos_rev10.11.25.pdf"] } },
   },
   TH: {
     spot: { v: 0.070, src: "ERC Ft filings 2026: fuel + power-purchase cost per kWh, single-buyer system ≈ 2.62 THB/kWh (no spot market; incl. ≈ 8–9 % capacity payments)", conf: "LOW", date: "2026-07-31" },
@@ -222,7 +224,8 @@ const MANUAL: Record<string, Partial<Record<"elec" | "gas" | "spot" | "lab" | "c
     spot: { v: 0.036, src: "IEX day-ahead market average FY 2025-26 Rs 3.86/kWh", conf: "HIGH", date: "2026-03-31" },
     lab: { v: 1.2, src: "MoSPI PLFS Annual Report 2025 (press note 27.03.2026): regular wage/salaried earnings, men Rs 24 217, women Rs 18 353/month; ≈ Rs 22 000 all persons × 12 × 1.15 employer EPF/ESI ÷ 2 300 h", conf: "MEDIUM", date: "2025-12-31" },
     gas: { v: 34.0, src: "PPAC notification 30.09.2026: gas price ceiling (market-priced deepwater/HPHT gas) US$ 9.89/MMBtu GCV for Oct 2026 – Mar 2027 (APM price Oct 2026 US$ 11.22, Sep 9.00) + US$ 1.5/MMBtu pipeline & distribution adder (assumption) = US$ 11.39/MMBtu", conf: "MEDIUM", date: "2026-09-30" },
-    capex: { v: 0.55, route: "biomethane", src: "SATAT CBG plant, Bagalkot (Karnataka): ₹ 42 crore for 10.2 t/day CBG from 200 t/day press mud ≈ 1 000 Nm³/h raw biogas → ≈ €4.3 M vs ≈ €8 M for the same plant at German prices; Indian-made digesters and upgrading. Single project — check against SATAT tenders", conf: "LOW", date: "2025-06-30" },
+    capex: { v: 0.55, route: "biomethane", src: "SATAT CBG plant, Bagalkot (Karnataka): ₹ 42 crore for 10.2 t/day CBG from 200 t/day press mud ≈ 1 000 Nm³/h raw biogas → ≈ €4.3 M vs ≈ €8 M for the same plant at German prices; Indian-made digesters and upgrading. Single project — check against SATAT tenders", conf: "LOW", date: "2025-06-30",
+      checked: { on: "2026-11-04", note: "Later official point agrees: PIB 05.10.2025, Kopargaon cooperative ₹ 55 crore for 12 t/day CBG incl. a 75 t/day potash unit = ₹ 4.6 crore per t/day (upper bound) vs Bagalkot ₹ 4.1 crore", urls: ["https://www.pib.gov.in/PressReleasePage.aspx?PRID=2175126"] } },
   },
 };
 
@@ -310,6 +313,30 @@ function regional(code: string, item: "gas" | "lab" | "spot", regionId: string |
   const r = REGIONAL[code]?.[item], admin = adminFor(code, regionId), f = admin ? r?.factors[admin] : undefined;
   if (!s || !r || f === undefined) return s;
   return { ...s, value: s.value * f, confidence: s.confidence === "HIGH" ? "MEDIUM" : s.confidence, source: `${s.source}; × ${f.toFixed(3)} for ${admin} (${r.src})`, range: s.range && { ...s.range, low: s.range.low * f, high: s.range.high * f } };
+}
+
+/** EU grid-injected biomethane without support = hub gas price + the green attribute (guarantee of origin), both € per MWh HHV.
+ * Hub: TTF 2025 annual average as the Dutch government fixed it for SDE++ (other EU hubs trade within a few €/MWh of TTF).
+ * Guarantee of origin: only where a state body publishes a value; elsewhere 20 €/MWh LHV stays an engineering assumption. */
+const TTF_HHV = { eurMwh: 36.908, period: "2025", src: "RVO, Definitieve correctiebedragen SDE++ 2025 (15.04.2026), TTF[HHV] 2025", url: "https://www.rvo.nl/sites/default/files/2026-04/Rapport-definitieve-correctiebedragen-SDE-2025.pdf" };
+const GO_HHV: Record<string, { eurMwh: number; period: string; src: string; url: string }> = {
+  // PBL: price formation "too unclear" for a representative value, so the ETS-1 benefit is used as a floor.
+  NL: { eurMwh: 14.9, period: "2025", src: "RVO/PBL 2025, GvO hernieuwbaar gas (floor: ETS-1 benefit)", url: TTF_HHV.url },
+  // State-owned GOs of supported plants (Code de l'énergie L.446-22); the State is the only seller. 1 GO = 1 MWh, PCS by French convention.
+  FR: { eurMwh: 20.23, period: "2026-08", src: "EEX auction of biomethane GOs for the French State, Aug 2026 (production Jan–Mar 2026)", url: "https://www.eex.com/en/markets/energy-certificates/french-auctions-biogas" },
+};
+export function greenGasFor(code: string): { eurMwhLhv: number; src: string; conf: Confidence; date: string; evidence: ParameterEvidence } {
+  const r = ENGINEERING_MAP["eng.gas_hhv_lhv_ratio"].value, go = GO_HHV[code];
+  const goLhv = go ? go.eurMwh * r : 20;
+  return {
+    eurMwhLhv: TTF_HHV.eurMwh * r + goLhv,
+    src: go
+      ? `(TTF ${TTF_HHV.eurMwh} + GO ${go.eurMwh} €/MWh HHV) × ${r} HHV/LHV; ${TTF_HHV.src}; ${go.src}`
+      : `TTF ${TTF_HHV.eurMwh} €/MWh HHV × ${r} HHV/LHV + 20 €/MWh LHV green-gas premium (engineering assumption, no official GO price); ${TTF_HHV.src}`,
+    conf: go ? "MEDIUM" : "LOW",
+    date: go && go.period > TTF_HHV.period ? `${go.period}-28` : "2025-12-31",
+    evidence: { checkedOn: "2026-11-04", period: go ? `${TTF_HHV.period}; GO ${go.period}` : TTF_HHV.period, urls: [TTF_HHV.url, ...(go && go.url !== TTF_HHV.url ? [go.url] : [])], scope: "Grid-injected biomethane, HHV prices converted to LHV; without feed-in tariffs, quotas or tax relief", method: "Hub gas price plus guarantee-of-origin value" },
+  };
 }
 
 /** Unsubsidised gas-parity reference; procurement eligibility is never inferred from the country. */
@@ -446,7 +473,8 @@ export function labourFor(code: string, regionId?: string): Sourced | undefined 
 /** Local CAPEX factor: 72 % of a plant is internationally priced equipment, 28 % civil works & installation scaled by local operator cost (Germany = 1). */
 export function capexFactorFor(code: string, route: RouteId = "chp"): Sourced | undefined {
   const m = MANUAL[code]?.capex;
-  if (m && route === (m.route ?? "chp")) return { value: m.v, kind: "CALCULATION", confidence: "LOW", source: `${route} only. ${m.src}`, date: m.date, range: { low: m.v * 0.7, high: m.v * 1.3, basis: "engineering" } };
+  if (m && route === (m.route ?? "chp")) return { value: m.v, kind: "CALCULATION", confidence: "LOW", source: `${route} only. ${m.src}`, date: m.date, range: { low: m.v * 0.7, high: m.v * 1.3, basis: "engineering" },
+    evidence: m.checked && { checkedOn: m.checked.on, period: m.date.slice(0, 7), urls: m.checked.urls, scope: "Single published plant cost scaled to the model's reference plant", method: `Re-checked: ${m.checked.note}` } };
   // Published plant costs (scripts/calibrate-capex.ts): only MEDIUM calibrations are applied; LOW ones are kept for the record.
   const cal = CAL.countries[code];
   if (route === "chp" && cal?.applied === true && cal.factor !== undefined && cal.confidence === "MEDIUM") {
@@ -488,12 +516,17 @@ export function debtRateFor(code: string): Sourced | undefined {
   return { value, kind: "CALCULATION", confidence: value <= 0.065 ? "MEDIUM" : "LOW", source: `Discount rate − 1.5 pp (senior debt is cheaper than blended project capital)${value <= 0.065 ? "; consistent with ECB MIR corporate loan rates + project margin" : ""}; a bank term sheet replaces this`, date: d.date };
 }
 
+/** Ukraine: Ember's last year is 2022 (no national generation data published under martial law). The official national factor
+ * (Ministry of Economy order 511, 2026: 1.311 t/MWh) covers fossil thermal plants only, so it is not the grid average used everywhere else. */
+const UA_EF_CHECK: ParameterEvidence = { checkedOn: "2026-11-04", period: "2022", urls: ["https://ourworldindata.org/grid/carbon-intensity-electricity", "https://mev.gov.ua/sites/default/files/field/file/nakaz-511_merged.pdf"], scope: "Grid-average carbon intensity of generation", method: "Latest Ember year for Ukraine; the official thermal-plant factor (1.311 t/MWh) is a different basis and is not used" };
+
 export function gridEfFor(code: string, regionId?: string): Sourced | undefined {
   const r = EF.regions?.[code];
   const admin = adminFor(code, regionId);
   const v = admin ? r?.values[admin] : undefined;
   if (r && v !== undefined) return { value: v, kind: "FACT", confidence: "MEDIUM", source: `${r.source}: ${code === "US" ? stateName(admin!) : admin}`, date: `${r.year}-12-31` };
   const e = EF.countries[code];
+  if (e && code === "UA") return { value: e.tCo2Mwh, kind: "FACT", confidence: "LOW", source: `${EF.source}, ${e.year} (latest year; wartime system changed since). Official thermal-plant factor 1.311 t/MWh (MinEconomy 2026) is another basis`, date: `${e.year}-12-31`, evidence: UA_EF_CHECK };
   return e && { value: e.tCo2Mwh, kind: "FACT", confidence: "HIGH", source: `${EF.source}, ${e.year}`, date: `${e.year}-12-31` };
 }
 

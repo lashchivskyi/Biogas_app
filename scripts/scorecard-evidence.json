@@ -1,6 +1,475 @@
 {
-  "about": "Measurements scripts/scorecard.ts cannot take itself. Record only what was actually measured, with its date and commit; never an estimate. realityCases: real projects with a documented outcome (study conclusion, operator record or official closure notice; never news alone), entered as the client would have entered them before the outcome was known; outcome 'go' = built and running on its own economics or a study advised building, 'no' = abandoned or closed, or a study advised against; reason 'economics' only when the source says so. web is written by `npm run scorecard -- --web <url>`.",
-  "realityCases": [],
+  "about": "Measurements scripts/scorecard.ts cannot take itself. Record only what was actually measured, with its date and commit; never an estimate. realityCases: real projects with a documented outcome (study conclusion, operator record or official closure notice; never news alone), entered as the client would have entered them before the outcome was known; outcome 'go' = built and running on its own economics or a study advised building, 'no' = abandoned or closed, or a study advised against; reason 'economics' only when the source says so; support names the scheme a 'go' depended on (such cases are reported apart: today's base case excludes support). web is written by `npm run scorecard -- --web <url>`.",
+  "realityCases": [
+    {
+      "id": "aa-dairy-ny",
+      "input": {
+        "countryCode": "US",
+        "regionId": "new-york",
+        "businessType": "dairy_farm",
+        "feedstocks": [
+          {
+            "id": "herd",
+            "animal": "dairy_cow",
+            "quantity": 600,
+            "housing": "year_round"
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "electricityKwhYear": 461400
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "source": "Cornell PRO-DAIRY, Gooch & Inglis 2006 / AA Dairy case study 2008: 600 cows, plug flow, 130 kW CHP, net metering (NYSEG); net benefit $18 906/a ($38/cow) after annualised capital. https://ecommons.cornell.edu/bitstream/1813/65738/2/DES_AA_Case_Study.pdf",
+      "decidedOn": "1997",
+      "blind": false
+    },
+    {
+      "id": "haubenschild-mn",
+      "input": {
+        "countryCode": "US",
+        "regionId": "minnesota",
+        "businessType": "dairy_farm",
+        "feedstocks": [
+          {
+            "id": "herd",
+            "animal": "dairy_cow",
+            "quantity": 425,
+            "housing": "year_round"
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "electricityKwhYear": 326825
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "East Central Energy purchase contract and state grants / 0 % loans",
+      "source": "Minnesota Dept. of Agriculture case study (Minnesota Project 2002) and EPA AgSTAR profile 2014: 425 cows at start (digester for 1 000), 150 kW; 'payback of 5 years on investment is possible'. https://www.mda.state.mn.us/manure-digester-case-study-haubenschild-farm",
+      "decidedOn": "1998",
+      "blind": false
+    },
+    {
+      "id": "dallmann-wi",
+      "input": {
+        "countryCode": "US",
+        "regionId": "wisconsin",
+        "businessType": "dairy_farm",
+        "feedstocks": [
+          {
+            "id": "herd",
+            "animal": "dairy_cow",
+            "quantity": 4400,
+            "housing": "year_round"
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "electricityKwhYear": 3383600
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "utility rate 15–16 c/kWh (2012–2019)",
+      "source": "UW-Stevens Point for the Wisconsin Office of Energy Innovation, WI Biogas Case Studies, Nov 2022: 4 400 cows; electricity 'profitable, as the utility paid 15-16 cents per kilowatt hour'. https://naturalresources.extension.wisc.edu/files/2026/04/4WI-Biogas-Case-Studies-Report-11-11-2022_WebR.pdf",
+      "decidedOn": "2011",
+      "blind": false
+    },
+    {
+      "id": "lemvig-dk",
+      "input": {
+        "countryCode": "DK",
+        "regionId": "jutland",
+        "businessType": "central_biogas_plant",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "dairy_slurry",
+            "quantity": 91500,
+            "delivered": true,
+            "distanceKm": 10
+          },
+          {
+            "id": "b",
+            "type": "pig_slurry",
+            "quantity": 91500,
+            "delivered": true,
+            "distanceKm": 10
+          },
+          {
+            "id": "c",
+            "type": "food_waste",
+            "quantity": 43000,
+            "delivered": true,
+            "distanceKm": 30
+          }
+        ],
+        "energy": {
+          "heatNeed": "year_round_process",
+          "heatKwhYear": 18000000,
+          "hasGridConnection": true
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "state grant DKK 14.2 M of 55.2 M investment (1992)",
+      "source": "IEA Bioenergy Task 37 success story, Feb 2013: 183 000 t/a manure (cattle/pig split not published; 50/50 entered) + 43 000 t/a fish, slaughterhouse, drinks and household waste; CHP with district heat; 'good and stable economic performance comfortably better than break even'. https://task37.ieabioenergy.com/wp-content/uploads/sites/32/2022/03/success_story_denmark_lemvik2013.pdf",
+      "decidedOn": "1991",
+      "blind": false
+    },
+    {
+      "id": "ribe-dk",
+      "input": {
+        "countryCode": "DK",
+        "regionId": "south-jutland",
+        "businessType": "central_biogas_plant",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "dairy_slurry",
+            "quantity": 69000,
+            "delivered": true,
+            "distanceKm": 15
+          },
+          {
+            "id": "b",
+            "type": "pig_slurry",
+            "quantity": 69000,
+            "delivered": true,
+            "distanceKm": 15
+          },
+          {
+            "id": "c",
+            "type": "food_waste",
+            "quantity": 26000,
+            "delivered": true,
+            "distanceKm": 15
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "state and EEC grants DKK 17.7 M of 45.3 M investment",
+      "source": "IEA Bioenergy Task 37 success story, May 2012: 138 000 t/a manure from 62 farms (split not published; 50/50 entered) + 26 000 t/a food and abattoir waste, 15 km average haul; biogas piped to the Ribe CHP plant; income 'constantly significantly above the level of breakeven'. https://task37.ieabioenergy.com/wp-content/uploads/sites/32/2022/03/Success_Story_Ribe2012.pdf",
+      "decidedOn": "1989",
+      "blind": false
+    },
+    {
+      "id": "reidling-at",
+      "input": {
+        "countryCode": "AT",
+        "regionId": "niederoesterreich",
+        "businessType": "pig_farm",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "pig_slurry",
+            "quantity": 7300
+          },
+          {
+            "id": "b",
+            "type": "maize_silage",
+            "quantity": 5500,
+            "delivered": true,
+            "distanceKm": 5
+          },
+          {
+            "id": "c",
+            "type": "fruit_veg_residues",
+            "quantity": 5500,
+            "delivered": true,
+            "distanceKm": 10
+          }
+        ],
+        "energy": {
+          "electricityKwhYear": 562000,
+          "heatNeed": "year_round_process",
+          "heatKwhYear": 1600000,
+          "hasGridConnection": true
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "Ökostromgesetz 2002 feed-in tariff 14.5 ct/kWh + 2 ct/kWh heat",
+      "source": "IEA Bioenergy Task 37 case study (data 2004–05): 7 300 t/a pig slurry + 11 000 t/a maize and vegetable residues (split not published; 50/50 entered), 2 × 500 kWel, heat to the village grid; generation cost 6–8 ct/kWh, 'benefit about 6–7 cent per kWh'. https://task37.ieabioenergy.com/wp-content/uploads/sites/32/2022/03/reidling_final.pdf",
+      "decidedOn": "2003",
+      "blind": false
+    },
+    {
+      "id": "icknield-gb",
+      "input": {
+        "countryCode": "GB",
+        "regionId": "south-east",
+        "businessType": "crop_farm",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "pig_slurry",
+            "quantity": 10000,
+            "delivered": true,
+            "distanceKm": 5
+          },
+          {
+            "id": "b",
+            "type": "cereal_grain",
+            "quantity": 11000
+          },
+          {
+            "id": "c",
+            "type": "maize_silage",
+            "quantity": 13000
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true
+        },
+        "site": {
+          "gasGridKm": 0.07
+        }
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "Renewable Heat Incentive (biomethane injection tariff)",
+      "source": "IEA Bioenergy Task 37 case story, Aug 2018: 10 000 t pig manure, 11 000 t cereals and screenings, 13 000 t maize and rye; grid injection 70 m away, ≈ £7 M; 'the unique set of circumstances which have led to the success of the plant', upgrading enlarged 2016. https://task37.ieabioenergy.com/wp-content/uploads/sites/32/2022/03/Icknield_Case_Story_LAY_1.pdf",
+      "decidedOn": "2013",
+      "blind": false
+    },
+    {
+      "id": "a01-st-bernard-la",
+      "input": {
+        "countryCode": "US",
+        "regionId": "texas",
+        "businessType": "municipal_biowaste",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "food_waste",
+            "quantity": 6350,
+            "dryMatterPct": 30,
+            "vsPctOfDm": 88.45,
+            "delivered": true,
+            "distanceKm": 10,
+            "purchasePricePerTonneLocal": -22.05
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "exportPriceLocalPerKwh": 0.078
+        },
+        "site": {}
+      },
+      "outcome": "no",
+      "reason": "economics",
+      "source": "NREL/EPA feasibility study, St. Bernard Parish LA, 2013: 7 000 short t/a food waste, export 0.078 USD/kWh, tipping fee 20 USD/short t; 'projected to lose money' (NPV −6.76 M USD).",
+      "decidedOn": "2013",
+      "blind": true
+    },
+    {
+      "id": "a03-ak-chin-az",
+      "input": {
+        "countryCode": "US",
+        "regionId": "california",
+        "businessType": "poultry_farm",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "poultry_layer_manure",
+            "quantity": 33100,
+            "dryMatterPct": 25
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "exportPriceLocalPerKwh": 0.065
+        },
+        "site": {}
+      },
+      "outcome": "no",
+      "reason": "economics",
+      "source": "US DOE tribal feasibility study, Ak-Chin / Hickman's layer manure, 2005: 1 045 kWe, sale 0.065 USD/kWh; IRR 4.4 % without a grant, viable only with a 0.5 M USD grant.",
+      "decidedOn": "2005",
+      "blind": true
+    },
+    {
+      "id": "b01-fiscalini-ca",
+      "input": {
+        "countryCode": "US",
+        "regionId": "california",
+        "businessType": "dairy_farm",
+        "feedstocks": [
+          {
+            "id": "a",
+            "animal": "dairy_cow",
+            "quantity": 1500,
+            "housing": "year_round"
+          },
+          {
+            "id": "b",
+            "type": "grass_silage",
+            "quantity": 6761,
+            "dryMatterPct": 33
+          },
+          {
+            "id": "c",
+            "type": "dairy_whey",
+            "quantity": 5530
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "exportPriceLocalPerKwh": 0.1095
+        },
+        "site": {}
+      },
+      "outcome": "no",
+      "reason": "economics",
+      "source": "US DOE final report (OSTI), Fiscalini Farms CA, 710 kWe, sale 0.1095 USD/kWh: 'would not be sustainable in the absence of government support' (NPV negative without ≈ 2 M USD grants).",
+      "decidedOn": "2008",
+      "blind": true
+    },
+    {
+      "id": "b03-tillamook-or",
+      "input": {
+        "countryCode": "US",
+        "regionId": "washington",
+        "businessType": "central_biogas_plant",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "dairy_slurry",
+            "quantity": 55300,
+            "dryMatterPct": 8,
+            "delivered": true,
+            "distanceKm": 10,
+            "purchasePricePerTonneLocal": 0
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "exportPriceLocalPerKwh": 0.047
+        },
+        "site": {}
+      },
+      "outcome": "no",
+      "reason": "economics",
+      "source": "Port of Tillamook Bay final report to US DOE, 2005: central dairy digester, 0.042 + 0.005 USD/kWh; 'revenues were lower than expected and costs were higher', port subsidy ≈ 10 000 USD/month.",
+      "decidedOn": "2001",
+      "blind": true
+    },
+    {
+      "id": "b02-den-eelder-nl",
+      "input": {
+        "countryCode": "NL",
+        "regionId": "gelderland",
+        "businessType": "dairy_farm",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "dairy_slurry",
+            "quantity": 7000
+          }
+        ],
+        "energy": {
+          "electricityKwhYear": 500000,
+          "heatNeed": "year_round_process",
+          "heatKwhYear": 1000000,
+          "hasGridConnection": true
+        },
+        "site": {}
+      },
+      "outcome": "go",
+      "reason": "economics",
+      "support": "SDE+",
+      "source": "IEA Bioenergy Task 37 case story, Mar 2017: 500 cows, 7 000 t/a fresh manure, 66 kWe behind the meter, ≈ 0.8 M EUR, saves ≈ 80 k EUR/a; owner: 'still a struggle to make it all work financially'.",
+      "decidedOn": "2012",
+      "blind": true
+    },
+    {
+      "id": "c-harderwijk-nl",
+      "input": {
+        "countryCode": "NL",
+        "regionId": "gelderland",
+        "businessType": "central_biogas_plant",
+        "feedstocks": [
+          {
+            "id": "a",
+            "type": "dairy_slurry",
+            "quantity": 65500,
+            "delivered": true,
+            "distanceKm": 20,
+            "purchasePricePerTonneLocal": -17
+          },
+          {
+            "id": "b",
+            "type": "cereal_grain",
+            "quantity": 4000,
+            "delivered": true,
+            "distanceKm": 30,
+            "purchasePricePerTonneLocal": 144
+          },
+          {
+            "id": "c",
+            "type": "grease_trap_fat",
+            "quantity": 6500,
+            "delivered": true,
+            "distanceKm": 30,
+            "purchasePricePerTonneLocal": 72
+          },
+          {
+            "id": "d",
+            "type": "cereal_grain",
+            "quantity": 5000,
+            "delivered": true,
+            "distanceKm": 30,
+            "purchasePricePerTonneLocal": 60
+          },
+          {
+            "id": "e",
+            "type": "dairy_whey",
+            "quantity": 7000,
+            "delivered": true,
+            "distanceKm": 30,
+            "purchasePricePerTonneLocal": 22
+          }
+        ],
+        "energy": {
+          "heatNeed": "none",
+          "hasGridConnection": true,
+          "biomethanePriceLocalPerMwhHhv": 22.8
+        },
+        "site": {
+          "gasGridKm": 0.5,
+          "existingStorageM3": 0
+        }
+      },
+      "outcome": "no",
+      "reason": "economics",
+      "source": "AEF evaluation for Waterschap Vallei en Veluwe, 26 Oct 2022 (2016 business case reprinted): green gas 17 + GO 5.8 EUR/MWh, SDE+ 55 EUR/MWh 12 a, CAPEX 15.95 M EUR; bankrupt Oct 2021 — co-products dearer and manure gate fee lower than planned. 4 200 t/a glycerine left out (no catalogue type).",
+      "decidedOn": "2016",
+      "blind": true
+    }
+  ],
   "web": {
     "date": "2026-11-03",
     "commit": "fbc3e54",

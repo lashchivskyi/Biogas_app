@@ -14,7 +14,9 @@ import { getCountry } from "../src/countries";
 import agstar from "../src/countries/data/agstar-backtest.json";
 import bmp3 from "../src/countries/data/bmp3-plants.json";
 import lmop from "../src/countries/data/lmop-landfills.json";
-import { agstarInput, type AgstarRow } from "../src/countries/backtest";
+import ispra from "../src/countries/data/ispra-biowaste.json";
+import eiaGas from "../src/countries/data/eia-digester-gas.json";
+import { agstarInput, isNameplate, type AgstarRow } from "../src/countries/backtest";
 
 const get = (id: string) => ENGINEERING_MAP[id as keyof typeof ENGINEERING_MAP].value;
 const LHV = 9.97; // kWh/Nm³ CH4
@@ -56,14 +58,15 @@ export function agstarPlants(): AgstarPlant[] {
     const c = CEILING[row.animal], kw = actual / 8760;
     const ceilingKwhHead = c.vsKgDay * 365 * c.bo * LHV * chpEtaEl(Math.max(kw, 20), get);
     return {
-      row, ratio: m.base.energy.elGrossKwh / actual, nameplate: actual % 8760 === 0, inside: actual >= lo && actual <= hi, below: actual < lo, verdict: a.verdict.id,
+      row, ratio: m.base.energy.elGrossKwh / actual, nameplate: isNameplate(row), inside: actual >= lo && actual <= hi, below: actual < lo, verdict: a.verdict.id,
       soleUse: /^(electricity|cogeneration)$/i.test(row.endUse.trim()), aboveCeiling: actual / row.head > ceilingKwhHead, heatedTank: HEATED_TANKS.test(row.digester ?? ""),
       realKwhHead: actual / row.head, modelKwhHead: m.base.energy.elGrossKwh / row.head, ceilingKwhHead,
     };
   });
 }
-/** Like-for-like: dairy (the swine head counts mix sows and places), electricity the only gas use, a heated tank, physically possible. */
-export const likeForLike = (p: AgstarPlant) => p.row.animal === "dairy" && p.soleUse && p.heatedTank && !p.aboveCeiling;
+/** Like-for-like: a read value (not nameplate × 8 760 h), dairy (the swine head counts mix sows and places), electricity the only
+ * gas use, a heated tank, physically possible. */
+export const likeForLike = (p: AgstarPlant) => !p.nameplate && p.row.animal === "dairy" && p.soleUse && p.heatedTank && !p.aboveCeiling;
 
 /* ---------- Europe: FNR Biogas-Messprogramm III, fed substrate and measured methane ---------- */
 
@@ -104,6 +107,42 @@ export function bmp3Plants() {
   return { plants, implausible, unmappable };
 }
 
+/* ---------- Italy: biowaste plants, ISPRA 2024 (tonnage by fraction, measured biogas) ---------- */
+
+/** Rules fixed before the first run (2026-11-04): food fraction → food_waste; green + other → municipal_biowaste; sludge →
+ * sewage_sludge; AD-only plants report food + green as one organic fraction → food_waste. Measured biogas outside 50–250 Nm³ per
+ * fresh tonne is left out as a scope or reporting mismatch (part of the tonnage bypasses the digester, or other inputs). */
+const ISPRA_REGION: Record<string, string> = { LOMBARDIA: "lombardia", "EMILIA ROMAGNA": "emilia", VENETO: "veneto", PIEMONTE: "piemonte", LAZIO: "lazio", CAMPANIA: "campania",
+  PUGLIA: "puglia", SICILIA: "sicilia", SARDEGNA: "sardegna", "TRENTINO ALTO ADIGE": "veneto", "FRIULI VENEZIA GIULIA": "veneto", LIGURIA: "piemonte", TOSCANA: "emilia",
+  UMBRIA: "lazio", MARCHE: "emilia", ABRUZZO: "lazio", MOLISE: "puglia", CALABRIA: "campania", BASILICATA: "puglia" };
+export function ispraPlants() {
+  const IT = getCountry("IT");
+  const all = ispra.plants.map((x) => ({ ...x, perT: x.biogasNm3 / x.totalT }));
+  const kept = all.filter((x) => x.perT >= 50 && x.perT <= 250);
+  const plants = kept.map((x) => {
+    const lines = [
+      { id: "f", type: "food_waste" as const, quantity: x.foodT },
+      { id: "g", type: "municipal_biowaste" as const, quantity: x.greenT + x.otherT },
+      { id: "s", type: "sewage_sludge" as const, quantity: x.sludgeT },
+    ].filter((l) => l.quantity > 0).map((l) => ({ ...l, delivered: true, distanceKm: 15, monthsActive: 12 }));
+    const a = assess({ countryCode: "IT", regionId: ISPRA_REGION[x.region] ?? "lazio", businessType: "municipal_biowaste", feedstocks: lines, energy: { heatNeed: "none", hasGridConnection: true }, site: {} }, IT, { uncertainty: false });
+    return { id: `${x.comune} ${x.totalT}`, kind: x.kind, foodShare: x.foodT / x.totalT, perT: x.perT, ratio: a.routesBase.chp.feed.biogasM3Year / x.biogasNm3 };
+  });
+  return { plants, excluded: all.length - kept.length };
+}
+
+/* ---------- US digester-gas engines: EIA-923 + EIA-860 ---------- */
+
+/** Rules fixed before the first run (2026-11-04): 0.15 < net η (HHV) < 0.45 (outside = fuel misallocated between power and heat);
+ * wastewater plants by name (water, WPCP, WWTP, reclamation, treatment …). Ratio = net η (LHV) ÷ datasheet at the unit size. */
+const WWTP = /water|wastewater|wpcp|wwtp|reclamation|wrf|awtf|treatment|pollution|wlwpcf|sewer|cogen plant/i;
+export function eiaDigesterEngines() {
+  const r = get("eng.gas_hhv_lhv_ratio");
+  return eiaGas.plants.map((x) => ({ ...x, eta: x.netMwh * 3.412 / x.elecMmbtuHhv, unitKw: x.nameplateMw * 1000 / x.units, cf: x.netMwh / (x.nameplateMw * 8760) }))
+    .filter((x) => x.eta > 0.15 && x.eta < 0.45)
+    .map((x) => ({ name: x.name, wastewater: WWTP.test(x.name), cf: x.cf, ratio: x.eta * r / chpEtaEl(x.unitKw, get) }));
+}
+
 /* ---------- US landfills and engines: EPA LMOP 2022 ---------- */
 
 const SCF_NM3 = 0.0283168 * 273.15 / 288.71; // standard cubic foot (60 °F) → Nm³ (0 °C)
@@ -136,6 +175,14 @@ export function lmopEngines() {
 }
 
 /* ---------- statistics ---------- */
+
+/** Fixed calibration / holdout split of every reference set, set on 2026-11-04 before any fitting to it: FNV-1a hash of the
+ * reference id, odd = holdout. Parameters may be fitted on calibration rows only; contract figures are read on the holdout. */
+export const isHoldout = (id: string) => {
+  let h = 0x811c9dc5;
+  for (const ch of id) h = Math.imul(h ^ ch.codePointAt(0)!, 0x01000193) >>> 0;
+  return h % 2 === 1;
+};
 
 export const quantile = (xs: number[], p: number) => {
   const s = xs.filter(Number.isFinite).sort((a, b) => a - b);
@@ -187,11 +234,11 @@ export function accuracySummary(capexRatios: number[]): { sets: AccuracySet[] } 
   const agMeta = { source: "EPA AgSTAR Livestock Anaerobic Digester Database", url: agstar.source, period: agstar.dataThrough, basis: "reported" as const };
   const lmopMeta = { source: "EPA LMOP Landfill and Project Database", url: lmop.source, period: String(lmop.dataYear), basis: "measured" as const };
   return { sets: [
-    set("us_farm_all", "electricity", ag.map((p) => p.ratio), 0.25, agMeta),
+    set("us_farm_all", "electricity", ag.filter((p) => !p.nameplate).map((p) => p.ratio), 0.25, agMeta),
     set("us_farm_like", "electricity", ag.filter(likeForLike).map((p) => p.ratio), 0.25, agMeta),
     set("de_farm_methane", "methane", bmp3Plants().plants.map((p) => p.ratio), 0.25, { source: "FNR Biogas-Messprogramm III", url: bmp3.url, period: "2016–2018", basis: "measured" }),
     set("us_landfill_engine", "engine", lmopEngines().map((x) => x.ratio / siteFactor), 0.25, lmopMeta),
     set("us_landfill_gas", "landfill_gas", lmopLandfills(50).filter((x) => x.closed).map((x) => x.captured), 0.25, lmopMeta),
-    set("capex", "capex", capexRatios, 0.3, { source: "BMWK/IEE/DBFZ 2024, LWK Niedersachsen, AgSTAR via Cornell, issuer filings (FR)", url: "", period: "2014–2026", basis: "published" }),
+    set("capex", "capex", capexRatios, 0.3, { source: "BMWK/IEE/DBFZ 2024, LWK Niedersachsen, AgSTAR via Cornell, issuer filings (FR), MME REIDI approvals (BR), Klimatklivet (SE)", url: "", period: "2014–2026", basis: "published" }),
   ] };
 }

@@ -28,7 +28,7 @@ import bmp3 from "../src/countries/data/bmp3-plants.json";
 import { BMP3_MAX_L_PER_KG_VS } from "./accuracy-references";
 import { ENGINEERING_MAP } from "../src/core/engineeringParams";
 import { agstarInput, type AgstarRow } from "../src/countries/backtest";
-import { agstarPlants, bmp3Plants, likeForLike, lmopEngines, lmopLandfills, quantile } from "./accuracy-references";
+import { agstarPlants, bmp3Plants, eiaDigesterEngines, isHoldout, ispraPlants, likeForLike, lmopEngines, lmopLandfills, quantile, type AgstarPlant } from "./accuracy-references";
 import { auditModel } from "../src/components/__tests__/report-audit";
 import { KNOWN } from "../src/i18n/__tests__/qa-known";
 import { capexReferenceRows } from "./capex-references";
@@ -39,7 +39,9 @@ interface Group { name: string; rows: Row[] }
 
 /* ---------- evidence recorded outside this script ---------- */
 
-interface RealityCase { id: string; input: ProjectInput; outcome: "go" | "no"; reason?: "economics" | "other"; source: string; decidedOn: string; blind: boolean }
+/** `support`: the scheme a "go" depended on (feed-in tariff, grant, premium PPA). The base case excludes support, so such cases
+ * are reported apart and never counted as base-verdict misses. */
+interface RealityCase { id: string; input: ProjectInput; outcome: "go" | "no"; reason?: "economics" | "other"; support?: string; source: string; decidedOn: string; blind: boolean }
 /** Lighthouse runs twice: simulated throttling (Lantern, the default) and applied DevTools throttling (the page really loads on slow 4G, 4× CPU). */
 interface WebPage { lcpMs: number; cls: number; tbtMs: number; lcpAppliedMs: number; tbtAppliedMs: number; axeSerious: string[] }
 interface Evidence {
@@ -135,10 +137,14 @@ const goClass = (v: VerdictId) => (v === "STRONG_CANDIDATE" || v === "POSSIBLE_W
 const shutdown = (agstarShutdown.rows as (AgstarRow & { economics: boolean; yearShutdown: number | null })[]).map((row): RealityCase => ({
   id: row.name, input: agstarInput(row), outcome: "no", reason: row.economics ? "economics" : "other", source: "EPA AgSTAR shutdown sheet", decidedOn: String(row.yearShutdown ?? ""), blind: false,
 }));
-const reality = [...evidence.realityCases, ...shutdown].map((c) => ({ c, v: assess(c.input, getCountry(c.input.countryCode), { uncertainty: false }).verdict.id }));
-/** D2 counts outcomes a screening can know: economic closures and "go"; fires, design faults and farm closures are left out. */
-const judged = reality.filter((r) => r.c.outcome === "go" || r.c.reason === "economics");
-const oneSided = new Set(judged.map((r) => r.c.outcome)).size < 2;
+const reality = [...evidence.realityCases, ...shutdown].map((c) => { const a = assess(c.input, getCountry(c.input.countryCode), { uncertainty: false }); return { c, v: a.verdict.id, supportPositive: a.supportCases.some((s) => s.eligible && s.npvEur > 0) }; });
+/** D2 counts outcomes a screening can know: economic closures and "go" on own economics; fires, design faults, farm closures and
+ * support-dependent "go" are left out. One or two cases on a side cannot show agreement: each side needs ≥ 3. */
+const judged = reality.filter((r) => (r.c.outcome === "go" && !r.c.support) || (r.c.outcome === "no" && r.c.reason === "economics"));
+const supported = reality.filter((r) => r.c.outcome === "go" && r.c.support);
+const [goN, noN] = [judged.filter((r) => r.c.outcome === "go").length, judged.filter((r) => r.c.outcome === "no").length];
+const oneSided = Math.min(goN, noN) < 3;
+const verdictCounts = (rs: typeof reality) => Object.entries(rs.reduce<Record<string, number>>((s, r) => ({ ...s, [r.v.split("_")[0]]: (s[r.v.split("_")[0]] ?? 0) + 1 }), {})).map(([k, n]) => `${k} ${n}`).join(", ");
 const closedEconomic = reality.filter((r) => r.c.outcome === "no" && r.c.reason === "economics");
 const strongOnClosed = closedEconomic.filter((r) => r.v === "STRONG_CANDIDATE").length;
 const agree = judged.filter((r) => goClass(r.v) === r.c.outcome).length;
@@ -148,16 +154,18 @@ const matrix = (["STRONG_CANDIDATE", "POSSIBLE_WITH_CONDITIONS", "WEAK_ECONOMICS
 /* ---------- accuracy and range honesty against real plants (AgSTAR) and published plant costs ---------- */
 
 const plants = agstarPlants();
-// Like-for-like (rules fixed before the ratio is seen): dairy, electricity the only gas use, a heated tank, physically possible.
+// An "output" that is an exact multiple of 8 760 h is nameplate kW × a full year, not a reading (48 % of the AgSTAR rows):
+// left out of every accuracy and range row, shown apart. Verdicts (D2) do not use the reported output and keep all rows.
+const read = plants.filter((p) => !p.nameplate), nameplate = plants.filter((p) => p.nameplate);
+// Like-for-like (rules fixed before the ratio is seen): read value, dairy, electricity the only gas use, a heated tank, physically possible.
 const lfl = plants.filter(likeForLike);
 /** The "reality check" band the report prints (actual = 1/p90 … 1/p10 × estimate), tested out of sample: each plant against
- * the p10–p90 of the other 78, so the band cannot cover a plant only because that plant helped set it. */
+ * the p10–p90 of the other read plants, so the band cannot cover a plant only because that plant helped set it. */
 const q = quantile;
-const insideField = plants.filter((p, i) => { const rest = plants.filter((_, j) => j !== i).map((x) => x.ratio); return p.ratio >= q(rest, 0.1) && p.ratio <= q(rest, 0.9); }).length;
-const within25 = plants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length;
-// An "output" that is an exact multiple of 8 760 h is nameplate kW × a full year, not a reading (48 % of the AgSTAR rows).
-const read = plants.filter((p) => !p.nameplate);
-const insideEnergy = plants.filter((p) => p.inside).length;
+const insideField = read.filter((p, i) => { const rest = read.filter((_, j) => j !== i).map((x) => x.ratio); return p.ratio >= q(rest, 0.1) && p.ratio <= q(rest, 0.9); }).length;
+const w25 = (xs: AgstarPlant[]) => xs.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length;
+const within25 = w25(read);
+const insideEnergy = read.filter((p) => p.inside).length;
 const agstarVerdicts = Object.entries(plants.reduce<Record<string, number>>((s, p) => ({ ...s, [p.verdict.split("_")[0]]: (s[p.verdict.split("_")[0]] ?? 0) + 1 }), {})).map(([k, n]) => `${k} ${n}`).join(", ");
 
 /* ---------- Europe: metered French biomethane output against plan (ODRÉ) ---------- */
@@ -196,6 +204,14 @@ const seRatio = seModelGwhPerKt / seActualGwhPerKt;
 
 const { plants: bmpPlants, implausible: bmpImplausible, unmappable: bmpUnmappable } = bmp3Plants();
 const bmpMedianVs = (() => { const v = bmp3.rows.map((x) => x.ch4M3PerTVs).filter((x): x is number => !!x).sort((a, b) => a - b); return { n: v.length, median: v[Math.floor(v.length / 2)] }; })();
+
+/* ---------- Italy: biowaste plants, ISPRA 2024 ---------- */
+
+// AD-only plants are the like-for-like set: in integrated AD + composting plants part of the reported tonnage never reaches the digester.
+const it = ispraPlants(), itAd = it.plants.filter((x) => x.kind === "ad_only"), itInt = it.plants.filter((x) => x.kind === "integrated");
+const w25r = (xs: { ratio: number }[]) => xs.filter((x) => Math.abs(x.ratio - 1) <= 0.25).length;
+// Sewage-gas engines against the model's datasheet × `eng.chp_sewage_site_factor`.
+const sewF = ENGINEERING_MAP["eng.chp_sewage_site_factor"].value, eia = eiaDigesterEngines(), eiaWw = eia.filter((x) => x.wastewater);
 
 /* ---------- Landfill gas: EPA LMOP, measured collection 2022 ---------- */
 
@@ -302,20 +318,22 @@ const kb = evidence.keyboard, us = evidence.usability;
 
 const groups: Group[] = [
   { name: "Decision accuracy (the client's go / no-go)", rows: [
-    { id: "D1", item: "STRONG verdict on projects closed for economic reasons", threshold: "0, n ≥ 10", fact: `${strongOnClosed} of ${closedEconomic.length} (AgSTAR shut-down US farm digesters, reason recorded as economics; today's prices)`, status: closedEconomic.length === 0 ? "GREY" : strongOnClosed ? "RED" : closedEconomic.length < 10 ? "AMBER" : "GREEN" },
-    { id: "D2", item: "Verdict vs reality (go/no), matrix verdict: go/no", threshold: "≥ 80 % agree, n ≥ 8", fact: `${share(agree, judged.length)}; ${matrix}${oneSided ? "; ONE-SIDED: no documented 'go' yet" : ""}; ${reality.length - judged.length} non-economic closures not counted. Not counted: ${plants.length} operating AgSTAR digesters → ${agstarVerdicts} (base excludes support; operating ≠ economic)`, status: judged.length === 0 ? "GREY" : agree / judged.length < 0.8 ? "RED" : judged.length < 8 || oneSided ? "AMBER" : "GREEN" },
+    { id: "D1", item: "STRONG verdict on projects closed for economic reasons", threshold: "0, n ≥ 10", fact: `${strongOnClosed} of ${closedEconomic.length} (AgSTAR shut-down US farm digesters at today's prices + documented cases at their decision-time prices)`, status: closedEconomic.length === 0 ? "GREY" : strongOnClosed ? "RED" : closedEconomic.length < 10 ? "AMBER" : "GREEN" },
+    { id: "D2", item: "Verdict vs reality (go/no), matrix verdict: go/no", threshold: "≥ 80 % agree, n ≥ 8", fact: `${share(agree, judged.length)}; ${matrix}${oneSided ? `; ONE-SIDED: ${goN} 'go' on own economics, ${noN} 'no' (need ≥ 3 each)` : ""}; support-dependent 'go' not counted: ${supported.length} → base ${verdictCounts(supported) || "—"}, today's support case NPV > 0 in ${supported.filter((r) => r.supportPositive).length}; ${reality.length - judged.length - supported.length} non-economic closures not counted. Not counted: ${plants.length} operating AgSTAR digesters → ${agstarVerdicts} (base excludes support; operating ≠ economic)`, status: judged.length === 0 ? "GREY" : agree / judged.length < 0.8 ? "RED" : judged.length < 8 || oneSided ? "AMBER" : "GREEN" },
   ] },
   { name: "Functional suitability — accuracy, range honesty, integrity", rows: [
-    { id: "A1", item: "Gas / energy within ±25 % of real plants — US (AgSTAR)", threshold: "≥ 80 % of references", fact: `${share(within25, plants.length)} AgSTAR electricity (self-reported); ${plants.length - read.length} rows are nameplate × 8 760 h; on the other ${read.length}: ${pct(read.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / read.length)}; ±30 %: ${pct(plants.filter((p) => Math.abs(p.ratio - 1) <= 0.3).length / plants.length)}; like-for-like (dairy, electricity only use, heated tank, ≤ manure ceiling) ${share(lfl.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, lfl.length)}, median ${q(lfl.map((p) => p.ratio), 0.5).toFixed(2)}; excluded: ${plants.filter((p) => p.aboveCeiling).length} above the manure ceiling (co-digestion or herd mismatch), ${plants.filter((p) => !p.soleUse).length} with other gas uses (median ${q(plants.filter((p) => !p.soleUse).map((p) => p.ratio), 0.5).toFixed(2)}), ${plants.filter((p) => !p.heatedTank).length} unheated lagoons / liquid-fraction reactors (median ${q(plants.filter((p) => !p.heatedTank).map((p) => p.ratio), 0.5).toFixed(2)})`, status: within25 / plants.length >= 0.8 ? "GREEN" : "RED" },
-    { id: "A1e", item: "Methane within ±25 % of real plants — Europe (FNR Messprogramm III)", threshold: "≥ 80 % of references, n ≥ 10", fact: `${share(bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, bmpPlants.length)}; median ${(() => { const r = bmpPlants.map((p) => p.ratio).sort((x, y) => x - y); return r[Math.floor(r.length / 2)]?.toFixed(2); })()}; excluded as implausible (> ${BMP3_MAX_L_PER_KG_VS} L CH4/kg VS): ${bmpImplausible.join(", ") || "—"}; ${bmpUnmappable} plants feed substrates the calculator cannot enter; all ${bmpMedianVs.n} plants: median ${bmpMedianVs.median} L CH4/kg VS (model maize 306, dairy slurry 180 after realisation)`, status: !bmpPlants.length ? "GREY" : bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / bmpPlants.length < 0.8 ? "RED" : bmpPlants.length < 10 ? "AMBER" : "GREEN" },
+    { id: "A1", item: "Gas / energy within ±25 % of real plants — US (AgSTAR)", threshold: "≥ 80 % of references", fact: `${share(within25, read.length)} AgSTAR electricity (self-reported, read values; holdout half ${share(w25(read.filter((p) => isHoldout(p.row.name))), read.filter((p) => isHoldout(p.row.name)).length)}); ${nameplate.length} nameplate × 8 760 h rows left out (${pct(w25(nameplate) / nameplate.length)} within ±25 %); ±30 %: ${pct(read.filter((p) => Math.abs(p.ratio - 1) <= 0.3).length / read.length)}; like-for-like (dairy, electricity only use, heated tank, ≤ manure ceiling) ${share(lfl.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, lfl.length)}, median ${q(lfl.map((p) => p.ratio), 0.5).toFixed(2)}; excluded: ${read.filter((p) => p.aboveCeiling).length} above the manure ceiling (co-digestion or herd mismatch), ${read.filter((p) => !p.soleUse).length} with other gas uses (median ${q(read.filter((p) => !p.soleUse).map((p) => p.ratio), 0.5).toFixed(2)}), ${read.filter((p) => !p.heatedTank).length} unheated lagoons / liquid-fraction reactors (median ${q(read.filter((p) => !p.heatedTank).map((p) => p.ratio), 0.5).toFixed(2)})`, status: within25 / read.length >= 0.8 ? "GREEN" : "RED" },
+    { id: "A1e", item: "Methane within ±25 % of real plants — Europe (FNR Messprogramm III)", threshold: "≥ 80 % of references, n ≥ 10", fact: `${share(bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length, bmpPlants.length)} (holdout half ${share(bmpPlants.filter((p) => isHoldout(p.id) && Math.abs(p.ratio - 1) <= 0.25).length, bmpPlants.filter((p) => isHoldout(p.id)).length)}); median ${(() => { const r = bmpPlants.map((p) => p.ratio).sort((x, y) => x - y); return r[Math.floor(r.length / 2)]?.toFixed(2); })()}; excluded as implausible (> ${BMP3_MAX_L_PER_KG_VS} L CH4/kg VS): ${bmpImplausible.join(", ") || "—"}; ${bmpUnmappable} plants feed substrates the calculator cannot enter; all ${bmpMedianVs.n} plants: median ${bmpMedianVs.median} L CH4/kg VS (model maize 306, dairy slurry 180 after realisation)`, status: !bmpPlants.length ? "GREY" : bmpPlants.filter((p) => Math.abs(p.ratio - 1) <= 0.25).length / bmpPlants.length < 0.8 ? "RED" : bmpPlants.length < 10 ? "AMBER" : "GREEN" },
+    { id: "A1f", item: "Food waste / biowaste: biogas within ±25 % of real plants — Italy (ISPRA, AD-only plants)", threshold: "≥ 80 % of references, n ≥ 10", fact: `${share(w25r(itAd), itAd.length)}; median ${quantile(itAd.map((x) => x.ratio), 0.5).toFixed(2)} (fresh mass, biogas Nm³; CH4 share not published); integrated AD + composting plants (tonnage partly bypasses the digester) ${share(w25r(itInt), itInt.length)}, median ${quantile(itInt.map((x) => x.ratio), 0.5).toFixed(2)}; ${it.excluded} left out (outside 50–250 Nm³/t), ISPRA ${2024}`, status: !itAd.length ? "GREY" : w25r(itAd) / itAd.length < 0.8 ? "RED" : itAd.length < 10 ? "AMBER" : "GREEN" },
     { id: "A1s", item: "EU aggregate: farm-plant gas per tonne — Sweden (official, all plants)", threshold: "model ÷ actual 0.75–1.25", fact: `model ${(seModelGwhPerKt * 1000).toFixed(0)} kWh/t ÷ actual ${(seActualGwhPerKt * 1000).toFixed(0)} kWh/t (${seStats.farm.plants} farm plants, ${seStats.dataYear}) = ${seRatio.toFixed(2)}; mix from DM balance: feed ${seFeed.feedDm.toFixed(1)} % DM → ${(seFeed.solidShare * 100).toFixed(0)} % solid manure; aggregate, so a proxy`, status: Math.abs(seRatio - 1) > 0.25 ? "RED" : "AMBER" },
     { id: "A1l", item: "Landfill gas: model with AP-42 k, L0 and our collection guidance ÷ measured collection (closed sites)", threshold: "median 0.75–1.25", fact: `median ${lfReal.m.toFixed(2)} at ${LF_GUIDANCE_PCT} % (p10–p90 ${lfReal.p10.toFixed(2)}–${lfReal.p90.toFixed(2)}, n ${lfReal.n}, LMOP 2022); AP-42 75 %: ${lfAp42.m.toFixed(2)}; method = EPA's own estimate ${lfMethod.m.toFixed(2)} (p10–p90 ${lfMethod.p10.toFixed(2)}–${lfMethod.p90.toFixed(2)}: even waste over the open years); methane recovered ${(lfRecovery.m * 100).toFixed(0)} % of EPA-estimated generation (p10–p90 ${(lfRecovery.p10 * 100).toFixed(0)}–${(lfRecovery.p90 * 100).toFixed(0)} %; volume share × CH4 ÷ 50 %: air dilution)`, status: Math.abs(lfReal.m - 1) > 0.25 ? "RED" : "GREEN" },
-    { id: "A1g", item: "Gas engines: real electricity ÷ model (LMOP landfill-gas engines)", threshold: "median 0.85–1.15", fact: `median ${lfEngine.m.toFixed(2)} (p10–p90 ${lfEngine.p10.toFixed(2)}–${lfEngine.p90.toFixed(2)}, n ${lfEngine.n}); out of sample (odd half, factor fitted on even) ${lfEngineOut.m.toFixed(2)}, n ${lfEngineOut.n}; model = TEDOM datasheet × site factor ${siteFactor}; AD engines keep the datasheet`, status: Math.abs(lfEngine.m - 1) > 0.15 ? "RED" : lfEngineOut.n < 100 ? "AMBER" : "GREEN" },
+    { id: "A1g", item: "Gas engines: real electricity ÷ model (LMOP landfill-gas engines)", threshold: "median 0.85–1.15", fact: `median ${lfEngine.m.toFixed(2)} (p10–p90 ${lfEngine.p10.toFixed(2)}–${lfEngine.p90.toFixed(2)}, n ${lfEngine.n}); out of sample (odd half, factor fitted on even) ${lfEngineOut.m.toFixed(2)}, n ${lfEngineOut.n}; model = TEDOM datasheet × site factor ${siteFactor}; farm AD engines keep the datasheet (FNR III fed-in electricity ≈ 0.88 net); sewage gas: A1h`, status: Math.abs(lfEngine.m - 1) > 0.15 ? "RED" : lfEngineOut.n < 100 ? "AMBER" : "GREEN" },
+    { id: "A1h", item: "Sewage-gas engines: real electricity ÷ model (EIA-923 + EIA-860, wastewater plants)", threshold: "median 0.85–1.15", fact: `median ${quantile(eiaWw.map((x) => x.ratio / sewF), 0.5).toFixed(2)} (n ${eiaWw.length}, net of engine own use; holdout half ${quantile(eiaWw.filter((x) => isHoldout(x.name)).map((x) => x.ratio / sewF), 0.5).toFixed(2)}); capacity factor median ${quantile(eiaWw.map((x) => x.cf), 0.5).toFixed(2)}; model = datasheet × ${sewF}; US farm engines (not used) ${quantile(eia.filter((x) => !x.wastewater).map((x) => x.ratio), 0.5).toFixed(2)} of datasheet`, status: Math.abs(quantile(eiaWw.map((x) => x.ratio / sewF), 0.5) - 1) > 0.15 ? "RED" : eiaWw.length < 20 ? "AMBER" : "GREEN" },
     { id: "A1w", item: "Wastewater / sewage sludge: model ÷ real plants", threshold: "≥ 80 % within ±25 %", fact: "no current open per-plant data (DWA benchmarks 2022–25 omit gas; the 2017 gas edition is too old); COD → CH4 is stoichiometric (IPCC)", status: "GREY" },
     { id: "A2", item: "CAPEX within ±30 % of published plant cost", threshold: "≥ 70 % of references", fact: `${share(capex30, counted.length)}; median model ÷ published ${capexMedian.toFixed(2)}${smallN}`, status: capex30 / counted.length >= 0.7 ? "GREEN" : "RED" },
     { id: "A3", item: "CAPEX within AACE class 5 (−50 % … +100 %)", threshold: "≥ 95 % of references", fact: `${share(capexClass5, counted.length)}${counted.length - capexClass5 ? `; outside: ${counted.filter((r) => capexRatio(r) < 0.5 || capexRatio(r) > 2).map((r) => `${r.id} ${capexRatio(r).toFixed(2)}`).join(", ")}` : ""}`, status: capexClass5 / counted.length >= 0.95 ? "GREEN" : "RED" },
-    { id: "R1", item: "Real output inside conservative–optimistic band (diagnostic)", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: `${share(insideEnergy, plants.length)} AgSTAR electricity (without nameplate rows ${pct(read.filter((p) => p.inside).length / read.length)}); below band ${plants.filter((p) => p.below).length}, above ${plants.filter((p) => !p.inside && !p.below).length}`, status: coverage(insideEnergy, plants.length, 20) },
-    { id: "R1b", item: "Real output inside the report's real-plant range (leave-one-out)", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: `${share(insideField, plants.length)} AgSTAR electricity; band = p10–p90 of model ÷ reported on the other plants`, status: coverage(insideField, plants.length, 20) },
+    { id: "R1", item: "Real output inside conservative–optimistic band (diagnostic)", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: `${share(insideEnergy, read.length)} AgSTAR electricity, read values; below band ${read.filter((p) => p.below).length}, above ${read.filter((p) => !p.inside && !p.below).length}`, status: coverage(insideEnergy, read.length, 20) },
+    { id: "R1b", item: "Real output inside the report's real-plant range (leave-one-out)", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: `${share(insideField, read.length)} AgSTAR electricity, read values; band = p10–p90 of model ÷ reported on the other plants`, status: coverage(insideField, read.length, 20) },
     { id: "R3", item: "EU: metered output ÷ plan inside the model's cons.–opt. spread (FR agri sites)", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: `${share(frInside, frRatios.length)} ODRÉ ${odreYear}, spread ${frBand[0].toFixed(2)}–${frBand[1].toFixed(2)} of base; below ${frRatios.filter((x) => x < frBand[0]).length}, above ${frRatios.filter((x) => x > frBand[1]).length}; plan = publisher's "capacité théorique" (basis undefined, so a proxy: AMBER at best)`, status: coverage(frInside, frRatios.length, 20) === "GREEN" ? "AMBER" : coverage(frInside, frRatios.length, 20) },
     { id: "R2", item: "Published CAPEX inside optimistic–conservative CAPEX", threshold: "70–90 % (≈ 80 %), n ≥ 20", fact: share(capexInside, counted.length), status: coverage(capexInside, counted.length, 20) },
     testRow("I1", "Mass, methane, energy and money balances close", ["src/core/__tests__/audit-balances.test.ts", "src/core/__tests__/finance-audit.test.ts"]),

@@ -10,8 +10,8 @@ describe("AgSTAR production back-test", () => {
   }, 30_000); // 161 full assessments; slow under a parallel run
 
   it("keeps US dairy electricity close to what operating digesters report", () => {
-    // Before the NRCS/ASAE excretion values the model gave about half (median 0.53).
-    expect(BACKTEST.electricity.n).toBeGreaterThanOrEqual(50);
+    // Before the NRCS/ASAE excretion values the model gave about half (median 0.53). Read values only: 41 of 79 rows.
+    expect(BACKTEST.electricity.n).toBeGreaterThanOrEqual(40);
     expect(BACKTEST.electricity.median).toBeGreaterThan(0.8);
     expect(BACKTEST.electricity.median).toBeLessThan(1.25);
   });

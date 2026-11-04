@@ -1,5 +1,5 @@
 import { fmtDec } from "./i18n";
-import { DAYS_IN_MONTH, HOURS_IN_MONTH, meanTemp, substrateTempC } from "./climate";
+import { DAYS_IN_MONTH, HOURS_IN_MONTH, lagoonEligible, meanTemp, substrateTempC } from "./climate";
 import type { RunContext } from "./context";
 import { FEEDSTOCKS, isEffluentLike } from "./feedstockData";
 import { digestateTonnes } from "./massBalance";
@@ -32,9 +32,8 @@ export function digestateStorageMonths(ctx: Pick<RunContext, "params" | "region"
 export function chooseDigestion(feed: FeedstockSummary, ctx: RunContext): Kind {
   const p = ctx.params;
   const dm = feed.dryMatterPct;
-  const warm = meanTemp(ctx.region.monthlyTempC) >= 20;
-  // An analysed solids stream has no demonstrated soluble COD / granular sludge basis.
-  if (!ctx.input.process && warm && dm < 8) return "covered_lagoon";
+  // Lagoon vs heated tank is compared by `assess` (both are run where eligible); the climate alone no longer decides.
+  if (ctx.reactor === "lagoon" && lagoonEligible(dm, ctx)) return "covered_lagoon";
   // Dilution alone is not evidence of soluble COD or suitability for a high-rate reactor.
   // UASB/EGSB sizing is available through the explicit COD process model.
   if (dm >= p.get("eng.dry_digestion_dm_pct")) return "high_solids";
@@ -122,6 +121,8 @@ export function recommendTechnology(feed: FeedstockSummary, ctx: RunContext, hrt
   return { primary, digestion, temperature, stages, mode, reactor, hrtDays: hrt, reasons, warnings, alternatives };
 }
 
+const LIQUID_MANURE = new Set<string>(["dairy_slurry", "cattle_other_slurry", "pig_slurry"]);
+
 export function designDigester(feed: FeedstockSummary, ctx: RunContext): DigesterDesign {
   const p = ctx.params;
   const tempDig = p.get("eng.digester_temp_c");
@@ -206,8 +207,9 @@ export function designDigester(feed: FeedstockSummary, ctx: RunContext): Digeste
   // A farm's own liquid manure is already stored today (closed-season storage is a legal duty under the Nitrates
   // Directive and national equivalents). Without an entered volume, that store is assumed to exist and only its
   // gas-tight cover is costed; new storage is costed for the rest of the digestate.
-  const solidsDm = p.get("eng.wet_solids_feeding_dm_pct");
-  const ownSlurryT = feed.lines.filter((l) => l.category === "manure" && !l.delivered && l.dryMatterPct < solidsDm).reduce((a, l) => a + l.tonnesYear, 0);
+  // Slurry by type, not by a DM cut: as-excreted US dairy manure is 12.8 % DM (NRCS AWMFH Table 4-5) yet handled and stored
+  // as liquid (NRCS practice standard 313 / CAFO permits), so a DM threshold wrongly costed a whole new store for every US dairy.
+  const ownSlurryT = feed.lines.filter((l) => !l.delivered && LIQUID_MANURE.has(l.typeId)).reduce((a, l) => a + l.tonnesYear, 0);
   const entered = ctx.input.site.existingStorageM3;
   const assumedExisting = entered === undefined && feed.tonnesYear > 0 ? storageRequired * ownSlurryT / feed.tonnesYear : 0;
   const existing = Math.max(0, entered ?? assumedExisting);

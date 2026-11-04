@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { assess } from "../src/core";
-import type { Assessment, ProjectInput, RouteId } from "../src/core/types";
+import type { Assessment, BusinessTypeId, FeedstockTypeId, ProjectInput, RouteId } from "../src/core/types";
 import { getCountry } from "../src/countries";
 import { ENGINEERING_MAP } from "../src/core/engineeringParams";
 
@@ -24,7 +24,7 @@ export interface Benchmark {
   size: number;
   capexEur: number;
   year: number;
-  quality: Exclude<CostQuality, "official">;
+  quality: CostQuality;
   source: string;
   build: "agri_chp" | "agri_biomethane" | "food_waste_chp";
   publishedOn?: string;
@@ -32,6 +32,11 @@ export interface Benchmark {
   sourceGroup?: string;
   role?: "fit" | "check";
   url?: string;
+  /** The plant's main feedstock where it is published (default maize silage) and the matching business. */
+  feed?: FeedstockTypeId;
+  business?: BusinessTypeId;
+  /** The plant's own region (climate decides lagoon vs heated tank); default the country's first region. */
+  regionId?: string;
 }
 
 const DIR = resolve(import.meta.dirname ?? ".", "../src/countries/data");
@@ -39,7 +44,7 @@ export const BENCHMARKS = (JSON.parse(readFileSync(resolve(DIR, "capex-benchmark
 
 export function capexInput(b: Benchmark, q: number): ProjectInput {
   const code = b.country;
-  const regionId = getCountry(code).regions[0].id;
+  const regionId = b.regionId ?? getCountry(code).regions[0].id;
   // Agricultural co-digestion plants in PL, TR, FR, ES are typically built around maize silage (energy crop), not manure alone:
   // a manure-only plant of this capacity would need >100 000 pig places, which is not a comparable configuration.
   if (b.build === "agri_chp") {
@@ -52,8 +57,8 @@ export function capexInput(b: Benchmark, q: number): ProjectInput {
   }
   if (b.build === "agri_biomethane") {
     return {
-      countryCode: code, regionId, businessType: "dairy_farm",
-      feedstocks: [{ id: "a", type: "maize_silage", quantity: Math.round(q), delivered: true, distanceKm: 5 }],
+      countryCode: code, regionId, businessType: b.business ?? "dairy_farm",
+      feedstocks: [{ id: "a", type: b.feed ?? "maize_silage", quantity: Math.round(q), delivered: true, distanceKm: 5 }],
       energy: { electricityKwhYear: 0, heatNeed: "year_round_process", heatKwhYear: 1_000_000, hasGridConnection: true },
       site: { landHa: 1500, gasGridKm: 1 },
     };

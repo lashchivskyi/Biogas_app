@@ -4,10 +4,11 @@
  "retrievedOn": "2026-10-31",
  "source": "https://www.epa.gov/agstar/livestock-anaerobic-digester-database",
  "electricity": {
-  "n": 79,
-  "median": 1.051,
-  "p10": 0.51,
-  "p90": 2.73,
-  "within30": 0.418
- }
+  "n": 41,
+  "median": 1.144,
+  "p10": 0.663,
+  "p90": 3.283,
+  "within30": 0.439
+ },
+ "nameplateRows": 38
 }

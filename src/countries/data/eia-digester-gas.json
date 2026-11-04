@@ -1,0 +1,432 @@
+{
+ "description": "US EIA-923 digester gas (OBG) reciprocating engines: fuel for electricity (MMBtu, HHV) and net generation; EIA-860 operable OBG engines: unit count and nameplate MW. Net of the engines' own use.",
+ "source923": "https://www.eia.gov/electricity/data/eia923/",
+ "source860": "https://www.eia.gov/electricity/data/eia860/",
+ "dataYear": 2025,
+ "retrievedOn": "2026-11-05",
+ "plants": [
+  {
+   "plantId": 10026,
+   "name": "Encina Water Pollution Control",
+   "state": "CA",
+   "elecMmbtuHhv": 152960,
+   "netMwh": 13366.516,
+   "units": 4,
+   "nameplateMw": 3.2
+  },
+  {
+   "plantId": 10339,
+   "name": "Southside Water Reclamation Plant",
+   "state": "NM",
+   "elecMmbtuHhv": 135617,
+   "netMwh": 13444.48,
+   "units": 2,
+   "nameplateMw": 3.3
+  },
+  {
+   "plantId": 50224,
+   "name": "Oxnard Wastewater Treatment Plant",
+   "state": "CA",
+   "elecMmbtuHhv": 30974,
+   "netMwh": 3722.031,
+   "units": 3,
+   "nameplateMw": 1.5
+  },
+  {
+   "plantId": 50329,
+   "name": "West Point Treatment Plant",
+   "state": "WA",
+   "elecMmbtuHhv": 88461,
+   "netMwh": 14336,
+   "units": 2,
+   "nameplateMw": 4.6
+  },
+  {
+   "plantId": 50492,
+   "name": "Gas Utilization Facility",
+   "state": "CA",
+   "elecMmbtuHhv": 170339,
+   "netMwh": 30461,
+   "units": 2,
+   "nameplateMw": 4.6
+  },
+  {
+   "plantId": 50696,
+   "name": "Plant No 1 Orange County",
+   "state": "CA",
+   "elecMmbtuHhv": 352659,
+   "netMwh": 33314.604,
+   "units": 3,
+   "nameplateMw": 7.5
+  },
+  {
+   "plantId": 52099,
+   "name": "Plant No 2 Orange County",
+   "state": "CA",
+   "elecMmbtuHhv": 376400,
+   "netMwh": 36201.468,
+   "units": 5,
+   "nameplateMw": 15.0
+  },
+  {
+   "plantId": 54569,
+   "name": "Bayville Central Facility",
+   "state": "NJ",
+   "elecMmbtuHhv": 5983,
+   "netMwh": 1133.712,
+   "units": 3,
+   "nameplateMw": 0.9
+  },
+  {
+   "plantId": 54951,
+   "name": "Monterey One Water",
+   "state": "CA",
+   "elecMmbtuHhv": 37222,
+   "netMwh": 6577.131,
+   "units": 3,
+   "nameplateMw": 1.8
+  },
+  {
+   "plantId": 55033,
+   "name": "Missouri River Wastewater Treatment",
+   "state": "NE",
+   "elecMmbtuHhv": 108133,
+   "netMwh": 9507.621,
+   "units": 3,
+   "nameplateMw": 3.0
+  },
+  {
+   "plantId": 55035,
+   "name": "Davenport Water Pollution Control Plant",
+   "state": "IA",
+   "elecMmbtuHhv": 23707,
+   "netMwh": 4085.406,
+   "units": 2,
+   "nameplateMw": 1.6
+  },
+  {
+   "plantId": 55525,
+   "name": "MMSD South Shore Wastewater",
+   "state": "WI",
+   "elecMmbtuHhv": 110624,
+   "netMwh": 20394.057,
+   "units": 5,
+   "nameplateMw": 5.1
+  },
+  {
+   "plantId": 56036,
+   "name": "WWTP Power Generation Station",
+   "state": "CA",
+   "elecMmbtuHhv": 172626,
+   "netMwh": 29922.872,
+   "units": 3,
+   "nameplateMw": 6.6
+  },
+  {
+   "plantId": 56134,
+   "name": "Regional Wastewater Control Facility",
+   "state": "CA",
+   "elecMmbtuHhv": 58603,
+   "netMwh": 3871.352,
+   "units": 3,
+   "nameplateMw": 3.0
+  },
+  {
+   "plantId": 57343,
+   "name": "Cargill B6 Biofactory",
+   "state": "ID",
+   "elecMmbtuHhv": 68867,
+   "netMwh": 635,
+   "units": 2,
+   "nameplateMw": 2.2
+  },
+  {
+   "plantId": 57345,
+   "name": "Kettle Butte Digester, LLC",
+   "state": "ID",
+   "elecMmbtuHhv": 42304,
+   "netMwh": 6819,
+   "units": 2,
+   "nameplateMw": 1.8
+  },
+  {
+   "plantId": 57393,
+   "name": "Big Sky Dairy Digester",
+   "state": "ID",
+   "elecMmbtuHhv": 105815,
+   "netMwh": 9025,
+   "units": 2,
+   "nameplateMw": 1.6
+  },
+  {
+   "plantId": 57557,
+   "name": "Sunnyvale City of WPCP",
+   "state": "CA",
+   "elecMmbtuHhv": 36409,
+   "netMwh": 3094.733,
+   "units": 2,
+   "nameplateMw": 1.6
+  },
+  {
+   "plantId": 57971,
+   "name": "SF Southeast Cogen Plant",
+   "state": "CA",
+   "elecMmbtuHhv": 3878,
+   "netMwh": 341,
+   "units": 1,
+   "nameplateMw": 2.1
+  },
+  {
+   "plantId": 58177,
+   "name": "Kishwaukee CHP Plant",
+   "state": "IL",
+   "elecMmbtuHhv": 34896,
+   "netMwh": 7898.992,
+   "units": 3,
+   "nameplateMw": 3.0
+  },
+  {
+   "plantId": 58326,
+   "name": "PWD Northeast WPCP Biogas Cogen Plant",
+   "state": "PA",
+   "elecMmbtuHhv": 267103,
+   "netMwh": 27181.861,
+   "units": 4,
+   "nameplateMw": 5.6
+  },
+  {
+   "plantId": 58399,
+   "name": "Synergy Biogas",
+   "state": "NY",
+   "elecMmbtuHhv": 51001,
+   "netMwh": 3126,
+   "units": 1,
+   "nameplateMw": 1.4
+  },
+  {
+   "plantId": 58439,
+   "name": "Collinwood BioEnergy Facility",
+   "state": "OH",
+   "elecMmbtuHhv": 46478,
+   "netMwh": 2262,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 58525,
+   "name": "City of Hayward WWTP",
+   "state": "CA",
+   "elecMmbtuHhv": 74838,
+   "netMwh": 7608.443,
+   "units": 1,
+   "nameplateMw": 1.1
+  },
+  {
+   "plantId": 58563,
+   "name": "Hometown Bio Energy LLC",
+   "state": "MN",
+   "elecMmbtuHhv": 25674,
+   "netMwh": 1695,
+   "units": 1,
+   "nameplateMw": 8.0
+  },
+  {
+   "plantId": 58617,
+   "name": "Water Reclamation Plant",
+   "state": "MN",
+   "elecMmbtuHhv": 26167,
+   "netMwh": 3681.115,
+   "units": 2,
+   "nameplateMw": 2.0
+  },
+  {
+   "plantId": 58699,
+   "name": "ABEC Bidart-Old River LLC",
+   "state": "CA",
+   "elecMmbtuHhv": 186175,
+   "netMwh": 15586,
+   "units": 2,
+   "nameplateMw": 2.0
+  },
+  {
+   "plantId": 58747,
+   "name": "Viresco Turtle Lake",
+   "state": "WI",
+   "elecMmbtuHhv": 35113,
+   "netMwh": 8472.1,
+   "units": 2,
+   "nameplateMw": 3.2
+  },
+  {
+   "plantId": 58834,
+   "name": "Richland Center Renewable Energy LLC",
+   "state": "WI",
+   "elecMmbtuHhv": 79632,
+   "netMwh": 7235,
+   "units": 2,
+   "nameplateMw": 1.8
+  },
+  {
+   "plantId": 58960,
+   "name": "Laguna Water Reclamation Facility",
+   "state": "CA",
+   "elecMmbtuHhv": 47218,
+   "netMwh": 7826.529,
+   "units": 4,
+   "nameplateMw": 4.4
+  },
+  {
+   "plantId": 58980,
+   "name": "Akron WRF",
+   "state": "OH",
+   "elecMmbtuHhv": 50807,
+   "netMwh": 5622,
+   "units": 3,
+   "nameplateMw": 1.8
+  },
+  {
+   "plantId": 59774,
+   "name": "BioTown Ag",
+   "state": "IN",
+   "elecMmbtuHhv": 349219,
+   "netMwh": 36846,
+   "units": 6,
+   "nameplateMw": 6.0
+  },
+  {
+   "plantId": 60220,
+   "name": "Zero Waste Energy Development Co LLC",
+   "state": "CA",
+   "elecMmbtuHhv": 2206,
+   "netMwh": 224,
+   "units": 2,
+   "nameplateMw": 1.6
+  },
+  {
+   "plantId": 60249,
+   "name": "Silicon Valley Clean Water",
+   "state": "CA",
+   "elecMmbtuHhv": 46058,
+   "netMwh": 7892.07,
+   "units": 1,
+   "nameplateMw": 1.2
+  },
+  {
+   "plantId": 60263,
+   "name": "Durham AWTF",
+   "state": "OR",
+   "elecMmbtuHhv": 100143,
+   "netMwh": 7528,
+   "units": 2,
+   "nameplateMw": 1.6
+  },
+  {
+   "plantId": 60721,
+   "name": "Green Cow Power",
+   "state": "IN",
+   "elecMmbtuHhv": 113288,
+   "netMwh": 11058,
+   "units": 4,
+   "nameplateMw": 4.3
+  },
+  {
+   "plantId": 60918,
+   "name": "Verwey-Hanford Dairy Digester #1",
+   "state": "CA",
+   "elecMmbtuHhv": 46363,
+   "netMwh": 3350.62,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 61501,
+   "name": "ABEC #2 dba West-Star Dairy",
+   "state": "CA",
+   "elecMmbtuHhv": 103618,
+   "netMwh": 8074,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 61502,
+   "name": "ABEC #3 dba Lakeview Dairy",
+   "state": "CA",
+   "elecMmbtuHhv": 85142,
+   "netMwh": 5457,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 61503,
+   "name": "ABEC #4 dba CE&S Dairy",
+   "state": "CA",
+   "elecMmbtuHhv": 98224,
+   "netMwh": 7411,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 62418,
+   "name": "Verwey-Hanford Dairy Digester #2",
+   "state": "CA",
+   "elecMmbtuHhv": 64609,
+   "netMwh": 6024,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 62419,
+   "name": "Verwey-Hanford Dairy Digester #3",
+   "state": "CA",
+   "elecMmbtuHhv": 63940,
+   "netMwh": 5647,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 63094,
+   "name": "Santa Barbara ReSource Center",
+   "state": "CA",
+   "elecMmbtuHhv": 103248,
+   "netMwh": 8714,
+   "units": 2,
+   "nameplateMw": 2.2
+  },
+  {
+   "plantId": 64141,
+   "name": "Still Water Power",
+   "state": "CA",
+   "elecMmbtuHhv": 17160,
+   "netMwh": 1484,
+   "units": 1,
+   "nameplateMw": 1.0
+  },
+  {
+   "plantId": 64622,
+   "name": "Diamond H Dairy Power",
+   "state": "CA",
+   "elecMmbtuHhv": 103390,
+   "netMwh": 11503,
+   "units": 2,
+   "nameplateMw": 2.0
+  },
+  {
+   "plantId": 64663,
+   "name": "WLWPCF Cogeneration Facility",
+   "state": "OR",
+   "elecMmbtuHhv": 58079,
+   "netMwh": 5929,
+   "units": 1,
+   "nameplateMw": 1.2
+  },
+  {
+   "plantId": 67436,
+   "name": "West Point RNG",
+   "state": "ID",
+   "elecMmbtuHhv": 140453,
+   "netMwh": 13691,
+   "units": 2,
+   "nameplateMw": 3.2
+  }
+ ]
+}

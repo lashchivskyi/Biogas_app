@@ -115,8 +115,11 @@ export function runEnergy(
     const qInstalled = etaEl > 0 ? chpKw / etaEl : 0;
     const hoursEff = Math.max(0, Math.min(HOURS_PER_YEAR, scenario.chpHours - (mods.extraDowntimePp / 100) * HOURS_PER_YEAR));
     const heatPerGas = recovery * etaTh;
-    // Landfill gas: real engines deliver 0.80 of the datasheet (EPA LMOP); the installed rating stays the datasheet one.
-    const siteFactor = input.process?.kind === "landfill" ? p.get("eng.chp_landfill_site_factor") : 1;
+    // Landfill gas: real engines deliver 0.80 of the datasheet (EPA LMOP); sewage gas (siloxanes, part load) 0.80 too (EIA-923/860).
+    // Sewage gas = an existing gas stream of a wastewater plant, or a digester fed mostly sewage sludge. The rating stays the datasheet one.
+    const sludgeCh4 = feed.lines.filter((l) => l.typeId === "sewage_sludge").reduce((a, l) => a + l.ch4M3Year, 0);
+    const sewage = (input.process?.kind === "gas" && input.businessType === "wastewater_treatment") || (!input.process && feed.lines.length > 0 && sludgeCh4 > 0.5 * feed.lines.reduce((a, l) => a + l.ch4M3Year, 0));
+    const siteFactor = input.process?.kind === "landfill" ? p.get("eng.chp_landfill_site_factor") : sewage ? p.get("eng.chp_sewage_site_factor") : 1;
 
     for (let i = 0; i < 12; i++) {
       const G = gasM[i];

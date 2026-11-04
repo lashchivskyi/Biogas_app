@@ -10,6 +10,12 @@ export function meanTemp(t: number[]): number {
   return t.reduce((a, b) => a + b, 0) / t.length;
 }
 
+/** An unheated covered lagoon is a real option for a liquid AD feed (< 8 % DM) where the annual mean reaches
+ * `eng.lagoon_min_mean_c`; it is chosen only when the run asks for it (`ctx.reactor`), never by the climate alone. */
+export function lagoonEligible(dmPct: number, ctx: { input: { process?: unknown }; region: Region; params: { get(id: string): number } }): boolean {
+  return !ctx.input.process && dmPct < 8 && meanTemp(ctx.region.monthlyTempC) >= ctx.params.get("eng.lagoon_min_mean_c");
+}
+
 /** Heating degree days, base 18 °C (monthly-mean approximation — underestimates true HDD by ~5–10 %). */
 export function hdd18(t: number[]): number {
   return t.reduce((acc, tm, i) => acc + Math.max(0, 18 - tm) * DAYS_IN_MONTH[i], 0);

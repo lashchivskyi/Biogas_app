@@ -1,10 +1,10 @@
 # Status — 2026-11-04. Current state and next steps only; overwrite, ≤ 40 lines, no history.
 
 ## Quality scorecard (`npm run scorecard`; contract in DECISIONS › Quality contract)
-- 40 items: GREEN 19 · AMBER 5 · RED 11 · GREY 5.
-- RED: A1 AgSTAR 37 % all / 53 % like for like (median 0.95; misses = downtime, lagoons, co-digestion); A1l landfill 1.26
-  (uniform-deposition input); A2 4/6 (n = 6); R1/R2 band diagnostics; I2 54 unordered scenarios; I7 4 stale; P1/P2; U4; S1.
-- AMBER: D2 one-sided; A1s Sweden 0.90 (aggregate); R3 ODRÉ 86 % (proxy); P3/U3 stale browser evidence. GREY: U1/U2, C1, Re2.
+- 42 items: GREEN 19 · AMBER 6 · RED 12 · GREY 5.
+- RED: A1 AgSTAR 39 % of 41 read values (38 nameplate × 8 760 h rows left out), like for like 50 % of 22, median 1.02; A1l
+  landfill 1.26; A1f IT biowaste AD-only 7/9, median 0.82; A2 7/11 (model above budgets, median 1.18), A3 10/11 (BR 180 Nm³/h, feed unknown, 3.0×); R1/R2 bands; I2 54 unordered; P1/P2; U4; S1.
+- AMBER: D2 one-sided (1 'go' on own economics: AA Dairy → WEAK); A1s 0.90; R3 ODRÉ 86 % (proxy); P3/U3 stale. GREY: U1/U2, C1, Re2.
 
 ## Current state
 - Model 0.6.1; data review 2026-10-30. NOT deployed: methalytics.com has no DNS (NXDOMAIN).
@@ -30,11 +30,11 @@
    runs Google Trends + Keyword Planner by hand; then build ONE of: vendor-offer check → existing-plant decision → portfolio.
 1. A1: re-run AD Screening Tool on the AgSTAR back-test herds; open why US lagoons read 1.54 (solids separation? partial herd?).
 2. A1l: landfill input of annual waste by year (or LandGEM import); split k by precipitation (AP-42).
-3. A2: storage cost (LWK "new storage" 1.60 incl. TA Luft gas-tight store); more primary plant costs ≥ 2024 with scope.
-4. D2: documented "go" cases + blind beta into `realityCases`. 5. P1/P2 sample report and calculator hydration.
-6. I2 scenario redesign. 7. S1 admin throttling + MFA. 8. I7 UA grid factor, BR/IN CAPEX.
+3. A2: realised (not budget) costs ≥ 2024; LWK storage 1.60 (FNR III economic sheets are 2016/17 costs: too old for A2).
+4. D2: ≥ 3 'go' on own economics (blind beta); support-dependent 'go' need the scheme of their year to be judged.
+5. P1/P2 sample report and calculator hydration. 6. I2 scenario redesign. 7. S1 admin throttling + MFA.
 
 ## Known weaknesses
-- Not validated at plant level: wastewater/sludge, food and drink residues, countries other than US/DE (FR, SE aggregates only).
+- Not validated at plant level: wastewater/sludge, food and drink residues (IT municipal biowaste only, fresh mass), countries other than US/DE (FR, SE aggregates only).
 - Judgement values (LOW): warm-climate store, `MANURE_RETURN_HAUL`, plausibility bands, λ = 0.6, gas-grid 2 km, advisor
-  assumptions; biomethane price LOW everywhere.
+  assumptions; biomethane GO premium outside FR/NL; biomethane price outside the EU.

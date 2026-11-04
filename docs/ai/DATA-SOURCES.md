@@ -65,9 +65,9 @@ Spot and export haircut dominate where biomethane is not the best route (RO, GR,
 | Spot electricity | EU/RS/BG: ENTSO-E (HIGH). MD OPEM, US EIA STEO MEDIUM. **LOW: TH** (ERC Ft, no spot market), **KZ** (single buyer, June missing), **AR** (Edenor wheeling proxy, Jun 2026; use Res. SE 109/2026 annex GUDI price next) | AR: read SE seasonal annex PDF; TH/KZ: no market exists |
 | Discount rate | Damodaran CRP Jul 2026 + λ 0.6 (assumption), range −1/+2 pp | bank term sheets; refresh Jan/Jul |
 | CAPEX factors | Engineering (DBFZ/KTBL split), LOW outside DE | supplier quotes per country |
-| Biomethane price | LOW everywhere: no official market series (EU formula 0.8 × gas + 20 €/MWh; national estimates elsewhere) | signed offtake; official green-gas tariffs only as support cases |
+| Biomethane price | EU injection: TTF (RVO SDE++ yearly correction, April) + GO; GO official only FR (EEX state auctions, quarterly) and NL (RVO/PBL floor), elsewhere +20 €/MWh LOW; IT GSE auctions not yet read (GME blocks scripts); national estimates outside the EU | signed offtake; official green-gas tariffs only as support cases |
 | Export haircut 0.85 | Assumption, one value for 33 markets, swing = spot swing | marketer/balancing fee quotes; baseload CHP likely < 15 % |
-| Grid CO₂ factor | Ember via OWID (secondary; derived from official data); UA 2022 | EEA/IEA/national inventory per country; UA: Ukrenergo/MinEconomy |
+| Grid CO₂ factor | Ember via OWID (secondary; derived from official data); UA 2022 LOW (MinEconomy order 511 factor 1.311 t/MWh is thermal plants only, other basis) | EEA/IEA/national inventory per country; UA NID on UNFCCC (bot wall) |
 
 ## Validation datasets (not market data)
 
@@ -77,6 +77,9 @@ Spot and export haircut dominate where biomethane is not the best route (RO, GR,
 | Shut-down digesters with closure reason (D1, D2) | AgSTAR sheet "Shutdown", `agstar-shutdown.json` | same |
 | French biomethane, metered output vs plan per site (R3) | ODRÉ "Production annuelle de biométhane par site", `odre-biomethane.json` (export API, no key) | yearly (published ≈ October) |
 | Swedish farm plants, gas per tonne of substrate (A1s) | SCB/Energimyndigheten via Energigas Sverige, report 2024 Tab. 3/10/11, `se-biogas-statistics.json` (LHV) | yearly (≈ autumn) |
+| Documented 'go' cases (D2) and their support scheme | IEA Bioenergy Task 37 case stories, Cornell PRO-DAIRY, state energy offices; `scorecard-evidence.json` | when a new case or beta outcome is documented |
+| US digester-gas engines: fuel, net generation, nameplate per unit (A1h, `eng.chp_sewage_site_factor`) | EIA-923 Page 1 (OBG, IC) + EIA-860 3_1 Generator, `eia-digester-gas.json` (`scripts/data/extract_eia_digester.py`) | yearly (EIA-923 final ≈ autumn) |
+| Italian biowaste plants, tonnage by fraction + measured biogas (A1f) | ISPRA Rapporto Rifiuti Urbani per-region tables + Catasto rifiuti CSV, `ispra-biowaste.json` (`scripts/data/extract_ispra.py`, needs pdftotext) | yearly (report ≈ December) |
 | US landfills: measured gas collection, engine output (A1l, A1g) | EPA LMOP composite xlsx (epa.gov/system/files/documents/2024-09/lmopcompositedata.xlsx), `lmop-landfills.json` (2024-09, data 2022; MW "actual or estimated") | yearly (≈ September) |
 | Accuracy summary on /methodology | all sets above → `accuracy-summary.json` via `npx tsx scripts/accuracy.ts --write` | after any reference or model change (`accuracy.test.ts` fails on drift) |
 | Published plant costs (A2, A3, R2) | `capex-benchmarks.json` + `scripts/capex-references.ts`; press and vendor shown, not counted | when a primary cost appears |

@@ -458,6 +458,8 @@ export interface Assessment {
   ghg?: import("./ghg").GhgCase | null;
   /** What to verify first: inputs ranked by the value of knowing them before deciding (EVPI). Absent for process inputs and older reports. */
   measureFirst?: MeasureItem[];
+  /** Where a covered lagoon is eligible: the digester type not chosen, with its base result for the best route. */
+  technologyAlternative?: { digestion: string; label: string; npvEur: number; capexEur: number; ch4M3Year: number };
   /** Monte Carlo over the scenario quantities for the chosen route (independent triangular draws). */
   monteCarlo?: MonteCarloResult;
   /** Same feedstock mix at other plant sizes (base case, every route re-sized); absent for process inputs and older reports. */
@@ -526,7 +528,7 @@ export interface ProductBreakEven {
   breakEvenEurMwh?: number;
 }
 
-export type MeasureKind = "yield" | "quantity" | "capex" | "electricity_price" | "export_price" | "heat_price" | "heat_buyer" | "offtake" | "fertiliser" | "bill_structure" | "market";
+export type MeasureKind = "yield" | "quantity" | "supply" | "feed_price" | "capex" | "electricity_price" | "export_price" | "heat_price" | "heat_buyer" | "offtake" | "fertiliser" | "bill_structure" | "market";
 
 export interface MeasureItem {
   kind: MeasureKind;

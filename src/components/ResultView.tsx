@@ -11,7 +11,7 @@ import { marketLabel, marketQuality } from "@/i18n/market";
 import { decisionCopy } from "@/i18n/decision";
 import { evidenceRequest } from "@/lib/evidence";
 import { CopyButton } from "./CopyButton";
-import fieldCheck from "@/countries/data/backtest-summary.json";
+import { realityCheck } from "@/lib/reality-check";
 import { climateCopy } from "@/i18n/climate";
 import { minimumForVerdict, qualityGapCopy } from "@/i18n/quality";
 import { keyDriver } from "@/lib/whatif";
@@ -505,6 +505,7 @@ function MonteCarloPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof
   const mc = a.monteCarlo;
   if (!mc) return null;
   const C = decisionCopy[locale].monteCarlo;
+  const rc = realityCheck(a.input);
   return (
     <Section id="uncertainty" title={C.title} sub={C.sub}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -514,7 +515,7 @@ function MonteCarloPanel({ a, F, locale }: { a: Assessment; F: ReturnType<typeof
         <Stat label={C.prob} value={<span className={mc.probPositive >= 0.5 ? "text-good" : "text-warn"}>{probText(mc.probPositive, F)}</span>} />
         <Stat label={C.payback} value={F.years(mc.p50PaybackYears)} />
       </div>
-      <p className="mt-3 text-sm text-ink2">{f(C.field, { count: fieldCheck.electricity.n, lo: F.n1(1 / fieldCheck.electricity.p90), hi: F.n1(1 / fieldCheck.electricity.p10) })}</p>
+      <p className="mt-3 text-sm text-ink2">{rc.copy === "fieldNone" ? C.fieldNone : f(C[rc.copy], { count: rc.count, lo: F.n1(rc.lo), hi: F.n1(rc.hi) })}</p>
     </Section>
   );
 }
