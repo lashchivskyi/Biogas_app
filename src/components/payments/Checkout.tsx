@@ -100,6 +100,7 @@ export function UnlockButton({ input, locale, d, demo, className = "btn btn-prim
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.redirectUrl) {
+        track("checkout_error", { plan, status: String(res.status) });
         if (res.status === 409) setQuoteRevision((version) => version + 1);
         setError(res.status === 503 ? C.unavailable : data.error === "insufficient_data" ? O.insufficient : C.error);
         setState("error");

@@ -104,52 +104,59 @@ as a separate case. Market data per country and, where official data exist, per 
   Residue catalogue aligned to FNR/KTBL 2026-11-03 (stillage, brewer's grain, beet pulp); slaughter, fats, fish, POME have no open primary value.
 - Grass silage, whole-crop cereal silage, grain and fresh beet added to the catalogue (2026-11-03); 8 of 53 measured plants still feed others.
 
-## Market position (competitor benchmark 2026-10-31; re-check yearly)
+## Market position (competitor benchmark 2026-11-04 from primary sources; re-check yearly)
 
-Nobody else sells self-serve, multi-country screening with a verdict. Searched EN, DE, FR, IT, ES, PL, PT-BR, FI, UK.
-- Free one-country agency/university tools, no verdict, data frozen: KTBL Wirtschaftlichkeitsrechner (DE, new
-  plants; Preisstand 2025 but EEG choices end 2016) + Post-EEG-Rechner (existing plants); Luke Biogas Tool (FI, Excel
-  v3 25.09.2026, ≤ 15 kt); AgSTAR AD Screening Tool, Penn State dairy/swine RNG tools (09/2025), WSU/USDA-ERS AD Budget
-  Calculator (US, 2013 costs, 2018); LandGEM/LFGcost-Web (US landfill); ECLAC Methane Calculator (wastewater); IDAE
-  BIOGEMIS (ES, GHG only); ATB Methanrechner, KWS calculator (yield only); BiogasWorld (≥ 30 kt). Generic: RETScreen
-  Expert (CAD 869/yr), NREL CREST. Old/unclear: ADEME GAZdeFERME, INRAE Méthasim, SmallBIOGAS (AINIA), UniTo BP tool.
-- Lead-gen calculators (Bioflux, GrowDiesel; Indian CBG e.g. PelletRates "plant ROI"): method not disclosed.
-- Enterprise, sales-led: Anessa AD•A/AD•O (16 countries, "bankable ROI" + monitoring), SIMBA#biogas (ADM1), Mendelsohn
-  (IT, Consorzio Biogas), NNFCC (UK). Map: IEA BioGRAM (07/2026, regional potential, no project economics).
-- Human studies: ADEME funds up to ~70 % of a feasibility study → our report is the step before paying for one.
+Nobody else sells self-serve, multi-country screening with a verdict (searched EN, DE, FR, IT, ES, PL, PT-BR, FI, UK).
+"Time" = a first complete run by someone who has the data (our estimate, not measured); "inputs" = fields needed for a result.
+| Reference | Who / price | Sectors | Countries · languages | Inputs · time | Accuracy evidence | Transparency | Free ↔ paid |
+|---|---|---|---|---|---|---|---|
+| KTBL Wirtschaftlichkeitsrechner | KTBL, free web | farm AD, CHP | DE · de | ~30 · 20 min | none published | standard yields, cost tables | all free |
+| Luke Biogas Tool v3 (09/2026) | Luke, free Excel | farm AD ≤ 15 kt | FI · fi/en | ~40 · 30 min | none | open workbook | all free |
+| EPA/GMI AD Screening Tool v2.2 (03/2022) | EPA, free Excel | manure, food, sludge, ~100 items | any · en (pt manual) | 3–10 · 10 min | **calibrated on > 100 EPA digesters** (IQR 0.40–0.73 of theoretical) | open; gas + GHG only, no money | all free |
+| WSU/USDA-ERS AD Budget Calculator (2018) | WSU, free Excel | dairy AD, CHP/RNG | US · en | ~25 · 20 min | none; 2013 costs | open | all free |
+| EPA LFGcost-Web v3.6 (09/2023) | EPA LMOP, free Excel | landfill gas: engine, turbine, boiler, RNG, CNG | US · en | ~10 · 15 min | none; 2013/2019 cost curves | open formulas | all free |
+| EPA LandGEM | EPA, free Excel | landfill gas generation | any · en | ~6 · 10 min | method = AP-42 | open | all free |
+| BiogasFlux (GrowDiesel) | free now, paid tiers "planned", no price | biogas/CBG/RNG yield, revenue, payback | any (INR/USD/EUR/CNY) · 10 languages | ~6 · 2 min | none; **method not disclosed** | none | all free today (account to save) |
+| RETScreen Expert | NRCan, CAD 869/yr (third-party copies of the NRCan price) | all energy projects | any · many languages | 50+ · hours | none biogas-specific | generic | viewer free, save/print paid |
+| Anessa AD•A/AD•O/AD•M | sales-led, no public price | AD development → operations | 16 countries · en | data room · weeks | self-reported impact only | closed | none free |
+| IEA BioGRAM (07/2026) | IEA, free map | regional potential + cost | world · en | area · 5 min | none per project | method note | all free; no project economics |
+| Feasibility study (consultant) | ADEME 2025 eligible cost ≤ €100 k (diagnostic ≤ €50 k), 50–70 % funded; Thurgau CHF 8–12 k (2014); AgSTAR "free scoping … > $100 k" | any | local · local | site data · weeks–months | site-specific, bankable | report | all paid |
+| **Methalytics** | free screening; €160–390 per report | 50+ feedstocks, gas streams, 3 routes | 33 · 25 | 6–30 · ≈ 5 min (U2 not yet measured) | AgSTAR, FNR MP III, SE, LMOP, ODRÉ back-tests (A1 RED, see STATUS) | all parameters with source on /methodology | verdict + levers free; HOW FAR / HOW SURE paid |
 
-Same inputs through free tools (`scripts/benchmark.ts` re-runs the model against the recorded tool outputs; LandGEM
-in `processes.test.ts`). Model ÷ tool, like-for-like scope; every gap > 15 % explained:
+Same inputs through the free tools (`npx tsx scripts/benchmark.ts`, 10 cases × 6 tools; LandGEM in `processes.test.ts`). Model ÷ tool:
 | Case → tool | Gas | Power | CAPEX | OPEX | Why the gap, who is right |
 |---|---|---|---|---|---|
-| de_nawaro → KTBL | 0.86 | 0.82 | 1.05 | 1.03 | KTBL uses its standard yield with no realisation (356 vs 340 L/kg VS, × 0.90): a well-run plant; our base is deliberately lower; our optimistic gas is 0.96 of KTBL. OPEX split differs (our labour 2.5×, repair 1.3×, supplies incl. plant power 0.3× KTBL's), totals agree. |
-| dairy_400 in FI → Luke v3 | 1.00 BMP | 1.56 | 0.93 | 2.67 | Luke burns ≈ 25 % of the gas in a boiler to heat the digester and dumps 440 MWh of CHP heat (method flaw; CHP plants heat from the engine) and realises 82 % (Chen–Hashimoto, HRT 35 d) vs our 90 %. Luke OPEX: 0.5 h/d labour vs 500–750 h/a for 75 kW (IEE/DBFZ 2023) and 13 €/MWh CHP service vs ASUE-based 2.6 ct → Luke too low. Digester heat 1.16: 38 °C vs 35 °C. |
-| us_dairy_rng → WSU | 0.78 | – | 1.03 CHP, 0.87 RNG | – | Same VS per cow (6.8 kg/d); WSU 0.23 m³/kg VS without realisation vs our 0.20 × 0.90. Our chain is checked on 79 US digesters (AgSTAR, median 0.94); WSU would sit ≈ 1.2 → WSU optimistic. RNG CAPEX: WSU $1.02 M (2013) injection point vs our 350 k€ LOW → we are likely low. |
-| us_closed_landfill → LandGEM | 0.98 | – | – | – | Same first-order decay; mid-year placement vs LandGEM's sections = −2 % timing. |
+| de_nawaro → KTBL | 0.95 | 0.92 | 1.09 | 1.09 | KTBL standard yields = our catalogue (realisation 1.0 since 2026-11-03); OPEX split differs, totals agree. |
+| dairy_400 in FI → Luke v3 | 0.99 BMP | 1.75 | 0.97 | 2.72 | Luke heats the digester with a gas boiler and dumps CHP heat (method flaw) and assumes 0.5 h/d labour, 13 €/MWh service → Luke too low. |
+| us_dairy_rng → WSU | 0.86 | – | 1.07 CHP, 0.98 RNG | – | WSU 0.23 m³/kg VS design yield; our chain is back-tested on AgSTAR digesters. |
+| us_closed_landfill → LandGEM | 0.98 | – | – | – | Same decay; −2 % timing convention. |
+| dairy_400, ro_pig_complex, gb_food, it_whey → AD Screening Tool | 1.34, 0.87, 0.97, 0.68 vs its theoretical; 2.37, 1.53, 1.71, 1.21 vs its calibrated mid | – | – | – | Same VS. Yields agree for pig and food waste; dairy: AD-ST 148 m³/t VS (Ward et al.) vs our 200; whey: the example's lab BMP 340 vs AD-ST 550. Its calibration (40–73 % of theoretical, > 100 US digesters) also absorbs collection, downtime and flaring, which we model separately, so it is a scope gap, not proven bias. **Open A1 check**: re-run AD-ST on the AgSTAR back-test herds; if it lands nearer the metered gas than we do, our dairy yield or per-head VS is high. |
+| us_closed_landfill → LFGcost-Web | – | 1.07 kWh/m³ CH4 | 0.77 engine; 0.58 RNG | 1.21 | Engine: LFGcost $1 300/kW + $1.35 M fixed (2013, ≥ 800 kW) vs our component sum; RNG: 342 cfm is below the tool's 1 000–6 000 cfm range, so its $6 M fixed term is extrapolated → not evidence. |
+Competitor tools are a cross-check, never a calibration target (DECISIONS 2026-10-31).
 
-Client jobs × who serves them × our position:
-| Job | Who serves it today | Us |
-|---|---|---|
-| Is this worth a paid feasibility study? | consultants (paid, weeks); tools give numbers, no verdict | **edge**: verdict + robustness in minutes |
-| How much gas/energy from my feedstock? | KTBL, Luke, AgSTAR, WSU, ATB, KWS (free) | parity; we add realisation and real-plant check |
-| CHP, heat or biomethane? | Luke (manual split), WSU/KTBL (one route per run) | **edge**: three routes, one run, full energy balance |
-| What does it earn at today's prices here? | one-country tools with frozen prices | **edge**: 33 countries, dated official prices, admin1 |
-| What should I check first? | consultants | **edge**: EVPI + request templates |
-| What would make it work? | consultants (weeks); tools: one manual re-run per idea | **edge**: levers tested on the client's own data, scenario lab (free); break-even per lever + action plan (paid) |
-| Subsidies / credits | KTBL (EEG ≤ 2016), WSU + Penn State (RIN/LCFS), Luke (FI grant) | partial: separate cases; no EU compliance value |
-| Overwrite a cost line I know | Luke, KTBL, WSU (every line editable) | **gap**: one supplier total per route |
-| Lender model, grid connection, GHG certificate | consultants, RETScreen, Anessa; grid operators; BIOGEMIS/NNFCC | **gap**: pre-tax, injection LOW, RED defaults only |
-| Operate / optimise a running plant; regional potential | Anessa, KTBL Post-EEG; IEA BioGRAM | not a goal |
+Positioning, one sentence per segment (free alternative named; paid value must beat it):
+- Dairy / pig farm: "Before you pay €10–100 k for a study, know in 5 minutes whether your herd and energy use can carry a digester at
+  today's prices, and which three facts to measure first" (free alternative: KTBL/Luke/AD-ST give gas and cost, not a decision).
+- Food / drink processor: "Find out whether digesting your residues beats today's disposal bill, with the break-even gate fee and the
+  vendor questions to ask" (free: none for residues outside the US; vendors' own offers).
+- Developer: "Triage sites in 33 countries with one dated method and a verdict per site, then spend development money on the best"
+  (free: one-country tools, one route per run; gap: no portfolio view yet, roadmap 8).
+- Municipality / wastewater / landfill: "See whether your sludge, biowaste or landfill gas pays for a study, with the gas already
+  measured as the input" (free: LandGEM/LFGcost for US landfills, BioWATT for wastewater; gap: energy-neutrality accounting).
+- Investor / bank: "An independent, sourced pre-tax screen with a downside case and a list of what the developer must prove"
+  (free: nothing comparable; gap: not bankable, no after-tax pack, roadmap 4).
 
-Proven differentiators (keep ≤ 3): (1) checked against real plants, not design values — AgSTAR back-test median 0.94
-on 79 digesters; none of the four tools run publishes a back-test, and two of them (KTBL, WSU) read 18–28 % above us on
-gas; (2) current dated prices for 33 countries — KTBL's tariff years end 2016, WSU prices are 2013/2018, Luke uses
-Finnish 2023 costs, LandGEM has no economics; (3) one run compares all three routes with a closed energy balance, a
-verdict and what to verify first — the tools need one run per route and leave the decision to the user (Luke's route
-split even wastes CHP heat). Weaker: biomethane offtake value (EU judgement formula), no EU compliance-market value,
-pre-tax only, no bank format, one site at a time, CAPEX anchored on German plants. Professionals get accuracy from
-lab BMP, metered quantities, quotes, a grid study, an offtake contract and a bank model; our edge is to say which of
-these matters here (EVPI) and re-run with each piece of evidence.
+Paid value vs what is free elsewhere (2026-11-04): Excel export and line-item tables are NOT unique (Luke, WSU, AD-ST, LFGcost are
+open workbooks, KTBL lists every cost line), and BiogasFlux gives yield, revenue and payback free in 10 languages. What nobody gives
+free: (1) what to verify first ranked by value of information, with pre-filled request letters; (2) break-even per lever and the
+order of action; (3) Monte Carlo + stress tests across three routes at dated local prices. The paid page and the pricing copy must lead
+with these three, not with tables; a professional who owns KTBL buys (1)–(2) or nothing.
+
+Proven differentiators (keep ≤ 3): (1) dated official prices for 33 countries — KTBL tariffs end 2016, WSU 2013/2018, LFGcost
+2013/2019, Luke Finnish 2023; (2) one run compares three routes with a closed energy balance, a verdict and what to verify first; (3)
+back-tested on several open real-plant sets with the result published on /methodology — no longer unique: AD-ST publishes a calibration
+on > 100 digesters, so claim "checked against real plants in five datasets", never "the only one". Weaker: biomethane offtake value,
+no EU compliance value, pre-tax only, one site at a time, CAPEX anchored on German plants, no line-item override (every free tool has it).
 
 ## Roadmap (Impact × Accuracy gain × Client value × Competitive edge ÷ Complexity; audit 2026-10-31)
 

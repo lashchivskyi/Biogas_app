@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid request" }, { status: 422 });
   try {
-    const { redirectUrl } = await startCheckout(parsed.data);
+    const { redirectUrl } = await startCheckout(parsed.data, request);
     return NextResponse.json({ redirectUrl });
   } catch (e) {
     if (e instanceof CheckoutError) return NextResponse.json({ error: e.message }, { status: e.status });

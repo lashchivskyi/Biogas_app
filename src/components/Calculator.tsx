@@ -5,7 +5,7 @@ import { calendarDateAt } from "@/lib/format";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { advise, assess, ANIMALS, BUSINESS_TYPES, FEEDSTOCKS, HANDLING_IDS } from "@/core";
 import { locList, registerMessages, type Messages } from "@/core/i18n";
-import type { Advice, AnimalKind, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
+import type { Advice, AnimalKind, Assessment, BusinessTypeId, FeedstockTypeId, HandlingId, HeatNeed, ProjectInput, RouteId } from "@/core";
 import { EXAMPLES } from "@/core/examples";
 import { COUNTRIES } from "@/countries";
 import { PLAN_IDS, type PlanId } from "@/config/plans";
@@ -43,6 +43,19 @@ const GROUP_ICONS: Record<BusinessAudience | "other", IconName> = { farm: "cow",
 export type CalculatorDict = Pick<Dict, "calc" | "labels" | "result" | "flow" | "charts" | "common" | "checkout" | "pricing" | "country" | "audience">;
 
 export type ExampleSummary = LiveExample;
+
+/** Funnel: size and economics of the screened project in coarse units (what kinds of projects reach the paywall). */
+function outcome(a: Assessment) {
+  const r = a.scenarios.base;
+  const money = a.financialsAvailable !== false;
+  return {
+    plant_class: r.plantClass,
+    tonnes_y: Math.round(r.feed.tonnesYear),
+    kwe: Math.round(r.kwElEquivalent),
+    ...(money ? { capex_keur: Math.round(r.fin.capexEur / 1000), npv_keur: Math.round(r.fin.npvEur / 1000) } : {}),
+    ...(money && r.fin.simplePaybackYears !== null ? { payback_y: Math.round(r.fin.simplePaybackYears * 10) / 10 } : {}),
+  };
+}
 
 function Field({ label, hint, tooltip, children, htmlFor }: { label: string; hint?: string; tooltip?: string; children: React.ReactNode; htmlFor?: string }) {
   const description = tooltip ?? hint;
@@ -253,7 +266,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
     setEditing(false);
     const asOfDate = today ?? calendarDateAt(new Date());
     const a = assess(input, country, { asOfDate, uncertainty: false });
-    track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: form.projectRole ?? BUSINESS_TYPES[form.businessType].role, process_model: input.process?.kind ?? "ad", verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code });
+    track("calculator_submit", { business_id: form.businessType, business_group: BUSINESS_TYPES[form.businessType].audience, business_role: form.projectRole ?? BUSINESS_TYPES[form.businessType].role, process_model: input.process?.kind ?? "ad", verdict: a.verdict.id, confidence: a.confidence.level, route: a.bestRoute, country: country.code, ...outcome(a) });
     scrollTo(resultRef);
   }
 

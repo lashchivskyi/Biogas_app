@@ -38,6 +38,21 @@ export const MIGRATIONS: readonly string[] = [
      hits integer NOT NULL,
      PRIMARY KEY (key, window_start)
    );`,
+  // Funnel event log (src/lib/funnel.ts): pseudonymous visit id, order id for money events, no e-mail, IP or device id.
+  `CREATE TABLE funnel_events (
+     id bigserial PRIMARY KEY,
+     at timestamptz NOT NULL,
+     event text NOT NULL,
+     visit text,
+     order_id text,
+     props jsonb NOT NULL
+   );
+   CREATE INDEX funnel_events_at ON funnel_events (at);
+   CREATE INDEX funnel_events_order ON funnel_events (order_id) WHERE order_id IS NOT NULL;
+   CREATE TABLE funnel_salts (
+     day date PRIMARY KEY,
+     salt text NOT NULL
+   );`,
 ];
 
 const MIGRATION_LOCK = 724_001;

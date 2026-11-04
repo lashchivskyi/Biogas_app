@@ -70,7 +70,11 @@ no-break space), dot (de it es pt nl ro sr el tr da vi), comma (en th).
 
 ## Procedure
 1. Look up the term in `glossary.ts`; if a new concept appears, add it there first (all 25 locales) and in the table.
-2. Translate, then read it aloud as the native audience: would an engineer or farm owner in that country say this?
+2. Write each language from the meaning, not from the English sentence: state for yourself who reads it and what it must
+   make them do, then write it as a native specialist of that country would (local term, word order, length, tone; names and
+   plan names as a native product writer would name them, not a calque). Revise it as a second native linguist: read it aloud
+   as an engineer or farm owner there; any sentence they would not say is rewritten, not patched. Check the term in a primary
+   native source (national agency, regulator, KTBL/ADEME-type body) when the glossary has none.
 3. Run `npx vitest run src/i18n/__tests__` and `npm run typecheck`. Fix hard failures. `KNOWN` counters in `qa.test.ts` are
    a ratchet: lower a number when you fix a defect, never raise it to make a test pass.
 4. Machine QA cannot judge meaning. Say so in the answer: "native review not done" until a native specialist signs off.

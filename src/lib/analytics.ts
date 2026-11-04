@@ -1,6 +1,9 @@
+import { sanitizeEvent } from "./funnel";
+
 /**
- * Minimal analytics hook. Pushes to window.dataLayer (GTM/GA4 pick it up when NEXT_PUBLIC_GTM_ID is set
- * in the layout later). Never sends personal data — only event names and coarse properties.
+ * Funnel analytics hook. Sends listed events to our own `/api/events` (one stored event each, pseudonymous visit
+ * id made on the server, no cookie, nothing stored on the device; contract in `funnel.ts`) and mirrors them to
+ * window.dataLayer for debugging. Unknown events and keys are dropped before anything leaves the browser.
  */
 type Props = Record<string, string | number | boolean | undefined>;
 
@@ -15,6 +18,11 @@ export function track(event: string, props: Props = {}): void {
   try {
     window.dataLayer = window.dataLayer ?? [];
     window.dataLayer.push({ event, ...props });
+    const clean = sanitizeEvent(event, props);
+    if (!clean) return;
+    const body = JSON.stringify({ e: clean.event, p: clean.props });
+    if (navigator.sendBeacon?.(`/api/events`, body)) return;
+    void fetch(`/api/events`, { method: "POST", body, keepalive: true, headers: { "content-type": "text/plain" } }).catch(() => undefined);
   } catch {
     /* analytics must never break the UI */
   }

@@ -447,3 +447,27 @@ replace the line rather than adding a contradicting one.
   vs FNR Tab. 4.3 2.8 % DM = 9.2 kg/t; other German tables are lower), poultry manure (model 27 % DM/220 L vs FNR 40 %/280 L, different
   products), pig slurry VS-specific 290 vs FNR 250 at equal m³/t; Eastern dairy needs national Tier 2 VS (Poland NID 2025 not downloadable
   here); support schemes, ODRÉ, Damodaran CRP and AP-42 k/L0 not re-read in this audit.
+- 2026-11-04 — Competitor benchmark from primary sources (table and positioning in PRODUCT › Market position). Re-run recipe: EPA/GMI AD
+  Screening Tool v2.2 xlsm (globalmethane.org is unreachable; Wayback copy of `documents/AD-ScreeningTool_v2.2.xlsm`, 2023-01) and EPA
+  LFGcost-Web v3.6 (`epa.gov/system/files/other-files/2023-09/lfgcost_web_v3.6.zip`) are macro workbooks: read the yield table, the
+  calibration tab and the cost formulas with openpyxl and apply them to the same inputs (results recorded in `scripts/benchmark.ts`).
+  Do NOT claim "the only back-tested tool": AD-ST's calibration factors are the 25th–75th percentile of measured ÷ modelled biogas on
+  > 100 EPA digesters (manual v2.2, 03/2022). Its calibrated mid sits 1.2–2.4 × below the model on equal VS; the factor also covers
+  collection, downtime and flaring, so this is an open A1 question, not a retune. BiogasFlux (free, 10 languages, method undisclosed,
+  paid tiers announced without price) makes yield/revenue/payback a free commodity → paid value must rest on verify-first, break-even and
+  risk, not tables (Excel and line items are free in every public workbook). ADEME 2025 study conditions PDF answers 403 to scripts;
+  ceiling and rate come from its indexed text (€100 k feasibility, €50 k diagnostic, 50–70 %), re-read in a browser before quoting.
+- 2026-11-04 — Beta funnel analytics: first-party, cookieless **event log** (`funnel_events` / `data/funnel.json`); the owner rejected
+  daily counters only (no per-visit path, no time to pay). Each event: time, event, props, `visit` = SHA-256(daily salt | IP | UA)
+  truncated (salt in `funnel_salts`, older salts deleted, so ids cannot be recomputed or followed past one UTC day), `order_id` on
+  money events (buyer identity stays in the CRM order, never copied). Allow-list of events/keys stays (schema hygiene, no free text,
+  URL or token); values: slugs ≤ 64, finite numbers (2 decimals), booleans. `calculator_submit` carries plant class, t/y, kWe, CAPEX/NPV
+  in k€ and payback. Money and delivery stages are server-only; the public endpoint refuses them. Retention 400 days. Read:
+  `GET /api/admin/funnel?days=30` (`visits` = distinct visits, payments credited to the visit that created the order, so a webhook/poll
+  race no longer double-counts; `events` = raw counts; `&raw=1` or `&format=csv`). No GTM/GA: consent + third-party transfer.
+  Persistent cookie id rejected: needs a banner and loses 30–60 % of EU visitors who decline.
+- 2026-11-04 — Pricing for the closed beta: owner chose to KEEP €160–390 (nothing changed in code). Evidence: substitutes are free (KTBL, Luke, AD-ST, WSU, LFGcost,
+  LandGEM, BiogasFlux) or paid per year (RETScreen CAD 869) or sales-led (Anessa, no price); the next paid step is a study at CHF 8–12 k
+  (farm, 2014) up to an ADEME ceiling of €100 k, 50–70 % subsidised. No willingness-to-pay data exist yet (0 paid orders). Recommendation:
+  keep €160–390 through the closed beta (beta reports free), measure checkout_open → checkout_created → paid by tier and plan plus Van
+  Westendorp in interviews; revisit after ≥ 3 paid at list price (flat tiers vs the size factor of 2026-11-02).

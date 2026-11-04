@@ -14,6 +14,7 @@ import { getDictionary, INTL_TAG, isLocale, LOCALES, type Locale } from "@/i18n"
 import { alternates, ogLocale } from "@/i18n/seo";
 import { LANGUAGE_OPTIONS } from "@/i18n/language-options";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { PageView } from "@/components/PageView";
 import { COUNTRIES, COUNTRY_ORDER } from "@/countries";
 import { fxFor } from "@/countries/sources";
 
@@ -68,6 +69,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         <LocaleProvider locale={lang} markets={Object.fromEntries(COUNTRY_ORDER.map((code) => { const c = COUNTRIES[code]; return [code, { currency: c.currency, regions: c.regions.map(({ id, name, names }) => ({ id, name, names })) }]; }))} usd={{ value: fxFor("USD")!.value, date: fxFor("USD")!.date }}>
         <a href="#main" className="skip-link">{d.nav.skip}</a>
         <SiteHeader locale={lang} t={d.nav} descriptor={d.brand.descriptor} languageOptions={LANGUAGE_OPTIONS} />
+        <PageView lang={lang} />
         <div id="main" className="flex-1">{children}</div>
         <footer className="no-print relative z-10 bg-night text-white/70">
           <div className="container-x grid gap-10 py-14 text-sm md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">

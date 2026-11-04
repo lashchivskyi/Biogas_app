@@ -3,6 +3,7 @@ import { z } from "zod";
 import { checkBasicAuth } from "@/server/adminAuth";
 import { deliverPaidReport, notifyRefund } from "@/server/notify";
 import { orders } from "@/server/orders";
+import { recordStatusChange } from "@/server/payments/service";
 
 const patchSchema = z.object({
   status: z.enum(["paid", "cancelled", "reversed", "pending"]).optional(),
@@ -18,6 +19,7 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/admin/orde
   const before = await orders.get(id);
   const updated = await orders.update(id, parsed.data, "admin");
   if (!updated) return NextResponse.json({ error: "not found" }, { status: 404 });
+  await recordStatusChange(before, updated);
   if (before?.status === "paid" && updated.status === "reversed") await notifyRefund(updated);
   await deliverPaidReport(updated); // Manual "paid" (e.g. bank transfer) delivers the link like a provider payment.
   return NextResponse.json(updated);

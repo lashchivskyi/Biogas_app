@@ -122,8 +122,12 @@ Today privacy is **one paragraph** and checkbox 1 *bundles* "terms + processing 
 3. **Processors / recipients** (our list, to be confirmed against real contracts): **Stripe** (payments; independent controller for
    payment data), **Resend** (transactional email), **Vercel** (hosting, edge geolocation header: country only), a **managed
    PostgreSQL** provider (orders, leads), **Sentry** (errors; configured to strip personal data — verify). Climate and city data
-   (ERA5, GeoNames) are bundled datasets: no visitor data goes to those providers at runtime. No advertising or analytics cookies are set; the funnel counter that is planned
-   is first-party and cookieless (decision pending). ☐ DPAs and **SCCs/DPF** for US recipients; sub-processor list.
+   (ERA5, GeoNames) are bundled datasets: no visitor data goes to those providers at runtime. No advertising or analytics cookies are set. Funnel analytics (2026-11-04, `src/lib/funnel.ts`)
+   is first-party and cookieless but **pseudonymous personal data**: each event (page class, calculator outcome such as size, CAPEX, NPV;
+   checkout and payment steps) is stored with a visit id = SHA-256 of IP + user agent + a salt that rotates every UTC day and is then
+   deleted, plus the order id on money events (the order holds the buyer's e-mail). IP and user agent are not stored; nothing is read
+   from or stored on the device; kept 400 days. Basis proposed: legitimate interest (product improvement), like cookieless Plausible/Matomo.
+   ☐ Confirm the basis and a balancing test, the notice text (purpose, retention, objection right), and that no banner is needed (no Art. 5(3) access). ☐ DPAs and **SCCs/DPF** for US recipients; sub-processor list.
 4. **Retention.** Orders and leads are kept indefinitely today (no deletion job). ☐ Retention periods: accounting records
    (country-specific, 6–10 years), report data, leads, logs (hosting logs contain report URLs = bearer tokens).
 5. **Browser storage.** The site stores the calculator draft and display preferences (language, country, units) in `localStorage`.

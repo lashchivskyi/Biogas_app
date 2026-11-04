@@ -46,7 +46,10 @@ export async function rateLimitedShared(key: string, max: number, windowMs = 3_6
  * so a script could rotate it to dodge every limit (including admin password guessing). Platform
  * headers are set by the edge itself; otherwise the RIGHT-most entry is the one our proxy appended.
  */
-export function clientIp(request: Request): string {
+/** Anything with request headers: a Request, or `await headers()` in a server component. */
+export type HeaderSource = { headers: Pick<Headers, "get"> };
+
+export function clientIp(request: HeaderSource): string {
   const h = request.headers;
   const platform = h.get("x-vercel-forwarded-for") ?? h.get("cf-connecting-ip") ?? h.get("x-real-ip");
   if (platform?.trim()) return platform.trim();

@@ -6,6 +6,8 @@ import { advise, assess } from "@/core";
 import { getCoreCatalog } from "@/i18n";
 import { coreLang, isLocale, type Locale } from "@/i18n/config";
 import { offerCopy } from "@/i18n/offer";
+import { recordEventSafely } from "../funnel";
+import type { HeaderSource } from "../rateLimit";
 import { deliverPaidReport, notifyOwner } from "../notify";
 import { orders, type Order } from "../orders";
 import { inputSchema } from "../validate";
@@ -43,7 +45,7 @@ export function assertSellable(a: Pick<ReturnType<typeof assess>, "verdict">) {
  * Creates the order (price from the plan table × the PROJECT country's tier, never from the client)
  * and a provider checkout session. Returns where to send the browser.
  */
-export async function startCheckout(input: CheckoutInput): Promise<{ order: Order; redirectUrl: string }> {
+export async function startCheckout(input: CheckoutInput, from?: HeaderSource): Promise<{ order: Order; redirectUrl: string }> {
   const country = getCountry(input.input.countryCode);
   const tier = country.priceTier;
   const provider = activeProvider();
@@ -89,6 +91,7 @@ export async function startCheckout(input: CheckoutInput): Promise<{ order: Orde
     throw error;
   }
   const updated = await orders.update(order.id, { providerRef: session.providerRef, status: "pending" }, "checkout");
+  await recordEventSafely("checkout_created", { plan: order.plan, tier, currency: order.currency }, { from, order: order.id });
   return { order: updated ?? order, redirectUrl: session.redirectUrl };
 }
 
@@ -103,9 +106,23 @@ export async function applyProviderStatus(order: Order, s: StatusResult, source:
     return flagged;
   }
   const updated = await orders.update(order.id, { ...paymentRef, status: s.status, providerModifiedAt: s.modifiedAt, ...(s.billingCountry ? { billingCountry: s.billingCountry } : {}) }, source);
+  await recordStatusChange(order, updated);
   // Throwing turns the webhook answer into a 500, so Stripe re-delivers until the link email goes out.
   if (updated?.status === "paid" && !(await deliverPaidReport(updated))) throw new Error(`Report link email failed for order ${order.id}`);
   return updated;
+}
+
+/**
+ * Funnel event for a status change (payment, closed checkout, refund). Counted on the transition only, so a replayed
+ * webhook adds nothing; a webhook and a poll racing on the same transition can count it twice (rare, beta-tolerable).
+ */
+export async function recordStatusChange(before: Order | null, after: Order | null): Promise<void> {
+  if (!before || !after || before.status === after.status) return;
+  const plan = after.plan;
+  const ctx = { order: after.id };
+  if (after.status === "paid") await recordEventSafely("payment_paid", { plan, tier: after.priceTier, currency: after.currency }, ctx);
+  else if (after.status === "reversed") await recordEventSafely("payment_reversed", { plan }, ctx);
+  else if (["failed", "expired", "cancelled"].includes(after.status)) await recordEventSafely("payment_closed", { plan, status: after.status }, ctx);
 }
 
 /** Pull the latest status from the provider (backup for missed webhooks). */

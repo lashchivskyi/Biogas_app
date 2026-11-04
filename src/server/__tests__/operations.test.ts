@@ -12,6 +12,7 @@ import { redact, reportError, sentryEndpoint } from "../monitoring";
 // isolate the JSON stores before the modules read their paths
 const dir = mkdtempSync(join(tmpdir(), "biogas-ops-"));
 process.env.ORDERS_FILE = join(dir, "orders.json");
+process.env.FUNNEL_FILE = join(dir, "funnel.json");
 process.env.LEADS_FILE = join(dir, "leads.json");
 delete process.env.STRIPE_SECRET_KEY;
 delete process.env.DATABASE_URL;

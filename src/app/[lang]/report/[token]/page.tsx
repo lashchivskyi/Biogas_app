@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { PageHero } from "@/components/PageHero";
 import { PrintButton } from "@/components/PrintButton";
 import { ExportButton } from "@/components/ExportButton";
@@ -17,6 +19,8 @@ import { coreLang, INTL_TAG } from "@/i18n/config";
 import { deliveryCopy, retryPayment } from "@/i18n/delivery";
 import { orders } from "@/server/orders";
 import { refreshOrder } from "@/server/payments/service";
+import { recordEventSafely } from "@/server/funnel";
+import { ageBucket } from "@/lib/funnel";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -47,6 +51,10 @@ export default async function ReportPage({ params }: PageProps<"/[lang]/report/[
     );
   }
 
+  // Funnel: delivery on day 0, a return on any later day; linked by order id, never the token or the buyer.
+  const paidAt = order.history.findLast((h) => h.status === "paid")?.at;
+  const requestHeaders = await headers();
+  after(() => recordEventSafely("report_view", { plan: order.plan, age: ageBucket(paidAt) }, { from: { headers: requestHeaders }, order: order.id }));
   const a = order.assessmentSnapshot ?? assess(order.input, country, { lang: cl, asOfDate: new Date().toISOString().slice(0, 10) });
   const report: ResultViewProps = { a, d, locale, currency: country.currency, countryNotes: locList(country.approachNotes, cl), core, access: order.plan === "standard" ? "standard" : "full", methodologyHref: `/${locale}/methodology` };
   return (

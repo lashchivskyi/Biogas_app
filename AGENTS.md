@@ -74,6 +74,10 @@ Say what you ran and what you did not.
   `docs/ai/STATUS.md` (rewrite, ≤ 40 lines) and append to `DECISIONS.md` only what a future
   session must not rediscover. Delete stale lines instead of adding new ones.
 - Research done by helper agents must end in code, tests or `docs/ai/`, never only in chat.
+- **Every user-facing text, in all 25 languages, is written as a native specialist of that language would write it**
+  (names, headings, buttons, emails, SEO, reports): start from the meaning and the reader, use that country's own terms
+  and word order, never a word-for-word copy of the English. Then revise it as a second native linguist would. It is still
+  machine-written: never claim native review; the localization skill holds the procedure.
 
 ## This is NOT the Next.js you know
 
