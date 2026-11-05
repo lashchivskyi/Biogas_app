@@ -78,7 +78,7 @@ describe("client overrides of catalogue and national values", () => {
     expect(a.dataAudit?.checks.find((c) => c.parameterId === "feed.lab.bmp")?.status).toBe("REVIEW_REQUIRED");
   });
 
-  it("a characterised residue gets a financial result from modelled costs; wastewater still needs budgets", () => {
+  it("a characterised residue or wastewater gets a financial result from modelled costs; landfill gas still needs budgets", () => {
     const residue = example("se_ras_sludge");
     const p = residue.process!;
     const blank = { ...residue, process: { ...p, processCapexLocal: undefined, processOpexLocalYear: undefined, residualCostLocalT: undefined, auxiliaryKwhYear: undefined, auxiliaryHeatKwhYear: undefined } } as ProjectInput;
@@ -88,7 +88,16 @@ describe("client overrides of catalogue and national values", () => {
     expect(a.scenarios.base.process!.capexEur).toBeGreaterThan(0);
     expect(a.scenarios.base.energy.elParasiticKwh ?? 1).toBeGreaterThan(0);
     const ww = EXAMPLES.find((e) => e.input.process?.kind === "wastewater")!.input;
-    const wwBlank = { ...ww, process: { ...ww.process!, processCapexLocal: undefined } } as ProjectInput;
-    expect(run(wwBlank).financialsAvailable).toBe(false);
+    const wwBlank = { ...ww, process: { ...ww.process!, processCapexLocal: undefined, auxiliaryKwhYear: undefined } } as ProjectInput;
+    const w = run(wwBlank);
+    expect(w.financialsAvailable).toBe(true);
+    expect(w.scenarios.base.process?.modelledCosts).toEqual(["processCapexLocal", "auxiliaryKwhYear"]);
+    // Judgement reactor cost: own power is the gas-energy share only, and the verdict can never be STRONG.
+    expect(w.scenarios.base.energy.elParasiticKwh ?? 1).toBeGreaterThan(0);
+    expect(w.confidence.level).toBe("LOW");
+    expect(w.verdict.id).not.toBe("STRONG");
+    expect(w.confidence.factors?.some((f) => f.id === "process_costs_modelled" && f.owner === "client")).toBe(true);
+    const lf = EXAMPLES.find((e) => e.input.process?.kind === "landfill")!.input;
+    expect(run({ ...lf, process: { ...lf.process!, processCapexLocal: undefined } } as ProjectInput).financialsAvailable).toBe(false);
   });
 });

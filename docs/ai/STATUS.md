@@ -32,7 +32,7 @@
 2. A1l: annual waste by year (or LandGEM import); k by precipitation (AP-42).
 3. A2: realised (not budget) costs ≥ 2024; LWK storage 1.60 (FNR III economic sheets are 2016/17 costs: too old for A2).
 4. D2: ≥ 3 'go' on own economics (blind beta); support-dependent 'go' need the scheme of their year to be judged.
-5. P1/P2 hydration. 6. I2 scenarios. 7. S1 MFA. 8. Sourced ≥ 2024 UASB/lagoon/LFG CAPEX-OPEX (else client budgets).
+5. P1/P2 hydration. 6. I2 scenarios. 7. S1 MFA. 8. Wastewater reactor costs are judgement (LOW, no STRONG): find an official ≥ 2024 UASB/IC/lagoon CAPEX-OPEX curve (none in DEA, IEA T37 2025, PBL SDE++), then A2/A3 on ≥ 5 plants.
 
 ## Known weaknesses
 - Not validated at plant level: wastewater/sludge, food and drink residues (IT municipal biowaste only, fresh mass), countries other than US/DE (FR, SE aggregates only).

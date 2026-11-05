@@ -1,4 +1,4 @@
-import { missingProcessInputs } from "./processes";
+import { missingProcessInputs, modelledProcessCosts } from "./processes";
 import type { CustomerDemand } from "./demand";
 import { ANIMALS, FEEDSTOCKS, PAID_HANDLING } from "./feedstockData";
 import type { Tr } from "./i18n";
@@ -125,6 +125,13 @@ export function assessQuality(
       const need = T("Project budgets, residuals disposal and auxiliary energy");
       missing.push(need);
       capQuality(q, 34, { id: "process_inputs", owner: "client", text: need });
+    }
+    // Wastewater reactor costs left blank are judgement unit costs (no dated public curve): usable for a screening
+    // answer, never for STRONG. Entering the installed budget closes the gap.
+    if (input.process.kind === "wastewater" && modelledProcessCosts(input.process).includes("processCapexLocal")) {
+      const need = T("Installed budget for the anaerobic reactor (the model's reactor cost is an engineering judgement)");
+      missing.push(need);
+      capQuality(q, 49, { id: "process_costs_modelled", owner: "client", text: need });
     }
   }
   q.level = levelOf(q.score, measuredFeedstock);

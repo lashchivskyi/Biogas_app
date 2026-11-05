@@ -92,10 +92,12 @@ export function runEnergy(
   let chpKw = 0;
   let etaEl = 0;
 
-  // A residue with no own-use figure is a digester like any other: the DBFZ own-use rule below applies (modelledProcessCosts).
-  const parasiticMonth = (i: number) => input.process && !(input.process.kind === "residue" && input.process.auxiliaryKwhYear === undefined)
+  // A residue or wastewater with no own-use figure is a digester like any other: the DBFZ own-use rule below applies
+  // (modelledProcessCosts); for water the per-tonne term would bill pumping water as feed handling, so only the gas share counts.
+  const modelledOwnUse = input.process && (input.process.kind === "residue" || input.process.kind === "wastewater") && input.process.auxiliaryKwhYear === undefined;
+  const parasiticMonth = (i: number) => input.process && !modelledOwnUse
     ? (input.process.auxiliaryKwhYear ?? 0) * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
-    : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare) + pretreatKwh * feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.monthlyTonnes[i], 0);
+    : input.process?.kind === "wastewater" ? gasM[i] * parShare : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare) + pretreatKwh * feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.monthlyTonnes[i], 0);
 
   if (route === "chp") {
     // A monthly peak, rather than the annual average, sets the engine rating for seasonal feed.

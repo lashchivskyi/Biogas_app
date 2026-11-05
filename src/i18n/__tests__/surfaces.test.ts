@@ -114,9 +114,10 @@ describe.each(LOCALES)("localised surfaces %s", (locale) => {
       const sidebar = html.match(/<aside\b[^>]*>([\s\S]*?)<\/aside>/)![1];
       expect([...sidebar.matchAll(/<dt\b/g)]).toHaveLength(4);
       expect([...sidebar.matchAll(/class="card p-6"/g)]).toHaveLength(2);
+      // Wastewater sectors: blank reactor costs are modelled (LOW, `modelledProcessCosts`), so the sidebar shows values.
       if (id === "starch_processor" || id === "pulp_paper") {
         const values = [...sidebar.matchAll(/<dd\b[^>]*>(.*?)<\/dd>/g)].map(m => m[1]);
-        expect(values.slice(1)).toEqual(["—", "—", "—"]);
+        expect(values.slice(1).every(v => v !== "—" && v.length > 0)).toBe(true);
       }
       expect(html).not.toMatch(/undefined|NaN/);
     }

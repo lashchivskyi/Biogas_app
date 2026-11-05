@@ -25,6 +25,7 @@ import { PaidTeaser } from "./PaidTeaser";
 import { SupportTable } from "./SupportTable";
 import { offerCopy } from "@/i18n/offer";
 import { processCopy, processFieldLabels, processMetricLabels, processPrimary } from "@/i18n/processes";
+import { presetCopy } from "@/i18n/process-presets";
 import { workspaceCopy } from "@/i18n/workspace";
 import { PROCESS_UNITS, type ProcessKind, type ProcessResult } from "@/core/processes";
 import { Icon, type IconName } from "./brand/Icon";
@@ -319,7 +320,7 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
         )}
         {process && economics && !!process.modelledCosts?.length && (
           <div className="mt-4 rounded-xl border border-line bg-surface2 p-4">
-            <p className="text-sm">{PC.modelledHint}</p>
+            <p className="text-sm">{process.kind === "wastewater" ? presetCopy(locale).modelledWastewater : PC.modelledHint}</p>
             <ul className="mt-1.5 list-disc pl-5 text-sm text-ink2">{process.modelledCosts.map((key) => <li key={key}>{fields[key]}</li>)}</ul>
           </div>
         )}

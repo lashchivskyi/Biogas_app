@@ -107,14 +107,15 @@ describe("independent process balance checks", () => {
 
 describe("process economics and cross-country execution", () => {
   it("distinguishes unknown budgets from an explicitly entered zero", () => {
-    const p = { ...cases[1], processCapexLocal: undefined };
+    // Landfill gas has no modelled cost fallback: a blank budget withholds the verdict, an entered zero does not.
+    const p = { ...cases.find(c => c.kind === "landfill")!, processCapexLocal: undefined };
     const a = assess(input(p),COUNTRIES.DE);
     expect(inputSchema.safeParse(a.input).success).toBe(true);
     expect(a.scenarios.base.feed.ch4M3Year).toBeGreaterThan(0);
     expect(a.scenarios.base.process!.missingInputs).toContain("processCapexLocal");
     expect(a.verdict.id).toBe("INSUFFICIENT_DATA");
     expect(a.confidence.score).toBeLessThan(35);
-    const knownZero = assess(input({ ...cases[1], processCapexLocal: 0 }),COUNTRIES.DE);
+    const knownZero = assess(input({ ...cases.find(c => c.kind === "landfill")!, processCapexLocal: 0 }),COUNTRIES.DE);
     expect(knownZero.scenarios.base.process!.missingInputs).toEqual([]);
   });
   it("keeps ambient lagoons separate from heated high-rate COD reactors", () => {
@@ -181,9 +182,16 @@ describe("process localisation and draft compatibility", () => {
     for (const e of EXAMPLES.filter(e => e.reference && e.input.process)) {
       const a = assess(e.input,COUNTRIES[e.input.countryCode]);
       const html = renderToStaticMarkup(createElement(ResultView,{ a,d,locale,currency:COUNTRIES[e.input.countryCode].currency,access:"full",methodologyHref:`/${locale}/methodology` }));
-      expect(a.verdict.id,e.id).toBe("INSUFFICIENT_DATA");
-      expect(html,e.id).not.toContain("NPV");
-      expect(html,e.id).not.toMatch(/<th[^>]*>DSCR/);
+      // Wastewater references get modelled reactor costs (LOW): an answer, never STRONG, with the modelled fields listed.
+      if (e.input.process!.kind === "wastewater") {
+        expect(a.verdict.id,e.id).not.toBe("STRONG");
+        expect(a.confidence.level,e.id).toBe("LOW");
+        expect(a.scenarios.base.process!.modelledCosts,e.id).toContain("processCapexLocal");
+      } else {
+        expect(a.verdict.id,e.id).toBe("INSUFFICIENT_DATA");
+        expect(html,e.id).not.toContain("NPV");
+        expect(html,e.id).not.toMatch(/<th[^>]*>DSCR/);
+      }
       expect(html,e.id).not.toMatch(/undefined|NaN|\uFFFD/);
     }
   });

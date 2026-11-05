@@ -16,6 +16,7 @@ import { methodologyCopy, methodologyTermHelp } from "../methodology";
 import { offerCopy } from "../offer";
 import { preferenceCopy } from "../preferences";
 import { processFieldHelp } from "../process-help";
+import { presetCopy } from "../process-presets";
 import { processCopy, processFieldLabels, processUsage } from "../processes";
 import { minimumForVerdict, qualityGapCopy, qualityPanelCopy } from "../quality";
 import { reportLinkHelp } from "../report-link";
@@ -48,7 +49,7 @@ function modules(d: (l: Locale) => Dict): Record<string, (l: Locale) => unknown>
     market: (l) => ({ labels: ["de_small_manure", "task37_manure_200", "de_500_flex", "pl_500_1000", "ua_1mw"].map((id) => marketLabel(l, id)), quality: ["official study", "trade press", "vendor", "single project"].map((v) => marketQuality(l, v)) }),
     formErrors: (l) => formErrorCopy[l], legal: (l) => legalCopy[l], location: locationCopy,
     methodology: (l) => methodologyCopy[l], methodologyTermHelp: (l) => methodologyTermHelp[l], offer: (l) => offerCopy[l],
-    preferences: preferenceCopy, processHelp: processFieldHelp, process: processCopy, processLabels: processFieldLabels, processUsage,
+    preferences: preferenceCopy, processHelp: processFieldHelp, processPresets: presetCopy, process: processCopy, processLabels: processFieldLabels, processUsage,
     minimumForVerdict: (l) => minimumForVerdict[l], qualityPanel: qualityPanelCopy, qualityGaps: (l) => qualityGapCopy(l, d(l), "EUR"),
     reportLink: (l) => reportLinkHelp[l], seo: (l) => seoCopy[l], sampleReference: sampleReferenceCopy, stepHelp, validation: (l) => validationCopy[l], workspace: (l) => workspaceCopy[l],
   };

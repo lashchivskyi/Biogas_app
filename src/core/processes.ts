@@ -57,10 +57,13 @@ export type ProcessInput = z.infer<typeof processSchema>;
 export type ProcessKind = ProcessInput["kind"];
 export const PROCESS_COST_FIELDS = ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "auxiliaryKwhYear", "auxiliaryHeatKwhYear"] as const;
 /** A characterised residue is digested like any feedstock, so its blank cost fields fall back to the farm-digester
- * reference (vessel curve, maintenance share, DBFZ own power use, surplus-digestate price). Reactors for wastewater,
- * landfill gas and gas purchase have no sourced cost reference here and still need the client's budgets. */
-export const modelledProcessCosts = (p: ProcessInput): string[] => p.kind === "residue" ? PROCESS_COST_FIELDS.filter(key => p[key] === undefined) : [];
-export const missingProcessInputs = (p: ProcessInput): string[] => [...(p.kind === "residue" ? [] : PROCESS_COST_FIELDS.filter(key => p[key] === undefined)), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : []),
+ * reference (vessel curve, maintenance share, DBFZ own power use, surplus-digestate price). A wastewater reactor falls
+ * back to its volume × `eng.capex.high_rate_eur_m3` / `eng.capex.lagoon_eur_m3`: no dated public cost curve exists for
+ * UASB/EGSB/IC or covered lagoons, so these estimates are LOW and cap data quality (`quality.ts`, no STRONG).
+ * Landfill gas and gas purchase have no cost reference here and still need the client's budgets. */
+const MODELLED_KINDS: ProcessKind[] = ["residue", "wastewater"];
+export const modelledProcessCosts = (p: ProcessInput): string[] => MODELLED_KINDS.includes(p.kind) ? PROCESS_COST_FIELDS.filter(key => p[key] === undefined) : [];
+export const missingProcessInputs = (p: ProcessInput): string[] => [...(MODELLED_KINDS.includes(p.kind) ? [] : PROCESS_COST_FIELDS.filter(key => p[key] === undefined)), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : []),
   ...(p.kind === "gas" && p.existingChpKwEl !== undefined && p.chpOverhaulLocal === undefined ? ["chpOverhaulLocal"] : [])];
 /** Existing biogas plant with its own CHP: the gas system, grid connection and engine are reused. */
 export const existingPlant = (p: ProcessInput | undefined) => (p?.kind === "gas" && (p.existingChpKwEl ?? 0) > 0 ? p : undefined);
@@ -216,9 +219,10 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
   const missingInputs = missingProcessInputs(p);
   const modelledCosts = modelledProcessCosts(p);
   const P = ctx.params;
-  // Model estimate: digester vessel + feeding at the country cost level and the scenario's CAPEX multiplier, as for any digester.
+  // Model estimate at the country cost level and the scenario's CAPEX multiplier, as for any digester: residue = digester
+  // vessel + feeding; wastewater = reactor volume × unit cost (high-rate incl. equalisation; lagoon incl. liner, cover, gas collection).
   const modelledCapexEur = modelledCosts.includes("processCapexLocal")
-    ? (digesterVesselEur(design, P) + P.get("eng.capex.feed_slurry") + (p.kind === "residue" && p.dmPct >= P.get("eng.wet_solids_feeding_dm_pct") ? P.get("eng.capex.feed_solids") : 0)) * P.get("econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex
+    ? (digesterVesselEur(design, P) + (p.kind === "residue" ? P.get("eng.capex.feed_slurry") + (p.dmPct >= P.get("eng.wet_solids_feeding_dm_pct") ? P.get("eng.capex.feed_solids") : 0) : 0)) * P.get("econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex
     : undefined;
   const capexEur = modelledCapexEur ?? (p.processCapexLocal ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.capex;
   const opexEurYear = modelledCosts.includes("processOpexLocalYear")
@@ -227,11 +231,11 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
   const residualCostEurT = modelledCosts.includes("residualCostLocalT") ? P.get("econ.digestate_excess_eur_t") : (p.residualCostLocalT ?? 0) / ctx.fx;
   for (const key of modelledCosts) provenance.push(prov(`process.model.${key}`, `${key}: model estimate (field left blank)`, key === "processCapexLocal" ? capexEur : key === "processOpexLocalYear" ? opexEurYear : key === "residualCostLocalT" ? residualCostEurT : 0,
     key === "residualCostLocalT" ? "EUR/t" : key.startsWith("auxiliary") ? (key === "auxiliaryKwhYear" ? "kWh/a" : "kWh_th/a") : key === "processOpexLocalYear" ? "EUR/a" : "EUR", "ESTIMATE",
-    key === "processCapexLocal" ? "Digester vessel curve + feeding (eng.capex.*) × country CAPEX factor; replace with an installed budget"
-      : key === "processOpexLocalYear" ? "eng.opex.maintenance_share × modelled process CAPEX"
-      : key === "residualCostLocalT" ? "National surplus-digestate price (econ.digestate_excess_eur_t); enter 0 if the residue goes to own land"
-      : key === "auxiliaryKwhYear" ? "Plant own use max(eng.parasitic_base_kwh_t × t, eng.parasitic_share_gas_energy × gas energy), DBFZ 2023 (value in the energy balance)"
-      : "No extra thermal load beyond the digester heat already calculated", "LOW", { country: ctx.country.code, date: "undated", origin: "ENGINEERING_ASSUMPTION" }));
+    key === "processCapexLocal" ? (p.kind === "wastewater" ? `Reactor volume ${Math.round(design.totalVolumeM3)} m³ × ${p.reactorTechnology === "covered_lagoon" ? "eng.capex.lagoon_eur_m3" : "eng.capex.high_rate_eur_m3"} × country CAPEX factor; no dated public cost curve for anaerobic wastewater reactors, judgement value; pretreatment (screens, DAF), aerobic polishing and effluent discharge excluded; replace with an installed budget` : "Digester vessel curve + feeding (eng.capex.*) × country CAPEX factor; replace with an installed budget")
+      : key === "processOpexLocalYear" ? `eng.opex.maintenance_share × modelled process CAPEX${p.kind === "wastewater" ? "; chemicals (pH control, nutrients) not included" : ""}`
+      : key === "residualCostLocalT" ? (p.kind === "wastewater" ? "National surplus-digestate price (econ.digestate_excess_eur_t) applied to excess anaerobic sludge; enter 0 if granular sludge is sold or reused" : "National surplus-digestate price (econ.digestate_excess_eur_t); enter 0 if the residue goes to own land")
+      : key === "auxiliaryKwhYear" ? (p.kind === "wastewater" ? "Pumping, recirculation and gas handling as eng.parasitic_share_gas_energy × gas energy (the per-tonne term is for solid feeds, not water; value in the energy balance)" : "Plant own use max(eng.parasitic_base_kwh_t × t, eng.parasitic_share_gas_energy × gas energy), DBFZ 2023 (value in the energy balance)")
+      : "No extra thermal load beyond the reactor heat already calculated", "LOW", { country: ctx.country.code, date: "undated", origin: "ENGINEERING_ASSUMPTION" }));
   return { feed, design, process: { kind: p.kind, missingInputs, modelledCosts, metrics, provenance, capexEur, opexEurYear,
     residualTonnesYear: residual, residualCostEurT, avoidedTreatmentEurYear: avoided, gasPurchaseEurYear: purchase,
     annualGasFactors: gasFactors } };
