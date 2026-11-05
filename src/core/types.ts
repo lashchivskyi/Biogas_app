@@ -131,6 +131,12 @@ export interface FeedstockLineInput {
   vsPctOfDm?: number;
   /** Laboratory BMP in litres CH4 per kg VS; process realisation still applies. */
   methaneYieldLPerKgVs?: number;
+  /** Laboratory gas analysis: methane in dry biogas, % by volume; overrides the catalogue. */
+  methanePct?: number;
+  /** Laboratory total nitrogen (Kjeldahl), kg N per tonne of fresh mass; overrides the catalogue. */
+  nKgT?: number;
+  /** Share of input mass screened out as rejects (packaging, plastics, grit), %; overrides the default for that stream. */
+  rejectSharePct?: number;
   /** How many months per year the stream exists (waste streams). Default from catalogue. */
   monthsActive?: number;
   startMonth?: number; // 1..12
@@ -173,6 +179,8 @@ export interface SiteInput {
   gasGridKm?: number;
   neighboursWithin300m?: boolean;
   nearProtectedOrWaterArea?: boolean;
+  /** What a contractor charges to take surplus digestate away, local currency per tonne. Replaces the national estimate. */
+  digestateExportCostLocalPerTonne?: number;
 }
 
 export interface FinanceInput {
@@ -189,6 +197,11 @@ export interface FinanceInput {
    */
   capexQuoteLocal?: number;
   capexQuoteRoute?: RouteId;
+  /**
+   * Supplier's yearly O&M contract for the quoted route, local currency/year: plant maintenance, CHP service and upgrading
+   * maintenance. Replaces those three modelled lines of that route only; staff, insurance and monitoring stay modelled.
+   */
+  omQuoteLocalYear?: number;
 }
 
 export interface ProjectInput {
@@ -232,6 +245,8 @@ export interface FeedstockLineResult {
   opportunityCostEurYear: number;
   /** Ensiled crops: harvested fresh mass put into the clamp (tonnesYear is what reaches the digester after ensiling loss). */
   ensiledTonnesYear?: number;
+  /** Share of fed mass screened out as rejects (client value or the default for packaged waste), 0..1. */
+  rejectShare?: number;
   category: "manure" | "processing" | "other";
   warnings: string[];
 }

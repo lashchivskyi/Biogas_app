@@ -29,10 +29,10 @@
 0. Beta: 20 interviews (developers, consultants/chambers, plants after tariff, food processors) with Van Westendorp; owner
    runs Google Trends + Keyword Planner by hand; then build ONE of: vendor-offer check → existing-plant decision → portfolio.
 1. A1: re-run AD Screening Tool on the AgSTAR back-test herds; open why US lagoons read 1.54 (solids separation? partial herd?).
-2. A1l: landfill input of annual waste by year (or LandGEM import); split k by precipitation (AP-42).
+2. A1l: annual waste by year (or LandGEM import); k by precipitation (AP-42).
 3. A2: realised (not budget) costs ≥ 2024; LWK storage 1.60 (FNR III economic sheets are 2016/17 costs: too old for A2).
 4. D2: ≥ 3 'go' on own economics (blind beta); support-dependent 'go' need the scheme of their year to be judged.
-5. P1/P2 sample report and calculator hydration. 6. I2 scenario redesign. 7. S1 admin throttling + MFA.
+5. P1/P2 hydration. 6. I2 scenarios. 7. S1 MFA. 8. Sourced ≥ 2024 UASB/lagoon/LFG CAPEX-OPEX (else client budgets).
 
 ## Known weaknesses
 - Not validated at plant level: wastewater/sludge, food and drink residues (IT municipal biowaste only, fresh mass), countries other than US/DE (FR, SE aggregates only).

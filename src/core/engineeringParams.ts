@@ -76,6 +76,8 @@ export const ENGINEERING_PARAMS: Provenance[] = [
   prov("eng.poultry_inhib_threshold", "Poultry share of VS above which NH₃ inhibition starts", 0.35, "—", "ESTIMATE", `${FNR10}, Table 2.2, p. 26 (inhibition at NH₄-N > 3.0–3.5 g/L); poultry share is a proxy`, "LOW", { date: FNR10_DATE }),
   prov("eng.poultry_inhib_loss_per_10pct", "Yield loss per 10 pp poultry VS above threshold", 0.04, "—", "ESTIMATE", JUDGEMENT("site-specific; lab BMP and NH₄-N test needed"), "LOW", { date: REVIEWED }),
   prov("eng.fat_share_warning", "Fat/grease share of VS above which overload risk", 0.25, "—", "ESTIMATE", "Long et al., Process Saf. Environ. Prot. 90 (2012): stable FOG co-digestion up to ≈ 30 % of VS", "LOW", { date: "2012-12-31" }),
+  prov("eng.ammonium_inhib_g_l", "Ammonium nitrogen in the digester above which methanogens are inhibited", 3.0, "g NH₄-N/L", "ESTIMATE", `${FNR10}, Table 2.2, p. 26: inhibition at NH₄-N > 3.0–3.5 g/L (lower bound used); compared with TOTAL N, an upper bound of NH₄-N`, "MEDIUM", { date: FNR10_DATE }),
+  prov("eng.lab_bmp_rsd", "Inter-laboratory spread of a laboratory BMP (relative standard deviation)", 0.08, "—", "ESTIMATE", "Hafner et al., Water 12(6) 1752 (2020), doi:10.3390/w12061752: RSD between laboratories < 8 % for tests meeting the validation criteria (7.5–24 % without)", "MEDIUM", { date: "2020-06-30" }),
 
   // --- CHP ---
   ...CHP_REFERENCE.flatMap(([kw, el, th]) => [

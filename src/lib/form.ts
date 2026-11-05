@@ -21,6 +21,10 @@ export interface FormLine {
   dryMatterPct: string;
   vsPctOfDm: string;
   methaneYieldLPerKgVs: string;
+  /** Lab values added later; older drafts lack them. */
+  methanePct?: string;
+  nKgT?: string;
+  rejectSharePct?: string;
   monthsActive: string;
   startMonth: string;
   delivered: boolean;
@@ -70,6 +74,10 @@ export interface FormState {
   /** Supplier's installed price for ONE technology; both fields are needed, otherwise the quote is ignored. */
   capexQuote?: string;
   capexQuoteRoute?: "" | RouteId;
+  /** Yearly O&M contract for the quoted route; ignored without the CAPEX quote and its route. */
+  omQuote?: string;
+  /** Contractor price for taking surplus digestate away, local/t; empty = national estimate. */
+  digestateCost?: string;
 }
 
 const formNumber = (s: string, locale?: Locale) => locale
@@ -80,9 +88,9 @@ const formNumber = (s: string, locale?: Locale) => locale
 export function invalidNumberStep(f: FormState): 1 | 2 | 3 | null {
   const invalid = (s: string | undefined) => Boolean(s?.trim()) && formNumber(s!, f.numberLocale) === undefined;
   if (Object.entries(f.processFields ?? {}).filter(([k]) => !k.startsWith("basis") && k !== "reactorTechnology").some(([,v]) => invalid(v))) return 1;
-  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.measuredTonnes, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
+  if ((f.processKind ?? defaultProcess(f.businessType)) === "ad" && f.lines.some((l) => [l.quantity, l.measuredTonnes, l.dryMatterPct, l.vsPctOfDm, l.methaneYieldLPerKgVs, l.methanePct, l.nKgT, l.rejectSharePct, l.monthsActive, l.startMonth, l.delivered ? l.distanceKm : "", l.disposalCost, l.opportunityValue, l.purchasePrice].some(invalid))) return 1;
   if ([f.elecBillMonthly, f.elecKwhYear, f.elecPrice, f.gasUsed ? f.gasBillMonthly : "", f.gasUsed ? f.gasM3Year : "", f.gasUsed ? f.gasPrice : "", f.heatKwhYear, f.exportPrice, f.heatPrice, f.biomethanePrice].some(invalid)) return 2;
-  if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", f.gasGridKm, ...(f.refineOpen ? [f.operatorWage, f.capexQuote, f.debtSharePct, f.debtRatePct, f.debtTenorYears] : [])].some(invalid)) return 3;
+  if ([(f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.landHa : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.existingStorageM3 : "", (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? f.digestateCost : "", f.gasGridKm, ...(f.refineOpen ? [f.operatorWage, f.capexQuote, f.omQuote, f.debtSharePct, f.debtRatePct, f.debtTenorYears] : [])].some(invalid)) return 3;
   return null;
 }
 
@@ -101,7 +109,7 @@ export const newId = () => `l${Date.now().toString(36)}${(counter++).toString(36
 
 export function emptyLine(kind: "animal" | "type", key: AnimalKind | FeedstockTypeId): FormLine {
   const base: FormLine = {
-    id: newId(), kind, quantity: "", measuredTonnes: "", housing: "year_round", dryMatterPct: "", vsPctOfDm: "", methaneYieldLPerKgVs: "", monthsActive: "", startMonth: "", delivered: false,
+    id: newId(), kind, quantity: "", measuredTonnes: "", housing: "year_round", dryMatterPct: "", vsPctOfDm: "", methaneYieldLPerKgVs: "", methanePct: "", nKgT: "", rejectSharePct: "", monthsActive: "", startMonth: "", delivered: false,
     distanceKm: "", handling: "", disposalCost: "", opportunityValue: "", purchasePrice: "",
   };
   if (kind === "animal") return { ...base, animal: key as AnimalKind };
@@ -138,10 +146,10 @@ export function recontextualizeForm(f: FormState, country: CountryAdapter, regio
   };
   const numbers = ["elecBillMonthly", "elecKwhYear", "elecPrice", "gasBillMonthly", "gasM3Year", "gasPrice", "heatKwhYear", "landHa", "existingStorageM3", "gasGridKm", "debtSharePct", "debtRatePct", "debtTenorYears"] as const;
   for (const key of numbers) next[key] = reformat(f[key] ?? "");
-  for (const key of ["exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = reformat(f[key] ?? "");
-  for (const line of next.lines) for (const key of ["quantity", "measuredTonnes", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key] ?? "");
+  for (const key of ["exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote", "omQuote", "digestateCost"] as const) next[key] = reformat(f[key] ?? "");
+  for (const line of next.lines) for (const key of ["quantity", "measuredTonnes", "dryMatterPct", "vsPctOfDm", "methaneYieldLPerKgVs", "methanePct", "nKgT", "rejectSharePct", "monthsActive", "startMonth", "distanceKm", "disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = reformat(line[key] ?? "");
   if (changed) {
-    for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice", "exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote"] as const) next[key] = "";
+    for (const key of ["elecBillMonthly", "elecPrice", "gasBillMonthly", "gasPrice", "exportPrice", "heatPrice", "biomethanePrice", "operatorWage", "capexQuote", "omQuote", "digestateCost"] as const) next[key] = "";
     for (const line of next.lines) for (const key of ["disposalCost", "opportunityValue", "purchasePrice"] as const) line[key] = "";
   }
   return next;
@@ -169,6 +177,12 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
     if (vs && vs > 0 && vs <= 100) line.vsPctOfDm = vs;
     const bmp = num(l.methaneYieldLPerKgVs ?? "");
     if (bmp && bmp > 0 && bmp <= 1200) line.methaneYieldLPerKgVs = bmp;
+    const ch4 = num(l.methanePct ?? "");
+    if (ch4 && ch4 >= 40 && ch4 <= 85) line.methanePct = ch4;
+    const n = num(l.nKgT ?? "");
+    if (n && n > 0 && n <= 40) line.nKgT = n;
+    const rejects = num(l.rejectSharePct ?? "");
+    if (rejects !== undefined && rejects >= 0 && rejects <= 60 && l.kind === "type") line.rejectSharePct = rejects;
     const months = num(l.monthsActive);
     if (months && l.kind === "type") line.monthsActive = Math.min(12, Math.max(1, months));
     const start = num(l.startMonth ?? "");
@@ -197,7 +211,11 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
     debtTenorYears: tenor !== undefined && tenor <= 30 ? Math.round(tenor) : undefined, operatorWageLocalPerHour: positive(rf?.operatorWage),
   };
   const quote = positive(rf?.capexQuote);
-  if (quote !== undefined && rf?.capexQuoteRoute && (f.processKind ?? defaultProcess(f.businessType)) === "ad") { finance.capexQuoteLocal = quote; finance.capexQuoteRoute = rf.capexQuoteRoute; }
+  if (quote !== undefined && rf?.capexQuoteRoute && (f.processKind ?? defaultProcess(f.businessType)) === "ad") {
+    finance.capexQuoteLocal = quote; finance.capexQuoteRoute = rf.capexQuoteRoute;
+    const om = positive(rf.omQuote);
+    if (om !== undefined) finance.omQuoteLocalYear = om;
+  }
   for (const k of Object.keys(finance) as (keyof typeof finance)[]) if (finance[k] === undefined) delete finance[k];
   const price = num(f.elecPrice);
   const kwh = num(f.elecKwhYear) ?? (num(f.elecBillMonthly) ? ((num(f.elecBillMonthly) as number) * 12) / (price ?? def.electricityPerKwh) : undefined);
@@ -235,6 +253,7 @@ export function formToInput(f: FormState, country: CountryAdapter, lang: CoreLan
     site: {
       landHa: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? num(f.landHa) : undefined,
       existingStorageM3: (f.processKind ?? defaultProcess(f.businessType)) === "ad" ? num(f.existingStorageM3) : undefined,
+      ...((f.processKind ?? defaultProcess(f.businessType)) === "ad" && num(f.digestateCost ?? "") !== undefined && num(f.digestateCost ?? "")! >= 0 ? { digestateExportCostLocalPerTonne: num(f.digestateCost ?? "") } : {}),
       gasGridKm: num(f.gasGridKm),
       neighboursWithin300m: f.neighbours,
       nearProtectedOrWaterArea: f.protectedArea,
@@ -256,6 +275,9 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
       dryMatterPct: s(l.dryMatterPct),
       vsPctOfDm: s(l.vsPctOfDm),
       methaneYieldLPerKgVs: s(l.methaneYieldLPerKgVs),
+      methanePct: s(l.methanePct),
+      nKgT: s(l.nKgT),
+      rejectSharePct: s(l.rejectSharePct),
       monthsActive: s(l.monthsActive),
       startMonth: s(l.startMonth),
       delivered: !!l.delivered,
@@ -301,6 +323,8 @@ export function inputToForm(i: ProjectInput, locale: Locale = "en"): FormState {
     debtTenorYears: s(i.finance?.debtTenorYears),
     capexQuote: s(i.finance?.capexQuoteLocal),
     capexQuoteRoute: i.finance?.capexQuoteRoute ?? "",
+    omQuote: s(i.finance?.omQuoteLocalYear),
+    digestateCost: s(i.site.digestateExportCostLocalPerTonne),
   };
 }
 

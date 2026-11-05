@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { RunContext } from "./context";
 import type { DigesterDesign, FeedstockSummary, Provenance } from "./types";
 import { DAYS_IN_MONTH, HOURS_IN_MONTH } from "./climate";
-import { designDigester } from "./digester";
+import { designDigester, digesterVesselEur } from "./digester";
 import { prov } from "./params";
 import { ENGINEERING_MAP } from "./engineeringParams";
 import { isoDate } from "./modelAudit";
@@ -56,7 +56,11 @@ export const processSchema = z.discriminatedUnion("kind", [
 export type ProcessInput = z.infer<typeof processSchema>;
 export type ProcessKind = ProcessInput["kind"];
 export const PROCESS_COST_FIELDS = ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "auxiliaryKwhYear", "auxiliaryHeatKwhYear"] as const;
-export const missingProcessInputs = (p: ProcessInput): string[] => [...PROCESS_COST_FIELDS.filter(key => p[key] === undefined), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : []),
+/** A characterised residue is digested like any feedstock, so its blank cost fields fall back to the farm-digester
+ * reference (vessel curve, maintenance share, DBFZ own power use, surplus-digestate price). Reactors for wastewater,
+ * landfill gas and gas purchase have no sourced cost reference here and still need the client's budgets. */
+export const modelledProcessCosts = (p: ProcessInput): string[] => p.kind === "residue" ? PROCESS_COST_FIELDS.filter(key => p[key] === undefined) : [];
+export const missingProcessInputs = (p: ProcessInput): string[] => [...(p.kind === "residue" ? [] : PROCESS_COST_FIELDS.filter(key => p[key] === undefined)), ...((p.kind === "gas" || p.kind === "landfill") && p.upgradingCapexLocal === undefined ? ["upgradingCapexLocal"] : []),
   ...(p.kind === "gas" && p.existingChpKwEl !== undefined && p.chpOverhaulLocal === undefined ? ["chpOverhaulLocal"] : [])];
 /** Existing biogas plant with its own CHP: the gas system, grid connection and engine are reused. */
 export const existingPlant = (p: ProcessInput | undefined) => (p?.kind === "gas" && (p.existingChpKwEl ?? 0) > 0 ? p : undefined);
@@ -76,6 +80,10 @@ export interface ProcessResult {
   capexEur: number;
   opexEurYear: number;
   residualTonnesYear: number;
+  /** Residuals disposal price, EUR/t: the client's figure, or for a residue the national surplus-digestate price. */
+  residualCostEurT: number;
+  /** Cost fields the model estimated because the client left them blank (see `modelledProcessCosts`). */
+  modelledCosts?: string[];
   avoidedTreatmentEurYear: number;
   gasPurchaseEurYear: number;
   annualGasFactors: number[];
@@ -103,7 +111,7 @@ export function processProvenance(input: ProcessInput, country: string): Provena
   const fields = Object.entries(input).filter(([, v]) => typeof v === "number");
   return fields.map(([key, value]) => {
     const bounds = processBounds(input.kind,key);
-    return prov("process." + key, key, value as number, PROCESS_UNITS[key] ?? "—", input.basisOrigin === "ENGINEERING_ASSUMPTION" ? "ASSUMPTION" : "ESTIMATE", input.basisReference || "Customer design basis / budget; measurement and quotation documents not independently verified", "LOW", { country, date: input.basisDate ?? "undated", origin: input.basisOrigin ?? "USER_INPUT", range: { low: Math.max(bounds.low, (value as number) * (1 - input.uncertaintyPct / 100)), high: Math.min(bounds.high, (value as number) * (1 + input.uncertaintyPct / 100)), basis: "engineering" } });
+    return prov("process." + key, key, value as number, PROCESS_UNITS[key] ?? "—", input.basisOrigin === "ENGINEERING_ASSUMPTION" ? "ASSUMPTION" : "ESTIMATE", input.basisReference || "Customer design basis / budget; measurement and quotation documents not independently verified", input.basisOrigin !== "ENGINEERING_ASSUMPTION" && input.basisReference && input.basisDate ? "MEDIUM" : "LOW", { country, date: input.basisDate ?? "undated", origin: input.basisOrigin ?? "USER_INPUT", range: { low: Math.max(bounds.low, (value as number) * (1 - input.uncertaintyPct / 100)), high: Math.min(bounds.high, (value as number) * (1 + input.uncertaintyPct / 100)), basis: "engineering" } });
   });
 }
 export const PROCESS_UNITS: Record<string, string> = {
@@ -206,8 +214,25 @@ export function prepareProcess(ctx: RunContext, year = 0): { feed: FeedstockSumm
     method: row.source === IPCC ? "COD stoichiometry; inventory MCF is not used as reactor performance" : "Annual integral of first-order decay; historical cohorts, no future deposition",
   };
   const missingInputs = missingProcessInputs(p);
-  return { feed, design, process: { kind: p.kind, missingInputs, metrics, provenance, capexEur: (p.processCapexLocal ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.capex,
-    opexEurYear: (p.processOpexLocalYear ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.opex,
-    residualTonnesYear: residual, avoidedTreatmentEurYear: avoided, gasPurchaseEurYear: purchase,
+  const modelledCosts = modelledProcessCosts(p);
+  const P = ctx.params;
+  // Model estimate: digester vessel + feeding at the country cost level and the scenario's CAPEX multiplier, as for any digester.
+  const modelledCapexEur = modelledCosts.includes("processCapexLocal")
+    ? (digesterVesselEur(design, P) + P.get("eng.capex.feed_slurry") + (p.kind === "residue" && p.dmPct >= P.get("eng.wet_solids_feeding_dm_pct") ? P.get("eng.capex.feed_solids") : 0)) * P.get("econ.capex_factor") * ctx.scenario.capexMult * ctx.mods.capex
+    : undefined;
+  const capexEur = modelledCapexEur ?? (p.processCapexLocal ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.capex;
+  const opexEurYear = modelledCosts.includes("processOpexLocalYear")
+    ? capexEur * P.get("eng.opex.maintenance_share") * ctx.scenario.opexMult * ctx.mods.opex
+    : (p.processOpexLocalYear ?? 0) / ctx.fx * (1 - s * spread) * ctx.mods.opex;
+  const residualCostEurT = modelledCosts.includes("residualCostLocalT") ? P.get("econ.digestate_excess_eur_t") : (p.residualCostLocalT ?? 0) / ctx.fx;
+  for (const key of modelledCosts) provenance.push(prov(`process.model.${key}`, `${key}: model estimate (field left blank)`, key === "processCapexLocal" ? capexEur : key === "processOpexLocalYear" ? opexEurYear : key === "residualCostLocalT" ? residualCostEurT : 0,
+    key === "residualCostLocalT" ? "EUR/t" : key.startsWith("auxiliary") ? (key === "auxiliaryKwhYear" ? "kWh/a" : "kWh_th/a") : key === "processOpexLocalYear" ? "EUR/a" : "EUR", "ESTIMATE",
+    key === "processCapexLocal" ? "Digester vessel curve + feeding (eng.capex.*) × country CAPEX factor; replace with an installed budget"
+      : key === "processOpexLocalYear" ? "eng.opex.maintenance_share × modelled process CAPEX"
+      : key === "residualCostLocalT" ? "National surplus-digestate price (econ.digestate_excess_eur_t); enter 0 if the residue goes to own land"
+      : key === "auxiliaryKwhYear" ? "Plant own use max(eng.parasitic_base_kwh_t × t, eng.parasitic_share_gas_energy × gas energy), DBFZ 2023 (value in the energy balance)"
+      : "No extra thermal load beyond the digester heat already calculated", "LOW", { country: ctx.country.code, date: "undated", origin: "ENGINEERING_ASSUMPTION" }));
+  return { feed, design, process: { kind: p.kind, missingInputs, modelledCosts, metrics, provenance, capexEur, opexEurYear,
+    residualTonnesYear: residual, residualCostEurT, avoidedTreatmentEurYear: avoided, gasPurchaseEurYear: purchase,
     annualGasFactors: gasFactors } };
 }

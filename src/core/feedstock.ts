@@ -67,6 +67,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   let ch4Raw = 0;
   let biogasRaw = 0;
   let poultryVs = 0;
+  let poultryNUnknown = false;
   let fatVs = 0;
   let fatDominantVs = 0;
   let manureVs = 0;
@@ -91,13 +92,18 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     const vsPct = line.vsPctOfDm ?? t.vsPctOfDm;
     const vsT = (fed * dm * vsPct) / 10000;
     const blend = scenario.yieldBlend;
-    const yieldL = line.methaneYieldLPerKgVs ?? (blend < 0 ? t.yieldTyp + -blend * (t.yieldLow - t.yieldTyp) : t.yieldTyp + blend * (t.yieldHigh - t.yieldTyp));
+    // A laboratory BMP is one measurement, not the truth: the scenarios move it by the inter-laboratory spread (±1 RSD at
+    // the conservative/optimistic blend of ±0.5), not by the much wider catalogue range.
+    const yieldL = line.methaneYieldLPerKgVs !== undefined ? line.methaneYieldLPerKgVs * (1 + 2 * blend * params.get("eng.lab_bmp_rsd")) : (blend < 0 ? t.yieldTyp + -blend * (t.yieldLow - t.yieldTyp) : t.yieldTyp + blend * (t.yieldHigh - t.yieldTyp));
     // 1 L/kg VS × t VS ×1000 kg/t / 1000 L/m3 = t VS × yield  → m3 CH4
     const ch4 = vsT * yieldL * mods.methaneYield;
-    const ch4Fraction = t.ch4Fraction;
+    const ch4Fraction = line.methanePct !== undefined ? line.methanePct / 100 : t.ch4Fraction;
 
     const nutrientScale = dm / nutrientDm; // catalogue nutrients are per tonne at catalogue dry matter; thinner slurry carries less
-    const nKg = tonnes * t.nKgT * nutrientScale;
+    const nKg = tonnes * (line.nKgT ?? t.nKgT * nutrientScale);
+    // Packaging, plastics and grit screened out of food waste / biowaste go to incineration or landfill (OPEX).
+    const rejectShare = line.rejectSharePct !== undefined ? line.rejectSharePct / 100
+      : t.id === "food_waste" ? params.get("eng.opex.reject_share_food_waste") : t.id === "municipal_biowaste" ? params.get("eng.opex.reject_share_biowaste") : 0;
     const pKg = tonnes * t.p2o5KgT * nutrientScale;
     const kKg = tonnes * t.k2oKgT * nutrientScale;
 
@@ -122,6 +128,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (!delivered && purchasePrice > 0 && (line.opportunityValuePerTonneLocal ?? 0) > 0) w.push(T("Purchase cost and foregone sale value overlap; the model uses the larger amount only."));
     // Entered lab values far from the type's range usually mean a basis mix-up (dry vs fresh, biogas vs CH₄, per kg FM).
     if (line.dryMatterPct !== undefined && (dm > 2 * t.dryMatterPct || dm < 0.4 * t.dryMatterPct)) w.push(T("Entered dry matter {dm} % is far from the typical {dryMatterPct} % for \"{nm}\": check that it is % of fresh mass.", { dm, dryMatterPct: t.dryMatterPct, nm }));
+    if (line.nKgT !== undefined && (line.nKgT > 2.5 * t.nKgT * nutrientScale || line.nKgT < 0.4 * t.nKgT * nutrientScale)) w.push(T("Entered nitrogen {nKgT} kg/t is far from the typical {typical} kg/t for \"{nm}\": check that it is total N per tonne of fresh mass (not per tonne of dry matter).", { nKgT: line.nKgT, typical: D(t.nKgT * nutrientScale), nm }));
     if (line.methaneYieldLPerKgVs !== undefined && (yieldL > 1.3 * t.yieldHigh || yieldL < 0.7 * t.yieldLow)) w.push(T("Entered BMP {yieldL} L/kg VS is outside the usual {yieldLow}–{yieldHigh} for \"{nm}\": check that it is methane (not biogas) per kg VS (not per kg fresh mass).", { yieldL, yieldLow: t.yieldLow, yieldHigh: t.yieldHigh, nm }));
     const labLine = line.dryMatterPct !== undefined && line.vsPctOfDm !== undefined && line.methaneYieldLPerKgVs !== undefined;
     if (t.confidence === "LOW" && !labLine) w.push(T("Parameters for \"{nm}\" have low confidence — a laboratory analysis (BMP) is needed.", { nm }));
@@ -143,7 +150,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     if (delivered && line.distanceKm === undefined) w.push(T("Delivery distance not given — logistics cost is understated."));
 
     lines.push({
-      id: line.id, label: locText(t.name, lang), typeId: t.id, tonnesYear: fed, ...(ensiled ? { ensiledTonnesYear: tonnes } : {}), monthlyTonnes: mt, dryMatterPct: dm,
+      id: line.id, label: locText(t.name, lang), typeId: t.id, tonnesYear: fed, ...(ensiled ? { ensiledTonnesYear: tonnes } : {}), ...(rejectShare > 0 ? { rejectShare } : {}), monthlyTonnes: mt, dryMatterPct: dm,
       vsPctOfDm: vsPct, methaneYieldLPerKgVs: yieldL,
       vsTonnesYear: vsT, ch4M3Year: ch4, ch4Fraction, nKgYear: nKg, p2o5KgYear: pKg, k2oKgYear: kKg, delivered,
       distanceKm: distance, transportCostEurYear: transportCost, purchaseCostEurYear: purchaseCost,
@@ -158,7 +165,7 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
     }
     ch4Raw += ch4;
     biogasRaw += ch4 / ch4Fraction;
-    if (t.flags.includes("poultry")) poultryVs += vsT;
+    if (t.flags.includes("poultry")) { poultryVs += vsT; if (line.nKgT === undefined) poultryNUnknown = true; }
     if (t.flags.includes("fat")) fatVs += vsT;
     if (t.flags.includes("fat_dominant")) fatDominantVs += vsT;
     if (t.category === "manure") manureVs += vsT;
@@ -172,14 +179,29 @@ export function analyseFeedstock(ctx: RunContext): FeedstockSummary {
   const fatShare = vsTotal > 0 ? fatVs / vsTotal : 0;
   const manureShare = vsTotal > 0 ? manureVs / vsTotal : 0;
 
+  // Total N per tonne of digester content is an upper bound of NH₄-N (ammonium is part of total N; density ≈ 1 t/m³, so
+  // kg/t ≈ g/L). Dry-gas mass leaves the digester; nitrogen stays.
+  const realGuess = scenario.processRealisation;
+  const gasT = (ch4Raw * realGuess * params.get("eng.ch4_density_kg_m3") + Math.max(0, biogasRaw - ch4Raw) * realGuess * params.get("eng.co2_density_kg_m3")) / 1000;
+  const nTotal = sum(lines.map((l) => l.nKgYear));
+  const nInDigester = tonnesTotal > gasT ? nTotal / (tonnesTotal - gasT) : 0;
+  const ammoniumThr = params.get("eng.ammonium_inhib_g_l");
+  // Lab nitrogen for every poultry stream and total N below the threshold proves NH₄-N cannot reach it: the poultry-share
+  // proxy is then not applied.
+  const nRulesOutInhibition = !poultryNUnknown && nInDigester <= ammoniumThr;
   let inhibition = 1;
-  if (poultryShare > thr) {
+  if (poultryShare > thr && !nRulesOutInhibition) {
     inhibition = Math.max(0.7, 1 - lossPer10 * ((poultryShare - thr) / 0.1));
     const ps = D(poultryShare * 100);
     const cut = D((1 - inhibition) * 100);
     warnings.push(
       T("Poultry manure is {ps} % of the organic matter: risk of ammonia inhibition. The model cuts the yield by {cut} %; dilution or a co-substrate is needed.", { ps, cut }),
     );
+  }
+  // Warn only where the nitrogen comes mainly from protein-rich wastes (fish, slaughter, food, grass, grain): slurry-only
+  // digesters run at their own N level by long practice, and poultry has its own proxy above. Advice only, no yield cut.
+  else if (nInDigester > ammoniumThr && nTotal > 0 && sum(lines.filter((l) => l.category !== "manure").map((l) => l.nKgYear)) / nTotal >= 0.5) {
+    warnings.push(T("Total nitrogen in the digester ≈ {n} kg/t. Above {thr} g/L of ammonium nitrogen methane formation is inhibited (FNR), and digestion turns much of the organic nitrogen into ammonium: measure NH₄-N, dilute, or add a low-nitrogen co-substrate. The model does not reduce the yield for this.", { n: D(nInDigester), thr: D(ammoniumThr) }));
   }
   if (fatShare > fatWarn) {
     inhibition *= 0.95;

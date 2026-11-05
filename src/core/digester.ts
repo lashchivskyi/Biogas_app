@@ -3,7 +3,18 @@ import { DAYS_IN_MONTH, HOURS_IN_MONTH, lagoonEligible, meanTemp, substrateTempC
 import type { RunContext } from "./context";
 import { FEEDSTOCKS, isEffluentLike } from "./feedstockData";
 import { digestateTonnes } from "./massBalance";
+import type { Params } from "./params";
 import type { DigesterDesign, FeedstockSummary, TechnologyRecommendation } from "./types";
+
+/** Installed digester vessel cost, EU baseline EUR before the country factor (DBFZ/component curve, see the parameters). */
+export function digesterVesselEur(design: DigesterDesign, p: Params): number {
+  const v = Math.max(design.workingVolumeM3, 50);
+  const unit = p.get("eng.capex.digester_eur_m3_1000") * Math.pow(v / 1000, p.get("eng.capex.digester_scale_exp"));
+  const kind = design.tech.digestion;
+  if (kind === "covered_lagoon") return design.totalVolumeM3 * p.get("eng.capex.lagoon_eur_m3");
+  if (kind === "high_rate") return design.totalVolumeM3 * p.get("eng.capex.high_rate_eur_m3");
+  return design.totalVolumeM3 * Math.min(Math.max(unit, 110), 450) * (kind === "high_solids" ? 1.15 : 1);
+}
 
 /**
  * Digester sizing, heat demand and technology choice.

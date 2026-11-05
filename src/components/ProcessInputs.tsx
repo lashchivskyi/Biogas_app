@@ -30,7 +30,7 @@ export function ProcessInputs({ form, onChange, locale, currency, adLabel, units
     {kind !== "ad" && <>
       <p className="text-sm text-muted">{c.inputHint}</p>
       {kind === "wastewater" && <label className="block"><span className="label"><HelpTooltip description={help.reactor}>{processFieldLabels(locale).reactorTechnology}</HelpTooltip></span><select className="field" value={form.processFields?.reactorTechnology || "high_rate"} onChange={e => onChange({processFields:{...form.processFields,reactorTechnology:e.target.value}})}><option value="high_rate">UASB / EGSB</option><option value="covered_lagoon">{usage.lagoon}</option></select></label>}
-      <p className="rounded-lg bg-surface2 p-3 text-sm">{c.costHint}</p>
+      <p className="rounded-lg bg-surface2 p-3 text-sm">{c.costHint}{kind === "residue" && <> {c.modelledHint}</>}</p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {keys.map(key => {
           const optional = (schema?.shape as Record<string,{isOptional:()=>boolean}> | undefined)?.[key]?.isOptional();

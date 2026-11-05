@@ -38,6 +38,7 @@ export function checkEvidence(p: Provenance, asOfDate: string): Check {
   if (evidence?.validFrom && asOfDate < evidence.validFrom) return result("EXPIRED", "Tariff is not yet effective at the assessment date");
   if (evidence?.validUntil && asOfDate > evidence.validUntil) return result("EXPIRED", "Published validity period ended; a newer applicable tariff or customer contract is required");
   if (evidence?.publishedOn && evidence.publishedOn > asOfDate) return result("REVIEW_REQUIRED", "Source publication is later than the assessment date");
+  if (p.origin === "MEASURED") return result("REVIEW_REQUIRED", "Customer measurement; sample, date and laboratory not independently verified")
   if (p.origin === "USER_INPUT") return result("REVIEW_REQUIRED", "Customer input; invoice date, contract and validity not independently verified");
   if (p.id === "econ.fx_local_per_eur" && p.unit === "EUR/EUR") return result("CONSTANT", "EUR reporting currency; no currency conversion");
   if (p.kind === "ASSUMPTION" || p.kind === "ESTIMATE" || p.id.startsWith("eng.") || p.id.startsWith("econ.capex_factor")) {

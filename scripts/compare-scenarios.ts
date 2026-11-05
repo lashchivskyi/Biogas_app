@@ -16,7 +16,8 @@ type Row = { route?: string; npv?: number; irr?: number | null; capex?: number; 
 const fxOf = (code: string) => COUNTRIES[code].params.find((p) => p.id === "econ.fx_local_per_eur")!.value;
 const PRICE_FIELDS = {
   energy: ["electricityPriceLocalPerKwh", "gasPriceLocalPerM3", "exportPriceLocalPerKwh", "heatPriceLocalPerKwh"],
-  finance: ["operatorWageLocalPerHour"],
+  finance: ["operatorWageLocalPerHour", "omQuoteLocalYear"],
+  site: ["digestateExportCostLocalPerTonne"],
   line: ["purchasePricePerTonneLocal", "currentDisposalCostPerTonneLocal", "opportunityValuePerTonneLocal"],
   process: ["processCapexLocal", "processOpexLocalYear", "residualCostLocalT", "upgradingCapexLocal", "gasPriceLocalNm3", "avoidedTreatmentLocalM3"],
 } as const;
@@ -34,6 +35,7 @@ function inCountry(input: ProjectInput, code: string): ProjectInput {
     ...input,
     energy: scale(input.energy, PRICE_FIELDS.energy)!,
     finance: scale(input.finance, PRICE_FIELDS.finance),
+    site: scale(input.site, PRICE_FIELDS.site)!,
     feedstocks: input.feedstocks.map((f) => scale(f, PRICE_FIELDS.line)!),
     process: scale(input.process, PRICE_FIELDS.process),
   };

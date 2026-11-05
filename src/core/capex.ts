@@ -1,6 +1,7 @@
 import { FEEDSTOCKS } from "./feedstockData";
 import { existingPlant, processCalendar } from "./processes";
 import { DAYS_IN_MONTH, HOURS_IN_MONTH } from "./climate";
+import { digesterVesselEur } from "./digester";
 import type { RunContext } from "./context";
 import type { CapexBreakdown, DigesterDesign, EnergyBalance, FeedstockSummary, RouteId } from "./types";
 
@@ -44,17 +45,8 @@ export function buildCapex(
 
   if (!process) {
   // Digester tank(s)
-  const v = Math.max(design.workingVolumeM3, 50);
-  const unit = p.get("eng.capex.digester_eur_m3_1000") * Math.pow(v / 1000, p.get("eng.capex.digester_scale_exp"));
-  const techMult = design.tech.digestion === "high_solids" ? 1.15 : 1;
-  const unitClamped = Math.min(Math.max(unit, 110), 450);
   const kind = design.tech.digestion;
-  const digesterEur =
-    kind === "covered_lagoon"
-      ? design.totalVolumeM3 * p.get("eng.capex.lagoon_eur_m3")
-      : kind === "high_rate"
-        ? design.totalVolumeM3 * p.get("eng.capex.high_rate_eur_m3")
-        : design.totalVolumeM3 * unitClamped * techMult;
+  const digesterEur = digesterVesselEur(design, p);
   add(
     "digester",
     kind === "covered_lagoon"

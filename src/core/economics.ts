@@ -110,19 +110,22 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
   };
   const labourHours = Math.max(p.get("eng.opex.labour_min_hours"), p.get("eng.opex.labour_hours_coef") * Math.pow(Math.max(kwEq, 0), p.get("eng.opex.labour_hours_exp")));
   ox("labour", T("Staff (operator, supervision)"), labourHours * ((input.finance?.operatorWageLocalPerHour ?? 0) > 0 ? (input.finance!.operatorWageLocalPerHour as number) / ctx.fx : p.get("econ.labour_official_eur_h") * p.get("econ.operator_wage_ratio")) * opexMult);
-  ox("chp_service", T("CHP service (oil, spares, overhaul reserve)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
+  // A supplier O&M contract for the quoted route replaces the three modelled maintenance lines of that route only.
+  const omQuote = !process && input.finance?.capexQuoteRoute === route && (input.finance.omQuoteLocalYear ?? 0) > 0 ? input.finance.omQuoteLocalYear! / ctx.fx : undefined;
+  if (omQuote !== undefined) ox("om_contract", T("O&M contract (supplier quote)"), omQuote * opexMult * maintMult);
+  if (omQuote === undefined) ox("chp_service", T("CHP service (oil, spares, overhaul reserve)"), energy.elGrossKwh * p.get("eng.opex.chp_service_eur_kwh") * Math.pow(Math.max(energy.chpKwEl, 1) / 100, p.get("eng.opex.chp_service_scale_exp")) * opexMult * maintMult);
   const upgradingCapex = gross.lines.filter((l) => l.id === "upgrading").reduce((a, l) => a + l.eur, 0);
   const chpCapex = gross.lines.filter((l) => l.id === "chp" || l.id === "chp_overhaul").reduce((a, l) => a + l.eur, 0);
   const otherCapex = gross.totalEur - upgradingCapex - chpCapex - (process?.capexEur ?? 0);
-  ox("maintenance", T("Plant maintenance"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
-  ox("upgrading_maintenance", T("Upgrading unit maintenance"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
+  if (omQuote === undefined) ox("maintenance", T("Plant maintenance"), otherCapex * p.get("eng.opex.maintenance_share") * opexMult * maintMult);
+  if (omQuote === undefined) ox("upgrading_maintenance", T("Upgrading unit maintenance"), upgradingCapex * p.get("eng.opex.upgrade_maintenance_share") * opexMult * maintMult);
   ox("insurance", T("Insurance"), gross.totalEur * p.get("eng.opex.insurance_share"));
   ox("monitoring", T("Lab tests, safety inspections, leak monitoring"), p.get("eng.opex.monitoring_fixed") * opexMult);
   ox("feedstock", T("Feedstock purchase (net of gate fees)"), feed.lines.reduce((a, l) => a + l.purchaseCostEurYear + Math.abs(l.purchaseCostEurYear) * mods.tradedPriceShift, 0) + feed.tonnesYear * mods.feedstockEurT);
   ox("opportunity", T("Lost revenue from alternative feedstock use"), feed.lines.reduce((a, l) => a + l.opportunityCostEurYear, 0));
   ox("transport", T("Feedstock logistics (and digestate return)"), feed.lines.reduce((a, l) => a + l.transportCostEurYear, 0));
-  // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled.
-  const rejectT = feed.lines.reduce((a, l) => a + l.tonnesYear * (l.typeId === "food_waste" ? p.get("eng.opex.reject_share_food_waste") : l.typeId === "municipal_biowaste" ? p.get("eng.opex.reject_share_biowaste") : 0), 0);
+  // Packaging, plastics and grit screened out of food waste / biowaste must be incinerated or landfilled (share per line).
+  const rejectT = feed.lines.reduce((a, l) => a + l.tonnesYear * (l.rejectShare ?? 0), 0);
   ox("rejects", T("Disposal of pre-treatment rejects (packaging, plastics, grit)"), rejectT * p.get("eng.opex.reject_disposal_eur_t") * opexMult);
   ox("digestate_handling", T("Digestate handling (incremental)"), dig.handlingCostEurYear);
   ox("el_purchased", T("Electricity purchased"), energy.elPurchasedKwh * demand.electricityPriceEurKwh);
@@ -132,7 +135,7 @@ export function runScenarioRoute(ctx: RunContext, route: RouteId, operatingYear 
 
   if (process) {
     ox("process_operation", T("Upstream process operation (budget)"), process.opexEurYear);
-    ox("residual_disposal", T("Residuals treatment and disposal"), process.residualTonnesYear * (input.process!.residualCostLocalT ?? 0) / ctx.fx * opexMult);
+    ox("residual_disposal", T("Residuals treatment and disposal"), process.residualTonnesYear * process.residualCostEurT * opexMult);
     ox("gas_supply", T("Purchased biogas"), process.gasPurchaseEurYear);
   }
   const revenueEur = revenueAll;

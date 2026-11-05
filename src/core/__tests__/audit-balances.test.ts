@@ -63,8 +63,9 @@ describe("engineering and financial reconciliation", () => {
     const line = a.scenarios.base.feed.lines[0];
     expect(line.vsTonnesYear).toBeCloseTo(180, 6);
     expect(line.ch4M3Year / line.vsTonnesYear).toBeCloseTo(450, 6);
-    expect(a.scenarios.conservative.feed.lines[0].methaneYieldLPerKgVs).toBe(450);
-    expect(a.scenarios.optimistic.feed.lines[0].methaneYieldLPerKgVs).toBe(450);
+    // A lab BMP moves only by the inter-laboratory spread (±1 RSD, eng.lab_bmp_rsd, Hafner et al. 2020), not the catalogue range.
+    expect(a.scenarios.conservative.feed.lines[0].methaneYieldLPerKgVs).toBeCloseTo(450 * 0.92, 6);
+    expect(a.scenarios.optimistic.feed.lines[0].methaneYieldLPerKgVs).toBeCloseTo(450 * 1.08, 6);
     expect(a.confidence.level).not.toBe("HIGH"); // a typed number alone is not a verified lab result
   });
 

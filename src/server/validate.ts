@@ -24,6 +24,9 @@ export const lineSchema = z
     dryMatterPct: z.number().gt(0).max(95).optional(),
     vsPctOfDm: z.number().gt(0).max(100).optional(),
     methaneYieldLPerKgVs: z.number().gt(0).max(1200).optional(),
+    methanePct: z.number().min(40).max(85).optional(),
+    nKgT: z.number().gt(0).max(40).optional(),
+    rejectSharePct: z.number().min(0).max(60).optional(),
     monthsActive: z.number().min(1).max(12).optional(),
     startMonth: z.number().min(1).max(12).optional(),
     delivered: z.boolean().optional(),
@@ -61,6 +64,7 @@ export const inputSchema = z.object({
     gasGridKm: optNum(1000),
     neighboursWithin300m: z.boolean().optional(),
     nearProtectedOrWaterArea: z.boolean().optional(),
+    digestateExportCostLocalPerTonne: optNum(LOCAL_UNIT_MAX),
   }),
   finance: z.object({
     debtShare: optNum(0.9),
@@ -69,7 +73,9 @@ export const inputSchema = z.object({
     operatorWageLocalPerHour: optNum(LOCAL_UNIT_MAX),
     capexQuoteLocal: optNum(1e15),
     capexQuoteRoute: z.enum(["chp", "boiler", "biomethane"]).optional(),
-  }).refine((f) => (f.capexQuoteLocal === undefined) === (f.capexQuoteRoute === undefined), { message: "A supplier quote needs its technology (CHP, boiler or biomethane), and the technology needs a quote" }).optional(),
+    omQuoteLocalYear: optNum(1e14),
+  }).refine((f) => (f.capexQuoteLocal === undefined) === (f.capexQuoteRoute === undefined), { message: "A supplier quote needs its technology (CHP, boiler or biomethane), and the technology needs a quote" })
+    .refine((f) => f.omQuoteLocalYear === undefined || f.capexQuoteRoute !== undefined, { message: "An O&M contract belongs to a quoted technology: enter the supplier CAPEX quote and its technology too" }).optional(),
   labAnalysisAvailable: z.boolean().optional(),
 }).superRefine((input, ctx) => {
   if (!modelsForBusiness(input.businessType).includes(input.process?.kind ?? "ad") || (input.process ? input.feedstocks.length > 0 : input.feedstocks.length === 0)) {

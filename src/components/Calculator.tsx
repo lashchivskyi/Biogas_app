@@ -525,7 +525,8 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
                   <Block>
                     <div className="grid gap-5 md:grid-cols-2">
                       {!input.process && <><Field label={C.land} htmlFor="c-la" hint={C.landHint} tooltip={T.land}><Num id="c-la" value={form.landHa} onChange={(v) => set("landHa", v)} unit={L.units.ha} min={0} /></Field>
-                      <Field label={C.storage} htmlFor="c-st" tooltip={T.storage} hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} min={0} /></Field></>}
+                      <Field label={C.storage} htmlFor="c-st" tooltip={T.storage} hint={C.storageHint}><Num id="c-st" value={form.existingStorageM3} onChange={(v) => set("existingStorageM3", v)} unit={L.units.m3} min={0} /></Field>
+                      <Field label={C.digestateCost} htmlFor="c-dg" tooltip={T.digestateCost}><Num id="c-dg" value={form.digestateCost ?? ""} onChange={(v) => set("digestateCost", v)} unit={`${cur}/${L.units.t}`} min={0} /></Field></>}
                       <Field label={C.gasGrid} htmlFor="c-gg" tooltip={T.gasGrid} hint={C.gasGridHint}><Num id="c-gg" value={form.gasGridKm} onChange={(v) => set("gasGridKm", v)} unit={L.units.km} min={0} /></Field>
                       <div className="space-y-2">
                         <Toggle checked={form.neighbours} onChange={(v) => set("neighbours", v)} label={C.neighbours} tooltip={T.neighbours} />
@@ -547,6 +548,7 @@ export function Calculator({ locale, d, examples, demo, samplesHref, samplesLabe
                             {(["chp", "boiler", "biomethane"] as RouteId[]).map((r) => <option key={r} value={r}>{L.route[r]}</option>)}
                           </select>
                         </Field>
+                        <Field label={C.omQuote} htmlFor="c-om" tooltip={T.omQuote}><Num id="c-om" value={form.omQuote ?? ""} onChange={(v) => set("omQuote", v)} unit={`${cur}/${L.units.years}`} min={0} /></Field>
                       </>}
                       <Field label={C.debtShare} htmlFor="c-ds" tooltip={T.debtShare}><Num id="c-ds" value={form.debtSharePct ?? ""} onChange={(v) => set("debtSharePct", v)} unit={L.units.pct} min={0} max={90} /></Field>
                       <Field label={C.debtRate} htmlFor="c-dr" tooltip={T.debtRate}><Num id="c-dr" value={form.debtRatePct ?? ""} onChange={(v) => set("debtRatePct", v)} unit={L.units.pct} min={0} max={60} /></Field>
@@ -689,6 +691,9 @@ function LineEditor({ line, d, cur, locale, onChange, onRemove }: { line: FormLi
           <Field label={fmt(C.dm, { v: localNumber(t.dryMatterPct) })} htmlFor={`${id}-dm`} hint={C.dmHint} tooltip={help.dm}><Num id={`${id}-dm`} value={line.dryMatterPct} onChange={(v) => onChange({ dryMatterPct: v })} unit={L.units.pct} min={0} max={95} /></Field>
           <Field label="VS (% DM)" htmlFor={`${id}-vs`} tooltip={help.vs}><Num id={`${id}-vs`} value={line.vsPctOfDm ?? ""} onChange={(v) => onChange({ vsPctOfDm: v })} unit={L.units.pct} placeholder={localNumber(t.vsPctOfDm)} min={0} max={100} /></Field>
           <Field label="BMP (L CH₄/kg VS)" htmlFor={`${id}-bmp`} tooltip={help.bmp}><Num id={`${id}-bmp`} value={line.methaneYieldLPerKgVs ?? ""} onChange={(v) => onChange({ methaneYieldLPerKgVs: v })} placeholder={localNumber(t.yieldTyp)} min={0} max={1200} /></Field>
+          <Field label={C.methanePct} htmlFor={`${id}-ch4`} tooltip={T.methanePct}><Num id={`${id}-ch4`} value={line.methanePct ?? ""} onChange={(v) => onChange({ methanePct: v })} placeholder={localNumber(Math.round(t.ch4Fraction * 100))} min={40} max={85} /></Field>
+          <Field label={C.nitrogen} htmlFor={`${id}-n`} tooltip={T.nitrogen}><Num id={`${id}-n`} value={line.nKgT ?? ""} onChange={(v) => onChange({ nKgT: v })} placeholder={localNumber(t.nKgT)} min={0} max={40} /></Field>
+          {!isAnimal && t.flags.includes("contaminants") && t.category === "processing" && <Field label={C.rejects} htmlFor={`${id}-rj`} tooltip={T.rejects}><Num id={`${id}-rj`} value={line.rejectSharePct ?? ""} onChange={(v) => onChange({ rejectSharePct: v })} unit={L.units.pct} placeholder={localNumber(t.id === "food_waste" ? 10 : t.id === "municipal_biowaste" ? 20 : 0)} min={0} max={60} /></Field>}
           {!isAnimal && <Field label={fmt(C.months, { v: localNumber(t.defaultMonths) })} htmlFor={`${id}-m`} tooltip={help.season}><Num id={`${id}-m`} value={line.monthsActive} onChange={(v) => onChange({ monthsActive: v })} unit={L.units.months} min={1} max={12} /></Field>}
           {!isAnimal && <Field label={C.seasonStart} htmlFor={`${id}-start`} tooltip={help.season}>
             <select id={`${id}-start`} className="field" value={line.startMonth || String(t.defaultStartMonth)} onChange={(e) => onChange({ startMonth: e.target.value })}>

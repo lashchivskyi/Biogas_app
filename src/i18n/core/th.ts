@@ -731,6 +731,9 @@ const messages: Messages = {
   "Largest benefit — “{label}”: ≈ {share} % of all revenue and savings.": "ประโยชน์ใหญ่ที่สุด — “{label}”: ≈ {share}% ของรายได้และการประหยัดทั้งหมด",
   "The original calculation version was not saved for this legacy order. This report is a new evaluation using the current model and available data.": "ไม่ได้บันทึกเวอร์ชันการคำนวณเดิมไว้สำหรับคำสั่งซื้อรุ่นเก่านี้ รายงานฉบับนี้เป็นการประเมินใหม่โดยใช้โมเดลปัจจุบันและข้อมูลที่มี",
   "Existing storage volume not entered: the farm's current slurry store is assumed to hold its own manure (≈ {m3} m³) and is only fitted with a gas-tight cover. Enter the real volume; if it is smaller, CAPEX rises by about {perM3} € per missing m³ before overheads.": "ยังไม่ได้ระบุปริมาตรบ่อเก็บเดิม: สมมติว่าบ่อเก็บสเลอร์รีปัจจุบันของฟาร์มรองรับมูลสัตว์ของตนเองได้ (≈ {m3} m³) และติดตั้งเพียงฝาปิดกันก๊าซรั่ว โปรดระบุปริมาตรจริง หากน้อยกว่านั้น CAPEX จะเพิ่มขึ้นประมาณ {perM3} € ต่อ m³ ที่ขาด ก่อนรวมค่าใช้จ่ายทั่วไป",
+  "Entered nitrogen {nKgT} kg/t is far from the typical {typical} kg/t for \"{nm}\": check that it is total N per tonne of fresh mass (not per tonne of dry matter).": "ไนโตรเจนที่ป้อน {nKgT} kg/t ต่างจากค่าทั่วไป {typical} kg/t ของ “{nm}” มาก: โปรดตรวจสอบว่าเป็น N ทั้งหมดต่อตันมวลสด (ไม่ใช่ต่อตันของแข็งแห้ง)",
+  "Total nitrogen in the digester ≈ {n} kg/t. Above {thr} g/L of ammonium nitrogen methane formation is inhibited (FNR), and digestion turns much of the organic nitrogen into ammonium: measure NH₄-N, dilute, or add a low-nitrogen co-substrate. The model does not reduce the yield for this.": "ไนโตรเจนทั้งหมดในบ่อหมัก ≈ {n} kg/t เมื่อไนโตรเจนแอมโมเนียมเกิน {thr} g/L การสร้างมีเทนจะถูกยับยั้ง (FNR) และการหมักจะเปลี่ยนไนโตรเจนอินทรีย์ส่วนใหญ่เป็นแอมโมเนียม: โปรดวัด NH₄-N เจือจาง หรือเติมวัตถุดิบร่วมที่มีไนโตรเจนต่ำ แบบจำลองไม่ได้ลดผลผลิตก๊าซด้วยเหตุนี้",
+  "O&M contract (supplier quote)": "สัญญาบำรุงรักษา (ใบเสนอราคาผู้จำหน่าย)",
 };
 
 export default messages;

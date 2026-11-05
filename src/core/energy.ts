@@ -92,7 +92,8 @@ export function runEnergy(
   let chpKw = 0;
   let etaEl = 0;
 
-  const parasiticMonth = (i: number) => input.process
+  // A residue with no own-use figure is a digester like any other: the DBFZ own-use rule below applies (modelledProcessCosts).
+  const parasiticMonth = (i: number) => input.process && !(input.process.kind === "residue" && input.process.auxiliaryKwhYear === undefined)
     ? (input.process.auxiliaryKwhYear ?? 0) * HOURS_IN_MONTH[i] / HOURS_PER_YEAR
     : Math.max(feed.monthlyTonnes[i] * parBase, gasM[i] * parShare) + pretreatKwh * feed.lines.filter((l) => FEEDSTOCKS[l.typeId].flags.includes("pretreatment")).reduce((a, l) => a + l.monthlyTonnes[i], 0);
 

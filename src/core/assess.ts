@@ -223,6 +223,23 @@ function assessOne(input: Assessment["input"], country: CountryAdapter, opts: As
   const quoteApplies = base.capex.modelledEur !== undefined;
   if (quoteApplies) userEvidence("econ.capex_quote_eur", `Supplier quote for the ${bestRoute} route (replaces the modelled CAPEX)`, base.capex.totalEur, "EUR", `${input.finance!.capexQuoteLocal} ${country.currency} installed, scenario multiplier 1.0 in base case`);
   if (input.finance?.debtRate !== undefined) userEvidence("econ.debt_interest", "Customer loan interest rate", input.finance.debtRate, "—", `${fmtDec("en")(input.finance.debtRate * 100, 1)} %`);
+  if (quoteApplies && (input.finance?.omQuoteLocalYear ?? 0) > 0) userEvidence("econ.om_quote_eur_year", `Supplier O&M contract for the ${bestRoute} route (replaces modelled maintenance, CHP service, upgrading maintenance)`, input.finance!.omQuoteLocalYear! / fx, "EUR/a", `${input.finance!.omQuoteLocalYear} ${country.currency}/a`);
+  if ((input.site.digestateExportCostLocalPerTonne ?? -1) >= 0 && !input.process) userEvidence("econ.digestate_excess_eur_t", "Customer price for taking surplus digestate away", input.site.digestateExportCostLocalPerTonne! / fx, "EUR/t", `${input.site.digestateExportCostLocalPerTonne} ${country.currency}/t`);
+  // Customer measurements replace catalogue values line by line; list each one so the register shows what the result used.
+  if (!input.process) for (const line of input.feedstocks) {
+    const name = line.animal ?? line.type;
+    const own = (field: string, label: string, value: number | undefined, unit: string, origin: "MEASURED" | "USER_INPUT", how: string) => {
+      if (value !== undefined) marketEvidence.push(prov(`feed.${line.id}.${field}`, `${name}: ${label}`, value, unit, origin === "MEASURED" ? "FACT" : "ESTIMATE",
+        `${origin} ${how}; replaces the catalogue value for this stream. Not independently verified.`, "MEDIUM", { country: country.code, date: "undated", origin }));
+    };
+    own("measured_t", "manure collected (replaces head count × per-head value)", line.measuredTonnesYear, "t/a", "MEASURED", "weighed loads or store levels");
+    own("dm", "dry matter", line.dryMatterPct, "% FM", "MEASURED", "laboratory report");
+    own("vs", "volatile solids", line.vsPctOfDm, "% DM", "MEASURED", "laboratory report");
+    own("bmp", "BMP (scenarios ± inter-laboratory spread)", line.methaneYieldLPerKgVs, "L CH₄/kg VS", "MEASURED", "laboratory BMP test");
+    own("ch4", "methane in biogas", line.methanePct, "% vol", "MEASURED", "gas analysis");
+    own("n", "total nitrogen", line.nKgT, "kg N/t FM", "MEASURED", "laboratory report");
+    own("rejects", "pre-treatment rejects", line.rejectSharePct, "% of input", "USER_INPUT", "operator figure");
+  }
   const actualEvidence = new Map(selectedParams.usedIds().map((id) => [id, params.prov(id)]));
   for (const p of [...marketEvidence, ...(base.process?.provenance ?? [])]) actualEvidence.set(p.id, p);
   const dataAudit: NonNullable<Assessment["dataAudit"]> = {

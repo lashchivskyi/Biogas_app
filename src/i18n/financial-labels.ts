@@ -74,6 +74,34 @@ const clamp: Record<Locale, string> = {
   th: "ไซโลบังเกอร์สำหรับเก็บพืชหมัก",
 };
 
+const omContract: Record<Locale, string> = {
+  en: "O&M contract (supplier quote)",
+  uk: "Сервісний договір (пропозиція постачальника)",
+  pl: "Umowa serwisowa (oferta dostawcy)",
+  de: "Wartungsvertrag (Angebot des Anbieters)",
+  fr: "Contrat de maintenance (devis du fournisseur)",
+  it: "Contratto di manutenzione (offerta del fornitore)",
+  es: "Contrato de mantenimiento (oferta del proveedor)",
+  pt: "Contrato de manutenção (proposta do fornecedor)",
+  nl: "Onderhoudscontract (offerte van de leverancier)",
+  cs: "Servisní smlouva (nabídka dodavatele)",
+  sk: "Servisná zmluva (ponuka dodávateľa)",
+  hu: "Karbantartási szerződés (szállítói ajánlat)",
+  ro: "Contract de mentenanță (ofertă furnizor)",
+  bg: "Договор за поддръжка (оферта на доставчика)",
+  sr: "Ugovor o održavanju (ponuda dobavljača)",
+  el: "Συμβόλαιο συντήρησης (προσφορά προμηθευτή)",
+  tr: "Bakım sözleşmesi (tedarikçi teklifi)",
+  lt: "Priežiūros sutartis (tiekėjo pasiūlymas)",
+  lv: "Apkopes līgums (piegādātāja piedāvājums)",
+  et: "Hooldusleping (tarnija pakkumine)",
+  da: "Servicekontrakt (leverandørtilbud)",
+  sv: "Serviceavtal (leverantörens offert)",
+  fi: "Huoltosopimus (toimittajan tarjous)",
+  vi: "Hợp đồng bảo trì (báo giá nhà cung cấp)",
+  th: "สัญญาบำรุงรักษา (ใบเสนอราคาผู้จำหน่าย)",
+};
+
 const equipment: Record<Locale, readonly [string, string, string]> = {
   en: ["Pasteurisation", "Gas-grid injection", "Gas pipeline"],
   uk: ["Пастеризація", "Подача до газової мережі", "Газопровід"],
@@ -111,7 +139,7 @@ export function financialLabels(locale: Locale, d: Pick<Dict, "labels" | "result
     ...Object.fromEntries(keys.map((k, i) => [k, values[i]])),
     digester: d.flow?.digester ?? d.result.dTech, chp: d.labels.route.chp, boiler: d.labels.route.boiler,
     pasteurisation: `${equipment[locale][0]} (70 °C / 1 ${locale === "uk" ? "год" : "h"})`, upgrading: upgradingWord(locale), cng: locale === "uk" ? "Bio-CNG (250 бар)" : "Bio-CNG (250 bar)",
-    silage_clamp: clamp[locale], grid: extra[locale][2], injection: equipment[locale][1], pipeline: equipment[locale][2], upgrading_maintenance: `${values[13]} (${upgradingWord(locale, true)})`,
+    silage_clamp: clamp[locale], grid: extra[locale][2], injection: equipment[locale][1], pipeline: equipment[locale][2], om_contract: omContract[locale], upgrading_maintenance: `${values[13]} (${upgradingWord(locale, true)})`,
     el_tariff: `${values[25]} (${["da", "es", "et", "fi", "fr", "lt", "lv", "nl", "sv"].includes(locale) ? d.result.colScheme.toLowerCase() : d.result.colScheme})`, heat: d.result.heatUseful, biomethane: d.labels.route.biomethane, support: d.result.assumedSupport,
   };
 }

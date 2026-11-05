@@ -23,7 +23,9 @@ export function assessDigestate(feed: FeedstockSummary, ctx: RunContext): Digest
   const pP = p.get("econ.fert_p2o5_eur_kg");
   const pK = p.get("econ.fert_k2o_eur_kg");
   const handling = p.get("econ.digestate_handling_eur_t");
-  const excessCost = p.get("econ.digestate_excess_eur_t");
+  // A contractor's price for taking surplus digestate away replaces the national estimate.
+  const clientExport = ctx.input.site.digestateExportCostLocalPerTonne;
+  const excessCost = clientExport !== undefined && clientExport >= 0 ? clientExport / ctx.fx : p.get("econ.digestate_excess_eur_t");
   const storageMonths = storageMonthsFor(ctx);
 
   const tonnes = digestateTonnes(feed, p);

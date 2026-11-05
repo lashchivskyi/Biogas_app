@@ -317,6 +317,12 @@ export function ResultView({ core, a: raw, d, locale, currency, countryNotes = [
             <p className="mt-2 text-sm text-amber-950/90">{PC.costHint}</p>
           </div>
         )}
+        {process && economics && !!process.modelledCosts?.length && (
+          <div className="mt-4 rounded-xl border border-line bg-surface2 p-4">
+            <p className="text-sm">{PC.modelledHint}</p>
+            <ul className="mt-1.5 list-disc pl-5 text-sm text-ink2">{process.modelledCosts.map((key) => <li key={key}>{fields[key]}</li>)}</ul>
+          </div>
+        )}
         {!a.confidence.factors && a.missingData.length > 0 && (
           <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
             <div className="font-semibold text-amber-950">{R.missing}</div>
