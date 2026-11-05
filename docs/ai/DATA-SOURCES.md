@@ -53,6 +53,20 @@ of a number. A Wayback snapshot of an official page is acceptable; state its dat
 - CA gas outside ON/BC/SK, MD ANRE tariffs, UA NEURC/Ukrenergo tariffs — sites unreachable.
 - Pending: Vietnam retail tariff cut announced for 1 Nov 2026 (check EVN decision).
 
+## Validation sources (real plants, national macro checks; mapped 2026-11-05, `sector-calibration` skill)
+
+- Macro EU/EnC: Eurostat `nrg_cb_rw`, `nrg_bal=IPRD`, TJ NCV; use R5310 = R5311 landfill + R5312 sewage + R5319 other AD
+  (R5300 adds thermal gas, e.g. FI). 2023 = last full split; FR 2024 = 0 (flag p). GB: DUKES 6.1 (split). US CA BR TH AR
+  KZ UA: UNSD EDATA `cmID BI` only (no split). MX SENER 3.25 PJ vs UNSD 1.6 (conflict). IN, VN: none. EPE, EPPO blocked.
+- Landfill: EPA GHGRP Subpart HH (API: measured LFG flow, CH₄ %, collection eff.) + LMOP xlsx (waste in place) by GHGRP id.
+- Industrial WW: EPA GHGRP Subpart II (CH₄ recovered vs COD-based Eq II-3, ≈ 85 processes); UNFCCC CDM PA/PoA xlsx = index
+  (capex pre-2016, engineering only), monitoring PDFs browser only (Incapsula). No UASB/IC/lagoon CAPEX ≥ 2024 (DEA, IEA T37 2025, PBL SDE++ checked).
+- Sewage: Eurostat R5312 ÷ `env_ww_spd` (kt DS); Destatis Klärgas 43381 (GENESIS needs a free token); EEA UWWTD (PE).
+- Co-digestion/food: Energimyndigheten 2024 co-digestion rows (kt per substrate + GWh); ISPRA Catasto other years
+  (`aa=`); ENS DK national total (category yields assumed); DREAL Pays de la Loire AD balances (134 plants).
+- CAPEX: IRENA RPGC 2024 (USD2024/kW); DESNZ Generation Costs 2025 (AD/LFG inflated from 2023); DEA sheet 81 = EUR2020;
+  LFGcost-Web 2023-09. None or lab only: poultry plants (AgSTAR ≈ 6), straw tonnes, fish, RAS, olive, slaughterhouses.
+
 ## Top-5 NPV drivers (tornado 2026-10-31: ±10 % per `econ.*`, mean |ΔNPV| over 39 examples, 33 countries)
 
 Frequency in the per-country top 5: discount rate 33, CAPEX factor CHP 33, CAPEX factor biomethane 24, FX 20,

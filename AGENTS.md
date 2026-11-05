@@ -15,7 +15,7 @@ Start here, then read only what the task needs:
 | Decisions already taken and why (do not relitigate without new evidence) | [docs/ai/DECISIONS.md](docs/ai/DECISIONS.md) |
 | Market data: source policy, official sources per country, refresh cadence | [docs/ai/DATA-SOURCES.md](docs/ai/DATA-SOURCES.md) |
 | Rules for `src/core/**` and `src/countries/**` | `.claude/rules/core-model.md`, `.claude/rules/country-data.md` |
-| Procedures (expert review, market-data update) | `.claude/skills/*/SKILL.md` |
+| Procedures (expert review, market-data update, sector calibration) | `.claude/skills/*/SKILL.md` |
 
 The source of truth for formulas, parameters and their provenance is the code
 (`src/core`, `src/countries`), shown to users on `/[lang]/methodology` via `allProvenance`.
